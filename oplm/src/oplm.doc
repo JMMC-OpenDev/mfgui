@@ -1,0 +1,20 @@
+/*******************************************************************************
+ * JMMC project
+ *
+ * "@(#) $Id: oplm.doc,v 1.2 2006-03-14 15:29:39 gzins Exp $"
+ *
+ * History
+ * -------
+ * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/03/01 09:23:46  sccmgr
+ * Fix directory structure and add additional files
+ *
+ ******************************************************************************/
+
+/**
+\mainpage oplm : Optimization with Bounced Levenberg-Marquardt algorithm 
+
+\bdesc
+This modules provides functions to fit a model to a set of observed data using
+Bounced Levenberg-Marquardt optimization method.
+*/

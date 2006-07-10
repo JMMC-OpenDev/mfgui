@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<errorList moduleName="oplm">
+   <error id="2">
+      <errName>OVER_LOWER_BOUND</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Parameter #%d - value '%.3e' is out of lower bound '%.3e']]></errFormat>
+   </error>
+   <error id="3">
+      <errName>OVER_UPPER_BOUND</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Parameter #%d - value '%.3e' is out of upper bound '%.3e']]></errFormat>
+   </error>
+   <error id="4">
+      <errName>NULL_POINTER</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Function parameter '%.20s' is a null pointer ]]></errFormat>
+   </error>
+   <error id="7">
+      <errName>WRONG_INT_VALUE</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Value %d for %.20s is wrong]]></errFormat>
+   </error>
+   <error id="8">
+      <errName>WRONG_FLOAT_VALUE</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Value %f for %.20s is wrong]]></errFormat>
+   </error>
+   <error id="9">
+      <errName>ALLOC_MEM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Could not allocate %d bytes]]></errFormat>
+   </error>
+</errorList>
