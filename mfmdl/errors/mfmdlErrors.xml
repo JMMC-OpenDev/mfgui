@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<errorList moduleName="mfmdl">
+   <error id="1">
+      <errName>INDEX_OUT_OF_BOUNDS</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[%s given index %d range is [%d,%d]]]></errFormat>
+   </error>
+   <error id="2">
+      <errName>WRONG_PARAMETER_NAME</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA['%s' parameter unknown]]></errFormat>
+   </error>
+   <error id="4">
+      <errName>ALLOC_MEM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Could not allocate %d bytes]]></errFormat>
+   </error>
+   <error id="5">
+      <errName>REALLOC_MEM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Could not reallocate vector %p]]></errFormat>
+   </error>
+</errorList>
