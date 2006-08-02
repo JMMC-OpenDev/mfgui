@@ -1,0 +1,59 @@
+1 - 	Arr Name: NPOI_2004-07-19
+1 - 	Ins Name: NPOI_2004-07-19
+1 - 	Observation date: 2004-07-19 (UTC)
+1 - Table #4 - type: 6
+1 - opening file [mfdata.oifits] ...mfdataVIS2Test - oidata - - oidataFITS.cpp:1088 - ##### nbElements could be wrong (1, must be 6) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:1088 - ##### nbElements could be wrong (1, must be 6) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:795 - nbElements could be wrong (1, must be 6) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:870 - ##### nbElements could be wrong (1, must be 6) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 6) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:795 - nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:795 - nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:1019 - ##### nbElements could be wrong (1, must be 195) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:795 - nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:945 - ##### nbElements could be wrong (1, must be 130) 
+1 - 
+1 - - oidata mfdataVIS2Test  oidataOI_TABLE.cpp:454 8 S [OI_T3, hdu:6] unit error for column 'T3PHI'
+1 -  done.
+1 - mfdata.oifits contains 5 OI tables
+1 - Table #0 - type: 2
+1 - Table #1 - type: 1
+1 - Table #2 - type: 3
+1 - Table #3 - type: 5
+1 - 	find VIS2 table at position 3 [1]
+1 - 	number of rows =195
+1 - 	number of waves=1
+1 - mfdataVIS2Test - oidata - - oidataFITS.cpp:277 -  Some structural error were encountered
