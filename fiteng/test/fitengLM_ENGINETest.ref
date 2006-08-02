@@ -1,0 +1,8 @@
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:371 - Generate new data
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:410 - Init new fit session
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:420 - fMaxEval before: 200, after: 5000
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:421 - Reset tolerance parameters
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:424 - Current Levenberg-Marquardt factor set to 100.000000
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINE.cpp:277 - op_lm_dif returns an error [stage=-1,info=-3]
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:465 - End of session
+1 - default - fitengLM_ENGINETest - fiteng - - fitengLM_ENGINETest.cpp:476 - Fitting procedure completed with p-value>10

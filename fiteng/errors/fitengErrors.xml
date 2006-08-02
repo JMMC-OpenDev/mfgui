@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<errorList moduleName="fiteng">
+   <error id="1">
+      <errName>INDEX_RANGE</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Index '%d' is out of range (max = %d)]]></errFormat>
+   </error>
+   <error id="2">
+      <errName>FREEDOM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Number of parameters (%d) must be smaller than the number of residues (%d)]]></errFormat>
+   </error>
+   <error id="4">
+      <errName>NULL_PARAM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[The '%s' parameter is NULL]]></errFormat>
+   </error>
+   <error id="5">
+      <errName>ALLOC_MEM</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Could not allocate %d bytes]]></errFormat>
+   </error>
+   <error id="6">
+      <errName>NOT_INITIALISED</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Fitting engine not initialised]]></errFormat>
+   </error>
+</errorList>

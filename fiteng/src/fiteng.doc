@@ -1,0 +1,25 @@
+/*******************************************************************************
+ * JMMC project
+ *
+ * "@(#) $Id: fiteng.doc,v 1.2 2006-03-20 07:11:27 gzins Exp $"
+ *
+ * History
+ * -------
+ * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/03/14 15:42:30  sccmgr
+ * Fix directory structure and add additional files
+ *
+ ******************************************************************************/
+
+/**
+\mainpage fiteng : Fitting engine module
+
+\bdesc
+This module provides a fitting engines.
+
+\ddesc
+This module provides an implementation of the Levenberg-Marquardt algorithm;
+fitengFIT_ENGINE. This algorithm iteratively adjusts parameters to minimize
+residuals, where residuals correspond to difference between measured dependent
+variable outputs and predictions from a model. 
+*/
