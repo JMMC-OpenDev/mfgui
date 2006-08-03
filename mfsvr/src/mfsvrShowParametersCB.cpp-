@@ -1,0 +1,108 @@
+/*******************************************************************************
+ * JMMC project
+ *
+ * "@(#) $"
+ *
+ * History
+ * -------
+ * $
+ *
+ ******************************************************************************/
+
+/**
+ * @file
+ *  Definition of SHOWPARAMETERS command callback.
+ */
+
+static char *rcsId="@(#) $"; 
+static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+
+/* 
+ * System Headers 
+ */
+#include <iostream>
+using namespace std;
+
+/*
+ * MCS Headers 
+ */
+#include "mcs.h"
+#include "log.h"
+#include "err.h"
+
+/*
+ * Local Headers 
+ */
+#include "mfsvrSERVER.h"
+#include "mfsvrSHOWPARAMETERS_CMD.h"
+#include "mfsvrPrivate.h"
+#include "mfsvrErrors.h"
+
+#define SEM printf("SEMAPHORE %s %d\n",__FILE__,__LINE__)
+
+/**
+ *  DOXYGEN HEADER
+ */
+evhCB_COMPL_STAT mfsvrSERVER::ShowParametersCB(msgMESSAGE &msg, void*)
+{
+    // Build the command object
+    mfsvrSHOWPARAMETERS_CMD ShowParametersCmd(msg.GetCommand(), msg.GetBody());
+    if (ShowParametersCmd.Parse() == mcsFAILURE)
+    {
+        return evhCB_NO_DELETE | evhCB_FAILURE;
+    }
+
+     // Check if a model is defined 
+    if (_model == NULL)
+    {
+        logInfo("No model defined.");
+        evhCB_COMPL_STAT status = PrintBody(msg,mcsTRUE,"No model defined. Done.");
+        return status | evhCB_NO_DELETE;
+    }
+    
+    // Model must be type of composed at top level.
+    // It should me the case if the user used the SetModel command
+    if (_model->GetModelType() != mfmdlCOMPOSED_MODEL_TYPE)
+    {
+        PrintBody(msg,mcsTRUE,"An error occured. Model must be type of composed at top level.");
+        logError("An error occured. Model must be type of composed at top level.");
+        return evhCB_NO_DELETE | evhCB_FAILURE;
+    }
+
+    mfmdlPARAMETER_LIST paramList;
+
+    if (_model->GetParameters(&paramList,mcsTRUE) == mcsSUCCESS)
+    {
+        mcsUINT16 idx;
+        for (idx=0 ; idx<paramList.Size() ; idx++)
+        {
+            mfmdlPARAMETER *param = NULL;
+            param = paramList.GetNextParameter((idx == 0)?mcsTRUE:mcsFALSE);
+            if (param != NULL)
+            {
+                mcsDOUBLE val_m,val_M,val_c;
+                PrintBody(msg,mcsFALSE,"%03d %-20s %+7.5e [%+7.5e , %+7.5e] %s %s %7.5e",
+                          idx,
+                          (param->GetName()).c_str(),
+                          val_c = param->GetValue(),
+                          val_m = param->GetMinValue(),
+                          val_M = param->GetMaxValue(),
+                          (param->HasFixedValue() == mcsTRUE ) ? "FIXED" : "FREE ",
+                          (val_c>=val_m)&&(val_c<=val_M) ? "" : "OUT OF BOUNDS",
+                          param->GetScale()
+                          );
+            }
+        }
+    }
+    
+    // Send reply
+    msg.SetBody("Done.");
+    if (SendReply(msg) == mcsFAILURE)
+    {
+        return evhCB_NO_DELETE | evhCB_FAILURE;
+    }
+
+    return evhCB_NO_DELETE;
+}
+
+/*___oOo___*/

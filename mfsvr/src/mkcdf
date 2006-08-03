@@ -1,0 +1,321 @@
+#! /bin/bash
+
+###############################################################################
+# JMMC project
+#
+# "@(#) $Id$"
+#
+# History
+# -------
+# $Log$
+#
+###############################################################################
+
+function usage ()
+{
+    BASENAME=`basename $0`
+    echo -e "\n\tUsage: ${BASENAME} <function name>" 
+}
+
+function callawkscript ()
+{
+    ## Store function arguments
+    SCRIPTNAME=$1
+    FILE=$2
+    ## create temporary file
+    TMPFILE=`mktemp -q /tmp/${tempfoo}.XXXXXX`
+    if [ $? -ne 0 ]; then
+        echo "$0: Can't create temp file, exiting..."
+        exit 1
+    fi
+    ## invoke awk script
+    awk -f ${SCRIPTNAME} ${FILE} > ${TMPFILE}
+    ## finally replace the fiel
+    mv ${TMPFILE} ${FILE}
+}
+
+## Create temporary files
+tempfoo=`basename $0`
+SCRIPTNAME=`mktemp -q /tmp/${tempfoo}.XXXXXX`
+if [ $? -ne 0 ]; then
+    echo "$0: Can't create temp file, exiting..."
+    exit 1
+fi
+TMPFILE=`mktemp -q /tmp/${tempfoo}.XXXXXX`
+if [ $? -ne 0 ]; then
+    echo "$0: Can't create temp file, exiting..."
+    exit 1
+fi
+
+##  ======================================================================
+##  CREATION OF THE CDF FILE 
+##  ======================================================================
+# Input parameters given should be 1 and in the correct format:
+if [ $# != 1 ]
+then 
+    usage
+    exit 1
+fi
+
+# Get the function name 
+FUNC=$1
+FUNCUPPERCASE=`echo $FUNC|awk '{print toupper($0)}'`
+
+# Get module name
+MODNAME=`ctooGetModuleName`
+if [ $? != 0 ]
+then
+    exit 1
+fi
+
+## Local declaration
+
+CMDFILE="${MODNAME}${FUNCUPPERCASE}_CMD"
+CBFILE="${MODNAME}${FUNC}CB"
+CDFFILE="${MODNAME}${FUNCUPPERCASE}"
+
+## Get the module server name 
+SERVERNAME=${MODNAME}Server
+OBJECTSTAG=${SERVERNAME}_OBJECTS
+
+# Create CDF File from template
+if test -f "../config/${CDFFILE}.cdf"
+then
+    echo "file ${CDFFILE} already exist."
+    exit 1
+fi
+
+echo "../config/${CDFFILE}"|ctooGetTemplateForCoding cdf-xml
+if [ $? != 0 ]
+then
+    echo An error occured during the creation of $CDFFILE. Abort.
+    exit 1
+fi
+
+## Fill CDF file with some basic informations 
+echo -n "Fill the CDF file ... "
+cat > ${SCRIPTNAME} << EOF
+/<mnemonic>/{
+    gsub("<mnemonic>","<mnemonic>$FUNCUPPERCASE")
+} 
+/<desc>/{
+    gsub("<desc>","<desc>$FUNC description")
+}
+/<name>/{
+    gsub("<name>","<name>param")
+}
+/<type>/{
+    gsub("paramType","integer")
+}
+/<minValue>/, /<\/defaultValue>/ { next } 
+/<unit>/, /<\/unit>/ { next } 
+{
+    printf \$0"\\n";
+}
+EOF
+
+callawkscript ${SCRIPTNAME} "../config/${CDFFILE}.cdf"
+
+echo "done."
+
+##  ======================================================================
+##  CREATION OF CORRESPONDING CMD MAIN CPP FILE 
+##  ======================================================================
+
+if test $( grep -ce ${CDFFILE} ../src/Makefile ) -gt 0
+then
+    echo "${CDFFILE} file tag already exists ; skipping insert procedure."
+else
+    echo "Generate the main CMD file ... "
+## write the awk batch file
+cat > ${SCRIPTNAME} << EOF
+/CDF_FILES/{
+    gsub("=","= $CDFFILE \t\\\\\n\t")
+} 
+{
+    printf \$0"\\n";
+}
+EOF
+## invoke awk and parse/replace file 
+callawkscript ${SCRIPTNAME} "../src/Makefile"
+
+## invoke make to generate file
+echo -n "Generate main command file (${CMDFILE}) ..." 
+OLDDIR=`pwd`
+cd ../src && ( make ; cd ${OLDDIR} )  
+echo " done."
+fi
+
+##  ======================================================================
+##  CREATION OF CORRESPONDING CALLBACK FUNCTION
+##  ======================================================================
+
+if test -f ../src/${CBFILE}.cpp
+then
+    echo "callback interface (${CBFILE}.cpp) already exist. skipping" 
+## Call back cpp template
+else
+echo -n "Write callback template (${CBFILE}.cpp) ..." 
+## Call back cpp template
+cat > ../src/${CBFILE}.cpp << EOF
+/*******************************************************************************
+ * JMMC project
+ *
+ * "@(#) \$Id\$"
+ *
+ * History
+ * -------
+ * \$Log\$
+ *
+ ******************************************************************************/
+
+/**
+ * @file
+ *  Definition of ${FUNCUPPERCASE} command callback.
+ */
+
+static char *rcsId="@(#) \$Id\$"; 
+static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+
+/* 
+ * System Headers 
+ */
+#include <iostream>
+using namespace std;
+
+/*
+ * MCS Headers 
+ */
+#include "mcs.h"
+#include "log.h"
+#include "err.h"
+
+/*
+ * Local Headers 
+ */
+#include "${MODNAME}SERVER.h"
+#include "${CMDFILE}.h"
+#include "${MODNAME}Private.h"
+#include "${MODNAME}Errors.h"
+
+/**
+ *  DOXYGEN HEADER
+ */
+evhCB_COMPL_STAT ${MODNAME}SERVER::${FUNC}CB(msgMESSAGE &msg, void*)
+{
+    // Build the command object
+    mfsvr${FUNCUPPERCASE}_CMD ${FUNC}Cmd(msg.GetCommand(), msg.GetBody());
+    if (${FUNC}Cmd.Parse() == mcsFAILURE)
+    {
+        return evhCB_NO_DELETE | evhCB_FAILURE;
+    }
+
+    // ***********************************
+    //       INSERT YOUR CODE HERE
+    // ***********************************
+	
+    // Send reply
+    msg.SetBody("Done.");
+    if (SendReply(msg) == mcsFAILURE)
+    {
+        return evhCB_NO_DELETE | evhCB_FAILURE;
+    }
+
+    return evhCB_NO_DELETE;
+}
+
+/*___oOo___*/
+EOF
+echo " done."
+fi
+
+## Add the previous files in the main Makefile if necessary
+rm -f ${SCRIPTNAME} 
+# Check if callback function is already registered
+if test $( grep -ce ${CBFILE} ../src/Makefile ) -gt 0
+then
+    echo "${CBFILE} file tag already exists ; skipping insert procedure."
+else
+echo "register Callback implementation in Makefile"
+cat > ${SCRIPTNAME} << EOF
+/${OBJECTSTAG}/{
+    gsub("=","= $CBFILE \t\\\\\n\t")
+} 
+EOF
+fi
+
+# Check if CMD implementation is already registered
+if test $( grep -ce ${CMDFILE} ../src/Makefile ) -gt 0
+then
+    echo "${CMDFILE} file tag already exists ; skipping insert procedure."
+else
+echo "register main CMD implementation in Makefile"
+cat >> ${SCRIPTNAME} << EOF
+/${OBJECTSTAG}/{
+    gsub("=","= $CMDFILE \t\\\\\n\t")
+} 
+EOF
+fi 
+cat >> ${SCRIPTNAME} << EOF
+{
+    printf \$0"\\n";
+}
+EOF
+## invoke awk
+callawkscript ${SCRIPTNAME} ../src/Makefile
+
+## Register the callback function
+SERVERINTERFACE=../include/${MODNAME}SERVER.h 
+SERVERIMPLEMENTATION=../src/${MODNAME}SERVER.cpp 
+
+CMDLINE="virtual evhCB_COMPL_STAT ${FUNC}CB(msgMESSAGE &msg, void*);"
+if test $( grep -ce '${CMDLINE}' ${SERVERINTERFACE} ) -gt 0
+then
+    echo "Callback function is already registered ; skipping insert procedure."
+else
+    echo "register callback in server interface"
+    cat ${SERVERINTERFACE} | awk -v cmd="${CMDLINE}" '/ommand callback/{print $0"\n\t"cmd;next}{print $0}' > ${TMPFILE}
+
+    mv ${TMPFILE} ${SERVERINTERFACE} 
+fi
+
+CMDLINE="AddCallback(${FUNC}_Key,${FUNC}_CB);"
+echo $CMDLINE
+if test $( grep -ce '${CMDLINE}' ${SERVERIMPLEMENTATION} ) -gt 0
+then
+    echo "Callback function is already active ; skipping insert procedure."
+else
+echo "register callback in server implementation"
+cat > ${SCRIPTNAME} << EOF
+/#include/{
+    if(match(\$0,"${MODNAME}SERVER.h") != 0)
+    {
+        print \$0
+        print("#include \"${MODNAME}${FUNCUPPERCASE}_CMD.h\"");
+        next
+    }
+    print \$0
+    next
+}
+/logTrace/{
+    if(match(\$0,"${MODNAME}SERVER::AppInit()") != 0)
+    {
+        print \$0"\n"
+        
+        print("\tevhCMD_KEY ${FUNC}_Key(${MODNAME}${FUNCUPPERCASE}_CMD_NAME, ${MODNAME}${FUNCUPPERCASE}_CDF_NAME);")
+        print("\tevhCMD_CALLBACK ${FUNC}_CB(this, (evhCMD_CB_METHOD)&${MODNAME}SERVER::${FUNC}CB);")
+        print("\tAddCallback(${FUNC}_Key,${FUNC}_CB);")
+    }
+    next
+} 
+{ 
+    print \$0
+}
+EOF
+
+## invoke awk
+callawkscript ${SCRIPTNAME} ${SERVERIMPLEMENTATION}
+
+fi
+
+echo Done.

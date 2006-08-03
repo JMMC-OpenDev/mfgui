@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<errorList moduleName="mfsvr">
+   <error id="1">
+      <errName>UNKNOWN_MODEL</errName>
+      <errSeverity>WARNING</errSeverity>
+      <errFormat><![CDATA[Model type %d not supported]]></errFormat>
+   </error>
+   <error id="2">
+      <errName>MODEL_UNDEFINED</errName>
+      <errSeverity>SEVERE</errSeverity>
+      <errFormat><![CDATA[No model previously defined]]></errFormat>
+   </error>
+</errorList>
