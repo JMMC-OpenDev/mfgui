@@ -1,7 +1,7 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.1 2006-08-29 07:26:27 sccmgr Exp $"
+# "@(#) $Id: Makefile,v 1.2 2006-09-26 12:13:07 mella Exp $"
 #
 # Makefile of mfgui module
 #
@@ -101,21 +101,27 @@ PY_SCRIPTS_L   =
 #
 # Jarfiles and their directories
 # ---------------------------------
-JARFILES        =
+JARFILES        = mfgui
 
 #
-# <brief description of jjjfff jar files>
-jjjfff_DIRS     =
-jjjfff_EXTRAS   = 
+# other Jar Files
+#
+JAVA_JAR = sclgui
+
+
+#
+# <brief description of sclgui jar files>
+mfgui_DIRS     = jmmc 
+#mfgui_EXTRAS   = 
 
 #
 # Java programs
 # ---------------------------------
-JAVA_EXECUTABLES=
+JAVA_EXECUTABLES = ModelFitting
 
 #
-# <brief description of jjjjjj java program>
-jjjjjj_CLASS    =
+# <brief description of ModelFitting java program>
+ModelFitting_CLASS    = jmmc.mf.gui.ModelFitting
 
 #
 # Command Definition Files (CDF)
