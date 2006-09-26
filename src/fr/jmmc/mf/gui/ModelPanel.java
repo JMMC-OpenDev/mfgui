@@ -374,18 +374,18 @@ public class ModelPanel extends javax.swing.JPanel
         // Iterate through all affected nodes
         for (int i = 0; i < paths.length; i++)
         {
+            _logger.fine("Changed occured on:" + paths[i]);
             if (evt.isAddedPath(i))
             {
                 Model m = (Model) paths[i].getLastPathComponent();
                 // This node has been selected
-                _logger.fine("Selected:" + paths[i]);
+                _logger.fine("Selected:" + paths[i]);                
                 currentSelectedPath = paths[i];
-
+                
                 if (m.getType().equals(ModelModel.COMPOSED_MODEL_TYPE))
                 {
                     setAddButtonEnabled = true;
                 }
-
                 setDelButtonEnabled = true;
             }
             else
@@ -402,7 +402,6 @@ public class ModelPanel extends javax.swing.JPanel
         {
             delButton.setEnabled(! getCurrentSelectedModel()
                                        .equals(treeModel.getRoot()));
-
             //expandAll(tree,currentSelectedPath.getParentPath(), true );
         }
 
@@ -523,8 +522,8 @@ public class ModelPanel extends javax.swing.JPanel
             }
 
             row.add(p.getUnits());
-            row.add("" + p.getValue());
-            row.add(new Boolean(p.hasFixed()));
+            row.add("" + p.getValue());            
+            row.add(new Boolean(p.getFixed()));
             row.add("" + p.getMinValue());
             row.add("" + p.getMaxValue());
             row.add(p.getDesc());
