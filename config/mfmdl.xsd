@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Document   : mfmdl.xsd
+Created on : 19 juillet 2006, 10:25
+Author     : mella
+Description:
+
+The form is quite simple:
+models are generic and can be nested using a simple model with type attribute
+valued to the composite value
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+argetNamespace="http://jmmc.fr/mf/model" elementFormDefault="qualified">
+
+<xsd:annotation>
+<xsd:documentation>
+This is a XML Schema for jmmc model fitting models.
+</xsd:documentation>
+</xsd:annotation>
+
+<!--
+Basic model representation. This model also correspond to composite model 
+-->
+<xsd:element name="model">
+<xsd:annotation>
+<xsd:documentation>
+A common representation of every models.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
+<xsd:element ref="parameter" minOccurs="1" maxOccurs="unbounded" />
+</xsd:sequence>
+<xsd:attributeGroup ref="ModelAttributes"/>
+</xsd:complexType>
+
+</xsd:element>
+<!--
+Model parameter representation.
+-->
+<xsd:element name="parameter">
+<xsd:annotation>
+<xsd:documentation>
+A common representation of every model parameters.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="units" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="fixed" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="minValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="maxValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
+</xsd:all>
+<xsd:attributeGroup ref="ParameterAttributes"/>
+</xsd:complexType>
+</xsd:element>
+
+<!-- Model attributes -->
+<xsd:attributeGroup name="ModelAttributes">
+<xsd:attribute name="name" type="xsd:string" use="required"/>
+<xsd:attribute name="type" type="xsd:string" use="required"/>
+</xsd:attributeGroup>
+
+<!-- Parameters attributes -->
+<xsd:attributeGroup name="ParameterAttributes">
+<xsd:attribute name="name" type="xsd:string" use="required"/>
+</xsd:attributeGroup>
+
+</xsd:schema>
+
