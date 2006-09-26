@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.2 2006-09-26 12:13:07 mella Exp $"
+# "@(#) $Id: Makefile,v 1.3 2006-09-26 12:44:16 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/09/26 12:13:07  mella
+# First revision
+#
 #*******************************************************************************
 # REMARKS
 #    Makefile based on the VLT/ALMA Makefile
@@ -68,7 +71,7 @@ lllll_OBJECTS   =
 # Scripts (public and local)
 # --------------------------
 SCRIPTS         =
-SCRIPTS_L       =
+SCRIPTS_L       = mfguiGenerateClasses
 
 #
 # TCL scripts (public and local)
