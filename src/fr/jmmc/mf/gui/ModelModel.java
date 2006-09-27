@@ -20,7 +20,7 @@ import javax.swing.tree.*;
 
 public class ModelModel implements TreeModel
 {
-    public final static String COMPOSED_MODEL_TYPE = "composed_model";
+    public final static String COMPOSED_MODEL_TYPE = "composite";
     private Vector             treeModelListeners  = new Vector();
     private Model              rootModel;
     public Action loadModelAction;
