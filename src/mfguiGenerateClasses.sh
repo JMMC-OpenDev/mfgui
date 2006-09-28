@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.2 2006-09-26 12:44:59 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.3 2006-09-28 09:41:36 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/09/26 12:44:59  mella
+# Search model.xsd using miscLocateFile
+#
 # Revision 1.1  2006/09/26 12:13:07  mella
 # First revision
 #
@@ -35,10 +38,14 @@ MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package jmmc.mf.models  $*
 
-exit 0
+MODEL_SCHEMA=$(miscLocateFile mfeng.xsd)
+# generate model java source from xml schema
+echo "Generating classes for $MODEL_SCHEMA"
+java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package jmmc.mf.engine  $*
 
-cat >> jmmc/mf/models/Model.java << EOM
- /**
+
+cat << EOM
+    /**
      * Returns one string descrition.
      */
     public String toString(){
