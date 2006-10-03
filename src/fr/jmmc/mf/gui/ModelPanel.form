@@ -67,6 +67,14 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delButtonActionPerformed"/>
                   </Events>
                 </Component>
+                <Component class="javax.swing.JButton" name="fixButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="fix"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fixButtonActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -130,7 +138,6 @@
             </Container>
             <Component class="javax.swing.JCheckBox" name="showChildrenParametersCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="show children parameters"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder bottom="0" left="0" right="0" top="0"/>

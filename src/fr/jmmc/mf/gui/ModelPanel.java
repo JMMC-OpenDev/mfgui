@@ -39,13 +39,14 @@ public class ModelPanel extends javax.swing.JPanel
     protected Hashtable modelsList;
     
     // Element for paramsPanel
-    JTable table;
-    Vector columnNames;
+    JTable table;   
+    ParametersTableModel tableModel;
     
     /** Creates new form ModelPanel */
     public ModelPanel(ModelModel treeModel) {
         initComponents();
         try{
+            // MANAGE LEFT PART OF MODEL (model tree) 
             // init combo content with server list of models
             supportedModels                     = ServerImpl.getSupportedModels();
             modelsList                          = new Hashtable();
@@ -63,43 +64,37 @@ public class ModelPanel extends javax.swing.JPanel
             tree               = new JTree(treeModel);
             tree.setScrollsOnExpand(true);
             tree.setEditable(true);
-            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-            
+            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);            
             
             JScrollPane scrollPane = new JScrollPane(tree);
             modelPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
-            
-            // Place centered Table
-            table          = new JTable();
-            scrollPane     = new javax.swing.JScrollPane();
-            scrollPane.setViewportView(table);
-            paramsPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
-            
-            // Adjust recursive checkBox
-            showChildrenParametersCheckBox.addChangeListener(this);
-            showChildrenParametersCheckBox.setModel(PreferencedButtonModel.getInstance(
-                    Preferences.getInstance(), "show.recursive.parameters"));
-            showChildrenParametersCheckBox.setAction(new MFAction(
-                    "showChildrenParameters"));
-            
-            // Init columns titles and types
-            columnNames = new Vector();
-            columnNames.add("Name");
-            columnNames.add("Unit");
-            columnNames.add("Value");
-            columnNames.add("Fixed");
-            columnNames.add("Min");
-            columnNames.add("Max");
-            columnNames.add("Desc");
-            // next call to display(oneModel) will show it up
-            display((Model) treeModel.getRoot());
-            modelSplitPane.setRightComponent(paramsPanel);
             
             // register to Selection to be able to add a model  into the hierachical
             // structure and to present fresh view of the selected model and its
             // parameters.
             tree.addTreeSelectionListener(this);
-            treeModel.addTreeModelListener(this);
+            treeModel.addTreeModelListener(this);            
+            
+            // MANAGE RIGTH PART OF MODEL (parameters table)
+            // Place centered Table for parameters
+            table          = new JTable();
+            tableModel = new ParametersTableModel(); 
+            table.setModel(tableModel);
+            scrollPane     = new javax.swing.JScrollPane();
+            scrollPane.setViewportView(table);
+            paramsPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+            modelSplitPane.setRightComponent(paramsPanel);
+            
+            // Adjust recursive checkBox            
+            showChildrenParametersCheckBox.addChangeListener(this);
+            showChildrenParametersCheckBox.setModel(PreferencedButtonModel.getInstance(
+                    Preferences.getInstance(), "show.recursive.parameters"));
+            showChildrenParametersCheckBox.setAction(new MFAction(
+                    "showChildrenParameters"));
+                        
+            // next call make table show the rootModel
+            display((Model) treeModel.getRoot());            
+            
             
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
@@ -132,11 +127,12 @@ public class ModelPanel extends javax.swing.JPanel
         }
     }
     
-    /** This method is called on model tree selection changes*/
+    /** 
+     * This method is called on model tree selection changes and adjust state
+     * of buttons
+     */
     public void valueChanged(TreeSelectionEvent evt) {
-        MCSLogger.trace();
-        
-        //_logger.fine(""+evt);
+        MCSLogger.trace();               
         
         // Get all nodes whose selection status has changed
         TreePath[] paths               = evt.getPaths();
@@ -149,13 +145,13 @@ public class ModelPanel extends javax.swing.JPanel
         for (int i = 0; i < paths.length; i++) {
             _logger.fine("Changed occured on:" + paths[i]);
             if (evt.isAddedPath(i)) {
-                Model m = (Model) paths[i].getLastPathComponent();
-                // This node has been selected
                 _logger.fine("Selected:" + paths[i]);
+                Model m = (Model) paths[i].getLastPathComponent();
+                // This node has been selected            
                 currentSelectedPath = paths[i];
-                // Tell add to be activated only if selected model is of composite type
-                if (m.getType().equals(ModelModel.COMPOSITE_MODEL_TYPE)) {
-                    setAddButtonEnabled = true;
+                // Tell addButton to be activated only if selected model is of composite type
+                if (m.getType().equals(ModelModel.COMPOSITE_MODEL_TYPE)) {                             
+                        setAddButtonEnabled = true;                                          
                 }
                 setDelButtonEnabled = true;
             } else {
@@ -218,8 +214,9 @@ public class ModelPanel extends javax.swing.JPanel
     /** This method make the panel showing information about given model.
      */
     public void display(Model currentModel, boolean showDescendant) {
-        MCSLogger.trace();
-        
+        MCSLogger.trace();        
+        tableModel.setModel(currentModel, showDescendant);
+        /*
         // do nothing if given model is null
         if (currentModel == null) {
             return;
@@ -240,61 +237,21 @@ public class ModelPanel extends javax.swing.JPanel
             // Unless this method is overridden, all values are
             // assumed to be the type Object.
             public Class getColumnClass(int columnIndex) {
-                Object o = getValueAt(0, columnIndex);
-                
-                if (o == null) {
-                    return Object.class;
-                } else {
-                    return o.getClass();
-                }
+        
             }
         };
         
-        table.setModel(tableModel);
+        
         
         if (currentModel.getModelCount() == 0) {
             showChildrenParametersCheckBox.setVisible(false);
         } else {
             showChildrenParametersCheckBox.setVisible(true);
         }
+         */
     }
     
-    protected void addParamsFor(Model model, Vector container, boolean recursive) {
-        MCSLogger.trace();
-        
-        // First append model parameters
-        Parameter[] params     = model.getParameter();
-        int         nbOfParams = params.length;
-        
-        // Create with initial data
-        for (int i = 0; i < nbOfParams; i++) {
-            Parameter p   = params[i];
-            Vector    row = new Vector();
-            
-            // objects should be added into the row vectr following the column Name order
-            if (recursive) {
-                row.add(model.getName() + "." + p.getName());
-            } else {
-                row.add(p.getName());
-            }
-            
-            row.add(p.getUnits());
-            row.add("" + p.getValue());
-            row.add(new Boolean(p.getFixed()));
-            row.add("" + p.getMinValue());
-            row.add("" + p.getMaxValue());
-            row.add(p.getDesc());
-            container.add(row);
-        }
-        
-        if (recursive) {
-            Model[] models = model.getModel();
-            
-            for (int i = 0; i < models.length; i++) {
-                addParamsFor(models[i], container, true);
-            }
-        }
-    }
+ 
     
     // If expand is true, expands all nodes in the tree.
     // Otherwise, collapses all nodes in the tree.
@@ -319,6 +276,7 @@ public class ModelPanel extends javax.swing.JPanel
         jComboBox1 = new javax.swing.JComboBox();
         addButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
+        fixButton = new javax.swing.JButton();
         paramsPanel = new javax.swing.JPanel();
         descPanel = new javax.swing.JPanel();
         modelNameLabel = new javax.swing.JLabel();
@@ -356,6 +314,15 @@ public class ModelPanel extends javax.swing.JPanel
 
         modelModifierPanel.add(delButton);
 
+        fixButton.setText("fix");
+        fixButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fixButtonActionPerformed(evt);
+            }
+        });
+
+        modelModifierPanel.add(fixButton);
+
         modelPanel.add(modelModifierPanel, java.awt.BorderLayout.SOUTH);
 
         modelSplitPane.setLeftComponent(modelPanel);
@@ -380,7 +347,6 @@ public class ModelPanel extends javax.swing.JPanel
         tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         paramsPanel.add(tablePanel, java.awt.BorderLayout.CENTER);
 
-        showChildrenParametersCheckBox.setText("show children parameters");
         showChildrenParametersCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         showChildrenParametersCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         paramsPanel.add(showChildrenParametersCheckBox, java.awt.BorderLayout.SOUTH);
@@ -390,6 +356,10 @@ public class ModelPanel extends javax.swing.JPanel
         add(modelSplitPane, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
+
+    private void fixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fixButtonActionPerformed
+        fix();
+    }//GEN-LAST:event_fixButtonActionPerformed
     
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         MCSLogger.trace();
@@ -403,15 +373,23 @@ public class ModelPanel extends javax.swing.JPanel
         String modelName;
         Model  model     = (Model) modelsList.get(modelType);
         Model  m         = model.getClone();
-        
+        Model  selectedModel = getCurrentSelectedModel();
         //m = new Model();
         // Add the node to the selected model or to the rootNode
         // And define model name
-        if (getCurrentSelectedModel() != null) {
+        if (selectedModel != null) {
+            
             // getCurrentSelectedModel().getModelCount() must be called before addModel call
             // addModel makes getCurrentSelectedModel() returns null
-            modelName = modelType + getCurrentSelectedModel().getModelCount();
-            treeModel.addModel(getCurrentSelectedModel(), m);
+            modelName = modelType + selectedModel.getModelCount();
+            // Accept to add only if selected model is the root model
+            // V0.0 does  not support hierachical level > 1
+            Model rootModel = (Model) treeModel.getRoot();
+            if(modelType.equals(ModelModel.COMPOSITE_MODEL_TYPE)){          
+                _logger.warning("Can't add one composite to one other");
+            }else{
+                treeModel.addModel(selectedModel, m);
+            }
         } else {
             treeModel.addModel(m);
             modelName = modelType;
@@ -424,29 +402,36 @@ public class ModelPanel extends javax.swing.JPanel
     void fix(){
         MCSLogger.trace();
         try{
+            // get root model
             Model rootModel = (Model) treeModel.getRoot();
-            List  models    = new ArrayList();
             
-            // this should work in the future
-            //registerModels(rootModel,models);
-            
-            // begin of temp part
-            // but at begining we have to do
-            Model[] ms = rootModel.getModel();
-            
-            for (int i = 0; i < ms.length; i++) {
-                registerModels(ms[i], models);
+            if (rootModel==null){
+                _logger.warning("Can't fix an empty model");
+                // @todo maybe add one user level error 
+                return;
             }
             
-            ServerImpl.add_mdl(rootModel.getType());
+            // get list of models
+            List  models    = new ArrayList();
+            registerModels(rootModel,models);
             
-            //  end of temp part
+            // send addmodel command for each model
             Object[] array = models.toArray();
-            
             for (int i = 0; i < array.length; i++) {
                 Model m = (Model) array[i];
                 ServerImpl.addmodel(m.getType(), true);
             }
+            
+            // and send associated parameters
+            for (int i = 0; i < array.length; i++) {
+                Model m = (Model) array[i];
+                Parameter[] params = m.getParameter();
+                for (int j=0; j<params.length;j++){
+                    Parameter p = params[j];
+                    ServerImpl.set_mdl_param(m.getName(),p.getName(), p.getValue());
+                }
+            }
+            
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
         }
@@ -472,10 +457,111 @@ public class ModelPanel extends javax.swing.JPanel
         }
     }
     
+    /**
+     * Implementation of a table model that is based on a given Model.
+     */
+    class ParametersTableModel extends  AbstractTableModel{
+        protected Model currentModel=null;
+        protected boolean recursive;
+        protected Parameter[] parameters;
+        
+        
+        // Init columns titles and types
+        protected final String[] columnNames = new String[]{
+            "Name","Unit","Value","Fixed","Min","Max","Desc"};
+        
+
+        public ParametersTableModel(){
+            // next static line should be replaced by a preference listener            
+            recursive=true;   
+            
+        }
+        
+        /**
+         * tell table model to represent the parameters of the given model. 
+         */
+        public void setModel(Model modelToPresent, boolean recursive){
+            currentModel = modelToPresent;
+            this.recursive=recursive;
+            parameters = new Parameter[]{};
+            if(currentModel!=null){
+                Vector params = new Vector();                
+                addParamsFor(currentModel,params, recursive);
+                parameters = new Parameter[params.size()];
+                for (int i=0; i<parameters.length; i++){
+                    parameters[i] = (Parameter) params.elementAt(i);                        
+                }
+            }
+            // notify observers
+            fireTableDataChanged();
+        }                
+        
+        protected void addParamsFor(Model model, Vector container, boolean recursive) {
+            MCSLogger.trace();
+            
+            // First append model parameters
+            Parameter[] params     = model.getParameter();
+            int         nbOfParams = params.length;
+            
+            // Create with initial data
+            for (int i = 0; i < nbOfParams; i++) {
+                Parameter p   = params[i];                                
+                container.add(p);
+            }
+            
+            if (recursive) {
+                Model[] models = model.getModel();                
+                for (int i = 0; i < models.length; i++) {
+                    addParamsFor(models[i], container, true);
+                }
+            }
+        }
+        
+        
+        // Next parts makes respond to the full TableModel interface        
+        public Class 	getColumnClass(int columnIndex){
+            Object o = getValueAt(0, columnIndex);            
+            if (o == null) {
+                return Object.class;
+            } else {
+                return o.getClass();
+            }
+        }
+        
+        public int 	getColumnCount(){
+            return columnNames.length;
+        }
+        
+        public String 	getColumnName(int columnIndex){
+            return columnNames[columnIndex];            
+        }
+        
+        public int 	getRowCount(){          
+            return parameters.length;
+        }
+        
+        public Object 	getValueAt(int rowIndex, int columnIndex){
+            Parameter p = parameters[rowIndex];            
+            return p.getName();
+        }
+        
+        public boolean 	isCellEditable(int rowIndex, int columnIndex){
+            Parameter p = parameters[rowIndex];
+            //@todo ... return p.getEditable();
+            return false;
+        }
+                        
+        public void 	setValueAt(Object aValue, int rowIndex, int columnIndex){
+            _logger.fine("TBD");
+        }
+        
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton delButton;
     private javax.swing.JPanel descPanel;
+    private javax.swing.JButton fixButton;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel modelModifierPanel;
     private javax.swing.JLabel modelNameLabel;
