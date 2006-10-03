@@ -67,14 +67,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delButtonActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="fixButton">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="fix"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fixButtonActionPerformed"/>
-                  </Events>
-                </Component>
               </SubComponents>
             </Container>
           </SubComponents>

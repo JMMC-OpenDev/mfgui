@@ -240,9 +240,7 @@ public class ModelPanel extends javax.swing.JPanel
             public Class getColumnClass(int columnIndex) {
         
             }
-        };
-        
-        
+        };                
         
         if (currentModel.getModelCount() == 0) {
             showChildrenParametersCheckBox.setVisible(false);
@@ -277,7 +275,6 @@ public class ModelPanel extends javax.swing.JPanel
         jComboBox1 = new javax.swing.JComboBox();
         addButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
-        fixButton = new javax.swing.JButton();
         paramsPanel = new javax.swing.JPanel();
         descPanel = new javax.swing.JPanel();
         modelNameLabel = new javax.swing.JLabel();
@@ -315,15 +312,6 @@ public class ModelPanel extends javax.swing.JPanel
 
         modelModifierPanel.add(delButton);
 
-        fixButton.setText("fix");
-        fixButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fixButtonActionPerformed(evt);
-            }
-        });
-
-        modelModifierPanel.add(fixButton);
-
         modelPanel.add(modelModifierPanel, java.awt.BorderLayout.SOUTH);
 
         modelSplitPane.setLeftComponent(modelPanel);
@@ -357,14 +345,11 @@ public class ModelPanel extends javax.swing.JPanel
         add(modelSplitPane, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fixButtonActionPerformed
-        fix();
-    }//GEN-LAST:event_fixButtonActionPerformed
     
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         MCSLogger.trace();
         treeModel.removeModel(getCurrentSelectedModel());
+        fix();
     }//GEN-LAST:event_delButtonActionPerformed
     
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -398,6 +383,7 @@ public class ModelPanel extends javax.swing.JPanel
         
         m.setName(modelName);
         m.setType(modelType);
+        fix();
     }//GEN-LAST:event_addButtonActionPerformed
     
     void fix(){
@@ -577,16 +563,25 @@ public class ModelPanel extends javax.swing.JPanel
         public void setValueAt(Object aValue, int rowIndex, int columnIndex){
             Parameter p = parameters[rowIndex];
             Model m = modelOfParameters[rowIndex];
-            _logger.fine("parameter "+p.getName()+"@"+m.getName()+" old:"+p.getValue() +" new:"+aValue);
-        }
-        
+            
+            try {
+                _logger.fine("parameter "+p.getName()+"@"+m.getName()+" old:"+p.getValue() +" new:"+aValue);
+                String xml=ServerImpl.set_mdl_param(m.getName(),p.getName(), "" + aValue);                
+                //@todo implement result interpretation
+                // or leave next line and remove this comment
+                super.setValueAt(aValue,rowIndex,columnIndex);
+            } catch (Exception e) {
+                 new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
+            }
+            
+            
+        }        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton delButton;
     private javax.swing.JPanel descPanel;
-    private javax.swing.JButton fixButton;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel modelModifierPanel;
     private javax.swing.JLabel modelNameLabel;
