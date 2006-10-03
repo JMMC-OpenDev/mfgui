@@ -23,6 +23,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 
+import java.lang.reflect.*;
 
 /**
  *
@@ -464,17 +465,17 @@ public class ModelPanel extends javax.swing.JPanel
         protected Model currentModel=null;
         protected boolean recursive;
         protected Parameter[] parameters;
+        // Store model of corresponding parameter in parameters array
+        protected Model[] modelOfParameters; 
         
         
         // Init columns titles and types
         protected final String[] columnNames = new String[]{
-            "Name","Unit","Value","Fixed","Min","Max","Desc"};
-        
+            "Name","Units","Value","Fixed","MinValue","MaxValue","Desc"};        
 
         public ParametersTableModel(){
             // next static line should be replaced by a preference listener            
-            recursive=true;   
-            
+            recursive=true;               
         }
         
         /**
@@ -485,18 +486,22 @@ public class ModelPanel extends javax.swing.JPanel
             this.recursive=recursive;
             parameters = new Parameter[]{};
             if(currentModel!=null){
-                Vector params = new Vector();                
-                addParamsFor(currentModel,params, recursive);
+                // get list , create array and init array with content list
+                Vector params = new Vector();
+                Vector models = new Vector();
+                addParamsFor(currentModel,params, models, recursive);
                 parameters = new Parameter[params.size()];
+                modelOfParameters = new Model[params.size()];
                 for (int i=0; i<parameters.length; i++){
-                    parameters[i] = (Parameter) params.elementAt(i);                        
+                    parameters[i] = (Parameter) params.elementAt(i); 
+                    modelOfParameters[i]=(Model) models.elementAt(i);
                 }
             }
             // notify observers
             fireTableDataChanged();
         }                
         
-        protected void addParamsFor(Model model, Vector container, boolean recursive) {
+        protected void addParamsFor(Model model, Vector paramContainer, Vector modelContainer, boolean recursive) {
             MCSLogger.trace();
             
             // First append model parameters
@@ -505,18 +510,18 @@ public class ModelPanel extends javax.swing.JPanel
             
             // Create with initial data
             for (int i = 0; i < nbOfParams; i++) {
-                Parameter p   = params[i];                                
-                container.add(p);
+                Parameter p   = params[i];
+                paramContainer.add(p);
+                modelContainer.add(model);
             }
             
             if (recursive) {
                 Model[] models = model.getModel();                
                 for (int i = 0; i < models.length; i++) {
-                    addParamsFor(models[i], container, true);
+                    addParamsFor(models[i], paramContainer, modelContainer, true);
                 }
             }
-        }
-        
+        }        
         
         // Next parts makes respond to the full TableModel interface        
         public Class 	getColumnClass(int columnIndex){
@@ -541,18 +546,38 @@ public class ModelPanel extends javax.swing.JPanel
         }
         
         public Object 	getValueAt(int rowIndex, int columnIndex){
-            Parameter p = parameters[rowIndex];            
-            return p.getName();
+            Parameter p = parameters[rowIndex];                 
+            try{              
+            Method m = Parameter.class.getMethod("get"+columnNames[columnIndex],null);            
+            if (columnNames[columnIndex].equals("Name")){
+                if(recursive){
+                    Model model = modelOfParameters[rowIndex];
+                    return model.getName()+"."+m.invoke(p,null);
+                }        
+            }
+            return m.invoke(p,null);            
+            }catch(Exception e){
+                _logger.warning("Can't find Parameter's method: get" 
+                    + columnNames[columnIndex] );
+                return "Error";
+            }
         }
         
         public boolean 	isCellEditable(int rowIndex, int columnIndex){
             Parameter p = parameters[rowIndex];
             //@todo ... return p.getEditable();
-            return false;
+            if(columnIndex>1){
+                return true;
+            }else{
+                return false;
+            }
+            
         }
                         
-        public void 	setValueAt(Object aValue, int rowIndex, int columnIndex){
-            _logger.fine("TBD");
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex){
+            Parameter p = parameters[rowIndex];
+            Model m = modelOfParameters[rowIndex];
+            _logger.fine("parameter "+p.getName()+"@"+m.getName()+" old:"+p.getValue() +" new:"+aValue);
         }
         
     }
