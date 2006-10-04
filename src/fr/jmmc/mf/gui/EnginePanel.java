@@ -221,7 +221,7 @@ public class EnginePanel extends javax.swing.JPanel {
             if(column!=0)            {
                 // just accept to change value if parameter is writable
                 Parameter p = parameters[row];
-                return p.getWritable();
+                return p.getEditable();
             }
             return false;
         }   
@@ -276,8 +276,8 @@ public class EnginePanel extends javax.swing.JPanel {
                         table,  obj, isSelected, hasFocus, row, column);
                 c.setBackground(ROFieldColor);
                 if(column!=0){
-                    Parameter p = parameters[row];
-                    if(p.getWritable()){
+                    Parameter p = parameters[row];                    
+                    if(p.getEditable()){
                         c.setBackground(RWFieldColor);
                     }
                 }
