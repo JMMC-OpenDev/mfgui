@@ -50,14 +50,15 @@ A common representation of every model parameters.
 </xsd:annotation>
 
 <xsd:complexType>
-<xsd:all>
+<xsd:sequence>
 <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
 <xsd:element name="units" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-<xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="value" type="xsd:long" minOccurs="1" maxOccurs="1"/>
 <xsd:element name="fixed" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
 <xsd:element name="minValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
 <xsd:element name="maxValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
-</xsd:all>
+<xsd:element name="editable" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+</xsd:sequence>
 <xsd:attributeGroup ref="ParameterAttributes"/>
 </xsd:complexType>
 </xsd:element>
