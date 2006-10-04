@@ -63,8 +63,7 @@ public class ModelPanel extends javax.swing.JPanel
             
             this.treeModel     = treeModel;
             tree               = new JTree(treeModel);
-            tree.setScrollsOnExpand(true);
-            tree.setEditable(true);
+            tree.setScrollsOnExpand(true);            
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);            
             
             JScrollPane scrollPane = new JScrollPane(tree);
@@ -212,45 +211,28 @@ public class ModelPanel extends javax.swing.JPanel
         display(m, showChildrenParametersCheckBox.isSelected());
     }
     
-    /** This method make the panel showing information about given model.
+    /** 
+     * This method make the panel showing information about given model.
      */
     public void display(Model currentModel, boolean showDescendant) {
         MCSLogger.trace();        
+        
         tableModel.setModel(currentModel, showDescendant);
-        /*
-        // do nothing if given model is null
+        showChildrenParametersCheckBox.setVisible(false);
+        // change model description and show recursive checkbox if necessary    
         if (currentModel == null) {
-            return;
-        }
-        
-        // change model description
-        modelNameTextField.setText(currentModel.getName());
-        modelTypeTextField.setText("" + currentModel.getType());
-        
-        // Build table model
-        Vector content = new Vector();
-        addParamsFor(currentModel, content, showDescendant);
-        
-        DefaultTableModel tableModel = new DefaultTableModel(content,
-                columnNames) {
-            // This method returns the Class object of the first
-            // cell in specified column in the table model.
-            // Unless this method is overridden, all values are
-            // assumed to be the type Object.
-            public Class getColumnClass(int columnIndex) {
-        
+            modelNameTextField.setText("");
+            modelNameTextField.setEditable(false);
+            modelTypeTextField.setText("");                        
+        }else{                    
+            modelNameTextField.setEditable(true);
+            modelNameTextField.setText(currentModel.getName());
+            modelTypeTextField.setText("" + currentModel.getType());
+            if (currentModel.getModelCount() != 0) {
+                showChildrenParametersCheckBox.setVisible(true);
             }
-        };                
-        
-        if (currentModel.getModelCount() == 0) {
-            showChildrenParametersCheckBox.setVisible(false);
-        } else {
-            showChildrenParametersCheckBox.setVisible(true);
-        }
-         */
-    }
-    
- 
+        }                
+    }     
     
     // If expand is true, expands all nodes in the tree.
     // Otherwise, collapses all nodes in the tree.
@@ -324,11 +306,19 @@ public class ModelPanel extends javax.swing.JPanel
         modelNameLabel.setText("Name:");
         descPanel.add(modelNameLabel);
 
+        modelNameTextField.setEditable(false);
+        modelNameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modelNameTextFieldActionPerformed(evt);
+            }
+        });
+
         descPanel.add(modelNameTextField);
 
         modelTypeLabel.setText("Type:");
         descPanel.add(modelTypeLabel);
 
+        modelTypeTextField.setEditable(false);
         descPanel.add(modelTypeTextField);
 
         paramsPanel.add(descPanel, java.awt.BorderLayout.NORTH);
@@ -345,6 +335,18 @@ public class ModelPanel extends javax.swing.JPanel
         add(modelSplitPane, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
+
+    private void modelNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modelNameTextFieldActionPerformed
+        MCSLogger.trace();        
+        // Change model name
+        Model m = getCurrentSelectedModel();
+        
+        if (m!=null){
+            m.setName(modelNameTextField.getText());
+            // Update tree
+            tree.repaint();
+        }
+    }//GEN-LAST:event_modelNameTextFieldActionPerformed
     
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         MCSLogger.trace();
