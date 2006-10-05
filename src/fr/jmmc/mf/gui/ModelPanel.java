@@ -219,7 +219,8 @@ public class ModelPanel extends javax.swing.JPanel
         
         tableModel.setModel(currentModel, showDescendant);
         showChildrenParametersCheckBox.setVisible(false);
-        // change model description and show recursive checkbox if necessary    
+        // change model description, show recursive checkbox if necessary    
+        // set columns width
         if (currentModel == null) {
             modelNameTextField.setText("");
             modelNameTextField.setEditable(false);
@@ -231,6 +232,7 @@ public class ModelPanel extends javax.swing.JPanel
             if (currentModel.getModelCount() != 0) {
                 showChildrenParametersCheckBox.setVisible(true);
             }
+            McsClass.initColumnSizes(table,300);
         }                
     }     
     
@@ -242,7 +244,8 @@ public class ModelPanel extends javax.swing.JPanel
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
         }
-    }
+    }       
+    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -400,6 +403,9 @@ public class ModelPanel extends javax.swing.JPanel
                 return;
             }
             
+            // Send clear model command
+            ServerImpl.clear_mdl();
+            
             // get list of models
             List  models    = new ArrayList();
             registerModels(rootModel,models);
@@ -408,7 +414,7 @@ public class ModelPanel extends javax.swing.JPanel
             Object[] array = models.toArray();
             for (int i = 0; i < array.length; i++) {
                 Model m = (Model) array[i];
-                ServerImpl.addmodel(m.getType(), true);
+                ServerImpl.add_mdl(m.getName(),m.getType());
             }
             
             // and send associated parameters
@@ -534,13 +540,16 @@ public class ModelPanel extends javax.swing.JPanel
         }
         
         public Object 	getValueAt(int rowIndex, int columnIndex){
-            Parameter p = parameters[rowIndex];                 
-            try{              
-            Method m = Parameter.class.getMethod("get"+columnNames[columnIndex],null);            
+            Parameter p = parameters[rowIndex];  
+            // @todo ask quality software responsible to validate following code
+            try{      
+            String methodName="get"+columnNames[columnIndex];
+            Method m = Parameter.class.getMethod(methodName,null);            
+            // Name is handled apart to supply model name
             if (columnNames[columnIndex].equals("Name")){
                 if(recursive){
                     Model model = modelOfParameters[rowIndex];
-                    return model.getName()+"."+m.invoke(p,null);
+                    return model.getName()+"."+m.invoke(p,null);                    
                 }        
             }
             return m.invoke(p,null);            
@@ -552,26 +561,28 @@ public class ModelPanel extends javax.swing.JPanel
         }
         
         public boolean 	isCellEditable(int rowIndex, int columnIndex){
-            Parameter p = parameters[rowIndex];
-            //@todo ... return p.getEditable();
+            Parameter p = parameters[rowIndex];            
             if(columnIndex>1){
-                return true;
+                return p.getEditable();
             }else{
                 return false;
             }
-            
         }
                         
         public void setValueAt(Object aValue, int rowIndex, int columnIndex){
             Parameter p = parameters[rowIndex];
             Model m = modelOfParameters[rowIndex];
             
-            try {
-                _logger.fine("parameter "+p.getName()+"@"+m.getName()+" old:"+p.getValue() +" new:"+aValue);
-                String xml=ServerImpl.set_mdl_param(m.getName(),p.getName(), "" + aValue);                
-                //@todo implement result interpretation
-                // or leave next line and remove this comment
-                super.setValueAt(aValue,rowIndex,columnIndex);
+            try {                
+                //@todo implement result interpretation instead of example code                               
+                if(aValue instanceof Long){
+                    String xml=ServerImpl.set_mdl_param(m.getName(),p.getName(), ((Long)aValue).longValue());
+                }else{
+                     _logger.fine("parameter "+p.getName()+"@"
+                         +m.getName()+" old:"+p.getValue() 
+                         +" new:"+aValue+"("+aValue.getClass()+")");
+                }                
+                
             } catch (Exception e) {
                  new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
             }
@@ -579,6 +590,8 @@ public class ModelPanel extends javax.swing.JPanel
             
         }        
     }
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
