@@ -42,13 +42,14 @@ public class DataPanel extends javax.swing.JPanel {
     public void addData(File file){
         MCSLogger.trace();        
         try {
-            ServerImpl.addobsdata(file.getCanonicalPath());                      
+            ServerImpl.add_obs_data(file.getCanonicalPath());                      
             // next line should be replaced by the computation of previous command result
             dataTableModel.addRow(new Object[]{file.getCanonicalPath()});                            
         } catch (Exception e) {            
            new ReportDialog( new javax.swing.JFrame(), true, e).setVisible(true);           
         }                         
     }
+    
     /** clear the table and send a command to the server */
     public void clearData(){
         MCSLogger.trace();
@@ -56,7 +57,7 @@ public class DataPanel extends javax.swing.JPanel {
             dataTableModel = new DataTableModel(new Object [][] {},
                 new String [] {"File name"});             
             dataTable.setModel(dataTableModel);    
-            ServerImpl.clearobsdata();
+            ServerImpl.clear_obs_data();
         } catch (Exception e) {            
            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
         } 
@@ -76,9 +77,9 @@ public class DataPanel extends javax.swing.JPanel {
             
             // To be synchronized with the server, we have to
             // clear and send again the user's file list
-            ServerImpl.clearobsdata();
+            ServerImpl.clear_obs_data();
             for( int row = 0; row < dataTableModel.getRowCount(); row++){
-                ServerImpl.addobsdata((String)dataTableModel.getValueAt(row, 0));
+                ServerImpl.add_obs_data((String)dataTableModel.getValueAt(row, 0));
             }
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);

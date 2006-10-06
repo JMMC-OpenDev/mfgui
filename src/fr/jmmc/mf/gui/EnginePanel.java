@@ -51,7 +51,7 @@ public class EnginePanel extends javax.swing.JPanel {
         // Get first the engine description
         String       xml;
         try {
-            xml  = ServerImpl.get_eng_param_list();
+            xml  = ServerImpl.get_eng_desc();
         }catch (Exception e) {          
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
             return;
@@ -120,6 +120,7 @@ public class EnginePanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 10;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         add(doNextStepButton, gridBagConstraints);
 
         doNextStepsButton.setText("Do next Steps");
@@ -136,6 +137,7 @@ public class EnginePanel extends javax.swing.JPanel {
         add(doNextStepsButton, gridBagConstraints);
 
         abortButton.setText("Abort");
+        abortButton.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -166,10 +168,10 @@ public class EnginePanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(tableScrollPane, gridBagConstraints);
 
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     private void doNextStepsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doNextStepsButtonActionPerformed
         MCSLogger.trace();
