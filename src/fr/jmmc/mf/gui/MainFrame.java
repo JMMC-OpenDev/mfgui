@@ -108,8 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
         menuItem     = new JMenuItem();
         action       = new RestorePrefAction();
         menuItem.setAction(action);
-        preferencesMenu.add(menuItem);        
-        
+        preferencesMenu.add(menuItem);                
     }
     
     /** This method is called from within the constructor to
@@ -119,6 +118,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+        mainPanel = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         dataPanel = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -126,10 +126,13 @@ public class MainFrame extends javax.swing.JFrame {
         jSplitPane3 = new javax.swing.JSplitPane();
         enginePanel = new javax.swing.JPanel();
         plotPanel = new javax.swing.JPanel();
-
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.X_AXIS));
+        statusPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        mainPanel.setLayout(new javax.swing.BoxLayout(mainPanel, javax.swing.BoxLayout.X_AXIS));
+
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.X_AXIS));
 
@@ -152,7 +155,21 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane1.setRightComponent(jSplitPane2);
 
-        getContentPane().add(jSplitPane1);
+        mainPanel.add(jSplitPane1);
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        statusPanel.setLayout(new javax.swing.BoxLayout(statusPanel, javax.swing.BoxLayout.X_AXIS));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setEditable(false);
+        jTextArea1.setRows(1);
+        jTextArea1.setText("Application started");
+        jScrollPane1.setViewportView(jTextArea1);
+
+        statusPanel.add(jScrollPane1);
+
+        getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -160,15 +177,18 @@ public class MainFrame extends javax.swing.JFrame {
         
     protected class ShowPrefAction extends MFAction
     {
+        /** Preferences view */
+        PreferencesView preferencesView;
         public ShowPrefAction(){
             super("showPreferences");
+            preferencesView = new PreferencesView();
         }
         
         public void actionPerformed(java.awt.event.ActionEvent e)
         {
             try
             {
-                Preferences.getInstance().saveToFile();
+                preferencesView.setVisible(true);
             }
             catch (Exception exc)
             {
@@ -179,6 +199,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     
+    // @todo try to move it into the mcs preferences area
      protected class SavePrefAction extends MFAction
     {
         public SavePrefAction(){
@@ -234,11 +255,15 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel dataPanel;
     private javax.swing.JPanel enginePanel;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel modelPanel;
     private javax.swing.JPanel plotPanel;
+    private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
     
 }
