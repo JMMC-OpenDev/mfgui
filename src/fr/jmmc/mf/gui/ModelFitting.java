@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class ModelFitting
 {
-    final static String rcsId="$Id: ModelFitting.java,v 1.1 2006-09-26 12:13:07 mella Exp $";
+    final static String rcsId="$Id: ModelFitting.java,v 1.2 2006-10-06 09:19:28 mella Exp $";
     
     /**
      * @param args the command line arguments
@@ -34,31 +34,25 @@ public class ModelFitting
             logger.setLevel(java.util.logging.Level.ALL);
             MCSLogger.trace();
             logger.info("Starting ModelFitting");
-            logger.info("Rev:"+rcsId);
+            logger.info("Rev:"+rcsId);           
 
             // Create a specific console handler
             ConsoleHandler handler = new ConsoleHandler();
             handler.setLevel(java.util.logging.Level.ALL);
-            logger.addHandler(handler);                      
+            //logger.addHandler(handler);                      
             
             ReportDialog.setDefaultComment( "Please complete above"+
                     " informations to improve this software.\n"+
                     rcsId+"\n"+
-                    "---\n");            
-                        
-                        // Uncomment next line to test ReportDialog 
-//            int a=1/0;
+                    "---\n");
                         
             MainFrame myFrame = new MainFrame();
             myFrame.setVisible(true);
         }
         catch (Exception e)
-        {
-            
+        {            
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);            
             System.exit(1);
-        }
-        
-        
+        }                
     }
 }
