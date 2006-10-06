@@ -49,7 +49,7 @@ public class ModelPanel extends javax.swing.JPanel
         try{
             // MANAGE LEFT PART OF MODEL (model tree) 
             // init combo content with server list of models
-            supportedModels                     = ServerImpl.getSupportedModels();
+            supportedModels                     = ServerImpl.get_mdl_list();
             modelsList                          = new Hashtable();
             Enumeration models                  = supportedModels.enumerateModel();
             Set         comboValues             = new TreeSet();
@@ -436,7 +436,7 @@ public class ModelPanel extends javax.swing.JPanel
         MCSLogger.trace();
         String       xml;
         try {
-            xml  = ServerImpl.showmodel();
+            xml  = ServerImpl.get_mdl_desc();
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
             return;
