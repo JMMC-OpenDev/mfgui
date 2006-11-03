@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class ModelFitting
 {
-    final static String rcsId="$Id: ModelFitting.java,v 1.2 2006-10-06 09:19:28 mella Exp $";
+    final static String rcsId="$Id: ModelFitting.java,v 1.3 2006-11-03 10:22:10 mella Exp $";
     
     /**
      * @param args the command line arguments
@@ -30,7 +30,7 @@ public class ModelFitting
         {
             // Get a MCSLogger reference  and adjust for convenience
             // @TODO : move this in MCSLogger
-            Logger logger = MCSLogger.getLogger();
+            Logger logger = Logger.getLogger("jmmc.mf");
             logger.setLevel(java.util.logging.Level.ALL);
             MCSLogger.trace();
             logger.info("Starting ModelFitting");

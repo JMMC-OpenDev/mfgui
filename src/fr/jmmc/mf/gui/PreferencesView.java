@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: PreferencesView.java,v 1.1 2006-10-06 09:19:28 mella Exp $"
+ * "@(#) $Id: PreferencesView.java,v 1.2 2006-11-03 10:22:10 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/10/06 09:19:28  mella
+ * Add missing files for a clean state
+ *
  *
  ******************************************************************************/
 package jmmc.mf.gui;
@@ -13,6 +16,7 @@ package jmmc.mf.gui;
 import jmmc.mcs.log.MCSLogger;
 
 import jmmc.mcs.util.*;
+import jmmc.mcs.gui.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -128,8 +132,13 @@ class HelpSetupPreferencesView extends JPanel implements Observer,
 
         if (source.equals(_enableToolTipCheckBox))
         {
-            _preferences.setPreference("help.tooltips.show",
+            try{
+                _preferences.setPreference("help.tooltips.show",
                 _enableToolTipCheckBox.isSelected());
+            }catch(Exception exc){
+                new ReportDialog(new JFrame(),true,exc).setVisible(true);
+                
+            }
         }
     }
 }

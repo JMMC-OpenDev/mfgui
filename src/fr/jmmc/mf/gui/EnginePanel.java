@@ -21,23 +21,51 @@ import jmmc.mf.engine.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import hep.aida.*;
+import hep.aida.ref.plotter.PlotterUtilities;
+
 /**
  *
  * @author  mella
  */
 public class EnginePanel extends javax.swing.JPanel {
-    Logger _logger = MCSLogger.getLogger();
+    Logger _logger = Logger.getLogger("jmmc.mf.gui.EnginePanel");
     Parameter[] parameters=null;    
     EngineParamsTableModel engineParamsTableModel;
     private EngineParamsTable paramsTable;
     
+    private IPlotter plotter;
+    private IDataPointSet chi2PointSet;                                 
+    private IAnalysisFactory af;
+    
     /* default colors */
     static final Color ROFieldColor = Color.WHITE;
-    static final Color RWFieldColor = Color.LIGHT_GRAY;        
+    static final Color RWFieldColor = Color.decode("#FFFFCC");        
     
     /** Creates new form EnginePanel */
     public EnginePanel(){
+        // prepare chi2 plot
+        af    = IAnalysisFactory.create();
+        ITree tree   = af.createTreeFactory().create();
+        plotter = af.createPlotterFactory()
+                       .create("Plot IDataPointSets");
+        plotter.createRegions();       
+        
+        IDataPointSetFactory dpsf   = af.createDataPointSetFactory(tree);
+        chi2PointSet = dpsf.create("dataPointSet2",
+                "Fit progress : Chi2 ", 2);                                        
+        plotter.region(0).plot(chi2PointSet); 
+        
         initComponents();  
+        
+        Component c = PlotterUtilities.componentForPlotter(plotter);
+        Dimension d = new Dimension(297,210);
+        c.setSize(d);
+        c.setMaximumSize(d);
+        c.setPreferredSize(d);
+        
+        chi2Panel.add(c);
+        
         paramsTable = new EngineParamsTable();
         JTableHeader header = paramsTable.getTableHeader();
         tablePanel.add(header, BorderLayout.NORTH);
@@ -76,13 +104,27 @@ public class EnginePanel extends javax.swing.JPanel {
         engineParamsTableModel.addColumn("Param name");
         engineParamsTableModel.addColumn("Param value");                        
         
+        String chi2=null;
+        String step=null;    
         // fill table rows
         for (int i=0; i< parameters.length; i++){
             Parameter p = parameters[i];
             String paramName= p.getName();
-            String paramValue= p .getValue();            
+            String paramValue= p.getValue();            
             engineParamsTableModel.addRow(new Object[]{paramName,paramValue} );                                  
+            if(paramName.equalsIgnoreCase("chi2")){
+                chi2 =paramValue;                
+            }
+            if(paramName.equalsIgnoreCase("step")){
+                step =paramValue;                
+            }
+        }      
+        if (step!=null && chi2!=null){
+            IDataPoint dataPoint = chi2PointSet.addPoint();          
+            dataPoint.coordinate(0).setValue(Double.parseDouble(step));            
+            dataPoint.coordinate(1).setValue(Double.parseDouble(chi2));            
         }
+        
         // Set the new table model of the table
         paramsTable.setModel(engineParamsTableModel);                     
         
@@ -97,17 +139,27 @@ public class EnginePanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        modeButtonGroup = new javax.swing.ButtonGroup();
+        explorePanel = new javax.swing.JPanel();
+        exploreButton = new javax.swing.JButton();
+        stepPanel = new javax.swing.JPanel();
         doNextStepButton = new javax.swing.JButton();
         doNextStepsButton = new javax.swing.JButton();
-        abortButton = new javax.swing.JButton();
         stepSpinner = new javax.swing.JSpinner();
-        doAllStepsButton = new javax.swing.JButton();
+        abortButton = new javax.swing.JButton();
         tableScrollPane = new javax.swing.JScrollPane();
         tablePanel = new javax.swing.JPanel();
+        chi2Panel = new javax.swing.JPanel();
+        exploreRadioButton = new javax.swing.JRadioButton();
+        stepRadioButton = new javax.swing.JRadioButton();
+        controlPanel = new javax.swing.JPanel();
 
-        setLayout(new java.awt.GridBagLayout());
+        exploreButton.setText("Run");
+        explorePanel.add(exploreButton);
 
-        doNextStepButton.setText("Do one Step");
+        stepPanel.setLayout(new java.awt.GridBagLayout());
+
+        doNextStepButton.setText("Do next Step");
         doNextStepButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 doNextStepButtonActionPerformed(evt);
@@ -116,12 +168,11 @@ public class EnginePanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 10;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        add(doNextStepButton, gridBagConstraints);
+        stepPanel.add(doNextStepButton, gridBagConstraints);
 
         doNextStepsButton.setText("Do next Steps");
         doNextStepsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -132,33 +183,26 @@ public class EnginePanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(doNextStepsButton, gridBagConstraints);
+        stepPanel.add(doNextStepsButton, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        stepPanel.add(stepSpinner, gridBagConstraints);
 
         abortButton.setText("Abort");
         abortButton.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(abortButton, gridBagConstraints);
+        stepPanel.add(abortButton, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(stepSpinner, gridBagConstraints);
-
-        doAllStepsButton.setText("Run");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 10;
-        add(doAllStepsButton, gridBagConstraints);
+        setLayout(new java.awt.GridBagLayout());
 
         tableScrollPane.setMinimumSize(new java.awt.Dimension(250, 80));
         tableScrollPane.setPreferredSize(new java.awt.Dimension(250, 80));
@@ -171,17 +215,71 @@ public class EnginePanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(tableScrollPane, gridBagConstraints);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        add(chi2Panel, gridBagConstraints);
+
+        modeButtonGroup.add(exploreRadioButton);
+        exploreRadioButton.setText("Explore");
+        exploreRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        exploreRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        exploreRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exploreRadioButtonActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        add(exploreRadioButton, gridBagConstraints);
+
+        modeButtonGroup.add(stepRadioButton);
+        stepRadioButton.setText("Step by step");
+        stepRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        stepRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        stepRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stepRadioButtonActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        add(stepRadioButton, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        add(controlPanel, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
+
+    private void stepRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepRadioButtonActionPerformed
+        controlPanel.removeAll();
+        controlPanel.add(stepPanel);
+        controlPanel.revalidate();
+    }//GEN-LAST:event_stepRadioButtonActionPerformed
+
+    private void exploreRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exploreRadioButtonActionPerformed
+        controlPanel.removeAll();
+        controlPanel.add(explorePanel);
+        controlPanel.revalidate();
+    }//GEN-LAST:event_exploreRadioButtonActionPerformed
     
     private void doNextStepsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doNextStepsButtonActionPerformed
         MCSLogger.trace();
-        try {
-            
+        try {            
             int i = ((Integer) stepSpinner.getValue()).intValue();
-            ServerImpl.donextstep(i);            
+            ServerImpl.donextstep(i);                                                
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
         }
+        abortButton.setEnabled(true);
+        updateParametersTable();
+        
     }//GEN-LAST:event_doNextStepsButtonActionPerformed
     
     private void doNextStepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doNextStepButtonActionPerformed
@@ -190,15 +288,24 @@ public class EnginePanel extends javax.swing.JPanel {
             ServerImpl.donextstep(1);            
         } catch (Exception e) {
             new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-        }
+        }        
+        abortButton.setEnabled(true);
+        updateParametersTable();
     }//GEN-LAST:event_doNextStepButtonActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton abortButton;
-    private javax.swing.JButton doAllStepsButton;
+    private javax.swing.JPanel chi2Panel;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JButton doNextStepButton;
     private javax.swing.JButton doNextStepsButton;
+    private javax.swing.JButton exploreButton;
+    private javax.swing.JPanel explorePanel;
+    private javax.swing.JRadioButton exploreRadioButton;
+    private javax.swing.ButtonGroup modeButtonGroup;
+    private javax.swing.JPanel stepPanel;
+    private javax.swing.JRadioButton stepRadioButton;
     private javax.swing.JSpinner stepSpinner;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPane;
