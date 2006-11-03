@@ -26,7 +26,7 @@ import javax.swing.table.*;
 public class DataPanel extends javax.swing.JPanel {
   
     String lastDir = null;
-    Logger _logger = MCSLogger.getLogger();
+    Logger _logger = Logger.getLogger("jmmc.mf.gui.DataPanel");
     DataTableModel dataTableModel;
     
     /** Creates new form DataPanel */

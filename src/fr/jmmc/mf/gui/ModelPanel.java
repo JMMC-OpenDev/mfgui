@@ -35,7 +35,8 @@ public class ModelPanel extends javax.swing.JPanel
     protected JTree     tree;
     ModelModel          treeModel;
     private TreePath    currentSelectedPath = null; // indicates jtree selected item
-    protected Logger    _logger             = MCSLogger.getLogger();
+    protected Logger    _logger             =
+        Logger.getLogger("jmmc.mf.gui.ModelPanel");
     protected Model     supportedModels     = null;
     protected Hashtable modelsList;
     
@@ -166,16 +167,9 @@ public class ModelPanel extends javax.swing.JPanel
             _logger.fine("Nothing seems selected");
         }
         
+        // update GUI
         addButton.setEnabled(setAddButtonEnabled);
-        delButton.setEnabled(setDelButtonEnabled);
-        // Do not enable del for root component
-        // uncomment next part to achieve previous comment
-        /*if (setDelButtonEnabled) {
-            delButton.setEnabled(! getCurrentSelectedModel()
-            .equals(treeModel.getRoot()));
-            //expandAll(tree,currentSelectedPath.getParentPath(), true );
-        }*/
-        
+        delButton.setEnabled(setDelButtonEnabled);        
         display(getCurrentSelectedModel());
     }
     
@@ -361,29 +355,30 @@ public class ModelPanel extends javax.swing.JPanel
         MCSLogger.trace();
         
         String modelType = (String) jComboBox1.getSelectedItem();
-        String modelName;
+        String modelName=modelType;
         Model  model     = (Model) modelsList.get(modelType);
         Model  m         = model.getClone();
         Model  selectedModel = getCurrentSelectedModel();
-        //m = new Model();
-        // Add the node to the selected model or to the rootNode
-        // And define model name
-        if (selectedModel != null) {
-            
-            // getCurrentSelectedModel().getModelCount() must be called before addModel call
-            // addModel makes getCurrentSelectedModel() returns null
-            modelName = modelType + selectedModel.getModelCount();
-            // Accept to add only if selected model is the root model
-            // V0.0 does  not support hierachical level > 1
-            Model rootModel = (Model) treeModel.getRoot();
-            if(modelType.equals(ModelModel.COMPOSITE_MODEL_TYPE)){          
-                _logger.warning("Can't add one composite to one other");
-            }else{
-                treeModel.addModel(selectedModel, m);
+        
+        // Accept to add only if selected model is not a composite model
+        // or is the new root
+        // V0.0 does  not support hierachical level > 1                        
+        if( (modelType.equals(ModelModel.COMPOSITE_MODEL_TYPE) )
+            && (treeModel.getRoot() != null)){          
+             _logger.warning("Can't add one composite to one other if it isn't the new rootnode");             
+             return;
+        }else{
+            // Add the node to the selected model or to the root
+            // Prepare the name
+            if (selectedModel != null) {            
+                // getCurrentSelectedModel().getModelCount() must be called before addModel call
+                // addModel makes getCurrentSelectedModel() returns null
+                modelName = modelType + selectedModel.getModelCount();
+                treeModel.addModel(selectedModel, m);            
+            }        
+            else {                
+                treeModel.addModel(m);                
             }
-        } else {
-            treeModel.addModel(m);
-            modelName = modelType;
         }
         
         m.setName(modelName);
@@ -465,7 +460,8 @@ public class ModelPanel extends javax.swing.JPanel
         
         // Init columns titles and types
         protected final String[] columnNames = new String[]{
-            "Name","Units","Value","Fixed","MinValue","MaxValue","Desc"};        
+            "Name","Units","Value","MinValue","MaxValue","Scale",
+                "HasFixedValue","HasMinValue","HasMaxValue"};        
 
         public ParametersTableModel(){
             // next static line should be replaced by a preference listener            
@@ -535,8 +531,11 @@ public class ModelPanel extends javax.swing.JPanel
             return columnNames[columnIndex];            
         }
         
-        public int 	getRowCount(){          
-            return parameters.length;
+        public int 	getRowCount(){ 
+            if (parameters!=null){
+                return parameters.length;
+            }
+            return 0;
         }
         
         public Object 	getValueAt(int rowIndex, int columnIndex){
@@ -544,18 +543,18 @@ public class ModelPanel extends javax.swing.JPanel
             // @todo ask quality software responsible to validate following code
             try{      
             String methodName="get"+columnNames[columnIndex];
-            Method m = Parameter.class.getMethod(methodName,null);            
+            Method m = Parameter.class.getMethod(methodName,new Class[0]);            
             // Name is handled apart to supply model name
             if (columnNames[columnIndex].equals("Name")){
                 if(recursive){
                     Model model = modelOfParameters[rowIndex];
-                    return model.getName()+"."+m.invoke(p,null);                    
+                    return model.getName()+"."+m.invoke(p,new Object[0]);                    
                 }        
             }
-            return m.invoke(p,null);            
+//            return m.invoke(p,new Object[]{});            
+            return m.invoke(p,new Object[0]);            
             }catch(Exception e){
-                _logger.warning("Can't find Parameter's method: get" 
-                    + columnNames[columnIndex] );
+                _logger.warning(""+e); 
                 return "Error";
             }
         }

@@ -61,7 +61,7 @@ public class ModelModel implements TreeModel {
         // Marshal the person object
         rootModel.marshal(writer);
     }
-    
+        
     public void addModel(Model parent, Model child) {
         jmmc.mcs.log.MCSLogger.trace();
         parent.addModel(child);

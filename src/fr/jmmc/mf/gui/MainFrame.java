@@ -27,7 +27,7 @@ public class MainFrame extends javax.swing.JFrame {
     
      /** Model reference */
     ModelModel userModel;
-    Logger _logger = jmmc.mcs.log.MCSLogger.getLogger();
+    Logger _logger = Logger.getLogger("jmmc.mf.gui.MainFrame");
                           
     protected String lastDir = null;    
     
