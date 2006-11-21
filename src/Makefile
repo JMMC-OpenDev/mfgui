@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.4 2006-11-10 12:54:20 mella Exp $"
+# "@(#) $Id: Makefile,v 1.5 2006-11-21 13:17:18 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/11/10 12:54:20  mella
+# Added file resources.properties
+#
 # Revision 1.3  2006/09/26 12:44:16  mella
 # Add mfguiGenerateClasses script
 #
@@ -118,7 +121,8 @@ JAVA_JAR = sclgui
 #
 # <brief description of sclgui jar files>
 mfgui_DIRS     = jmmc 
-mfgui_EXTRAS   = jmmc/mf/gui/Resources.properties 
+mfgui_EXTRAS   = jmmc/mf/gui/Resources.properties \
+                 jmmc/mf/gui/mapping.xml 
 
 #
 # Java programs

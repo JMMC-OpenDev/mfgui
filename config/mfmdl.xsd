@@ -1,24 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Document   : mfmdl.xsd
-Created on : 19 juillet 2006, 10:25
+Document   : LITproSettings.xsd
+Created on : 31 octobre 2006, 09:25
 Author     : mella
 Description:
 
-The form is quite simple:
-models are generic and can be nested using a simple model with type attribute
-valued to the composite value
+The form try to collect every informtions needed by model fitting process
 
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-argetNamespace="http://jmmc.fr/mf/model" elementFormDefault="qualified">
+argetNamespace="http://jmmc.fr/LITpro" elementFormDefault="qualified">
 
 <xsd:annotation>
 <xsd:documentation>
-This is a XML Schema for jmmc model fitting models.
+Jmmc model fitting settings Xml Schema.
 </xsd:documentation>
 </xsd:annotation>
+
+<!--
+Root element of settings 
+-->
+<xsd:element name="settings">
+
+<xsd:annotation>
+<xsd:documentation>
+Highest element of settings.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="files" minOccurs="1" maxOccurs="1"/>
+<xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+
+<!--
+File list. 
+-->
+<xsd:element name="files">
+<xsd:annotation>
+<xsd:documentation>
+Contains files.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="file" minOccurs="1" maxOccurs="unbounded"/>
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+
+
+<!--
+File description with its possible content. 
+-->
+<xsd:element name="file">
+<xsd:annotation>
+<xsd:documentation>
+File description.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="oitarget" minOccurs="0" maxOccurs="unbounded"/>
+</xsd:sequence>
+<xsd:attribute name="name" type="xsd:string" use="required"/>
+<xsd:attribute name="id" type="xsd:ID" use="required"/>
+<xsd:attribute name="href" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+</xsd:element>
+
+<!--
+oitarget representation 
+-->
+<xsd:element name="oitarget">
+
+<xsd:annotation>
+<xsd:documentation>
+oitarget representation.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element name="target" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="infos" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+
+
+<!--
+Target list 
+-->
+<xsd:element name="targets">
+
+<xsd:annotation>
+<xsd:documentation>
+Contains target elements.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="target" minOccurs="1" maxOccurs="unbounded"/>
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+
+
+<!--
+Target representation 
+-->
+<xsd:element name="target">
+
+<xsd:annotation>
+<xsd:documentation>
+Target representation.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element name="ident" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+<xsd:element ref="fileLink" minOccurs="1" maxOccurs="unbounded"/>
+<xsd:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+<!--
+File link used by targets to reference existing files by their id. 
+-->
+<xsd:element name="fileLink">
+<xsd:annotation>
+<xsd:documentation>
+File link.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:attribute name="fileRef" type="xsd:IDREF"/>
+</xsd:complexType>
+
+</xsd:element>
+
+
 
 <!--
 Basic model representation. This model also correspond to composite model 
@@ -39,6 +177,7 @@ A common representation of every models.
 </xsd:complexType>
 
 </xsd:element>
+
 <!--
 Model parameter representation.
 -->
@@ -53,11 +192,12 @@ A common representation of every model parameters.
 <xsd:sequence>
 <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
 <xsd:element name="units" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-<xsd:element name="value" type="xsd:long" minOccurs="1" maxOccurs="1"/>
-<xsd:element name="fixed" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
-<xsd:element name="minValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
-<xsd:element name="maxValue" type="xsd:long" minOccurs="0" maxOccurs="1"/>
-<xsd:element name="editable" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="value" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="minValue" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="maxValue" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="scale" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+<xsd:element name="hasFixedValue" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+<xsd:element name="editable" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
 </xsd:sequence>
 <xsd:attributeGroup ref="ParameterAttributes"/>
 </xsd:complexType>
@@ -72,6 +212,7 @@ A common representation of every model parameters.
 <!-- Parameters attributes -->
 <xsd:attributeGroup name="ParameterAttributes">
 <xsd:attribute name="name" type="xsd:string" use="required"/>
+<xsd:attribute name="type" type="xsd:string" use="required"/>
 </xsd:attributeGroup>
 
 </xsd:schema>
