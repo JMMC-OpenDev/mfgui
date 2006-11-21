@@ -1,19 +1,20 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: PreferencesView.java,v 1.2 2006-11-03 10:22:10 mella Exp $"
+ * "@(#) $Id: PreferencesView.java,v 1.3 2006-11-21 13:11:01 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/03 10:22:10  mella
+ * Make it compile according mcs changes
+ *
  * Revision 1.1  2006/10/06 09:19:28  mella
  * Add missing files for a clean state
  *
  *
  ******************************************************************************/
 package jmmc.mf.gui;
-
-import jmmc.mcs.log.MCSLogger;
 
 import jmmc.mcs.util.*;
 import jmmc.mcs.gui.*;
@@ -126,7 +127,6 @@ class HelpSetupPreferencesView extends JPanel implements Observer,
      */
     public void stateChanged(ChangeEvent e)
     {
-        MCSLogger.trace();
 
         Object source = e.getSource();
 

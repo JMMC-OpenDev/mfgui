@@ -5,13 +5,10 @@ package jmmc.mf.gui;
 
 import jmmc.mcs.gui.*;
 
-import jmmc.mcs.log.MCSLogger;
-
 import java.util.logging.*;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-
 
 /**
  *
@@ -19,35 +16,30 @@ import javax.swing.JOptionPane;
  */
 public class ModelFitting
 {
-    final static String rcsId="$Id: ModelFitting.java,v 1.3 2006-11-03 10:22:10 mella Exp $";
+    final static String rcsId="$Id: ModelFitting.java,v 1.4 2006-11-21 13:11:01 mella Exp $";
     
+    static String getVersion(){
+        return rcsId;
+    }
+        
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args)
     {        
         try
-        {
-            // Get a MCSLogger reference  and adjust for convenience
-            // @TODO : move this in MCSLogger
+        {            
             Logger logger = Logger.getLogger("jmmc.mf");
-            logger.setLevel(java.util.logging.Level.ALL);
-            MCSLogger.trace();
             logger.info("Starting ModelFitting");
-            logger.info("Rev:"+rcsId);           
-
-            // Create a specific console handler
-            ConsoleHandler handler = new ConsoleHandler();
-            handler.setLevel(java.util.logging.Level.ALL);
-            //logger.addHandler(handler);                      
+            logger.info("Rev:"+rcsId);        
             
             ReportDialog.setDefaultComment( "Please complete above"+
                     " informations to improve this software.\n"+
                     rcsId+"\n"+
                     "---\n");
                         
-            MainFrame myFrame = new MainFrame();
-            myFrame.setVisible(true);
+            MainFrame myFrame = new MainFrame();           
+            myFrame.setVisible(true);            
         }
         catch (Exception e)
         {            

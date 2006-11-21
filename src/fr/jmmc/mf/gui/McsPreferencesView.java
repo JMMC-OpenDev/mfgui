@@ -1,16 +1,17 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: McsPreferencesView.java,v 1.1 2006-10-06 09:19:28 mella Exp $"
+ * "@(#) $Id: McsPreferencesView.java,v 1.2 2006-11-21 13:11:01 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/10/06 09:19:28  mella
+ * Add missing files for a clean state
+ *
  *
  ******************************************************************************/
 package jmmc.mf.gui;
-
-import jmmc.mcs.log.MCSLogger;
 
 import jmmc.mcs.util.*;
 

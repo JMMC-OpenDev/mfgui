@@ -2,8 +2,6 @@ package jmmc.mf.gui;
 
 import jmmc.mcs.gui.*;
 
-import jmmc.mcs.log.MCSLogger;
-
 import java.util.logging.*;
 
 import javax.swing.JButton;
@@ -21,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class LITproApplet extends javax.swing.JApplet {
 
-    final static String rcsId="$Id: LITproApplet.java,v 1.1 2006-10-31 15:25:00 mella Exp $";
+    final static String rcsId="$Id: LITproApplet.java,v 1.2 2006-11-21 13:11:01 mella Exp $";
     
     /** Initializes the applet LITproApplet */
     public void init() {
@@ -59,12 +57,9 @@ public class LITproApplet extends javax.swing.JApplet {
 
 
         try
-        {
-            // Get a MCSLogger reference  and adjust for convenience
-            // @TODO : move this in MCSLogger
+        {      
             Logger logger = Logger.getLogger("jmmc.mf");
-            logger.setLevel(java.util.logging.Level.ALL);
-            MCSLogger.trace();
+            logger.setLevel(java.util.logging.Level.ALL);            
             logger.info("Starting ModelFitting");
             logger.info("Rev:"+rcsId);           
 

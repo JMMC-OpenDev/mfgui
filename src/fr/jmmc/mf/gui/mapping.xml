@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                         "http://castor.org/mapping.dtd">
+
+<mapping>
+    <description>Permit mapping with model fitting classes</description>
+    <!--
+    <class name="jmmc.mf.models.Target">
+        <field name="ident">
+            <bind-xml name="ident" node="element"/>
+        </field>
+        <field name="fileLink" type="jmmc.mf.models.FileLink" collection="array">            
+            <bind-xml name="fileLink" node="element"/>
+        </field>
+        <field name="model" type="jmmc.mf.models.Model" collection="array">
+            <bind-xml name="model" node="element"/>
+        </field>
+    </class>
+        --> 
+    <class name="jmmc.mf.models.FileLink">
+        <field name="fileRef" >
+        <!--<bind-xml name="fileRef" reference="true" node="attribute"/>        -->
+        <bind-xml name="fileRef" reference="true" node="attribute"/>        
+        </field>
+    </class>
+    
+    <class name="jmmc.mf.models.File" identity="id">
+        <field name="id">
+            <bind-xml name="id" node="attribute"/>
+        </field>
+    
+        <field name="name">
+            <bind-xml name="name" node="attribute"/>
+        </field>
+        <field name="href" >            
+            <bind-xml name="href" node="attribute"/>
+        </field>
+    </class>
+</mapping>
+

@@ -6,7 +6,6 @@
 
 package jmmc.mf.gui;
 import jmmc.mf.svr.*;
-import jmmc.mcs.log.MCSLogger;
 import jmmc.mcs.gui.ReportDialog;
 
 import javax.swing.*;
@@ -17,118 +16,21 @@ import javax.swing.table.*;
 
 import java.util.logging.*;
 import java.io.*;
-import jmmc.mf.engine.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import hep.aida.*;
-import hep.aida.ref.plotter.PlotterUtilities;
 
 /**
  *
  * @author  mella
  */
 public class EnginePanel extends javax.swing.JPanel {
-    Logger _logger = Logger.getLogger("jmmc.mf.gui.EnginePanel");
-    Parameter[] parameters=null;    
-    EngineParamsTableModel engineParamsTableModel;
-    private EngineParamsTable paramsTable;
-    
-    private IPlotter plotter;
-    private IDataPointSet chi2PointSet;                                 
-    private IAnalysisFactory af;
-    
-    /* default colors */
-    static final Color ROFieldColor = Color.WHITE;
-    static final Color RWFieldColor = Color.decode("#FFFFCC");        
+    Logger logger = Logger.getLogger("jmmc.mf.gui.EnginePanel");
     
     /** Creates new form EnginePanel */
     public EnginePanel(){
-        // prepare chi2 plot
-        af    = IAnalysisFactory.create();
-        ITree tree   = af.createTreeFactory().create();
-        plotter = af.createPlotterFactory()
-                       .create("Plot IDataPointSets");
-        plotter.createRegions();       
-        
-        IDataPointSetFactory dpsf   = af.createDataPointSetFactory(tree);
-        chi2PointSet = dpsf.create("dataPointSet2",
-                "Fit progress : Chi2 ", 2);                                        
-        plotter.region(0).plot(chi2PointSet); 
-        
-        initComponents();  
-        
-        Component c = PlotterUtilities.componentForPlotter(plotter);
-        Dimension d = new Dimension(297,210);
-        c.setSize(d);
-        c.setMaximumSize(d);
-        c.setPreferredSize(d);
-        
-        chi2Panel.add(c);
-        
-        paramsTable = new EngineParamsTable();
-        JTableHeader header = paramsTable.getTableHeader();
-        tablePanel.add(header, BorderLayout.NORTH);
-        tablePanel.add(paramsTable, BorderLayout.CENTER);        
-        updateParametersTable();
+        initComponents();
     }
-     
-    protected void updateParametersTable(){
-        MCSLogger.trace();        
-        
-        // Get first the engine description
-        String       xml;
-        try {
-            xml  = ServerImpl.get_eng_desc();
-        }catch (Exception e) {          
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-            return;
-        }  
-        Engine engine;
-        // then unmarshal given description
-        StringReader reader = new StringReader(xml);
-        try {
-            engine = Engine.unmarshal(reader);            
-        } catch (Exception e) {
-            _logger.fine("Can't read engine desc");
-            _logger.fine(e.getMessage());
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-            return;
-        }  
-        
-        // init parameters
-        parameters = engine.getParameter();        
-
-        // init new table model
-        engineParamsTableModel= new EngineParamsTableModel(); 
-        engineParamsTableModel.addColumn("Param name");
-        engineParamsTableModel.addColumn("Param value");                        
-        
-        String chi2=null;
-        String step=null;    
-        // fill table rows
-        for (int i=0; i< parameters.length; i++){
-            Parameter p = parameters[i];
-            String paramName= p.getName();
-            String paramValue= p.getValue();            
-            engineParamsTableModel.addRow(new Object[]{paramName,paramValue} );                                  
-            if(paramName.equalsIgnoreCase("chi2")){
-                chi2 =paramValue;                
-            }
-            if(paramName.equalsIgnoreCase("step")){
-                step =paramValue;                
-            }
-        }      
-        if (step!=null && chi2!=null){
-            IDataPoint dataPoint = chi2PointSet.addPoint();          
-            dataPoint.coordinate(0).setValue(Double.parseDouble(step));            
-            dataPoint.coordinate(1).setValue(Double.parseDouble(chi2));            
-        }
-        
-        // Set the new table model of the table
-        paramsTable.setModel(engineParamsTableModel);                     
-        
-      }
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -137,265 +39,30 @@ public class EnginePanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        modeButtonGroup = new javax.swing.ButtonGroup();
-        explorePanel = new javax.swing.JPanel();
-        exploreButton = new javax.swing.JButton();
-        stepPanel = new javax.swing.JPanel();
-        doNextStepButton = new javax.swing.JButton();
-        doNextStepsButton = new javax.swing.JButton();
-        stepSpinner = new javax.swing.JSpinner();
-        abortButton = new javax.swing.JButton();
-        tableScrollPane = new javax.swing.JScrollPane();
-        tablePanel = new javax.swing.JPanel();
-        chi2Panel = new javax.swing.JPanel();
-        exploreRadioButton = new javax.swing.JRadioButton();
-        stepRadioButton = new javax.swing.JRadioButton();
-        controlPanel = new javax.swing.JPanel();
-
-        exploreButton.setText("Run");
-        explorePanel.add(exploreButton);
-
-        stepPanel.setLayout(new java.awt.GridBagLayout());
-
-        doNextStepButton.setText("Do next Step");
-        doNextStepButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doNextStepButtonActionPerformed(evt);
-            }
-        });
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 10;
-        stepPanel.add(doNextStepButton, gridBagConstraints);
-
-        doNextStepsButton.setText("Do next Steps");
-        doNextStepsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doNextStepsButtonActionPerformed(evt);
-            }
-        });
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        stepPanel.add(doNextStepsButton, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        stepPanel.add(stepSpinner, gridBagConstraints);
-
-        abortButton.setText("Abort");
-        abortButton.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        stepPanel.add(abortButton, gridBagConstraints);
+        runButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
-        tableScrollPane.setMinimumSize(new java.awt.Dimension(250, 80));
-        tableScrollPane.setPreferredSize(new java.awt.Dimension(250, 80));
-        tablePanel.setLayout(new java.awt.BorderLayout());
-
-        tableScrollPane.setViewportView(tablePanel);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(tableScrollPane, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
-        add(chi2Panel, gridBagConstraints);
-
-        modeButtonGroup.add(exploreRadioButton);
-        exploreRadioButton.setText("Explore");
-        exploreRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        exploreRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        exploreRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        runButton.setAction(MainFrame.runFitAction);
+        runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exploreRadioButtonActionPerformed(evt);
+                runButtonActionPerformed(evt);
             }
         });
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        add(exploreRadioButton, gridBagConstraints);
-
-        modeButtonGroup.add(stepRadioButton);
-        stepRadioButton.setText("Step by step");
-        stepRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        stepRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        stepRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stepRadioButtonActionPerformed(evt);
-            }
-        });
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        add(stepRadioButton, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        add(controlPanel, gridBagConstraints);
+        add(runButton, new java.awt.GridBagConstraints());
 
     }// </editor-fold>//GEN-END:initComponents
-
-    private void stepRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepRadioButtonActionPerformed
-        controlPanel.removeAll();
-        controlPanel.add(stepPanel);
-        controlPanel.revalidate();
-    }//GEN-LAST:event_stepRadioButtonActionPerformed
-
-    private void exploreRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exploreRadioButtonActionPerformed
-        controlPanel.removeAll();
-        controlPanel.add(explorePanel);
-        controlPanel.revalidate();
-    }//GEN-LAST:event_exploreRadioButtonActionPerformed
     
-    private void doNextStepsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doNextStepsButtonActionPerformed
-        MCSLogger.trace();
-        try {            
-            int i = ((Integer) stepSpinner.getValue()).intValue();
-            ServerImpl.donextstep(i);                                                
-        } catch (Exception e) {
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-        }
-        abortButton.setEnabled(true);
-        updateParametersTable();
-        
-    }//GEN-LAST:event_doNextStepsButtonActionPerformed
-    
-    private void doNextStepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doNextStepButtonActionPerformed
-        MCSLogger.trace();
-        try {
-            ServerImpl.donextstep(1);            
-        } catch (Exception e) {
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-        }        
-        abortButton.setEnabled(true);
-        updateParametersTable();
-    }//GEN-LAST:event_doNextStepButtonActionPerformed
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+
+        // TODO: get xml deocument for current settings and make it processed by run.php
+        logger.warning("We should send xml to run.php...");
+    }//GEN-LAST:event_runButtonActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton abortButton;
-    private javax.swing.JPanel chi2Panel;
-    private javax.swing.JPanel controlPanel;
-    private javax.swing.JButton doNextStepButton;
-    private javax.swing.JButton doNextStepsButton;
-    private javax.swing.JButton exploreButton;
-    private javax.swing.JPanel explorePanel;
-    private javax.swing.JRadioButton exploreRadioButton;
-    private javax.swing.ButtonGroup modeButtonGroup;
-    private javax.swing.JPanel stepPanel;
-    private javax.swing.JRadioButton stepRadioButton;
-    private javax.swing.JSpinner stepSpinner;
-    private javax.swing.JPanel tablePanel;
-    private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JButton runButton;
     // End of variables declaration//GEN-END:variables
-    
-    
-    /** table model of engine parameters table */
-    class EngineParamsTableModel extends DefaultTableModel{
-        public EngineParamsTableModel(){
-            super();
-        }
-        public EngineParamsTableModel(Object[][] data, Object[] columnNames) {
-            super(data, columnNames);
-        }
-        
-        /** Make return false by default */
-        public boolean isCellEditable(int row, int column){
-            if (parameters==null){
-                return false;
-            }
-            // Do no accept to change parameter name
-            if(column!=0)            {
-                // just accept to change value if parameter is writable
-                Parameter p = parameters[row];
-                return p.getEditable();
-            }
-            return false;
-        }   
-        
-        /** */
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            // super.setValueAt(aValue,rowIndex,columnIndex);
-            try {
-                _logger.fine("Setting new param value on "+rowIndex+":"+columnIndex+" -> "+aValue);
-                Parameter p = parameters[rowIndex];
-                ServerImpl.set_eng_param(p.getName(), ""+aValue);
-            } catch (Exception e) {
-                new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-            }
-            
-        }
-        
-    }
-    /** table showing engine parameters */
-    class EngineParamsTable extends JTable{                
-        
-        public EngineParamsTable(){
-            super();                                                     
-            TableCellRenderer tcr = new EngineParamsTableCellRenderer();           
-            this.setDefaultRenderer(String.class,tcr);
-            this.setDefaultRenderer(Object.class,tcr);            
-        }
-        
-        /** Make return false by default */
-        public String getToolTipText(MouseEvent e) {
-            if (parameters==null){
-                return null;
-            }
-
-            String tip = null;
-            java.awt.Point point = e.getPoint();
-            int rowIndex = rowAtPoint(point);
-            int colIndex = columnAtPoint(point);
-            int realColumnIndex = convertColumnIndexToModel(colIndex);
-            
-            Parameter p = parameters[rowIndex];
-            return p.getDesc();            
-        }
-        
-        /** Change color depending RO or RW state */
-        class EngineParamsTableCellRenderer extends DefaultTableCellRenderer{
-            public Component getTableCellRendererComponent(
-                    JTable table, Object obj,
-                    boolean isSelected, boolean hasFocus,
-                    int row, int column) {
-                Component c = super.getTableCellRendererComponent(
-                        table,  obj, isSelected, hasFocus, row, column);
-                c.setBackground(ROFieldColor);
-                if(column!=0){
-                    Parameter p = parameters[row];                    
-                    if(p.getEditable()){
-                        c.setBackground(RWFieldColor);
-                    }
-                }
-                return this;
-            }
-        }        
-    }
-    
-    
-    
     
 }
