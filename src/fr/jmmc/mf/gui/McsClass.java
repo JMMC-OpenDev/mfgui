@@ -28,7 +28,6 @@ public class McsClass {
      *@todo move this function into one mcs common area
      */
     public static void initColumnSizes(JTable table, int maxWidth) {        
-        jmmc.mcs.log.MCSLogger.trace();
         TableModel model = table.getModel();
         TableColumn column = null;
         Component comp = null;
