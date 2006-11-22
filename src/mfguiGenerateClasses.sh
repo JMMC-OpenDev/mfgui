@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.3 2006-09-28 09:41:36 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.4 2006-11-22 14:51:13 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2006/09/28 09:41:36  mella
+# add engine param list generation
+#
 # Revision 1.2  2006/09/26 12:44:59  mella
 # Search model.xsd using miscLocateFile
 #
@@ -38,11 +41,32 @@ MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package jmmc.mf.models  $*
 
-MODEL_SCHEMA=$(miscLocateFile mfeng.xsd)
-# generate model java source from xml schema
-echo "Generating classes for $MODEL_SCHEMA"
-java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package jmmc.mf.engine  $*
 
+for f in jmmc/mf/models/*.java
+do
+    tmp=${f%%.java}
+    className=${tmp##*/}
+
+    if [ "$className" == "File" ]
+    then
+        toString="\"File[\"+getName()+\"]\";"
+    elif [ "$className" == "Target" ]
+    then
+        toString="\"Target[\"+getIdent()+\"]\";"
+    else
+        toString="\"$className\";"
+    fi
+    
+    tmp=$(mktemp tmpXX)
+    nbLines=( $( wc -l $f ))
+    let b1=$nbLines-1
+    head -$b1 $f > $tmp
+    echo "    public String toString(){ return $toString } " >> $tmp
+    echo "}" >> $tmp
+    cp -af $tmp $f
+    rm $tmp
+done
+    
 
 cat << EOM
     /**
