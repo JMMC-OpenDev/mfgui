@@ -33,11 +33,13 @@ Highest element of settings.
 <xsd:sequence>
 <xsd:element ref="files" minOccurs="1" maxOccurs="1"/>
 <xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
+<xsd:element ref="parameters" minOccurs="1" maxOccurs="1"/>
 <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
 </xsd:sequence>
 </xsd:complexType>
 
 </xsd:element>
+
 
 <!--
 File list. 
@@ -78,6 +80,24 @@ File description.
 </xsd:complexType>
 
 </xsd:element>
+
+
+<!--
+File link used by targets to reference existing files by their id. 
+-->
+<xsd:element name="fileLink">
+<xsd:annotation>
+<xsd:documentation>
+File link.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:attribute name="fileRef" type="xsd:IDREF"/>
+</xsd:complexType>
+
+</xsd:element>
+
 
 <!--
 oitarget representation 
@@ -140,22 +160,6 @@ Target representation.
 </xsd:complexType>
 
 </xsd:element>
-<!--
-File link used by targets to reference existing files by their id. 
--->
-<xsd:element name="fileLink">
-<xsd:annotation>
-<xsd:documentation>
-File link.
-</xsd:documentation>
-</xsd:annotation>
-
-<xsd:complexType >
-<xsd:attribute name="fileRef" type="xsd:IDREF"/>
-</xsd:complexType>
-
-</xsd:element>
-
 
 
 <!--
@@ -171,12 +175,32 @@ A common representation of every models.
 <xsd:complexType >
 <xsd:sequence>
 <xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
-<xsd:element ref="parameter" minOccurs="1" maxOccurs="unbounded" />
+<xsd:element ref="parameterLink" minOccurs="1" maxOccurs="unbounded" />
 </xsd:sequence>
 <xsd:attributeGroup ref="ModelAttributes"/>
 </xsd:complexType>
 
 </xsd:element>
+
+
+<!--
+Parameter list. 
+-->
+<xsd:element name="parameters">
+<xsd:annotation>
+<xsd:documentation>
+Contains parameters.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:sequence>
+<xsd:element ref="parameter" minOccurs="1" maxOccurs="unbounded"/>
+</xsd:sequence>
+</xsd:complexType>
+
+</xsd:element>
+
 
 <!--
 Model parameter representation.
@@ -203,6 +227,25 @@ A common representation of every model parameters.
 </xsd:complexType>
 </xsd:element>
 
+<!--
+Parameter link used by target's models to reference existing parameters 
+by their id. 
+-->
+<xsd:element name="parameterLink">
+<xsd:annotation>
+<xsd:documentation>
+Parameter link.
+</xsd:documentation>
+</xsd:annotation>
+
+<xsd:complexType >
+<xsd:attribute name="parameterRef" type="xsd:IDREF"/>
+</xsd:complexType>
+
+</xsd:element>
+
+
+
 <!-- Model attributes -->
 <xsd:attributeGroup name="ModelAttributes">
 <xsd:attribute name="name" type="xsd:string" use="required"/>
@@ -213,6 +256,7 @@ A common representation of every model parameters.
 <xsd:attributeGroup name="ParameterAttributes">
 <xsd:attribute name="name" type="xsd:string" use="required"/>
 <xsd:attribute name="type" type="xsd:string" use="required"/>
+<xsd:attribute name="id" type="xsd:ID" use="required"/>
 </xsd:attributeGroup>
 
 </xsd:schema>
