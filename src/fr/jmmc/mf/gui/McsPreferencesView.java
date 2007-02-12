@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: McsPreferencesView.java,v 1.2 2006-11-21 13:11:01 mella Exp $"
+ * "@(#) $Id: McsPreferencesView.java,v 1.3 2007-02-12 14:27:18 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/11/21 13:11:01  mella
+ * blah
+ *
  * Revision 1.1  2006/10/06 09:19:28  mella
  * Add missing files for a clean state
  *
@@ -33,8 +36,7 @@ import javax.swing.table.*;
 /**
  * This is a preference dedicated to the java SearchCal Client.
  */
-public class McsPreferencesView extends JFrame implements ActionListener
-{
+public class McsPreferencesView extends JFrame implements ActionListener {
     /** Data model */
     Preferences _preferences;
 
@@ -46,15 +48,13 @@ public class McsPreferencesView extends JFrame implements ActionListener
 
     /** Allow tabbed pane presentation */
     private JTabbedPane tabbedPane;
-    
+
     /**
      * Constructor.
      */
-    public McsPreferencesView()
-    {
+    public McsPreferencesView() {
         super("Preferences");
 
-        
         // Set Window sized and centered
         setSize(480, 360);
         setResizable(false);
@@ -64,10 +64,11 @@ public class McsPreferencesView extends JFrame implements ActionListener
         _preferences = Preferences.getInstance();
 
         // Build the tabbed pane
-        tabbedPane  = new JTabbedPane();
-        Container   contentPane = getContentPane();
+        tabbedPane = new JTabbedPane();
+
+        Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-        contentPane.add(tabbedPane, BorderLayout.CENTER);      
+        contentPane.add(tabbedPane, BorderLayout.CENTER);
 
         // Add the restore and save buttons
         JPanel buttonsPanel = new JPanel();
@@ -81,8 +82,9 @@ public class McsPreferencesView extends JFrame implements ActionListener
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
+
     /** Add a new pane */
-    public void addPane(String title, Component c){
+    public void addPane(String title, Component c) {
         tabbedPane.add(title, c);
     }
 
@@ -90,31 +92,22 @@ public class McsPreferencesView extends JFrame implements ActionListener
      * actionPerformed  -  Listener
      * @param evt ActionEvent
      */
-    public void actionPerformed(ActionEvent evt)
-    {
+    public void actionPerformed(ActionEvent evt) {
         // If the "Restore to default settings" button has been pressed
-        if (evt.getSource().equals(_restoreDefaultButton))
-        {
-            try
-            {
+        if (evt.getSource().equals(_restoreDefaultButton)) {
+            try {
                 _preferences.resetToDefaultPreferences();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // TODO criez fort!!
                 e.printStackTrace();
             }
         }
 
         // If the "Save modifications" button has been pressed
-        if (evt.getSource().equals(_saveModificationButton))
-        {
-            try
-            {
+        if (evt.getSource().equals(_saveModificationButton)) {
+            try {
                 _preferences.saveToFile();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // TODO criez fort!!
                 e.printStackTrace();
             }
