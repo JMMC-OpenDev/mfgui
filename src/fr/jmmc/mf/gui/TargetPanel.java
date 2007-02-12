@@ -3,95 +3,149 @@
  *
  * Created on 3 novembre 2006, 15:48
  */
-
 package jmmc.mf.gui;
 
 import jmmc.mf.models.*;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import java.util.Hashtable;
 import java.util.Vector;
+
 import javax.swing.*;
 import javax.swing.event.*;
+
+
 /**
- 
+ *
  *
  * @author  mella
  */
-public class TargetPanel extends javax.swing.JPanel implements
-ListSelectionListener {
-
-    Target current=null;
+public class TargetPanel extends javax.swing.JPanel
+    implements ListSelectionListener {
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            "jmmc.mf.gui.TargetPanel");
+    static SettingsViewerInterface settingsViewer;
+    Target current = null;
     ListModel targetFiles;
     boolean listenToFileSelection;
     ListSelectionModel selectedFiles = new DefaultListSelectionModel();
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.TargetPanel");
-    
+    DefaultListModel models = new DefaultListModel();
+    public Settings rootSettings = null;
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addModelButton;
+    private javax.swing.JList fileList;
+    private javax.swing.JComboBox identComboBox;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList modelList;
+    private javax.swing.JComboBox modelTypeComboBox;
+    private javax.swing.JButton removeModelButton;
+
     /** Creates new form TargetPanel */
-    public TargetPanel() {
+    public TargetPanel(SettingsViewerInterface viewer) {
+        settingsViewer = viewer;
         initComponents();
+        listenToFileSelection = false;
+
         fileList.addListSelectionListener(this);
         fileList.setSelectionModel(selectedFiles);
-        listenToFileSelection=false;
+        modelList.setModel(models);
     }
-    
-    public void show(Target t,Settings rootSettings){
-        logger.entering(""+this.getClass(), "show");
 
-        listenToFileSelection=false;
-        current = t;                
-        // Select current ident
-        identComboBox.setSelectedItem(t.getIdent());  
-        
-        // clear file selection
-        selectedFiles.clearSelection();        
+    public void refresh() {
+        show(current, rootSettings);
+    }
+
+    public void show(Target t, Settings rootSettings) {
+        logger.entering("" + this.getClass(), "show");
+
+        this.rootSettings = rootSettings;
+
+        listenToFileSelection = false;
+        current = t;
+        //// Select current ident
+        identComboBox.setSelectedItem(t.getIdent());
+
+        //// Set file selection
+        selectedFiles.clearSelection();
         // select fileListModel corresponding to target ident
-        targetFiles = (ListModel)SettingsModel.fileListModels.get(t.getIdent());        
-        if(targetFiles != null){
-            fileList.setModel(targetFiles);                    
-            // define selected files reading fileLinks 
-            Vector filesId = new Vector();                        
-            File[] files =rootSettings.getFiles().getFile(); 
-            for (int i=0; i < files.length; i++){
-                File file  = files[i];
+        targetFiles = (ListModel) MainFrame.rootSettingsModel.fileListModels.get(t.getIdent());
+
+        if (targetFiles != null) {
+            fileList.setModel(targetFiles);
+
+            // define selected files reading fileLinks
+            Vector filesId = new Vector();
+            File[] files = rootSettings.getFiles().getFile();
+
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
                 filesId.addElement(file.getId());
             }
-            
+
             FileLink[] links = current.getFileLink();
-            for (int i = 0; i < links.length; i++){               
-               FileLink link = links[i];
-               Object idRef = link.getFileRef();
-               if(idRef!=null){
-                   logger.fine("Selecting file for ref="+ idRef);                 
-                   selectedFiles.addSelectionInterval(i, i);  
-               }
+
+            for (int i = 0; i < links.length; i++) {
+                FileLink link = links[i];
+                Object idRef = link.getFileRef();
+
+                if (idRef != null) {
+                    logger.fine("Selecting file for ref=" + idRef);
+                    selectedFiles.addSelectionInterval(i, i);
+                }
             }
-            
-        }else{
+        } else {
             // should not append except if user delete some files??
-            logger.warning("Can't find list of files");            
-        }               
-        listenToFileSelection=true;
+            logger.warning("Can't find list of files");
+        }
+
+        listenToFileSelection = true;
+
+        //// Set model list
+        models.clear();
+
+        for (int i = 0; i < current.getModelCount(); i++) {
+            models.addElement(current.getModel(i));
+        }
+
+        // check addModel button
     }
-    
-     public void   valueChanged(ListSelectionEvent e){
-        logger.entering(""+this.getClass(), "valueChanged");
-        if(!listenToFileSelection || e.getValueIsAdjusting()){
+
+    public void valueChanged(ListSelectionEvent e) {
+        logger.entering("" + this.getClass(), "valueChanged");
+
+        if (!listenToFileSelection || e.getValueIsAdjusting()) {
             return;
         }
+
         Object[] files = fileList.getSelectedValues();
         current.removeAllFileLink();
-        for (int i=0; i<files.length; i++){
-            File file= (File)files[i];
+
+        for (int i = 0; i < files.length; i++) {
+            File file = (File) files[i];
             FileLink link = new FileLink();
             link.setFileRef(file);
             current.addFileLink(link);
         }
-     }
-    
+
+        // fire tree event to refresh
+        MainFrame.rootSettingsModel.fireUpdate();
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
+
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -108,31 +162,43 @@ ListSelectionListener {
         modelList = new javax.swing.JList();
         addModelButton = new javax.swing.JButton();
         modelTypeComboBox = new javax.swing.JComboBox();
+        removeModelButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Target panel"));
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1,
+                javax.swing.BoxLayout.X_AXIS));
 
         jLabel1.setText("Ident:");
         jPanel1.add(jLabel1);
 
-        identComboBox.setModel(SettingsModel.oiTargets);
+        identComboBox.setModel(MainFrame.rootSettingsModel.oiTargets);
+        identComboBox.setEnabled(false);
         identComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                identComboBoxActionPerformed(evt);
-            }
-        });
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    identComboBoxActionPerformed(evt);
+                }
+            });
 
         jPanel1.add(identComboBox);
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3,
+                javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2,
+                javax.swing.BoxLayout.X_AXIS));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                "Selected file list"));
+        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    fileListMouseClicked(evt);
+                }
+            });
+
         jScrollPane1.setViewportView(fileList);
 
         jPanel2.add(jScrollPane1);
@@ -141,27 +207,48 @@ ListSelectionListener {
 
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                "Model list"));
+        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                public void valueChanged(
+                    javax.swing.event.ListSelectionEvent evt) {
+                    modelListValueChanged(evt);
+                }
+            });
+        modelList.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    modelListMouseClicked(evt);
+                }
+            });
+
         jScrollPane2.setViewportView(modelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
-        addModelButton.setText("Add a model");
+        addModelButton.setText("Get model list");
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addModelButtonActionPerformed(evt);
-            }
-        });
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    addModelButtonActionPerformed(evt);
+                }
+            });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         jPanel4.add(addModelButton, gridBagConstraints);
 
-        modelTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "punct", "disk" }));
+        modelTypeComboBox.setModel(SettingsModel.supportedModelsModel);
+        modelTypeComboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+                public void focusGained(java.awt.event.FocusEvent evt) {
+                    modelTypeComboBoxFocusGained(evt);
+                }
+            });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -169,43 +256,127 @@ ListSelectionListener {
         gridBagConstraints.weightx = 1.0;
         jPanel4.add(modelTypeComboBox, gridBagConstraints);
 
+        removeModelButton.setText("Remove");
+        removeModelButton.setEnabled(false);
+        removeModelButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    removeModelButtonActionPerformed(evt);
+                }
+            });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        jPanel4.add(removeModelButton, gridBagConstraints);
+
         jPanel3.add(jPanel4);
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
+    } // </editor-fold>//GEN-END:initComponents
 
-    }// </editor-fold>//GEN-END:initComponents
+    private void modelTypeComboBoxFocusGained(java.awt.event.FocusEvent evt) { //GEN-FIRST:event_modelTypeComboBoxFocusGained
+        logger.entering("" + this.getClass(), "modelTypeComboBoxFocusGained");
 
-    private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
-    logger.entering(""+this.getClass(), "addTypeButtonActionPerformed");
-    Model m = new Model();
-    String type = (String)modelTypeComboBox.getSelectedItem();
-    m.setName(type+current.getModelCount());
-    m.setType(type);
-    current.addModel(m);
-    MainFrame.rootSettingsModel.fireUpdate(); 
-    }//GEN-LAST:event_addModelButtonActionPerformed
-
-    private void identComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identComboBoxActionPerformed
-        if(current!=null && evt.getSource()==identComboBox){
-            current.setIdent(""+identComboBox.getSelectedItem());
-            System.out.println(evt);
+        if (modelTypeComboBox.getItemCount() < 1) {
+            MainFrame.getModelListAction.actionPerformed(null);
         }
-    }//GEN-LAST:event_identComboBoxActionPerformed
-    
-    
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addModelButton;
-    private javax.swing.JList fileList;
-    private javax.swing.JComboBox identComboBox;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList modelList;
-    private javax.swing.JComboBox modelTypeComboBox;
+    } //GEN-LAST:event_modelTypeComboBoxFocusGained
+
+    private void modelListMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_modelListMouseClicked
+
+        if (evt.getClickCount() == 2) {
+            settingsViewer.showSettingElement(modelList.getSelectedValue());
+        }
+    } //GEN-LAST:event_modelListMouseClicked
+
+    private void fileListMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_fileListMouseClicked
+
+        if (evt.getClickCount() == 2) {
+            settingsViewer.showSettingElement(fileList.getSelectedValue());
+        }
+    } //GEN-LAST:event_fileListMouseClicked
+
+    private void removeModelButtonActionPerformed(
+        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_removeModelButtonActionPerformed
+        logger.entering("" + this.getClass(), "removeModelButtonActionPerformed");
+
+        int[] indices = modelList.getSelectedIndices();
+
+        for (int i = 0; i < indices.length; i++) {
+            int indice = indices[i] - i;
+            current.removeModel(indice);
+        }
+
+        removeModelButton.setEnabled(false);
+        refresh();
+    } //GEN-LAST:event_removeModelButtonActionPerformed
+
+    private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt) { //GEN-FIRST:event_modelListValueChanged
+
+        if (modelList.getSelectedIndex() != -1) {
+            removeModelButton.setEnabled(true);
+        } else {
+            removeModelButton.setEnabled(false);
+        }
+    } //GEN-LAST:event_modelListValueChanged
+
+    private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_addModelButtonActionPerformed
+        logger.entering("" + this.getClass(), "addModelButtonActionPerformed");
+
+        if (modelTypeComboBox.getItemCount() < 1) {
+            addModelButton.setText("Add model");
+            addModelButton.validate();
+            MainFrame.getModelListAction.actionPerformed(null);
+
+            return;
+        }
+
+        try {
+            // Construct a new copy
+            Model selected = (Model) modelTypeComboBox.getSelectedItem();
+            Model m;
+            StringWriter writer = new StringWriter();
+            selected.marshal(writer);
+
+            StringReader reader = new StringReader(writer.toString());
+            m = Model.unmarshal(reader);
+
+            // force another name with given position
+            int position = current.getModelCount();
+            String type = selected.getType();
+            m.setName(type + position);
+
+            // and change parameters name also
+            Parameter[] params = m.getParameter();
+
+            for (int i = 0; i < params.length; i++) {
+                Parameter p = params[i];
+                p.setName(p.getName() + position);
+            }
+
+            // add the new element to current target
+            current.addModel(m);
+
+            refresh();
+            MainFrame.rootSettingsModel.fireUpdate();
+        } catch (Exception e) {
+            // this occurs when add button is pressed without selection
+            logger.warning("No model selected");
+        }
+    } //GEN-LAST:event_addModelButtonActionPerformed
+
+    private void identComboBoxActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_identComboBoxActionPerformed
+
+        if ((current != null) && (evt.getSource() == identComboBox)) {
+            // This test was added because it changed even if user did not
+            // play with the combo
+            if (identComboBox.isShowing()) {
+                logger.fine("Setting " + current.getIdent() + " ident to " +
+                    identComboBox.getSelectedItem());
+                current.setIdent("" + identComboBox.getSelectedItem());
+            }
+        }
+    } //GEN-LAST:event_identComboBoxActionPerformed
+
     // End of variables declaration//GEN-END:variables
-    
 }

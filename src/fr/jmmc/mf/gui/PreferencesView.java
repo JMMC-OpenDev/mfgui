@@ -1,144 +1,217 @@
-/*******************************************************************************
- * JMMC project
+/*
+ * PreferencesView.java
  *
- * "@(#) $Id: PreferencesView.java,v 1.3 2006-11-21 13:11:01 mella Exp $"
- *
- * History
- * -------
- * $Log: not supported by cvs2svn $
- * Revision 1.2  2006/11/03 10:22:10  mella
- * Make it compile according mcs changes
- *
- * Revision 1.1  2006/10/06 09:19:28  mella
- * Add missing files for a clean state
- *
- *
- ******************************************************************************/
+ * Created on 30 novembre 2006, 10:33
+ */
 package jmmc.mf.gui;
 
-import jmmc.mcs.util.*;
-import jmmc.mcs.gui.*;
+import java.util.Observable;
+import java.util.Observer;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-import java.util.logging.*;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.colorchooser.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
-
-// TODO handle close button correctly
-
-/**
- * This is a preference dedicated to the java SearchCal Client.
- */
-public class PreferencesView extends McsPreferencesView
-{    
-    public PreferencesView()
-    {
-        super();
-
-        _preferences = Preferences.getInstance();        
-
-        // Append help component
-        HelpSetupPreferencesView helpView = new HelpSetupPreferencesView(_preferences);
-        addPane("Help", helpView);
-    }
-
-   
-}
-
+import javax.swing.ToolTipManager;
 
 
 /**
- * This Panel is dedicated to manage help behaviour configuration.
  *
+ * @author  mella
  */
-class HelpSetupPreferencesView extends JPanel implements Observer,
-    ChangeListener
-{
-    /**
-     * DOCUMENT ME!
-     */
-    private Preferences _preferences;
+public class PreferencesView extends javax.swing.JFrame implements Observer {
+    static Preferences myPreferences = Preferences.getInstance();
+    static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            "jmmc.mf.gui.MainFrame");
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton restoreButton;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JPanel saveRestorePanel;
+    private javax.swing.JPanel yogaPanel;
 
     /**
-     * DOCUMENT ME!
+     * Creates new form PreferencesView
      */
-    private JCheckBox _enableToolTipCheckBox;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private ToolTipManager _sharedToolTipManager;
-
-    /**
-     * Constructor.
-     * @param preferences the application preferences
-     */
-    public HelpSetupPreferencesView(Preferences preferences)
-    {
-        _preferences = preferences;
-        _preferences.addObserver(this);
-
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        // get instance of shared tooltip to adjust behaviour in update code
-        _sharedToolTipManager      = ToolTipManager.sharedInstance();
-
-        // Handle tooltips
-        _enableToolTipCheckBox     = new JCheckBox("Show tooltips");
-
-        String ttt                 = Resources.getToolTipText(
-                "_enableToolTipCheckBox");
-        _enableToolTipCheckBox.setToolTipText(ttt);
-        _sharedToolTipManager.registerComponent(_enableToolTipCheckBox);
-        _enableToolTipCheckBox.addChangeListener(this);
-        add(_enableToolTipCheckBox);
-
-        // Make data filled
-        update(null, null);
+    public PreferencesView() {
+        initComponents();
+        myPreferences.addObserver(this);
     }
 
-    /**
-     * Present fresh content according preference content.
-     *
-     * @param o preferences
-     * @param arg not used
-     */
-    public void update(Observable o, Object arg)
-    {
-        // Adjust view and behaviour according preferences entries
-        boolean b;
+    public void update(Observable o, Object arg) {
+        // Adjust view and behaviour according preferences entries        
+        // Keep eye on help.tooltips.show                        
+        boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");
 
-        // Tooltips
-        b = _preferences.getPreferenceAsBoolean("help.tooltips.show");
-        _enableToolTipCheckBox.setSelected(b);
-        _sharedToolTipManager.setEnabled(b);
-    }
-
-    /**
-     * Update preferences according buttons change
-     */
-    public void stateChanged(ChangeEvent e)
-    {
-
-        Object source = e.getSource();
-
-        if (source.equals(_enableToolTipCheckBox))
-        {
-            try{
-                _preferences.setPreference("help.tooltips.show",
-                _enableToolTipCheckBox.isSelected());
-            }catch(Exception exc){
-                new ReportDialog(new JFrame(),true,exc).setVisible(true);
-                
-            }
+        if (b) {
+            logger.fine("Adjusting ToolTipManager to on");
+        } else {
+            logger.fine("Adjusting ToolTipManager to off");
         }
+
+        toolTipManager.setEnabled(b);
     }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        saveRestorePanel = new javax.swing.JPanel();
+        saveButton = new javax.swing.JButton();
+        restoreButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        yogaPanel = new javax.swing.JPanel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+
+        setTitle("Preferences");
+        saveRestorePanel.setLayout(new java.awt.GridBagLayout());
+
+        saveButton.setAction(MainFrame.savePrefAction);
+        saveRestorePanel.add(saveButton, new java.awt.GridBagConstraints());
+
+        restoreButton.setAction(MainFrame.restorePrefAction);
+        saveRestorePanel.add(restoreButton, new java.awt.GridBagConstraints());
+
+        getContentPane().add(saveRestorePanel, java.awt.BorderLayout.SOUTH);
+
+        yogaPanel.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0,
+                0, 0));
+        jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jCheckBox1.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(
+                myPreferences, "yoga.remote.use"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(jCheckBox1, gridBagConstraints);
+
+        jLabel1.setText("HTTP URL:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel1, gridBagConstraints);
+
+        jTextField1.setDocument(jmmc.mcs.util.PreferencedDocument.getInstance(
+                myPreferences, "yoga.remote.url"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(jTextField1, gridBagConstraints);
+
+        jLabel2.setText("Yoga local path:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel2, gridBagConstraints);
+
+        jTextField2.setDocument(jmmc.mcs.util.PreferencedDocument.getInstance(
+                myPreferences, "yoga.local.home"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(jTextField2, gridBagConstraints);
+
+        jLabel3.setText("Use remote yoga:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel3, gridBagConstraints);
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        yogaPanel.add(jPanel1, gridBagConstraints);
+
+        jTabbedPane1.addTab("Yoga", yogaPanel);
+
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBox2.setText("Show tooltips");
+        jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0,
+                0, 0));
+        jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jCheckBox2.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(
+                myPreferences, "help.tooltips.show"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel2.add(jCheckBox2, gridBagConstraints);
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jPanel3, gridBagConstraints);
+
+        jTabbedPane1.addTab("help", jPanel2);
+
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        pack();
+
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit()
+                                                        .getScreenSize();
+        java.awt.Dimension dialogSize = getSize();
+        setLocation((screenSize.width - dialogSize.width) / 2,
+            (screenSize.height - dialogSize.height) / 2);
+    } // </editor-fold>//GEN-END:initComponents
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new PreferencesView().setVisible(true);
+                }
+            });
+    }
+
+    // End of variables declaration//GEN-END:variables
 }
