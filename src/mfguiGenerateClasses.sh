@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.4 2006-11-22 14:51:13 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.5 2007-02-12 14:14:15 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/11/22 14:51:13  mella
+# Add toString() to File and Target
+#
 # Revision 1.3  2006/09/28 09:41:36  mella
 # add engine param list generation
 #
@@ -41,21 +44,32 @@ MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package jmmc.mf.models  $*
 
-
 for f in jmmc/mf/models/*.java
 do
     tmp=${f%%.java}
     className=${tmp##*/}
-
     if [ "$className" == "File" ]
     then
         toString="\"File[\"+getName()+\"]\";"
+    elif [ "$className" == "FileLink" ]
+    then
+        toString="\"FileLink[\"+((File)getFileRef()).getName()+\"]\";"
+    elif [ "$className" == "Parameter" ]
+    then
+        toString="\"Parameter[\"+getName()+\"]\";"
+    elif [ "$className" == "ParameterLink" ]
+    then
+        toString="\"ParameterLink[\"+((Parameter)getParameterRef()).getName()+\"]\";"
     elif [ "$className" == "Target" ]
     then
         toString="\"Target[\"+getIdent()+\"]\";"
+    elif [ "$className" == "Model" ]
+    then
+        toString="\"Model[\"+getType()+\":\"+getName()+\"]\";"
     else
         toString="\"$className\";"
     fi
+    echo "'$className' class uses toString: $toString" 
     
     tmp=$(mktemp tmpXX)
     nbLines=( $( wc -l $f ))
@@ -66,7 +80,6 @@ do
     cp -af $tmp $f
     rm $tmp
 done
-    
 
 cat << EOM
     /**
