@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.6 2007-02-12 14:27:18 mella Exp $"
+# "@(#) $Id: Makefile,v 1.7 2007-02-14 09:28:51 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2007/02/12 14:27:18  mella
+# Jalopyzation
+#
 # Revision 1.5  2006/11/21 13:17:18  mella
 # blah
 #
@@ -123,10 +126,10 @@ JAVA_JAR = sclgui
 
 #
 # <brief description of sclgui jar files>
-mfgui_DIRS     = jmmc 
-mfgui_EXTRAS   = jmmc/mf/gui/Resources.properties \
-                 jmmc/mf/gui/*.html \
-                 jmmc/mf/gui/mapping.xml \
+mfgui_DIRS     = fr 
+mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
+                 fr/jmmc/mf/gui/*.html \
+                 fr/jmmc/mf/gui/mapping.xml \
 
 #
 # Java programs
@@ -135,7 +138,7 @@ JAVA_EXECUTABLES = ModelFitting
 
 #
 # <brief description of ModelFitting java program>
-ModelFitting_CLASS    = jmmc.mf.gui.ModelFitting
+ModelFitting_CLASS    = fr.jmmc.mf.gui.ModelFitting
 
 #
 # Command Definition Files (CDF)
