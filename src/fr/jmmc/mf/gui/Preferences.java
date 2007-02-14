@@ -4,11 +4,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.6 2007-02-14 14:14:57 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.7 2007-02-14 14:44:03 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2007/02/14 14:14:57  mella
+ * Use netbeans refactoring to save form<->java consistency
+ *
  * Revision 1.3  2006/11/21 13:11:01  mella
  * blah
  *
@@ -28,7 +31,7 @@ import java.util.Properties;
 /**
  * This is a preference dedicated to the java Model Fitting Client.
  */
-public class Preferences extends jmmc.mcs.util.Preferences
+public class Preferences extends fr.jmmc.mcs.util.Preferences
 {
     /** Preference file name */
     static String _shortPreferenceFilename = "fr.jmmc.mf.gui.properties";
@@ -37,7 +40,7 @@ public class Preferences extends jmmc.mcs.util.Preferences
     private static Preferences _singleton = null;
 
     /** Logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.Preferences");
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.Preferences");
     
     
     /**
@@ -67,7 +70,7 @@ public class Preferences extends jmmc.mcs.util.Preferences
 
             // Store preference file version number
             myDefaultProperties.setPreference("mf.version",
-                    jmmc.mcs.util.Resources.getResource("mf.version"));
+                    fr.jmmc.mcs.util.Resources.getResource("mf.version"));
 
             /* Place general preferences  */
             myDefaultProperties.setPreference("show.recursive.parameters", "false");

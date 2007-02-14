@@ -30,7 +30,7 @@ public class FilePanel extends javax.swing.JPanel {
     static Action saveEmbeddedFileAction;
     static Action showEmbeddedFileAction;
     static DefaultListModel hduListModel = new DefaultListModel();
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.FilePanel");
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.FilePanel");
     
     /** Creates new form FilePanel */
     public FilePanel() {
@@ -236,6 +236,7 @@ public class FilePanel extends javax.swing.JPanel {
         jPanel2.add(jLabel6, gridBagConstraints);
 
         saveFileButton.setAction(this.saveEmbeddedFileAction);
+        saveFileButton.setForeground(new java.awt.Color(51, 51, 52));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -561,7 +562,7 @@ public class FilePanel extends javax.swing.JPanel {
        UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
     }
     
-    protected class ShowEmbeddedFileAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
         
         public ShowEmbeddedFileAction() {
             super("showEmbeddedFile");
@@ -585,7 +586,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
     
-    protected class SaveEmbeddedFileAction extends jmmc.mcs.util.MCSAction {
+    protected class SaveEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
             
             public SaveEmbeddedFileAction() {

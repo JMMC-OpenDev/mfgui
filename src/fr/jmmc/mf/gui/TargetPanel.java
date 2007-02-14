@@ -26,7 +26,7 @@ import java.io.StringReader;
 
 public class TargetPanel extends javax.swing.JPanel implements
         ListSelectionListener {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.TargetPanel");
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.TargetPanel");
     Target current=null;
     ListModel targetFiles;
     boolean listenToFileSelection;

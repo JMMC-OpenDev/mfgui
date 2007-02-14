@@ -17,7 +17,7 @@ import fr.jmmc.mf.models.Parameters;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
 import java.util.*;
 import java.util.logging.*;
@@ -53,7 +53,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     /** Model reference */
     static public SettingsModel rootSettingsModel=null;
     
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.MainFrame");
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.MainFrame");
     
     // List of viewer panel used to display sub components
     static TargetsPanel targetsPanel;    
@@ -271,7 +271,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         
         // Add Help->ShowTooltips
         menuItem     = new JCheckBoxMenuItem("Tooltips");
-        menuItem.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
+        menuItem.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
         helpMenu.add(menuItem);
         
 
@@ -449,7 +449,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     }//GEN-LAST:event_formWindowClosed
     
     
-    protected class ShowPrefAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowPrefAction extends fr.jmmc.mcs.util.MCSAction {
         /** Preferences view */
         PreferencesView preferencesView;
         public ShowPrefAction(){
@@ -470,7 +470,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     
     
     // @todo try to move it into the mcs preferences area
-    protected class SavePrefAction extends jmmc.mcs.util.MCSAction {
+    protected class SavePrefAction extends fr.jmmc.mcs.util.MCSAction {
         public SavePrefAction(){
             super("savePreferences");
         }
@@ -487,7 +487,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class RestorePrefAction extends jmmc.mcs.util.MCSAction {
+    protected class RestorePrefAction extends fr.jmmc.mcs.util.MCSAction {
         public RestorePrefAction(){
             super("restorePreferences");
         }
@@ -504,7 +504,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }          
     /** Display another tab with revision informations */
-    protected class ShowRevisionAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowRevisionAction extends fr.jmmc.mcs.util.MCSAction {
         public ShowRevisionAction(){
             super("showRevision");
         }
@@ -512,7 +512,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         public void actionPerformed(java.awt.event.ActionEvent e) {            
             logger.fine("Requesting revision display");                                    
             try {
-                URL url = this.getClass().getClassLoader().getResource("jmmc/mf/gui/Releases.html");                                                                     
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Releases.html");                                                                     
                 ResultPanel rp = new ResultPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Revision", rp);                
@@ -524,14 +524,14 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     }
     
     /** Display another tab with help informations */
-    protected class ShowHelpAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowHelpAction extends fr.jmmc.mcs.util.MCSAction {
         public ShowHelpAction(){
             super("showHelp");
         }        
         public void actionPerformed(java.awt.event.ActionEvent e) {            
             logger.fine("Requesting Help display");
             try {
-                URL url = this.getClass().getClassLoader().getResource("jmmc/mf/gui/Help.html");                                                                     
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");                                                                     
                 ResultPanel rp = new ResultPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Help", rp);                                
@@ -541,7 +541,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class RunFitAction extends jmmc.mcs.util.MCSAction {
+    protected class RunFitAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName="runFit";
         
         public RunFitAction(){
@@ -615,7 +615,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     }
     
 
-    protected class GetYogaVersionAction extends jmmc.mcs.util.MCSAction {
+    protected class GetYogaVersionAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName="getYogaVersion";
         public GetYogaVersionAction(){
             super("getYogaVersion");
@@ -640,7 +640,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class YogaExec implements jmmc.mcs.util.ProcessManager{
+    protected class YogaExec implements fr.jmmc.mcs.util.ProcessManager{
         StringBuffer sb;
         
         public YogaExec(){
@@ -677,7 +677,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             
             String result="";
             // Run main application waiting for end of cat process
-            jmmc.mcs.util.ProcessHandler ph = new jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName});
+            fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName});
             YogaExec pm = new YogaExec();
             ph.setProcessManager(pm);
             ph.start();
@@ -723,7 +723,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             
             String result="";
             // Run main application waiting for end of cat process
-            jmmc.mcs.util.ProcessHandler ph = new jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename});
+            fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename});
             YogaExec pm = new YogaExec();
             ph.setProcessManager(pm);
             ph.start();
@@ -762,7 +762,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }                
     
     
-    protected class GetModelListAction extends jmmc.mcs.util.MCSAction {
+    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName="getModelList";
         public GetModelListAction(){
             super("getModelList");
@@ -842,7 +842,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class NewModelAction extends jmmc.mcs.util.MCSAction {
+    protected class NewModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
         
         public NewModelAction() {
@@ -871,7 +871,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class LoadModelAction extends jmmc.mcs.util.MCSAction {
+    protected class LoadModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
         
         public LoadModelAction() {
@@ -904,7 +904,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
     
-    protected class SaveModelAction extends jmmc.mcs.util.MCSAction {
+    protected class SaveModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
         
         public SaveModelAction() {

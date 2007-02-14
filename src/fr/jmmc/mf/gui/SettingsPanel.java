@@ -5,7 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mcs.gui.ReportDialog;
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
 import java.awt.event.ActionEvent;
 
@@ -27,7 +27,7 @@ import java.lang.reflect.*;
  */
 public class SettingsPanel extends javax.swing.JPanel
 {   
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.SettingsPanel");
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.SettingsPanel");
    
     static FilesPanel filesPanel=null;
     static TargetsPanel targetsPanel=null;
