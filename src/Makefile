@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.9 2007-02-14 11:09:15 mella Exp $"
+# "@(#) $Id: Makefile,v 1.10 2007-02-14 11:10:13 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2007/02/14 11:09:15  mella
+# Added do_all before and after do_xsdMapping target to all
+#
 # Revision 1.8  2007/02/14 11:07:48  mella
 # Added do_xsdMapping target to all
 #
@@ -186,10 +189,7 @@ include $(MAKEDIR)/mkfMakefile
 # TARGETS
 # -------
 
-do_xsdMapping:	
-	mfguiGenerateClasses
-
-all:	do_all do_xsdMapping do_all
+all:	do_all
 	@echo " . . . 'all' done" 
 	
 
