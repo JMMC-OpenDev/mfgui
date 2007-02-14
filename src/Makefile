@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.10 2007-02-14 11:10:13 mella Exp $"
+# "@(#) $Id: Makefile,v 1.11 2007-02-14 12:52:23 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2007/02/14 11:10:13  mella
+# remove not working do_xsdMapping target to all
+#
 # Revision 1.9  2007/02/14 11:09:15  mella
 # Added do_all before and after do_xsdMapping target to all
 #
@@ -130,11 +133,10 @@ JARFILES        = mfgui
 #
 # other Jar Files
 #
-JAVA_JAR = sclgui
-
+JAVA_JAR =
 
 #
-# <brief description of sclgui jar files>
+# <brief description of mfgui jar files>
 mfgui_DIRS     = fr 
 mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
                  fr/jmmc/mf/gui/*.html \
