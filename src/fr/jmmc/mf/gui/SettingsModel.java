@@ -72,7 +72,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public DefaultComboBoxModel oiTargets;    
     
     // Logging
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.SettingsModel");
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.SettingsModel");
     
     // ModifyAndSaveObject interface
     public boolean isModified=false;    
@@ -90,7 +90,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.setTargets(new Targets());        
         rootSettings.setParameters(new Parameters());
         rootSettings.setFitter("standard");
-        rootSettings.setUserInfo("Created on "+new java.util.Date()+" by ModelFitting GUI rev. "+ jmmc.mcs.util.Resources.getResource("mf.version"));                
+        rootSettings.setUserInfo("Created on "+new java.util.Date()+" by ModelFitting GUI rev. "+ fr.jmmc.mcs.util.Resources.getResource("mf.version"));                
         setRootSettings(rootSettings);
     }
 
@@ -199,7 +199,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         
     }
 
-    // @todo place this method into jmmc.mf.util
+    // @todo place this method into fr.jmmc.mf.util
     public void addFile(java.io.File fileToAdd)throws Exception{
         logger.entering(""+this.getClass(), "addFile");
         // Try to add list to comboModel if it is not already inside the listModel
@@ -230,7 +230,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         }        
     }
 
-    // @todo place this method into jmmc.mf.util
+    // @todo place this method into fr.jmmc.mf.util
     public void addFileHref(File bindedFile) throws Exception{        
         logger.entering(""+this.getClass(), "addFileHref");
         java.io.File realFile = new java.io.File(bindedFile.getName());
@@ -245,7 +245,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         logger.entering(""+this.getClass(), "addFileOiTarget");
     }
 
-    // @todo place this method into jmmc.mf.util
+    // @todo place this method into fr.jmmc.mf.util
     public void checkFile(File bindedFile)throws Exception{
         logger.entering(""+this.getClass(), "checkFile");
 
@@ -378,7 +378,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         }
     }
 
-    // @todo think to move this method into jmmc.mf.util
+    // @todo think to move this method into fr.jmmc.mf.util
     public void checkSettingsFormat(Settings s)throws Exception{
         logger.entering(""+this.getClass(), "checkSettingsFormat");
         // try to locate files
@@ -398,13 +398,13 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         // assert that one userInfo section is present to allow traces
         if(s.getUserInfo()==null){
             logger.fine("no userInfo section, -> new one created");
-            s.setUserInfo("UserInfo added on "+new java.util.Date()+" by ModelFitting GUI rev. "+ jmmc.mcs.util.Resources.getResource("mf.version"));
+            s.setUserInfo("UserInfo added on "+new java.util.Date()+" by ModelFitting GUI rev. "+ fr.jmmc.mcs.util.Resources.getResource("mf.version"));
             setModified(true);            
         }
         
     }
     
-    // @todo place this method into jmmc.mf.util
+    // @todo place this method into fr.jmmc.mf.util
     public void loadSettingsFile(java.io.File fileToLoad) 
     throws java.io.FileNotFoundException,org.exolab.castor.xml.MarshalException,java.lang.Exception
     {
@@ -419,7 +419,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     
     /**
      * Write serialisation into given file.
-     * @todo place this method into jmmc.mf.util
+     * @todo place this method into fr.jmmc.mf.util
      * @param temporaryRequest indicates that this file is not save by user but for internal use
      */     
     public void saveSettingsFile(java.io.File fileToSave, boolean temporaryRequest)
@@ -430,7 +430,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         // Read a File to unmarshal from
         java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
         
-        URL mappingURL = this.getClass().getClassLoader().getResource("jmmc/mf/gui/mapping.xml");
+        URL mappingURL = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Using mapping file :"+mappingURL);
         // Use a mapping file
         Mapping      mapping = new Mapping();

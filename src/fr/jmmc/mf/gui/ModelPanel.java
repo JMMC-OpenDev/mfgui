@@ -19,7 +19,7 @@ import java.lang.reflect.*;
  * @author  mella
  */
 public class ModelPanel extends javax.swing.JPanel {
-     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.ModelPanel");
+     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.ModelPanel");
      ParametersTableModel parametersTableModel;
      Model current;
      SettingsModel settingsModel;

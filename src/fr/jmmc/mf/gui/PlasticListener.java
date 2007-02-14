@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class PlasticListener extends uk.ac.starlink.plastic.HubManager{
     
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.PlasticListener");
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.PlasticListener");
     
     /** Creates a new instance of PlasticListener */
     public PlasticListener() {

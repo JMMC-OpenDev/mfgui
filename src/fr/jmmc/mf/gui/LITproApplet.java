@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class LITproApplet extends javax.swing.JApplet {
 
-    final static String rcsId="$Id: LITproApplet.java,v 1.5 2007-02-14 14:14:57 mella Exp $";
+    final static String rcsId="$Id: LITproApplet.java,v 1.6 2007-02-14 14:44:03 mella Exp $";
     
     /** Initializes the applet LITproApplet */
     public void init() {
@@ -58,7 +58,7 @@ public class LITproApplet extends javax.swing.JApplet {
 
         try
         {      
-            Logger logger = Logger.getLogger("jmmc.mf");
+            Logger logger = Logger.getLogger("fr.jmmc.mf");
             logger.setLevel(java.util.logging.Level.ALL);            
             logger.info("Starting ModelFitting");
             logger.info("Rev:"+rcsId);           

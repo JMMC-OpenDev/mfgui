@@ -14,7 +14,7 @@ import javax.swing.*;
  * @author  mella
  */
 public class FilesPanel extends javax.swing.JPanel {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.FilesPanel");    
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.FilesPanel");    
     static Files current=null;
     SettingsViewerInterface settingsViewer=null;
     public Action loadFilesAction;
@@ -92,7 +92,7 @@ public class FilesPanel extends javax.swing.JPanel {
     // Inner classes used to manage actions
     //
 
-    protected class LoadFilesAction extends jmmc.mcs.util.MCSAction {
+    protected class LoadFilesAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
 
         public LoadFilesAction() {

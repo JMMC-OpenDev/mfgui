@@ -25,7 +25,7 @@ import java.awt.event.*;
  * @author  mella
  */
 public class EnginePanel extends javax.swing.JPanel {
-    Logger logger = Logger.getLogger("jmmc.mf.gui.EnginePanel");
+    Logger logger = Logger.getLogger("fr.jmmc.mf.gui.EnginePanel");
     
     /** Creates new form EnginePanel */
     public EnginePanel(){

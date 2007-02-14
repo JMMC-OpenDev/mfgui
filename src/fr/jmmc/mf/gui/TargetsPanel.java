@@ -16,7 +16,7 @@ import javax.swing.ListModel;
  * @author  mella
  */
 public class TargetsPanel extends javax.swing.JPanel {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.TargetsPanel");    
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.TargetsPanel");    
     static Targets current=null;
     static SettingsViewerInterface settingsViewer;
     

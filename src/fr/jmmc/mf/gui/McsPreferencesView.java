@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: McsPreferencesView.java,v 1.5 2007-02-14 14:14:57 mella Exp $"
+ * "@(#) $Id: McsPreferencesView.java,v 1.6 2007-02-14 14:44:03 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2007/02/14 14:14:57  mella
+ * Use netbeans refactoring to save form<->java consistency
+ *
  * Revision 1.2  2006/11/21 13:11:01  mella
  * blah
  *
@@ -16,7 +19,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
 import java.awt.*;
 import java.awt.event.*;

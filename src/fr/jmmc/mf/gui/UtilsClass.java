@@ -28,7 +28,7 @@ import java.io.*;
  * @author mella
  */
 public class UtilsClass {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("jmmc.mf.gui.McsClass");
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.McsClass");
     static String className="UtilsClass";
     
      /*

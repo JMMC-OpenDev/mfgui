@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
  */
 public class ModelFitting
 {
-    final static String rcsId="$Id: ModelFitting.java,v 1.7 2007-02-14 14:14:57 mella Exp $";
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.ModelFitting");                
+    final static String rcsId="$Id: ModelFitting.java,v 1.8 2007-02-14 14:44:03 mella Exp $";
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");                
     
     static String getVersion(){
         return rcsId;
@@ -45,9 +45,9 @@ public class ModelFitting
                 logger.fine(propName+"="+propValue);
             }
             // Set default resource for application
-            jmmc.mcs.util.Resources.setResourceName("jmmc/mf/gui/Resources");            
+            fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");            
             logger.info("Starting ModelFitting Rev:"+rcsId);                    
-            logger.info("Version:"+ jmmc.mcs.util.Resources.getResource("mf.version"));             
+            logger.info("Version:"+ fr.jmmc.mcs.util.Resources.getResource("mf.version"));             
             // Set the default locale to custom locale
             Locale locale = Locale.US;
             Locale.setDefault(locale);
