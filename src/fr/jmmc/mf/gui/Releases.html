@@ -1,0 +1,79 @@
+<html>
+    <body>
+        <h1> Model Fitting software </h1>
+        <em>This sections only detail GUI part</em>
+        <h1>
+            Requested features:
+        </h1>
+        <ul>
+            
+            <li> Request to the server the model corresponding synthetic oifits file </li>
+            <li> End main plot diagrams </li>
+            <ul>
+                <li>UV Coverage (symetric part)</li>
+                <li>VIS2 plot</li>
+            </ul>
+            <li> Use checkboxes to file selection instead of the simple list widget </li>
+            <li> Permit user to select installed programs as fits viewer </li>            
+            <li> Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request!</li>
+            <li> Add one format version of all xml settings files
+                 (Future revision will be able to check format validity 
+                  and propose converter tools)</li>
+            <li>Make right click on parameters to share them without selection need</li>
+        </ul>
+
+        <h1>
+            Implemented features:
+        </h1>
+ 
+        <h2>
+            V1.0.4         
+        </h2>
+        <ul>
+            <li> Fitting results are taken into account for parameters values</li>
+            <li> Models can share parameters </li>
+            <li> Fits files with zero length column supported </li>
+            <li> Fits viewer do not close anymore main application while quitting fits viewer</li>
+            <li> UV Coverage plot and interferometer sketch are automated at one basic level </li>
+        </ul>
+        
+        <h2> 
+            V1.0.3: 
+        </h2>
+        <ul>
+            <li> Select by default oifiles associated to the added target </li>
+            <li> Display more info on observed data files </li>
+            <li> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</li>	
+            <li> Quit action checks that every document have been saved </li>
+        </ul>
+        
+        
+        <h2> 
+            V1.0.2: 
+        </h2>
+        <ul>
+            <li> Display the release panel </li>
+            <li> Saving file does not use openDialog anymore but saveDialog instead</li>
+        </ul>
+        
+        <h2> 
+            V1.0.1: 
+        </h2>
+        <ul>
+            <li> Fits file viewers can show selected tables with topcat defaut viewer </li>
+            <li> Embedded data extracted one time for every actions(viewing,saving...) </li>
+        </ul>
+
+        <h2> 
+            V1.0:
+        </h2> 
+        <ul>
+            <li> FilePanel permits to save embedded file </li>
+            <li> Delete button used to supress target refreshes the left tree </li>
+            <li> Preference window close button does not quit the application anylonger </li>
+            <li> Double clicks into list select view on clicked element </li>
+            <li> Settings splits sub components grouping FilesPanel and TargetsPanel </li>
+            <li> Report error loading bad format files (oifiles and settings ones) </li>
+        </ul>
+    </body>
+</html>
