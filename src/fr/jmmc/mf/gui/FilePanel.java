@@ -146,7 +146,6 @@ public class FilePanel extends javax.swing.JPanel {
         saveFileButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         loadViewerButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         hduList = new javax.swing.JList();
@@ -256,14 +255,6 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(loadViewerButton, gridBagConstraints);
-
-        jLabel1.setText("file size, file infos,...whatever else... ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel1.add(jLabel1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -537,7 +528,6 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu fileListPopupMenu;
     private javax.swing.JList hduList;
     private javax.swing.JTextField infosTextField;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
