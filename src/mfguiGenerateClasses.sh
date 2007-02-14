@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.6 2007-02-14 09:29:52 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.7 2007-02-14 17:05:39 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2007/02/14 09:29:52  mella
+# Moved jmmc.* into fr.jmmc.*
+#
 # Revision 1.5  2007/02/12 14:14:15  mella
 # Add message for every class
 #
@@ -40,9 +43,14 @@
 
 
 # Generate the class path for Java
-CLASSPATH=`mkfMakeJavaClasspath`
+CLASSPATH=$CLASSPATH
+for l in ../lib/*.jar
+do
+CLASSPATH=$CLASSPATH:$l
+done
 
-MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
+#MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
+MODEL_SCHEMA=../config/mfmdl.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $CLASSPATH org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  $*
@@ -80,7 +88,10 @@ do
     head -$b1 $f > $tmp
     echo "    public String toString(){ return $toString } " >> $tmp
     echo "}" >> $tmp
-    cp -af $tmp $f
+    if ! cp -af $tmp $f
+    then
+        cp -pf $tmp $f
+    fi
     rm $tmp
 done
 
