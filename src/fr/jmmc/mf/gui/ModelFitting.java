@@ -1,9 +1,9 @@
 /*
  JMMC
 */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.*;
+import fr.jmmc.mcs.gui.*;
 
 import java.util.*;
 import java.util.logging.*;
@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.5 2007-02-12 14:27:18 mella Exp $";
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.ModelFitting");
+    final static String rcsId = "$Id: ModelFitting.java,v 1.6 2007-02-14 10:32:33 mella Exp $";
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
 
     static String getVersion() {
         return rcsId;
@@ -45,10 +45,10 @@ public class ModelFitting {
             }
 
             // Set default resource for application
-            jmmc.mcs.util.Resources.setResourceName("jmmc/mf/gui/Resources");
+            fr.jmmc.mcs.util.Resources.setResourceName("fr.jmmc.mf/gui/Resources");
             logger.info("Starting ModelFitting Rev:" + rcsId);
             logger.info("Version:" +
-                jmmc.mcs.util.Resources.getResource("mf.version"));
+                fr.jmmc.mcs.util.Resources.getResource("mf.version"));
 
             // Set the default locale to custom locale
             Locale locale = Locale.US;
@@ -63,7 +63,7 @@ public class ModelFitting {
             MainFrame myFrame = new MainFrame();
             myFrame.setVisible(true);
         } catch (Exception exc) {
-            new jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
             System.exit(1);
         }
     }
@@ -77,7 +77,7 @@ public class ModelFitting {
             topcat.addTable(topcat.getTableFactory().makeStarTable(filename),
                 filename, true);
         } catch (Exception exc) {
-            new jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
     }
 }

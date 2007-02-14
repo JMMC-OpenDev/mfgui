@@ -3,13 +3,13 @@
  *
  * Created on 5 octobre 2006, 09:31
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.*;
+import fr.jmmc.mcs.gui.*;
 
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
-import jmmc.mf.models.*;
+import fr.jmmc.mf.models.*;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -49,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame
         SettingsViewerInterface {
     /** Model reference */
     static public SettingsModel rootSettingsModel = null;
-    static Logger logger = Logger.getLogger("jmmc.mf.gui.MainFrame");
+    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.MainFrame");
 
     // List of viewer panel used to display sub components
     static TargetsPanel targetsPanel;
@@ -272,7 +272,7 @@ public class MainFrame extends javax.swing.JFrame
 
         // Add Help->ShowTooltips
         menuItem = new JCheckBoxMenuItem("Tooltips");
-        menuItem.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(
+        menuItem.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(
                 myPreferences, "help.tooltips.show"));
         helpMenu.add(menuItem);
 
@@ -464,7 +464,7 @@ public class MainFrame extends javax.swing.JFrame
         String result = "";
 
         // Run main application waiting for end of cat process
-        jmmc.mcs.util.ProcessHandler ph = new jmmc.mcs.util.ProcessHandler(new String[] {
+        fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[] {
                     yogaProgram, methodName
                 });
         YogaExec pm = new YogaExec();
@@ -521,7 +521,7 @@ public class MainFrame extends javax.swing.JFrame
         String result = "";
 
         // Run main application waiting for end of cat process
-        jmmc.mcs.util.ProcessHandler ph = new jmmc.mcs.util.ProcessHandler(new String[] {
+        fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[] {
                     yogaProgram, methodName, filename
                 });
         YogaExec pm = new YogaExec();
@@ -581,7 +581,7 @@ public class MainFrame extends javax.swing.JFrame
             });
     }
 
-    protected class ShowPrefAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowPrefAction extends fr.jmmc.mcs.util.MCSAction {
         /** Preferences view */
         PreferencesView preferencesView;
 
@@ -602,7 +602,7 @@ public class MainFrame extends javax.swing.JFrame
     }
 
     // @todo try to move it into the mcs preferences area
-    protected class SavePrefAction extends jmmc.mcs.util.MCSAction {
+    protected class SavePrefAction extends fr.jmmc.mcs.util.MCSAction {
         public SavePrefAction() {
             super("savePreferences");
         }
@@ -619,7 +619,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class RestorePrefAction extends jmmc.mcs.util.MCSAction {
+    protected class RestorePrefAction extends fr.jmmc.mcs.util.MCSAction {
         public RestorePrefAction() {
             super("restorePreferences");
         }
@@ -637,7 +637,7 @@ public class MainFrame extends javax.swing.JFrame
     }
 
     /** Display another tab with revision informations */
-    protected class ShowRevisionAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowRevisionAction extends fr.jmmc.mcs.util.MCSAction {
         public ShowRevisionAction() {
             super("showRevision");
         }
@@ -647,7 +647,7 @@ public class MainFrame extends javax.swing.JFrame
 
             try {
                 URL url = this.getClass().getClassLoader()
-                              .getResource("jmmc/mf/gui/Releases.html");
+                              .getResource("fr/jmmc/mf/gui/Releases.html");
                 ResultPanel rp = new ResultPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Revision", rp);
@@ -658,7 +658,7 @@ public class MainFrame extends javax.swing.JFrame
     }
 
     /** Display another tab with help informations */
-    protected class ShowHelpAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowHelpAction extends fr.jmmc.mcs.util.MCSAction {
         public ShowHelpAction() {
             super("showHelp");
         }
@@ -668,7 +668,7 @@ public class MainFrame extends javax.swing.JFrame
 
             try {
                 URL url = this.getClass().getClassLoader()
-                              .getResource("jmmc/mf/gui/Help.html");
+                              .getResource("fr/jmmc/mf/gui/Help.html");
                 ResultPanel rp = new ResultPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Help", rp);
@@ -678,7 +678,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class RunFitAction extends jmmc.mcs.util.MCSAction {
+    protected class RunFitAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName = "runFit";
 
         public RunFitAction() {
@@ -759,7 +759,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class GetYogaVersionAction extends jmmc.mcs.util.MCSAction {
+    protected class GetYogaVersionAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName = "getYogaVersion";
 
         public GetYogaVersionAction() {
@@ -786,7 +786,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class YogaExec implements jmmc.mcs.util.ProcessManager {
+    protected class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
         StringBuffer sb;
 
         public YogaExec() {
@@ -821,7 +821,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class GetModelListAction extends jmmc.mcs.util.MCSAction {
+    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName = "getModelList";
 
         public GetModelListAction() {
@@ -900,7 +900,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class NewModelAction extends jmmc.mcs.util.MCSAction {
+    protected class NewModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
 
         public NewModelAction() {
@@ -928,7 +928,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class LoadModelAction extends jmmc.mcs.util.MCSAction {
+    protected class LoadModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
 
         public LoadModelAction() {
@@ -960,7 +960,7 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
-    protected class SaveModelAction extends jmmc.mcs.util.MCSAction {
+    protected class SaveModelAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
 
         public SaveModelAction() {

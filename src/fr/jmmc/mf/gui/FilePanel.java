@@ -3,11 +3,11 @@
  *
  * Created on 8 novembre 2006, 11:27
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.ReportDialog;
 
-import jmmc.mf.models.File;
+import fr.jmmc.mf.models.File;
 
 //import nom.tam.fits.*;
 import org.eso.fits.FitsFile;
@@ -32,9 +32,9 @@ public class FilePanel extends javax.swing.JPanel {
     static Action showEmbeddedFileAction;
     static DefaultListModel hduListModel = new DefaultListModel();
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "jmmc.mf.gui.FilePanel");
+            "fr.jmmc.mf.gui.FilePanel");
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JPopupMenu fileListPopupMenu;
     private javax.swing.JList hduList;
     private javax.swing.JTextField infosTextField;
@@ -340,7 +340,7 @@ public class FilePanel extends javax.swing.JPanel {
     } // </editor-fold>//GEN-END:initComponents
 
     private void showUVCoverageButtonActionPerformed(
-        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_showUVCoverageButtonActionPerformed
+        java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUVCoverageButtonActionPerformed
                                           // Get all selected items
 
         int[] indices = hduList.getSelectedIndices();
@@ -399,11 +399,11 @@ public class FilePanel extends javax.swing.JPanel {
             }
         } catch (Exception exc) {
             logger.warning("Can't do graph");
-            new jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
-    } //GEN-LAST:event_showUVCoverageButtonActionPerformed
+    }//GEN-LAST:event_showUVCoverageButtonActionPerformed
 
-    private void showSketchButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_showSketchButtonActionPerformed
+    private void showSketchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSketchButtonActionPerformed
 
         try {
             String filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
@@ -460,9 +460,9 @@ public class FilePanel extends javax.swing.JPanel {
             */
         } catch (Exception exc) {
             logger.warning("Can't do graph");
-            new jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
-    } //GEN-LAST:event_showSketchButtonActionPerformed
+    }//GEN-LAST:event_showSketchButtonActionPerformed
 
     public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app) {
         try {
@@ -493,7 +493,7 @@ public class FilePanel extends javax.swing.JPanel {
                 logger.info("app does not support:" + loadFromURLURI);
             }
         } catch (Exception exc) {
-            new jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
 
         /*list.getElementAt();
@@ -501,7 +501,7 @@ public class FilePanel extends javax.swing.JPanel {
          **/
     }
 
-    private void hduListMousePressed(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_hduListMousePressed
+    private void hduListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hduListMousePressed
         logger.entering("" + this.getClass(), "hduListMousePressed");
 
         //if (evt.isPopupTrigger() && hduList.getSelectedIndex()>0 ) {
@@ -543,9 +543,9 @@ public class FilePanel extends javax.swing.JPanel {
         } else {
             logger.finest("No menu required");
         }
-    } //GEN-LAST:event_hduListMousePressed
+    }//GEN-LAST:event_hduListMousePressed
 
-    private void hduListMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_hduListMouseClicked
+    private void hduListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hduListMouseClicked
         logger.entering("" + this.getClass(), "hduListMouseClicked");
 
         // launch viewer if double click else adjust view button state
@@ -558,18 +558,18 @@ public class FilePanel extends javax.swing.JPanel {
         } else {
             loadViewerButton.setEnabled(false);
         }
-    } //GEN-LAST:event_hduListMouseClicked
+    }//GEN-LAST:event_hduListMouseClicked
 
-    private void hduListValueChanged(javax.swing.event.ListSelectionEvent evt) { //GEN-FIRST:event_hduListValueChanged
+    private void hduListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_hduListValueChanged
 
         if (hduList.getSelectedIndex() >= 0) {
             loadViewerButton.setEnabled(true);
         } else {
             loadViewerButton.setEnabled(false);
         }
-    } //GEN-LAST:event_hduListValueChanged
+    }//GEN-LAST:event_hduListValueChanged
 
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
     public static void saveFile(java.io.File targetFile)
         throws java.io.IOException, java.io.FileNotFoundException {
         UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
@@ -599,7 +599,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-    protected class ShowEmbeddedFileAction extends jmmc.mcs.util.MCSAction {
+    protected class ShowEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
         public ShowEmbeddedFileAction() {
             super("showEmbeddedFile");
         }
@@ -626,7 +626,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-    protected class SaveEmbeddedFileAction extends jmmc.mcs.util.MCSAction {
+    protected class SaveEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
 
         public SaveEmbeddedFileAction() {

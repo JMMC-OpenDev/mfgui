@@ -1,13 +1,13 @@
 /*
  * JMMC
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.ReportDialog;
 
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
-import jmmc.mf.models.*;
+import fr.jmmc.mf.models.*;
 
 import java.awt.event.ActionEvent;
 
@@ -30,7 +30,7 @@ import javax.swing.tree.*;
  */
 public class SettingsPanel extends javax.swing.JPanel {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "jmmc.mf.gui.SettingsPanel");
+            "fr.jmmc.mf.gui.SettingsPanel");
     static FilesPanel filesPanel = null;
     static TargetsPanel targetsPanel = null;
     static FitterPanel fitterPanel = null;

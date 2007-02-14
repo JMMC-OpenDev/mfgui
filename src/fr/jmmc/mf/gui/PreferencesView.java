@@ -3,7 +3,7 @@
  *
  * Created on 30 novembre 2006, 10:33
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,7 +19,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     static Preferences myPreferences = Preferences.getInstance();
     static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "jmmc.mf.gui.MainFrame");
+            "fr.jmmc.mf.gui.MainFrame");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
@@ -102,7 +102,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0,
                 0, 0));
         jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jCheckBox1.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(
+        jCheckBox1.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(
                 myPreferences, "yoga.remote.use"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -119,7 +119,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel1, gridBagConstraints);
 
-        jTextField1.setDocument(jmmc.mcs.util.PreferencedDocument.getInstance(
+        jTextField1.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(
                 myPreferences, "yoga.remote.url"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -136,7 +136,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel2, gridBagConstraints);
 
-        jTextField2.setDocument(jmmc.mcs.util.PreferencedDocument.getInstance(
+        jTextField2.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(
                 myPreferences, "yoga.local.home"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -171,7 +171,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0,
                 0, 0));
         jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jCheckBox2.setModel(jmmc.mcs.util.PreferencedButtonModel.getInstance(
+        jCheckBox2.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(
                 myPreferences, "help.tooltips.show"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;

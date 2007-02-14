@@ -1,11 +1,11 @@
 /*
  JMMC
 */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.log.*;
+import fr.jmmc.mcs.log.*;
 
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
 import javax.swing.*;
 
