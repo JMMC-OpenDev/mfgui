@@ -3,11 +3,11 @@
  *
  * Created on 13 novembre 2006, 09:42
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.ReportDialog;
 
-import jmmc.mf.models.*;
+import fr.jmmc.mf.models.*;
 
 import java.lang.reflect.*;
 
@@ -24,7 +24,7 @@ import javax.swing.table.*;
  */
 public class ModelPanel extends javax.swing.JPanel {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "jmmc.mf.gui.ModelPanel");
+            "fr.jmmc.mf.gui.ModelPanel");
     ParametersTableModel parametersTableModel;
     Model current;
     SettingsModel settingsModel;

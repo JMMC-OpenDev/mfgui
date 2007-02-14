@@ -1,6 +1,6 @@
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.*;
+import fr.jmmc.mcs.gui.*;
 
 import java.util.logging.*;
 
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  * @author  mella
  */
 public class LITproApplet extends javax.swing.JApplet {
-    final static String rcsId = "$Id: LITproApplet.java,v 1.3 2007-02-12 14:27:18 mella Exp $";
+    final static String rcsId = "$Id: LITproApplet.java,v 1.4 2007-02-14 10:32:33 mella Exp $";
 
     // Variables declaration - do not modify
     private javax.swing.JButton startButton;
@@ -57,7 +57,7 @@ public class LITproApplet extends javax.swing.JApplet {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            Logger logger = Logger.getLogger("jmmc.mf");
+            Logger logger = Logger.getLogger("fr.jmmc.mf");
             logger.setLevel(java.util.logging.Level.ALL);
             logger.info("Starting ModelFitting");
             logger.info("Rev:" + rcsId);

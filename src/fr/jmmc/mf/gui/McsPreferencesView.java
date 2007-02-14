@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: McsPreferencesView.java,v 1.3 2007-02-12 14:27:18 mella Exp $"
+ * "@(#) $Id: McsPreferencesView.java,v 1.4 2007-02-14 10:32:33 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2007/02/12 14:27:18  mella
+ * Jalopyzation
+ *
  * Revision 1.2  2006/11/21 13:11:01  mella
  * blah
  *
@@ -14,9 +17,9 @@
  *
  *
  ******************************************************************************/
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.util.*;
+import fr.jmmc.mcs.util.*;
 
 import java.awt.*;
 import java.awt.event.*;

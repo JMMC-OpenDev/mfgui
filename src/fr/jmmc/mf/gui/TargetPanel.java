@@ -3,9 +3,9 @@
  *
  * Created on 3 novembre 2006, 15:48
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mf.models.*;
+import fr.jmmc.mf.models.*;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -25,7 +25,7 @@ import javax.swing.event.*;
 public class TargetPanel extends javax.swing.JPanel
     implements ListSelectionListener {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "jmmc.mf.gui.TargetPanel");
+            "fr.jmmc.mf.gui.TargetPanel");
     static SettingsViewerInterface settingsViewer;
     Target current = null;
     ListModel targetFiles;

@@ -3,9 +3,9 @@
  *
  * Created on 28 septembre 2006, 13:43
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
-import jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.ReportDialog;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -24,7 +24,7 @@ import javax.swing.table.*;
  * @author  mella
  */
 public class EnginePanel extends javax.swing.JPanel {
-    Logger logger = Logger.getLogger("jmmc.mf.gui.EnginePanel");
+    Logger logger = Logger.getLogger("fr.jmmc.mf.gui.EnginePanel");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton getAvailableModelsButton;

@@ -3,7 +3,7 @@
  *
  * Created on 13 novembre 2006, 17:10
  */
-package jmmc.mf.gui;
+package fr.jmmc.mf.gui;
 
 
 /**
