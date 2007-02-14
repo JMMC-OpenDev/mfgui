@@ -1,12 +1,11 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.*;
+import fr.jmmc.mcs.gui.ReportDialog;
 
 import java.util.logging.*;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-
 
 /*
  * LITproApplet.java
@@ -19,19 +18,17 @@ import javax.swing.JOptionPane;
  * @author  mella
  */
 public class LITproApplet extends javax.swing.JApplet {
-    final static String rcsId = "$Id: LITproApplet.java,v 1.4 2007-02-14 10:32:33 mella Exp $";
 
-    // Variables declaration - do not modify
-    private javax.swing.JButton startButton;
-
+    final static String rcsId="$Id: LITproApplet.java,v 1.5 2007-02-14 14:14:57 mella Exp $";
+    
     /** Initializes the applet LITproApplet */
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
-                    public void run() {
-                        initComponents();
-                    }
-                });
+                public void run() {
+                    initComponents();
+                }
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -47,36 +44,49 @@ public class LITproApplet extends javax.swing.JApplet {
 
         startButton.setText("Start LITpro GUI");
         startButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    startButtonActionPerformed(evt);
-                }
-            });
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
 
         getContentPane().add(startButton, new java.awt.GridBagConstraints());
+
     }
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
-            Logger logger = Logger.getLogger("fr.jmmc.mf");
-            logger.setLevel(java.util.logging.Level.ALL);
+
+
+        try
+        {      
+            Logger logger = Logger.getLogger("jmmc.mf");
+            logger.setLevel(java.util.logging.Level.ALL);            
             logger.info("Starting ModelFitting");
-            logger.info("Rev:" + rcsId);
+            logger.info("Rev:"+rcsId);           
 
             // Create a specific console handler
             ConsoleHandler handler = new ConsoleHandler();
             handler.setLevel(java.util.logging.Level.ALL);
             //logger.addHandler(handler);                      
-            ReportDialog.setDefaultComment("Please complete above" +
-                " informations to improve this software.\n" + rcsId + "\n" +
-                "---\n");
+
+            ReportDialog.setDefaultComment( "Please complete above"+
+                    " informations to improve this software.\n"+
+                    rcsId+"\n"+
+                    "---\n");
 
             MainFrame myFrame = new MainFrame();
             myFrame.setVisible(true);
-        } catch (Exception e) {
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-            System.exit(1);
         }
+        catch (Exception e)
+        {            
+            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);            
+            System.exit(1);
+        }                
+
     }
 
+
+    // Variables declaration - do not modify
+    private javax.swing.JButton startButton;
     // End of variables declaration
+
 }

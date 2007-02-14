@@ -6,8 +6,8 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-package fr.jmmc.mf.gui;
 
+package fr.jmmc.mf.gui;
 
 /**
  *
