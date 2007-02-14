@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.7 2007-02-14 09:28:51 mella Exp $"
+# "@(#) $Id: Makefile,v 1.8 2007-02-14 11:07:48 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2007/02/14 09:28:51  mella
+# Moved jmmc.* into fr.jmmc.*
+#
 # Revision 1.6  2007/02/12 14:27:18  mella
 # Jalopyzation
 #
@@ -179,8 +182,13 @@ include $(MAKEDIR)/mkfMakefile
 #
 # TARGETS
 # -------
-all:	do_all
+
+do_xsdMapping:	
+	mfguiGenerateClasses
+
+all:	do_xsdMapping do_all
 	@echo " . . . 'all' done" 
+	
 
 clean : clean_all 
 	@echo " . . . clean done"
