@@ -62,10 +62,10 @@ public class TargetPanel extends javax.swing.JPanel implements
         //// Select current ident
         identComboBox.setSelectedItem(t.getIdent());
         
-        //// Set file selection
+        //// Set file selection according target info
         selectedFiles.clearSelection();
         // select fileListModel corresponding to target ident
-        targetFiles = (ListModel)MainFrame.rootSettingsModel.fileListModels.get(t.getIdent());
+        targetFiles = MainFrame.rootSettingsModel.getFileListModelForOiTarget(t.getIdent());
         if(targetFiles != null){
             fileList.setModel(targetFiles);
             // define selected files reading fileLinks
@@ -80,9 +80,11 @@ public class TargetPanel extends javax.swing.JPanel implements
             for (int i = 0; i < links.length; i++){
                 FileLink link = links[i];
                 Object idRef = link.getFileRef();
+                selectedFiles.addSelectionInterval(i, i);
                 if(idRef!=null){
-                    logger.fine("Selecting file for ref="+ idRef);
-                    selectedFiles.addSelectionInterval(i, i);
+                    logger.fine("Selecting file for ref="+ idRef);                    
+                }else{
+                    logger.warning("No idRef for link");
                 }
             }
         }else{
@@ -91,7 +93,7 @@ public class TargetPanel extends javax.swing.JPanel implements
         }
         listenToFileSelection=true;
         
-        //// Set model list
+        // Set model list
         models.clear();
         for (int i=0; i < current.getModelCount(); i++){
             models.addElement(current.getModel(i));
