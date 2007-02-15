@@ -151,7 +151,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         t.setIdent(targetIdent);
         
         // Add list of currently files that contain this target        
-        ListModel targetFiles = (ListModel)MainFrame.rootSettingsModel.fileListModels.get(targetIdent);
+        ListModel targetFiles = MainFrame.rootSettingsModel.getFileListModelForOiTarget(targetIdent);
         for (int i = 0; i < targetFiles.getSize(); i++) {
             FileLink fileLink = new FileLink();
             fileLink.setFileRef(targetFiles.getElementAt(i));
