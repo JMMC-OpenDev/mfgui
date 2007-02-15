@@ -66,7 +66,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public static Hashtable supportedModels = new Hashtable();
     public static DefaultComboBoxModel supportedModelsModel= new DefaultComboBoxModel();
     
-    public Hashtable fileListModels = new Hashtable();    
+    private Hashtable fileListModels = new Hashtable();    
     public DefaultListModel allFilesListModel;
     public DefaultListModel targetListModel;
     public DefaultComboBoxModel oiTargets;    
@@ -163,13 +163,19 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             targetListModel.addElement(t);
         }
         
-        logger.fine("This rootSettings contains "
+        String desc="This rootSettings contains "
                 + rootSettings.getFiles().getFileCount() + " files,"
-                + rootSettings.getTargets().getTargetCount() + " targets,"
+                + rootSettings.getTargets().getTargetCount() + " targets,"                
                 + "User info: [ " + rootSettings.getUserInfo() + " ]"
 // Some old settings files have no parameters and cause a null exception on this line
 //                + rootSettings.getParameters().getParameterCount() + " shared parameters,"
-                );
+                ;
+        
+        if( rootSettings.getResult() != null ){
+                desc=desc+" with result section";                
+        }
+        
+        logger.fine(desc);
         
         // fire general change event
         fireTreeStructureChanged(rootSettings);
@@ -183,7 +189,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     private void addFileListModelForOiTarget(Oitarget target, File file){
         logger.entering(""+this.getClass(), "addFileListModelForTarget");
         // we use target name as key
-        String key = target.getTarget();
+        String key = target.getTarget().trim();
         DefaultListModel lm = (DefaultListModel) fileListModels.get(key);
         if(lm == null){
             // We need to create one new fileModel for this ident
@@ -191,14 +197,23 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             fileListModels.put(key, lm);            
         }
         if(!lm.contains(file)){
-            logger.fine("adding file "+file.getName() +" to listmodel for "+ key );
+            logger.fine("adding file '"+file.getName() +"' to listmodel for '"+ key+ "'" );
             lm.addElement(file);
         }else{
-            logger.fine("file "+file.getName() +" already registered to listmodel for "+ key );
+            logger.fine("file "+file.getName() +" already registered to listmodel for '"+ key + "'" );
         }
         
     }
 
+    
+    public ListModel getFileListModelForOiTarget(String oiTargetName){
+        logger.entering(""+this.getClass(), "getFileListModelForTarget");
+        // we use target name as key
+        String key = oiTargetName.trim();
+        return (ListModel)fileListModels.get(key);
+    }
+
+    
     // @todo place this method into fr.jmmc.mf.util
     public void addFile(java.io.File fileToAdd)throws Exception{
         logger.entering(""+this.getClass(), "addFile");
@@ -526,13 +541,17 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         //logger.entering(""+this.getClass(), "getChild");
         if (parent instanceof Settings ){
             Settings s = (Settings) parent;
-            // select if child is one target or fitter node
+            // select which settings child it is
             if( index ==0 ){
                 return s.getFiles();
             }else if( index == 1 ){                                
                 return s.getTargets();
-            }else if( index == 2 ){
+            }else if( index == 2 && s.getParameters().getParameterCount()>=1){
                 return s.getParameters();
+            }else if( index == 2 && s.getParameters().getParameterCount()==0){
+                return s.getResult();            
+            }else if( index == 3){
+                return s.getResult();            
             }else{
                 logger.warning("This line must not occur");
                 return "??";
@@ -566,8 +585,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             // return files, targets, and parameters
             int i=1;
             if( s.getFiles().getFileCount() >= 1){
-                logger.fine("file count is "+s.getFiles().getFileCount());
-                logger.fine("target count is "+s.getTargets().getTargetCount());
+                logger.finest("file count is "+s.getFiles().getFileCount());
+                logger.finest("target count is "+s.getTargets().getTargetCount());
                 i++;                
             }
             if(s.getParameters()!=null){
@@ -575,6 +594,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                     i++;                
                 }
             }
+            if( s.getResult() != null ){                            
+                i++;                
+            }            
             return i;
         }else if (parent instanceof Files){
             Files f = (Files) parent;
