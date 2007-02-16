@@ -4,11 +4,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.7 2007-02-14 14:44:03 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.8 2007-02-16 17:38:13 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2007/02/14 14:44:03  mella
+ * Files should now be ok to compile and be modified by netbeans
+ *
  * Revision 1.6  2007/02/14 14:14:57  mella
  * Use netbeans refactoring to save form<->java consistency
  *
@@ -75,7 +78,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
             /* Place general preferences  */
             myDefaultProperties.setPreference("show.recursive.parameters", "false");
             myDefaultProperties.setPreference("yoga.remote.use", "true");
-            myDefaultProperties.setPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITpro/run.php");
+            myDefaultProperties.setPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproDev/run.php");
             myDefaultProperties.setPreference("yoga.local.home", "../ys");
 
 
