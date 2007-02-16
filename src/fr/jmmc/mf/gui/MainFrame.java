@@ -17,6 +17,7 @@ import fr.jmmc.mf.models.Parameters;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
+import fr.jmmc.mf.models.Result;
 import fr.jmmc.mcs.util.*;
 
 import java.util.*;
@@ -65,6 +66,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     static FilePanel filePanel;
     static ModelPanel modelPanel;
     static ParametersPanel parametersPanel;
+    static ResultPanel resultPanel;
     static StatusBar statusBar;
     
     // Application actions
@@ -130,6 +132,8 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         filePanel = new FilePanel();
         modelPanel = new ModelPanel();
         parametersPanel = new ParametersPanel(this);
+        resultPanel = new ResultPanel(this);
+        
     
         // To permit modifier panel changes,
         // Register myself as treeselectionListener
@@ -353,6 +357,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }else if ( o instanceof Parameters){
             parametersPanel.show((Parameters)o);
             modifierPanel.add(parametersPanel);
+        }else if ( o instanceof Result){
+            resultPanel.show((Result)o);
+            modifierPanel.add(resultPanel);
         }else{            
             modifierPanel.add(new JLabel("missing modifier panel for '"+o.getClass()+"' objects"));
             if ( o instanceof Files){
@@ -513,7 +520,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             logger.fine("Requesting revision display");                                    
             try {
                 URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Releases.html");                                                                     
-                ResultPanel rp = new ResultPanel("");
+                TabbedPanel rp = new TabbedPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Revision", rp);                
                 
@@ -532,7 +539,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             logger.fine("Requesting Help display");
             try {
                 URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");                                                                     
-                ResultPanel rp = new ResultPanel("");
+                TabbedPanel rp = new TabbedPanel("");
                 rp.setPage(url);
                 tabbedPane.addTab("Help", rp);                                
             } catch (Exception exc) {
@@ -571,7 +578,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                 setStatus("Error during fitting process");
             }
             
-            ResultPanel rp = new ResultPanel(result);
+            TabbedPanel rp = new TabbedPanel(result);
             tabbedPane.addTab("Fit Result", rp);    
             int i1 = result.indexOf("START_XML_RESULT");
             int i2 = result.indexOf("END_XML_RESULT");
@@ -778,7 +785,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                     result=doExec(methodName);
                 }                
                 // create a result panel
-                ResultPanel rp = new ResultPanel(result);
+                TabbedPanel rp = new TabbedPanel(result);
                 tabbedPane.addTab("Available Models", rp);
                 
                 // Indicates to the rootSettingsModel list of availables models
