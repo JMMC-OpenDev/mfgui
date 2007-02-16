@@ -268,8 +268,9 @@ by their id.
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexType>
-        <xsd:complexContent mixed="true">            
-        </xsd:complexContent>
+            <xsd:sequence>
+                <xsd:any minOccurs="0" processContents="lax"/>
+            </xsd:sequence>
         </xsd:complexType>
         
     </xsd:element>
