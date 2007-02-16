@@ -34,8 +34,9 @@ Root element of settings
                 <xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
                 <xsd:element ref="parameters" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
-                <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="result" minOccurs="0" maxOccurs="1"/>
+                <!-- since updateSettingsWithYogaResult.xsl add userInfo at end keep it at end -->
+                <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
         
