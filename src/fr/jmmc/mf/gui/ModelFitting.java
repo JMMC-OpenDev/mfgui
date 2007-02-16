@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  */
 public class ModelFitting
 {
-    final static String rcsId="$Id: ModelFitting.java,v 1.8 2007-02-14 14:44:03 mella Exp $";
+    final static String rcsId="$Id: ModelFitting.java,v 1.9 2007-02-16 17:35:36 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");                
     
     static String getVersion(){
@@ -54,7 +54,7 @@ public class ModelFitting
             logger.info("Setting locale to:"+locale);
             
             ReportDialog.setDefaultComment( "This forms does not actually works but present requirements....\n\n Please complete above"+
-                    " informations to improve this software.\n"+
+                    " informations to improve model fitting software.\n"+
                     //rcsId+"\n"+
                     "---\n");
             
