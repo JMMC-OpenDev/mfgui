@@ -1,5 +1,5 @@
 /*
- * ResultPanel.java
+ * TabbedPanel.java
  *
  * Created on 13 novembre 2006, 17:10
  */
@@ -10,10 +10,12 @@ package fr.jmmc.mf.gui;
  *
  * @author  mella
  */
-public class ResultPanel extends javax.swing.JPanel {
+public class TabbedPanel extends javax.swing.JPanel {
     
-    /** Creates new form ResultPanel */
-    public ResultPanel(String result) {
+    /**
+     * Creates new form TabbedPanel
+     */
+    public TabbedPanel(String result) {
         initComponents();
         resultPane.setText(result);     
         dateTextField.setText(""+new java.util.Date());
