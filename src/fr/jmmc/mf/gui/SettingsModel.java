@@ -542,15 +542,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         if (parent instanceof Settings ){
             Settings s = (Settings) parent;
             // select which settings child it is
-            if( index ==0 ){
+            if( index == 0 ){
                 return s.getFiles();
             }else if( index == 1 ){                                
                 return s.getTargets();
-            }else if( index == 2 && s.getParameters().getParameterCount()>=1){
+            }else if( index == 2 && s.getParameters().getParameterCount() >=1 ){
                 return s.getParameters();
-            }else if( index == 2 && s.getParameters().getParameterCount()==0){
+            }else if( index == 2 && s.getParameters().getParameterCount() ==0 ){
                 return s.getResult();            
-            }else if( index == 3){
+            }else if( index == 3 ){
                 return s.getResult();            
             }else{
                 logger.warning("This line must not occur");
@@ -585,8 +585,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             // return files, targets, and parameters
             int i=1;
             if( s.getFiles().getFileCount() >= 1){
-                logger.finest("file count is "+s.getFiles().getFileCount());
-                logger.finest("target count is "+s.getTargets().getTargetCount());
+                logger.finest("file count:"+s.getFiles().getFileCount());
+                logger.finest("target count:"+s.getTargets().getTargetCount());
                 i++;                
             }
             if(s.getParameters()!=null){

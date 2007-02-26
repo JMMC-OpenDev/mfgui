@@ -25,6 +25,7 @@ import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
+import java.awt.BorderLayout;
 
 import java.awt.Component;
 import java.awt.Color;
@@ -81,6 +82,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     public static Action restorePrefAction;
     public static Action showRevisionAction;
     public static Action showHelpAction;
+    public static Action showLogGuiAction;
 
     // Model actions
     public static Action newModelAction;
@@ -111,6 +113,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         showPrefAction = new ShowPrefAction();
         showRevisionAction = new ShowRevisionAction();
         showHelpAction = new ShowHelpAction();
+        showLogGuiAction = new ShowLogGuiAction();
         newModelAction     = new NewModelAction();
         loadModelAction     = new LoadModelAction();
         saveModelAction     = new SaveModelAction();                        
@@ -209,11 +212,11 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         editMenu.setText("Edit");
         jMenuBar.add(editMenu);
 
-        // Add Interop
-        JMenu interopMenu        = new JMenu();
-        interopMenu.setText("Interop");
-        jMenuBar.add(interopMenu);                
-        
+        // Add Advanced
+        JMenu advancedMenu        = new JMenu();
+        advancedMenu.setText("Advanced");
+        jMenuBar.add(advancedMenu);                
+                
         // Add Help
         JMenu helpMenu        = new JMenu();
         helpMenu.setText("Help");
@@ -279,6 +282,12 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         helpMenu.add(menuItem);
         
 
+        // Add Advanced->Interop
+        JMenu interopMenu = new JMenu();
+        interopMenu.setText("Interop");
+        advancedMenu.add(interopMenu);   
+        advancedMenu.addSeparator();
+
         // Fill Interop menu
         try {
             interopMenu.add( plasticServer_.getRegisterAction( true ) );
@@ -286,18 +295,20 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             interopMenu.add( plasticServer_.getHubStartAction( true ) );
             interopMenu.add( plasticServer_.getHubStartAction( false ) );
             interopMenu.add( new HubWatchAction( plasticServer_ ) );
-            interopMenu.addSeparator();
+  //          interopMenu.addSeparator();
             //    interopMenu.add( tableTransmitter_.getBroadcastAction() );
 //            interopMenu.add( tableTransmitter_.createSendMenu() );
-            interopMenu.addSeparator();
+//            interopMenu.addSeparator();
             //          interopMenu.add( interophelpAct );
         } catch ( SecurityException e ) {
             interopMenu.setEnabled( false );
             logger.warning( "Security manager denies use of PLASTIC" );
         }
         
-        
-        
+        // Add Advanced->Interop
+        menuItem     = new JMenuItem();
+        menuItem.setAction(showLogGuiAction);        
+        advancedMenu.add(menuItem);
     }
     
     public static void closeTab(java.awt.Component c){
@@ -474,6 +485,31 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             }
         }
     }
+    
+    
+    protected class ShowLogGuiAction extends fr.jmmc.mcs.util.MCSAction {
+        JFrame logGuiFrame;
+        public ShowLogGuiAction(){
+            super("showLogGui");            
+            logGuiFrame = new JFrame("Log GUI"); 
+            logGuiFrame.getContentPane().add(imx.loggui.LogMaster.getLogView());            
+            logGuiFrame.setJMenuBar(new imx.loggui.LogMasterMenuBar(logGuiFrame));
+            // HACK remove file-> exit 
+            logGuiFrame.getJMenuBar().getMenu(0).remove(5);
+            imx.loggui.LogMaster.getLogMaster().configDefault();
+            imx.loggui.LogMaster.getLogMaster().configExternalLHFF();            
+            imx.loggui.LogMaster.getLogMaster().refresh();   
+            logGuiFrame.setMinimumSize(new java.awt.Dimension(640,480));
+            logGuiFrame.setPreferredSize(new java.awt.Dimension(640,480));
+            logGuiFrame.pack();            
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {                              
+          logGuiFrame.setVisible(true);                      
+          imx.loggui.LogMaster.getLogMaster().refresh();   
+        }
+    }
+    
     
     
     // @todo try to move it into the mcs preferences area

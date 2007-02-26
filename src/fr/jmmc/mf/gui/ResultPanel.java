@@ -1,7 +1,7 @@
 /*
  * ResultPanel.java
  *
- * Created on 16 fvrier 2007, 08:40
+ * Created on 16 fevrier 2007, 08:40
  */
 
 package fr.jmmc.mf.gui;
