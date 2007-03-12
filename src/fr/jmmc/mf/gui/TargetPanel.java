@@ -305,7 +305,7 @@ public class TargetPanel extends javax.swing.JPanel implements
             m = Model.unmarshal(reader);
             
             // force another name with given position
-            int position = current.getModelCount();
+            int position = current.getModelCount()+1;
             String type = selected.getType();
             m.setName(type+position);
             
