@@ -72,8 +72,7 @@
                 <xsl:copy-of select="degen"/>
                 </p>
                 </xsl:if>
-            
-
+                           
                 <h1>Covariance matrix</h1>
                 <table border="1">
                     <!-- append table headers first is empty-->
@@ -91,6 +90,26 @@
                         </tr>
                     </xsl:for-each>                
                 </table>
+                
+                 <h1>Correlation matrix</h1>
+                <table border="1">
+                    <!-- append table headers first is empty-->
+                    <tr>
+                        <th></th>
+                        <xsl:for-each select=".//param/*">
+                            <th><xsl:value-of select="name()"/></th>
+                        </xsl:for-each>
+                    </tr>
+                    <!-- append param name on first column then the table content-->
+                    <xsl:for-each select=".//param/*">
+                        <xsl:variable name="lineNb" select="position()"/>
+                        <tr><td><xsl:value-of select="name()"/></td>
+                            <xsl:copy-of select="$fitter//correl/table/tr[position()=$lineNb]/td"/>
+                        </tr>
+                    </xsl:for-each>                
+                </table>
+
+                
            </xsl:for-each>
             </body>
         </html>
