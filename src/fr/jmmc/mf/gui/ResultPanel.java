@@ -9,20 +9,10 @@ import fr.jmmc.mcs.gui.ReportDialog;
 
 import fr.jmmc.mf.models.Result;
 
-import javax.xml.xpath.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
+import javax.swing.*;
 
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import java.net.URL;
+import ptolemy.plot.plotml.*;
+import ptolemy.plot.*;
 
 
 /**
@@ -30,96 +20,65 @@ import java.net.URL;
  * @author  mella
  */
 public class ResultPanel extends javax.swing.JPanel {
-   static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.ResultPanel");
-     //ParametersTableModel parametersTableModel;
-     Result current;
-    SettingsViewerInterface settingsViewer=null;    
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.ResultPanel");
+    //ParametersTableModel parametersTableModel;
+    Result current;
+    SettingsViewerInterface settingsViewer=null;
+    
+    /* actions  (definitions are at end of file) */
+    static Action plotBaselinesAction;
+    static Action plotUVCoverageAction;    
+    static Action plotRadialAction;    
+    static Action plotImageAction;    
+    static Action plotUVMapAction;    
     
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer) {
-        initComponents();
+        /* actions must be inited before component init */
+        plotBaselinesAction = new PlotAction("plotBaselines");        
+        plotUVCoverageAction = new PlotAction("plotUVCoverage");
+        plotRadialAction = new PlotAction("plotRadial");
+        plotImageAction = new PlotAction("plotImage");
+        plotUVMapAction = new PlotAction("plotUVMap");
+        initComponents();        
     }
-    
-    public static String xsl(String xmlBuffer, URL xslURL) {
-            
-            try {
-                // Create transformer factory
-                TransformerFactory factory = TransformerFactory.newInstance();
-    
-                // Use the factory to create a template containing the xsl file
-                Templates template = factory.newTemplates(new StreamSource(
-                    xslURL.openStream()));
-    
-                // Use the template to create a transformer
-                Transformer xformer = template.newTransformer();
-    
-                // Prepare the input and output files
-                Source source = new StreamSource(new StringReader(xmlBuffer));
-                StringWriter sw = new StringWriter();
-                javax.xml.transform.Result result = new StreamResult(sw);
-    
-                // Apply the xsl file to the source file and write the result to the output file
-                xformer.transform(source, result);
-                
-                return sw.toString();
-                
-            } catch (TransformerConfigurationException exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-                // An error occurred in the XSL file
-            } catch (TransformerException exc) {
-                // An error occurred while applying the XSL file
-                // Get location of error in input file
-                SourceLocator locator = exc.getLocator();
-                int col = locator.getColumnNumber();
-                int line = locator.getLineNumber();
-                String publicId = locator.getPublicId();
-                String systemId = locator.getSystemId();
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);                
-            } catch (Exception exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-            }            
-            return null;
-        }    
     
     public void show(Result r){
         current=r;
         String xmlContent=""+current.getAnyObject();
-         try {
-             //
-             // Do a simple XPATH request
-             /* 
+        try {
+            //
+            // Do a simple XPATH request
+             /*
             // Parse the XML as a W3C document.
             DocumentBuilder builder =
                 DocumentBuilderFactory.newInstance().newDocumentBuilder();
             java.io.StringReader reader = new java.io.StringReader(xmlContent);
             Document document = builder.parse(new InputSource(reader));
-   
+              
             XPath xpath = XPathFactory.newInstance().newXPath();
             String expression = "//covar";
-
+              
             // Obtain the element as a String.
-            String covarStr = (String)
-                xpath.evaluate(expression, document);
+            String covarStr = (String)xpath.evaluate(expression, document);
             String htmlContent="<html>"+covarStr+"</html>";
             resultTextArea.setText(htmlContent);
             */
             
             //
-             // Do a simple xslt transform
-             // 
+            // Show simple xslt transform result
+            //
             java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/resultToHtml.xsl");
-            String htmlStr = xsl(xmlContent, url);
-            resultEditorPane.setContentType("text/html");            
-            resultEditorPane.setText(htmlStr);  
+            String htmlStr = UtilsClass.xsl(xmlContent, url, null);
+            resultEditorPane.setContentType("text/html");
+            resultEditorPane.setText(htmlStr);
             resultTextArea.setText(htmlStr);
-            
             
         } catch (Exception exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
         
     }
-    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -128,14 +87,22 @@ public class ResultPanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         resultTextArea = new javax.swing.JTextArea();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
+        setLayout(new java.awt.GridBagLayout());
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Result panel"));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
@@ -154,13 +121,46 @@ public class ResultPanel extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("xml", jScrollPane1);
 
-        add(jTabbedPane1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jTabbedPane1, gridBagConstraints);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
+
+        jButton1.setAction(plotBaselinesAction);
+        jPanel2.add(jButton1);
+
+        jButton2.setAction(plotUVCoverageAction);
+        jPanel2.add(jButton2);
+
+        jButton3.setAction(plotRadialAction);
+        jPanel2.add(jButton3);
+
+        jButton4.setAction(plotImageAction);
+        jPanel2.add(jButton4);
+
+        jButton5.setAction(plotUVMapAction);
+        jPanel2.add(jButton5);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(jPanel2, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -168,4 +168,38 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JTextArea resultTextArea;
     // End of variables declaration//GEN-END:variables
     
+    
+    protected void plot(String plotName) {
+        logger.entering(""+this.getClass(), "plot");
+        try{
+            // Contruct xml document to plot
+            java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
+            String xmlContent=""+current.getAnyObject();
+            String xmlStr = UtilsClass.xsl(xmlContent, url, new String[] {"plotName", plotName});            
+            // Construct plot and parse xml
+            Plot plot = new Plot();
+            PlotMLParser plotMLParser = new PlotMLParser(plot);
+            plotMLParser.parse(null, xmlStr);
+            
+            // Show plot into frame
+            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting "+plotName, plot);
+            plotMLFrame.setVisible(true);
+            logger.finest("plot ready to be shown");
+        }catch(Exception exc){            
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        }
+    }
+    
+    protected class PlotAction extends fr.jmmc.mcs.util.MCSAction {
+        String plotName;
+        /* plotName must correcspond to a resource action and one xslt template */
+        public PlotAction(String plotName) {
+            super(plotName);
+            this.plotName=plotName;            
+        }        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.entering(""+this.getClass(), "actionPerformed");
+            plot(plotName);
+        }
+    }    
 }
