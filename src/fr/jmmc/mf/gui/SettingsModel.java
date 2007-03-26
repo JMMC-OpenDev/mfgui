@@ -377,7 +377,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         // And update list
         if(targetNb>0){
             for(int i = 0; i< targetNb; i++){
-                String s = targetsColumn.getString(i);
+                String s = targetsColumn.getString(i).trim();
                 if (!modelOiTargetVector.contains(s)){
                     Oitarget t = new Oitarget();
                     t.setTarget(s);
