@@ -30,7 +30,7 @@ public class ResultPanel extends javax.swing.JPanel {
     static Action plotUVCoverageAction;    
     static Action plotRadialAction;    
     static Action plotImageAction;    
-    static Action plotUVMapAction;    
+    
     
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer) {
@@ -38,8 +38,6 @@ public class ResultPanel extends javax.swing.JPanel {
         plotBaselinesAction = new PlotAction("plotBaselines");        
         plotUVCoverageAction = new PlotAction("plotUVCoverage");
         plotRadialAction = new PlotAction("plotRadial");
-        plotImageAction = new PlotAction("plotImage");
-        plotUVMapAction = new PlotAction("plotUVMap");
         initComponents();        
     }
     
@@ -99,8 +97,6 @@ public class ResultPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -138,12 +134,6 @@ public class ResultPanel extends javax.swing.JPanel {
         jButton3.setAction(plotRadialAction);
         jPanel2.add(jButton3);
 
-        jButton4.setAction(plotImageAction);
-        jPanel2.add(jButton4);
-
-        jButton5.setAction(plotUVMapAction);
-        jPanel2.add(jButton5);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -157,8 +147,6 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -168,9 +156,9 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JTextArea resultTextArea;
     // End of variables declaration//GEN-END:variables
     
-    
-    protected void plot(String plotName) {
-        logger.entering(""+this.getClass(), "plot");
+    /** Plots using ptplot widgets */
+    protected void ptplot(String plotName) {
+        logger.entering(""+this.getClass(), "ptplot");
         try{
             // Contruct xml document to plot
             java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
@@ -184,10 +172,27 @@ public class ResultPanel extends javax.swing.JPanel {
             // Show plot into frame
             PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting "+plotName, plot);
             plotMLFrame.setVisible(true);
+            plotMLFrame.setSize(new java.awt.Dimension(400,400));
+            plotMLFrame.validate();
+            
             logger.finest("plot ready to be shown");
         }catch(Exception exc){            
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
+    }
+    
+    protected void plotImage(String plotName){
+        logger.entering(""+this.getClass(), "plotImage");
+        
+        fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();
+        //c.fitsInit("/home/users/mella/img.fits");        
+        c.xmlInit("<table></table>");        
+        
+        javax.swing.JFrame frame = new javax.swing.JFrame();
+        frame.getContentPane().add(c);
+        frame.setTitle(plotName);
+        frame.setSize(400, 400);
+        frame.setVisible(true);        
     }
     
     protected class PlotAction extends fr.jmmc.mcs.util.MCSAction {
@@ -198,8 +203,14 @@ public class ResultPanel extends javax.swing.JPanel {
             this.plotName=plotName;            
         }        
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.entering(""+this.getClass(), "actionPerformed");
-            plot(plotName);
+            logger.entering(""+this.getClass(), "actionPerformed");            
+            if (plotName.equals("plotBaselines")
+                || plotName.equals("plotUVCoverage")
+                || plotName.equals("plotRadial")){
+                ptplot(plotName);
+            }else{
+                plotImage(plotName);
+            }            
         }
     }    
 }

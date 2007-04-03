@@ -347,4 +347,58 @@ public class UtilsClass {
 
         return null;
     }
+    
+    //
+    // XML Parsing
+    // 
+    
+    /** Parses an XML file and returns a DOM document.
+     * If validating is true, the contents is validated against the DTD
+     * specified in the file.
+     */
+    public static Document parseXmlFile(String filename, boolean validating) {
+        try {
+            // Create a builder factory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating(validating);
+            
+            // Create the builder and parse the file
+            Document doc = factory.newDocumentBuilder().parse(new File(filename));
+            return doc;
+        } catch (SAXException exc) {
+            // A parsing error occurred; the xml input is not valid
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        } catch (ParserConfigurationException exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        } catch (IOException exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        }
+        return null;
+    }
+    
+    /** Parses an XML string and returns a DOM document.
+     * If validating is true, the contents is validated against the DTD
+     * specified in the file.
+     */
+    public static Document parseXmlString(String xmlBuffer, boolean validating) {
+        try {
+            // Create a builder factory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating(validating);
+            
+            // Create the builder and parse the buffer            
+            StringReader r= new StringReader(xmlBuffer);
+            Document doc = factory.newDocumentBuilder().parse(new InputSource(r));
+            return doc;
+        } catch (SAXException exc) {
+            // A parsing error occurred; the xml input is not valid
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        } catch (ParserConfigurationException exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        } catch (IOException exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        }
+        return null;
+    }
+    
 }

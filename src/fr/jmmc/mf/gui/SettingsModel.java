@@ -12,6 +12,7 @@ import fr.jmmc.mf.models.Parameters;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
+import fr.jmmc.mf.models.Result;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
@@ -436,31 +437,33 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * Write serialisation into given file.
      * @todo place this method into fr.jmmc.mf.util
      * @param temporaryRequest indicates that this file is not save by user but for internal use
+     * and for internal use result informations are removed
      */     
     public void saveSettingsFile(java.io.File fileToSave, boolean temporaryRequest)
     throws java.io.IOException, org.exolab.castor.xml.MarshalException,
             org.exolab.castor.xml.ValidationException ,org.exolab.castor.mapping.MappingException{
-        logger.entering(""+this.getClass(), "saveSettingsFile");
+        logger.entering(""+this.getClass(), "saveSettingsFile");                
+        
+        if( temporaryRequest){
+           rootSettings.setResult(new Result());
+        }
         
         // Read a File to unmarshal from
         java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
         
         URL mappingURL = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Using mapping file :"+mappingURL);
-        // Use a mapping file
-        Mapping      mapping = new Mapping();
-        mapping.loadMapping( mappingURL );
-        
+                
         // Do marshalling
         Marshaller marshaller = new Marshaller(writer);
+        // old code sometimes break xml elements order then use a mapping file
+        Mapping       mapping = new Mapping();
+        mapping.loadMapping( mappingURL );
         marshaller.setMapping(mapping);
+        rootSettings.validate();
         marshaller.marshal(rootSettings);
-        /* old code sometimes break xml elements order 
-         * then a mapping was added
-           // Marshal objects
-           rootSettings.validate();
-           rootSettings.marshal(writer);
-        */   
+        writer.flush();         
+        
         if(! temporaryRequest){
             associatedFile=fileToSave;
             setModified(false);
