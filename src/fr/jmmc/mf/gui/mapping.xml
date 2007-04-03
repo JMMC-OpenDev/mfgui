@@ -37,5 +37,16 @@
             <bind-xml name="href" node="attribute"/>
         </field>
     </class>
+    
+    <!-- place Files into mapping file else following error occurs:
+    settings.xml:76: element files: Schemas validity error : Element 'files', attribute 'type': The attribute 'type' is not allowed.
+    settings.xml:76: element files: Schemas validity error : Element 'files': Character content other than whitespace is not allowed because the content type is 'element-only'.
+    -->
+    <class name="fr.jmmc.mf.models.Files">
+        <field name="file" type="fr.jmmc.mf.models.File" collection="array">
+            <bind-xml name="file" node="element"/>
+        </field>
+    </class>
+    
 </mapping>
 

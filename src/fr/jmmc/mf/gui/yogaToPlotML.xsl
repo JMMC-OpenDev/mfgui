@@ -111,7 +111,7 @@
         </plot>
     </xsl:template>
 
-    <xsl:template name="plotRadial">
+    <xsl:template name="plotRadial">    
         <plot>
             <title>Plot versus radial distance</title>
             <xLabel>spatial frequency (1/rad)</xLabel>
@@ -126,6 +126,25 @@
             </xsl:for-each>
         </plot>
     </xsl:template>
+    
+    <xsl:template name="plotImage">    
+        <plot>
+            <title>Plot an image of the model</title>
+            <xLabel>spatial frequency (1/rad)</xLabel>
+            <yLabel>Squared visibility (VIS2)</yLabel>            
+            <!-- we should follow crlst list according yorick code -> 
+            //_modeler/dataset//crlst            
+            -->
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
+                <xsl:element name="dataset">
+                    <xsl:attribute name="name"><xsl:call-template name="getClassName"/></xsl:attribute>
+                </xsl:element>
+            </xsl:for-each>
+        </plot>
+    </xsl:template>   
+    
+    
+    
     
     <!-- Returns class name associated to .//class element -->
     <xsl:template name="getClassName">

@@ -2,6 +2,15 @@
  * MainFrame.java
  *
  * Created on 5 octobre 2006, 09:31
+ *
+ * TODO: 
+ *    remove duplicated part of codes that occur in this file under the 
+ *    following form
+ if(myPreferences.getPreferenceAsBoolean("yoga.remote.use")){
+                    result=doPost(methodName, tmpFile);
+                }else{
+                    result=doExec(methodName, tmpFile);
+                }
  */
 
 package fr.jmmc.mf.gui;
@@ -58,22 +67,25 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.MainFrame");
     
     // List of viewer panel used to display sub components
-    static TargetsPanel targetsPanel;    
+    static TargetsPanel targetsPanel;
     static FilesPanel filesPanel;
-    static UserInfoPanel userInfoPanel;    
+    static UserInfoPanel userInfoPanel;
     static FitterPanel fitterPanel;
     static SettingsPanel settingsPanel;
-    static TargetPanel targetPanel;    
+    static TargetPanel targetPanel;
     static FilePanel filePanel;
     static ModelPanel modelPanel;
     static ParametersPanel parametersPanel;
     static ResultPanel resultPanel;
     static StatusBar statusBar;
     
+    
     // Application actions
     public static Action runFitAction;
     public static Action getYogaVersionAction;
     public static Action getModelListAction;
+    public static Action getModelImageAction;
+    public static Action getModelUVMapAction;
     
     // Preference and general actions
     public static Action quitAction;
@@ -83,7 +95,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     public static Action showRevisionAction;
     public static Action showHelpAction;
     public static Action showLogGuiAction;
-
+    
     // Model actions
     public static Action newModelAction;
     public static Action loadModelAction;
@@ -93,12 +105,11 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     
     // adjusted to true after user modification
     // toggled again to false after saving action
-    protected boolean modified;       
-   
-    private static PlasticListener plasticServer_;
-
-    private static MainFrame instance=null;
+    protected boolean modified;
     
+    private static PlasticListener plasticServer_;
+    
+    private static MainFrame instance=null;
     
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -107,6 +118,8 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         runFitAction = new RunFitAction();
         getYogaVersionAction = new GetYogaVersionAction();
         getModelListAction = new GetModelListAction();
+        getModelImageAction = new GetModelImageAction();
+        getModelUVMapAction = new GetModelUVMapAction();
         quitAction = new QuitAction();
         savePrefAction = new SavePrefAction();
         restorePrefAction = new RestorePrefAction();
@@ -116,7 +129,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         showLogGuiAction = new ShowLogGuiAction();
         newModelAction     = new NewModelAction();
         loadModelAction     = new LoadModelAction();
-        saveModelAction     = new SaveModelAction();                        
+        saveModelAction     = new SaveModelAction();
         
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
@@ -130,35 +143,34 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         fitterPanel =new FitterPanel(this);
         userInfoPanel = new UserInfoPanel(this);
         settingsPanel = new SettingsPanel(filesPanel,
-                targetsPanel, fitterPanel, userInfoPanel);
+                targetsPanel, fitterPanel, userInfoPanel);                
         targetPanel = new TargetPanel(this);
         filePanel = new FilePanel();
         modelPanel = new ModelPanel();
         parametersPanel = new ParametersPanel(this);
         resultPanel = new ResultPanel(this);
         
-    
         // To permit modifier panel changes,
         // Register myself as treeselectionListener
         settingsTree.addTreeSelectionListener(this);
         
         // next part is done using netbeans design area
-        //settingsTree.setCellRenderer(new MyCellRenderer());        
-     
+        //settingsTree.setCellRenderer(new MyCellRenderer());
+        
         // Place engine Panel
-        enginePanel.add(new EnginePanel());                                
+        enginePanel.add(new EnginePanel());
         
         /* Plastic transmitter. */
         plasticServer_ = new PlasticListener();
         
-        initMenuBar();        
+        initMenuBar();
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
         
         setStatus("Application started");
-        setTitle("ModelFitting V"+Resources.getResource("mf.version"));     
-             
-        showSettingElement(rootSettingsModel.getRootSettings());            
+        setTitle("ModelFitting V"+Resources.getResource("mf.version"));
+        
+        showSettingElement(rootSettingsModel.getRootSettings());
     }
     
     public static SettingsModel getSettingsModel(){
@@ -177,14 +189,13 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
      * In a multi document, this should return the selected pane associated
      * model or null
      */
-    
     public SettingsModel getSelectedSettingsModel(){
-        return rootSettingsModel;        
+        return rootSettingsModel;
     }
     
-    public static void expandSettingsTree(){        
+    public static void expandSettingsTree(){
         // Next line does not work because node doesn't respond to treeNode interface
-        //McsClass.expandAll(settingsTree,true);                    
+        //McsClass.expandAll(settingsTree,true);
     }
     
     public void setStatus(String text){
@@ -201,7 +212,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         this.setJMenuBar(jMenuBar);
         
         // First level menus
-
+        
         // Add File
         JMenu fileMenu        = new JMenu();
         fileMenu.setText("File");
@@ -211,24 +222,24 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         JMenu editMenu        = new JMenu();
         editMenu.setText("Edit");
         jMenuBar.add(editMenu);
-
+        
         // Add Advanced
         JMenu advancedMenu        = new JMenu();
         advancedMenu.setText("Advanced");
-        jMenuBar.add(advancedMenu);                
-                
+        jMenuBar.add(advancedMenu);
+        
         // Add Help
         JMenu helpMenu        = new JMenu();
         helpMenu.setText("Help");
         jMenuBar.add(helpMenu);
-       
-        // Second level menus                
+        
+        // Second level menus
         
         // Add File->NewModel
         JMenuItem menuItem = new JMenuItem();
         Action    action   = newModelAction;
         menuItem.setAction(action);
-        fileMenu.add(menuItem);        
+        fileMenu.add(menuItem);
         
         // Add File->LoadModel
         menuItem = new JMenuItem();
@@ -244,12 +255,12 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         fileMenu.add(new JSeparator());
         
         // Add File->quit
-        menuItem     = new JMenuItem();        
+        menuItem     = new JMenuItem();
         menuItem.setAction(quitAction);
-        fileMenu.add(menuItem);                      
+        fileMenu.add(menuItem);
         
         // Add Edit->ShowPrefs
-        menuItem     = new JMenuItem();        
+        menuItem     = new JMenuItem();
         menuItem.setAction(showPrefAction);
         editMenu.add(menuItem);
         
@@ -259,11 +270,11 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         editMenu.add(menuItem);
         
         // Add Edit->RestorePrefs
-        menuItem     = new JMenuItem();        
+        menuItem     = new JMenuItem();
         menuItem.setAction(restorePrefAction);
-        editMenu.add(menuItem);        
+        editMenu.add(menuItem);
         editMenu.add(new JSeparator());
-
+        
         // Add Help->ShowRevision
         menuItem     = new JMenuItem();
         menuItem.setAction(showRevisionAction);
@@ -281,13 +292,13 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         menuItem.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
         helpMenu.add(menuItem);
         
-
+        
         // Add Advanced->Interop
         JMenu interopMenu = new JMenu();
         interopMenu.setText("Interop");
-        advancedMenu.add(interopMenu);   
+        advancedMenu.add(interopMenu);
         advancedMenu.addSeparator();
-
+        
         // Fill Interop menu
         try {
             interopMenu.add( plasticServer_.getRegisterAction( true ) );
@@ -295,19 +306,19 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             interopMenu.add( plasticServer_.getHubStartAction( true ) );
             interopMenu.add( plasticServer_.getHubStartAction( false ) );
             interopMenu.add( new HubWatchAction( plasticServer_ ) );
-  //          interopMenu.addSeparator();
-            //    interopMenu.add( tableTransmitter_.getBroadcastAction() );
-//            interopMenu.add( tableTransmitter_.createSendMenu() );
-//            interopMenu.addSeparator();
-            //          interopMenu.add( interophelpAct );
+//          interopMenu.addSeparator();
+//          interopMenu.add( tableTransmitter_.getBroadcastAction() );
+//          interopMenu.add( tableTransmitter_.createSendMenu() );
+//          interopMenu.addSeparator();
+//          interopMenu.add( interophelpAct );
         } catch ( SecurityException e ) {
             interopMenu.setEnabled( false );
-            logger.warning( "Security manager denies use of PLASTIC" );
+            logger.warning("Security manager denies use of PLASTIC");
         }
         
         // Add Advanced->Interop
         menuItem     = new JMenuItem();
-        menuItem.setAction(showLogGuiAction);        
+        menuItem.setAction(showLogGuiAction);
         advancedMenu.add(menuItem);
     }
     
@@ -325,7 +336,6 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         showSettingElement(o);
         
     }
-
     
     
     public  void showSettingElement(Object o){
@@ -339,13 +349,13 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }else{
             tabbedPane.setTitleAt(0,"Settings");
         }
-
+        
         
         modifierPanel.removeAll();
         if ( o instanceof Settings ){
             //settingsPanel.show((Settings)o);
             settingsPanel.show(rootSettingsModel.getRootSettings(), getSelectedSettingsModel());
-            modifierPanel.add(settingsPanel);            
+            modifierPanel.add(settingsPanel);
         }else if ( o instanceof Targets){
             targetsPanel.show((Targets)o);
             modifierPanel.add(targetsPanel);
@@ -362,7 +372,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             filePanel.show((File)o);
             modifierPanel.add(filePanel);
         }else if ( o instanceof FileLink){
-            FileLink link = (FileLink)o; 
+            FileLink link = (FileLink)o;
             filePanel.show((File)link.getFileRef());
             modifierPanel.add(filePanel);
         }else if ( o instanceof Parameters){
@@ -371,29 +381,29 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }else if ( o instanceof Result){
             resultPanel.show((Result)o);
             modifierPanel.add(resultPanel);
-        }else{            
+        }else{
             modifierPanel.add(new JLabel("missing modifier panel for '"+o.getClass()+"' objects"));
             if ( o instanceof Files){
                 Files f = (Files)o;
-                logger.fine("Selected files contains "+f.getFileCount());                
+                logger.fine("Selected files contains "+f.getFileCount());
             }else if ( o instanceof Targets){
                 Targets t = (Targets)o;
-                logger.fine("Selected targets contains "+t.getTargetCount());                
+                logger.fine("Selected targets contains "+t.getTargetCount());
             }
-        }   
+        }
         modifierPanel.revalidate();
-        modifierPanel.repaint();                
+        modifierPanel.repaint();
     }
     /**
      * Responds to tree structure changes
      */
-    public void treeStructureChanged(javax.swing.event.TreeModelEvent e){        
+    public void treeStructureChanged(javax.swing.event.TreeModelEvent e){
         logger.entering(""+this.getClass(), "treeStructureChanged");
-        showSettingElement(rootSettingsModel.getRoot());        
+        showSettingElement(rootSettingsModel.getRoot());
     }
     
     public void treeNodesRemoved(javax.swing.event.TreeModelEvent e){
-         
+        
     }
     public void treeNodesInserted(javax.swing.event.TreeModelEvent e){
         
@@ -455,132 +465,85 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
         getContentPane().add(tabbedPane, java.awt.BorderLayout.CENTER);
 
-        setBounds(0, 0, 626, 592);
+        setBounds(0, 0, 1092, 620);
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         quitAction.actionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
-
+    
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         quitAction.actionPerformed(null);
     }//GEN-LAST:event_formWindowClosed
     
-    
-    protected class ShowPrefAction extends fr.jmmc.mcs.util.MCSAction {
-        /** Preferences view */
-        PreferencesView preferencesView;
-        public ShowPrefAction(){
-            super("showPreferences");
-            preferencesView = new PreferencesView();
+    protected class GetModelUVMapAction extends fr.jmmc.mcs.util.MCSAction {
+        String methodName="getModelUVMap";
+        
+        public GetModelUVMapAction(){
+            super("getModelUVMap");
         }
         
         public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting yoga '"+methodName+"' call");            
+            String result="";
             try {
-                preferencesView.setVisible(true);
-                logger.fine("Showing preferences");
-            } catch (Exception exc) {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }
-    
-    
-    protected class ShowLogGuiAction extends fr.jmmc.mcs.util.MCSAction {
-        JFrame logGuiFrame;
-        public ShowLogGuiAction(){
-            super("showLogGui");            
-            logGuiFrame = new JFrame("Log GUI"); 
-            logGuiFrame.getContentPane().add(imx.loggui.LogMaster.getLogView());            
-            logGuiFrame.setJMenuBar(new imx.loggui.LogMasterMenuBar(logGuiFrame));
-            // HACK remove file-> exit 
-            logGuiFrame.getJMenuBar().getMenu(0).remove(5);
-            imx.loggui.LogMaster.getLogMaster().configDefault();
-            imx.loggui.LogMaster.getLogMaster().configExternalLHFF();            
-            imx.loggui.LogMaster.getLogMaster().refresh();   
-            logGuiFrame.setMinimumSize(new java.awt.Dimension(640,480));
-            logGuiFrame.setPreferredSize(new java.awt.Dimension(640,480));
-            logGuiFrame.pack();            
-        }
+                // Create temp file.
+                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
+                // Delete temp file when program exits.
+                tmpFile.deleteOnExit();
+                rootSettingsModel.saveSettingsFile(tmpFile, true);
+                result=execMethod(methodName,tmpFile);
+                setStatus(methodName + " process finished");                
+            } catch (Exception ex) {
+                logger.warning(ex.getClass().getName() + " "+ ex.getMessage());
+                ex.printStackTrace();
+                result="Error:"+ex.getMessage();
+                setStatus("Error during process of "+methodName);
+            }                        
+            logger.entering(""+this.getClass(), "data received");
         
-        public void actionPerformed(java.awt.event.ActionEvent e) {                              
-          logGuiFrame.setVisible(true);                      
-          imx.loggui.LogMaster.getLogMaster().refresh();   
+            fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();            
+            c.xmlInit(result);            
+            javax.swing.JFrame frame = new javax.swing.JFrame();
+            frame.getContentPane().add(c);
+            frame.setTitle("UV map");
+            frame.setSize(400, 400);
+            frame.setVisible(true);            
         }
     }
-    
-    
-    
-    // @todo try to move it into the mcs preferences area
-    protected class SavePrefAction extends fr.jmmc.mcs.util.MCSAction {
-        public SavePrefAction(){
-            super("savePreferences");
+    protected class GetModelImageAction extends fr.jmmc.mcs.util.MCSAction {
+        String methodName="getModelImage";
+        
+        public GetModelImageAction(){
+            super("getModelImage");
         }
         
         public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting yoga '"+methodName+"' call");            
+            String result="";
             try {
-                myPreferences.saveToFile();
-                //@todo move next line into Preferences 
-                logger.fine("Saving preferences");
-            } catch (Exception exc) {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }
-    
-    protected class RestorePrefAction extends fr.jmmc.mcs.util.MCSAction {
-        public RestorePrefAction(){
-            super("restorePreferences");
-        }
+                // Create temp file.
+                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
+                // Delete temp file when program exits.
+                tmpFile.deleteOnExit();
+                rootSettingsModel.saveSettingsFile(tmpFile, true);
+                result=execMethod(methodName,tmpFile);
+                setStatus(methodName + " process finished");                
+            } catch (Exception ex) {
+                logger.warning(ex.getClass().getName() + " "+ ex.getMessage());
+                ex.printStackTrace();
+                result="Error:"+ex.getMessage();
+                setStatus("Error during process of "+methodName);
+            }                        
+            logger.entering(""+this.getClass(), "data received");
         
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            try {
-                myPreferences.resetToDefaultPreferences();
-                //@todo move next line into Preferences 
-                logger.fine("Restoring preferences");
-            } catch (Exception exc) {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }          
-    /** Display another tab with revision informations */
-    protected class ShowRevisionAction extends fr.jmmc.mcs.util.MCSAction {
-        public ShowRevisionAction(){
-            super("showRevision");
-        }
-        
-        public void actionPerformed(java.awt.event.ActionEvent e) {            
-            logger.fine("Requesting revision display");                                    
-            try {
-                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Releases.html");                                                                     
-                TabbedPanel rp = new TabbedPanel("");
-                rp.setPage(url);
-                tabbedPane.addTab("Revision", rp);                
-                
-            } catch (Exception exc) {
-                  new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);   
-            }
-        }
-    }
-    
-    /** Display another tab with help informations */
-    protected class ShowHelpAction extends fr.jmmc.mcs.util.MCSAction {
-        public ShowHelpAction(){
-            super("showHelp");
-        }        
-        public void actionPerformed(java.awt.event.ActionEvent e) {            
-            logger.fine("Requesting Help display");
-            try {
-                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");                                                                     
-                TabbedPanel rp = new TabbedPanel("");
-                rp.setPage(url);
-                tabbedPane.addTab("Help", rp);                                
-            } catch (Exception exc) {
-                  new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);   
-            }
+            fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();            
+            c.xmlInit(result);            
+            javax.swing.JFrame frame = new javax.swing.JFrame();
+            frame.getContentPane().add(c);
+            frame.setTitle("Model Image");
+            frame.setSize(400, 400);
+            frame.setVisible(true);            
         }
     }
     
@@ -591,21 +554,17 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             super("runFit");
         }
         
-        public void actionPerformed(java.awt.event.ActionEvent e) {            
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.fine("Requesting yoga '"+methodName+"' call");
             
-            String result="";                                                
+            String result="";
             try {
                 // Create temp file.
-                java.io.File targetFile = java.io.File.createTempFile("tmpSettings", ".xml");
+                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
                 // Delete temp file when program exits.
-                targetFile.deleteOnExit();
-                rootSettingsModel.saveSettingsFile(targetFile, true);
-                 if(myPreferences.getPreferenceAsBoolean("yoga.remote.use")){
-                    result=doPost(methodName, targetFile);
-                }else{                
-                    result=doExec(methodName, targetFile);
-                }        
+                tmpFile.deleteOnExit();
+                rootSettingsModel.saveSettingsFile(tmpFile, true);
+                result=execMethod(methodName,tmpFile);
                 setStatus("Fitting process finished");
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " "+ ex.getMessage());
@@ -615,7 +574,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             }
             
             TabbedPanel rp = new TabbedPanel(result);
-            tabbedPane.addTab("Fit Result", rp);    
+            tabbedPane.addTab("Fit Result", rp);
             int i1 = result.indexOf("START_XML_RESULT");
             int i2 = result.indexOf("END_XML_RESULT");
             String xml = result.substring(i1+"START_XML_RESULT".length(),i2);
@@ -639,53 +598,70 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                         String prevId  = prevFile.getId();
                         if(prevId.equals(newId)){
                             newFile.setHref(prevFile.getHref());
-                            Oitarget[] oitargets = prevFile.getOitarget();    
+                            Oitarget[] oitargets = prevFile.getOitarget();
                             for (int k = 0; k < oitargets.length; k++) {
                                 newFile.addOitarget(oitargets[i]);
                             }
                         }
-                    }    
-                }                
+                    }
+                }
                 rootSettingsModel.setRootSettings(newModel);
                 showSettingElement(rootSettingsModel.getRootSettings());
                 logger.info("Settings created");
             }catch(Exception ex){
                 logger.warning(ex.getClass().getName() + " "+ ex.getMessage());
-            }
-            
-            
+            }                        
         }
-    }
+    }    
     
-
     protected class GetYogaVersionAction extends fr.jmmc.mcs.util.MCSAction {
         String methodName="getYogaVersion";
         public GetYogaVersionAction(){
             super("getYogaVersion");
-        }
-        
-        public void actionPerformed(java.awt.event.ActionEvent e) {             
+        }        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.fine("Requesting yoga '"+methodName+"' call");
             String result="";
             try {
+                result=execMethod(methodName,null);
+                setStatus("Yoga version is '"+result.trim()+"'");                
+            } catch (Exception ex) {
+                logger.warning(ex.getClass().getName() + " "+ ex.getMessage());
+                setStatus("Can't get Yoga version");
+            }
+        }
+    }
+    
+    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
+        String methodName="getModelList";
+        public GetModelListAction(){
+            super("getModelList");
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting yoga '"+methodName+"' call");
+            String result="";
+            try{
+                result=execMethod(methodName,null);
+                // create a result panel
+                TabbedPanel rp = new TabbedPanel(result);
+                tabbedPane.addTab("Available Models", rp);
                 
-                if(myPreferences.getPreferenceAsBoolean("yoga.remote.use")){
-                    result=doPost(methodName);
-                }else{                
-                    result=doExec(methodName);
-                }         
-                setStatus("Yoga version is '"+result.trim()+"'");
+                // Search model into return result
+                java.io.StringReader reader   = new java.io.StringReader(result);
+                Model newModel = (Model) Model.unmarshal(reader);
+                // Indicates to the rootSettingsModel list of availables models
+                rootSettingsModel.setSupportedModels(newModel.getModel());
                 
             } catch (Exception ex) {
-                logger.warning(ex.getClass().getName() + " "+ ex.getMessage());                               
-                setStatus("Can't get Yoga version");
-            }                                                           
+                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
+                setStatus("Can't get available models");
+            }
         }
     }
     
     protected class YogaExec implements fr.jmmc.mcs.util.ProcessManager{
-        StringBuffer sb;
-        
+        StringBuffer sb;        
         public YogaExec(){
             sb = new StringBuffer();
         }
@@ -706,165 +682,206 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             logger.entering(""+this.getClass(), "outputOccured");
             sb.append(line);
             logger.finest("occured line:"+line);
-        }
-        
+        }        
         public String getContent(){
             return sb.toString();
-        }
-        
-    }
-    // call yoga.sh with method Name
-    public String doExec(String methodName) throws Exception{            
-            String yogaProgram=myPreferences.getPreference("yoga.local.home")+"/bin/yoga.sh";
-            logger.fine("Making call using yoga script:"+yogaProgram+" "+methodName);
-            
-            String result="";
-            // Run main application waiting for end of cat process
-            fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName});
-            YogaExec pm = new YogaExec();
-            ph.setProcessManager(pm);
-            ph.start();
-            ph.waitFor();
-            result=pm.getContent();
-            
-            return result;
-        }       
-    
-    public String doPost(String methodName)throws Exception{
-            String result="";
-            String targetURL = myPreferences.getPreference("yoga.remote.url");
-            PostMethod myPost = new PostMethod(targetURL);
-            Part[] parts =
-            {
-                new StringPart("method", methodName)
-            };
-            
-            try{
-                myPost.setRequestEntity( new MultipartRequestEntity(parts, myPost.getParams()));
-                HttpClient client = new HttpClient();
-                client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-                int status = client.executeMethod(myPost);
-                if (status == HttpStatus.SC_OK) {
-                    result=myPost.getResponseBodyAsString();
-                } else {
-                    logger.fine("Post for '"+methodName+"' failed");            
-                    throw new Exception("Requets failed, response=" + HttpStatus.getStatusText(status));                    
-                }                
-                myPost.releaseConnection();             
-            }catch(Exception e){
-                myPost.releaseConnection();
-                throw e;
-            }
-            return result;
-        }                
-    
-     // call yoga.sh with method Name
-    public String doExec(String methodName, java.io.File targetFile) throws Exception{            
-            String yogaProgram=myPreferences.getPreference("yoga.local.home")+"/bin/yoga.sh";
-            String filename=targetFile.getAbsolutePath();
-            logger.fine("Making call using yoga script:"+yogaProgram+" "+methodName+" "+filename);
-            
-            String result="";
-            // Run main application waiting for end of cat process
-            fr.jmmc.mcs.util.ProcessHandler ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename});
-            YogaExec pm = new YogaExec();
-            ph.setProcessManager(pm);
-            ph.start();
-            ph.waitFor();
-            result=pm.getContent();            
-            return result;
-        }
-    
-        public String doPost(String methodName, java.io.File targetFile)throws Exception{                                        
-            String result="";
-            String targetURL = myPreferences.getPreference("yoga.remote.url");
-            PostMethod myPost = new PostMethod(targetURL);
-            Part[] parts =
-            {
-                new StringPart("method", methodName),
-                new FilePart("userfile", targetFile.getName(), targetFile)                                         
-            };
-            
-            try{
-                myPost.setRequestEntity( new MultipartRequestEntity(parts, myPost.getParams()));
-                HttpClient client = new HttpClient();
-                client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-                int status = client.executeMethod(myPost);
-                if (status == HttpStatus.SC_OK) {
-                    result=myPost.getResponseBodyAsString();
-                } else {
-                    logger.fine("Post for '"+methodName+"' failed");            
-                    throw new Exception("Requets failed, response=" + HttpStatus.getStatusText(status));                    
-                }                
-                myPost.releaseConnection();             
-            }catch(Exception e){
-                myPost.releaseConnection();
-                throw e;
-            }
-            return result;
-        }                
-    
-    
-    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
-        String methodName="getModelList";
-        public GetModelListAction(){
-            super("getModelList");
-        }                
-        
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting yoga '"+methodName+"' call");            
-            String result="";                
-            try{
-                if(myPreferences.getPreferenceAsBoolean("yoga.remote.use")){
-                    result=doPost(methodName);
-                }else{                
-                    result=doExec(methodName);
-                }                
-                // create a result panel
-                TabbedPanel rp = new TabbedPanel(result);
-                tabbedPane.addTab("Available Models", rp);
-                
-                // Indicates to the rootSettingsModel list of availables models
-                java.io.StringReader reader   = new java.io.StringReader(result);
-                Model newModel = (Model) Model.unmarshal(reader);
-                rootSettingsModel.setSupportedModels(newModel.getModel());
-                
-            } catch (Exception ex) {
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());                
-                setStatus("Can't get available models");
-            }         
-        }
+        }        
     }
     
-    protected class QuitAction extends MCSAction
-    {
-        public QuitAction()
-        {
+    /** This is the main wrappers method to execute yoga actions
+     *  @param methodName name of method to wrap
+     *  @param xmlFile file to give as argument of the method or null if 
+     *         no one is requested    
+     */
+    public String execMethod(String methodName, java.io.File xmlFile )throws Exception{
+         if(myPreferences.getPreferenceAsBoolean("yoga.remote.use")){
+                    return doPost(methodName, xmlFile);
+                }else{
+                    return doExec(methodName, xmlFile);
+                }       
+    }
+    
+    private String doExec(String methodName, java.io.File xmlFile) throws Exception{
+        String result="";        
+        String yogaProgram=myPreferences.getPreference("yoga.local.home")+"/bin/yoga.sh";
+        String filename=null;
+        
+        if(xmlFile!=null){
+            filename=xmlFile.getAbsolutePath();
+        }                
+        // Run main application waiting for end of cat process
+        fr.jmmc.mcs.util.ProcessHandler ph;
+        if (xmlFile==null){
+            ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName});
+            logger.fine("Making call using yoga script:"+yogaProgram+" "+methodName);            
+        }else{
+            ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename});
+            logger.fine("Making call using yoga script:"+yogaProgram+" "+methodName+" "+filename);            
+        }
+        
+        YogaExec pm = new YogaExec();
+        ph.setProcessManager(pm);
+        ph.start();
+        ph.waitFor();
+        result=pm.getContent();
+        
+        return result;
+    }    
+
+    public String doPost(String methodName, java.io.File xmlFile)throws Exception{
+        String result="";
+        String targetURL = myPreferences.getPreference("yoga.remote.url");
+        PostMethod myPost = new PostMethod(targetURL);
+        Part[] parts;
+        if(xmlFile==null){
+            parts=new Part[]{ new StringPart("method", methodName) };
+        }else{
+            parts =new Part[]{
+            new StringPart("method", methodName),
+            new FilePart("userfile", xmlFile.getName(), xmlFile)
+            };
+        }
+        
+        try{
+            myPost.setRequestEntity( new MultipartRequestEntity(parts, myPost.getParams()));
+            HttpClient client = new HttpClient();
+            client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+            int status = client.executeMethod(myPost);
+            if (status == HttpStatus.SC_OK) {
+                result=myPost.getResponseBodyAsString();
+            } else {
+                logger.fine("Post for '"+methodName+"' failed");
+                throw new Exception("Requets failed, response=" + HttpStatus.getStatusText(status));
+            }
+            myPost.releaseConnection();
+        }catch(Exception e){
+            myPost.releaseConnection();
+            throw e;
+        }
+        return result;
+    }
+    
+    protected class QuitAction extends MCSAction {
+        public QuitAction() {
             super("quit");
         }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.info("Bye!");
-
-            // here will come a loop over every open settings            
+            
+            // here will come a loop over every open settings
             ModifyAndSaveObject[] objs;
             objs = new ModifyAndSaveObject[] {rootSettingsModel};
             // next line should quit if no modification occurs
-            // or user answer yes to save every modifications 
+            // or user answer yes to save every modifications
             UtilsClass.checkUserModificationAndQuit(objs);
         }
     }
     
+    protected class ShowPrefAction extends fr.jmmc.mcs.util.MCSAction {
+        /** Preferences view */
+        PreferencesView preferencesView;
+        public ShowPrefAction(){
+            super("showPreferences");
+            preferencesView = new PreferencesView();
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            try {
+                preferencesView.setVisible(true);
+                logger.fine("Showing preferences");
+            } catch (Exception exc) {
+                // @todo handle this error at user level
+                exc.printStackTrace();
+            }
+        }
+    }
     
-        /**
-     * Action which displays a window giving some information about 
+    protected class ShowLogGuiAction extends fr.jmmc.mcs.util.MCSAction {
+        JFrame logGuiFrame;
+        public ShowLogGuiAction(){
+            super("showLogGui");
+            logGuiFrame = new JFrame("Log GUI");
+            logGuiFrame.getContentPane().add(imx.loggui.LogMaster.getLogView());
+            logGuiFrame.setJMenuBar(new imx.loggui.LogMasterMenuBar(logGuiFrame));
+            // HACK remove file-> exit
+            logGuiFrame.getJMenuBar().getMenu(0).remove(5);
+            imx.loggui.LogMaster.getLogMaster().configDefault();
+            imx.loggui.LogMaster.getLogMaster().configExternalLHFF();
+            imx.loggui.LogMaster.getLogMaster().refresh();
+            logGuiFrame.setMinimumSize(new java.awt.Dimension(640,480));
+            logGuiFrame.setPreferredSize(new java.awt.Dimension(640,480));
+            logGuiFrame.pack();
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logGuiFrame.setVisible(true);
+            imx.loggui.LogMaster.getLogMaster().refresh();
+        }
+    }
+    
+    // @todo try to move it into the mcs preferences area
+    protected class SavePrefAction extends fr.jmmc.mcs.util.MCSAction {
+        public SavePrefAction(){
+            super("savePreferences");
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            try {
+                myPreferences.saveToFile();
+                //@todo move next line into Preferences
+                logger.fine("Saving preferences");
+            } catch (Exception exc) {
+                // @todo handle this error at user level
+                exc.printStackTrace();
+            }
+        }
+    }
+    
+    protected class RestorePrefAction extends fr.jmmc.mcs.util.MCSAction {
+        public RestorePrefAction(){
+            super("restorePreferences");
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            try {
+                myPreferences.resetToDefaultPreferences();
+                //@todo move next line into Preferences
+                logger.fine("Restoring preferences");
+            } catch (Exception exc) {
+                // @todo handle this error at user level
+                exc.printStackTrace();
+            }
+        }
+    }
+    /** Display another tab with revision informations */
+    protected class ShowRevisionAction extends fr.jmmc.mcs.util.MCSAction {
+        public ShowRevisionAction(){
+            super("showRevision");
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting revision display");
+            try {
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Releases.html");
+                TabbedPanel rp = new TabbedPanel("");
+                rp.setPage(url);
+                tabbedPane.addTab("Revision", rp);
+                
+            } catch (Exception exc) {
+                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            }
+        }
+    }
+    
+    /**
+     * Action which displays a window giving some information about
      * the state of the PLASTIC hub.
      */
     private class HubWatchAction extends MCSAction {
         private final uk.ac.starlink.plastic.HubManager hubManager_;
         private JFrame hubWindow_;
-
+        
         HubWatchAction( uk.ac.starlink.plastic.HubManager hubManager ) {
             /*super( "Show Registered Applications", null,
                    "Display applications registered with the PLASTIC hub" );
@@ -897,8 +914,8 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             
             // We only have one document so: ask to save previously lost...
             
-            if ( ! UtilsClass.askToSaveUserModification(rootSettingsModel)){                
-                 return;
+            if ( ! UtilsClass.askToSaveUserModification(rootSettingsModel)){
+                return;
             }
             
             rootSettingsModel = new SettingsModel();
@@ -907,9 +924,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             // To permit modifier panel changes,
             // Register myself as treeselectionListener
             settingsTree.addTreeSelectionListener(MainFrame.this);
-                    
-            rootSettingsModel.fireUpdate();                                
-            showSettingElement(rootSettingsModel.getRootSettings());            
+            
+            rootSettingsModel.fireUpdate();
+            showSettingElement(rootSettingsModel.getRootSettings());
             setStatus("New model ready for modifications");
         }
     }
@@ -938,7 +955,8 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     java.io.File file = fileChooser.getSelectedFile();
                     lastDir = file.getParent();
-                    rootSettingsModel.loadSettingsFile(file);                    
+                    rootSettingsModel.loadSettingsFile(file);
+                    showSettingElement(rootSettingsModel.getRootSettings());
                 }
                 
             }catch(Exception exc){
@@ -955,11 +973,10 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
         
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.entering(""+this.getClass(), "actionPerformed");
+            logger.entering(""+this.getClass(), "actionPerformed");                        
             
+            // Open a filechooser in previous save directory
             JFileChooser fileChooser = new JFileChooser();
-            
-            // Set in previous save directory
             if (lastDir != null) {
                 fileChooser.setCurrentDirectory(new java.io.File(lastDir));
             }
@@ -970,7 +987,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     java.io.File file = fileChooser.getSelectedFile();
-                    lastDir = file.getParent();                    
+                    lastDir = file.getParent();
                     // Ask to overwrite
                     if (file.exists()) {
                         String message = "File '" + file.getName() +
@@ -979,61 +996,75 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                         // Modal dialog with yes/no button
                         int answer = JOptionPane.showConfirmDialog(null, message);
                         
-                        if (answer == JOptionPane.YES_OPTION) {
-                            rootSettingsModel.saveSettingsFile(file, false);
+                        if (answer != JOptionPane.YES_OPTION) {
+                            return;
                         }
-                    } else {
-                        rootSettingsModel.saveSettingsFile(file,false);
                     }
+                    rootSettingsModel.saveSettingsFile(file,false);                    
                 }
             } catch (Exception exc) {
                 ReportDialog dialog = new ReportDialog(null, true, exc);
                 dialog.setVisible(true);
-                // if (dialog.returnedValue="Report")
             }
         }
     }
     
-
+    /** Display another tab with help informations */
+    protected class ShowHelpAction extends fr.jmmc.mcs.util.MCSAction {
+        public ShowHelpAction(){
+            super("showHelp");
+        }
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting Help display");
+            try {
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");
+                TabbedPanel rp = new TabbedPanel("");
+                rp.setPage(url);
+                tabbedPane.addTab("Help", rp);
+            } catch (Exception exc) {
+                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            }
+        }
+    }
     
-    // Cell renderer used by the settings tree 
+    // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
     protected class MyCellRenderer extends DefaultTreeCellRenderer{
         
         //getTreeCellRendererComponent
         public Component getTreeCellRendererComponent(JTree tree,
-            Object value,
-            boolean sel,
-            boolean expanded,
-            boolean leaf,
-            int row,
-            boolean hasFocus) {
-                        
+                Object value,
+                boolean sel,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus) {
+            
             super.getTreeCellRendererComponent(
-                tree, value, sel,expanded, leaf, row,
-                hasFocus);            
+                    tree, value, sel,expanded, leaf, row,
+                    hasFocus);
             
             setToolTipText("TBD");
             // Next part try to get valide state of serialized xml objects
-           try{                
-                String methodName="validate";                 
+            try{
+                String methodName="validate";
                 Class[] c  = new Class[0] ;
                 Method m = value.getClass().getMethod(methodName,c);
                 Object[] o = new Object [0];
                 m.invoke(value,o);
-                //logger.fine("method invoked using reflexion");                
+                //logger.fine("method invoked using reflexion");
             }catch(Exception e){
                 setForeground(Color.red);
                 if (e.getCause()!=null){
                     setToolTipText(e.getCause().getMessage());
                 }else{
-                    setToolTipText(e.getMessage());    
+                    setToolTipText(e.getMessage());
                 }
-            }            
+            }
             return this;
         }
     }
-           
+    
     /**
      * @param args the command line arguments
      */

@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.io.StringWriter;
 import java.io.StringReader;
+
 /**
  *
  *
@@ -25,7 +26,7 @@ import java.io.StringReader;
  */
 
 public class TargetPanel extends javax.swing.JPanel implements
-        ListSelectionListener {
+    ListSelectionListener {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.TargetPanel");
     Target current=null;
     ListModel targetFiles;
@@ -141,6 +142,9 @@ public class TargetPanel extends javax.swing.JPanel implements
         addModelButton = new javax.swing.JButton();
         modelTypeComboBox = new javax.swing.JComboBox();
         removeModelButton = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -202,7 +206,7 @@ public class TargetPanel extends javax.swing.JPanel implements
         gridBagConstraints.weighty = 1.0;
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
-        addModelButton.setText("Get model list");
+        addModelButton.setText("Add model");
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelButtonActionPerformed(evt);
@@ -244,6 +248,14 @@ public class TargetPanel extends javax.swing.JPanel implements
         jPanel3.add(jPanel4);
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
+
+        jButton1.setAction(MainFrame.getModelImageAction);
+        jPanel5.add(jButton1);
+
+        jButton2.setAction(MainFrame.getModelUVMapAction);
+        jPanel5.add(jButton2);
+
+        add(jPanel5, java.awt.BorderLayout.SOUTH);
 
     }// </editor-fold>//GEN-END:initComponents
     
@@ -288,9 +300,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
         logger.entering(""+this.getClass(), "addModelButtonActionPerformed");
-        if(modelTypeComboBox.getItemCount() < 1){
-            addModelButton.setText("Add model");
-            addModelButton.validate();
+        if(modelTypeComboBox.getItemCount() < 1){            
             MainFrame.getModelListAction.actionPerformed(null);
             return;
         }
@@ -342,11 +352,14 @@ public class TargetPanel extends javax.swing.JPanel implements
     private javax.swing.JButton addModelButton;
     private javax.swing.JList fileList;
     private javax.swing.JComboBox identComboBox;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList modelList;
