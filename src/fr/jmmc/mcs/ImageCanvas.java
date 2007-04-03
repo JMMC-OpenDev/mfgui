@@ -135,7 +135,7 @@ public class ImageCanvas extends Canvas{
             NodeList tdList = tr.getElementsByTagName("td");
             int h=trList.getLength();
             int w=tdList.getLength();
-            logger.finest("Xml Image: dims="+w+"x"+h+", min=");
+            logger.fine("Xml Image: dims="+w+"x"+h+", min=");
             
             double[] array=new double[h*w];            
             // init array content
@@ -143,8 +143,8 @@ public class ImageCanvas extends Canvas{
                 tr =  (Element)trList.item(j);                                
                 tdList = tr.getElementsByTagName("td");
                 for (int i = 0; i < w; i++) {
-                    Element td =  (Element)tdList.item(i);                  
-                    array[i+j*w]=Double.parseDouble(td.getTextContent());
+                    Element td =  (Element)tdList.item((w-1)-i);                  
+                    array[i+(j*w)]=Double.parseDouble(td.getTextContent());
                 }
             }                    
             
@@ -184,7 +184,7 @@ public class ImageCanvas extends Canvas{
                 }                
             }         
         }catch(Exception exc){            
-            logger.fine(xmlStr);
+            logger.finest(xmlStr);
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
     }          
