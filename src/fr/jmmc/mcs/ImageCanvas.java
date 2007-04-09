@@ -212,31 +212,25 @@ public class ImageCanvas extends Canvas{
                     RenderingHints.VALUE_ANTIALIAS_OFF);
         }
         
-        
-        
-        
         Dimension d = new Dimension(this.getWidth(), this.getHeight());
         int canvasWidth=(int)d.getWidth()-70;
         int canvasHeight=(int)d.getHeight()-34;        
         
         int margin=15;
         int wedgeWidth=10;
-        
+        g2d.setColor(Color.GRAY);
+        g2d.fillRect(0, 0, (int)d.getWidth(), (int)d.getHeight());
+        g2d.setColor(Color.BLACK);
+                
         if (canvasWidth>0 && canvasHeight>0){
             if (image!=null){
-                g2d.setColor(Color.GRAY);
-                g2d.fillRect(0, 0, (int)d.getWidth(), (int)d.getHeight());
-                g2d.setColor(Color.BLACK);
                 // draw image into rect
                 g2d.drawImage(image, margin+1, margin+1, canvasWidth, canvasHeight, null);
-                g2d.setColor(Color.BLACK);
                 g2d.drawRect(margin, margin, canvasWidth+1, canvasHeight+1);                
             }
             if (wedge!=null){
                 int wedgeImageDist=10;
-                g2d.setColor(Color.BLACK);
                 g2d.drawRect(margin+canvasWidth+wedgeImageDist,margin, wedgeWidth+1, canvasHeight+1);
-                g2d.setColor(Color.GREEN);
                 g2d.drawString("255", margin+canvasWidth+wedgeImageDist+wedgeWidth+3, margin+6 );
                 g2d.drawString("0", margin+canvasWidth+wedgeImageDist+wedgeWidth+3, canvasHeight+20 );
                 g2d.drawImage(wedge, margin+canvasWidth+wedgeImageDist+1, margin+1, wedgeWidth, canvasHeight, null);    
