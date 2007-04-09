@@ -502,13 +502,10 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             }                        
             logger.entering(""+this.getClass(), "data received");
         
-            fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();            
-            c.xmlInit(result);            
-            javax.swing.JFrame frame = new javax.swing.JFrame();
-            frame.getContentPane().add(c);
-            frame.setTitle("UV map");
-            frame.setSize(400, 400);
-            frame.setVisible(true);            
+            fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);            
+            v.setTitle("UV map");
+            v.setSize(400, 400);
+            v.setVisible(true);            
         }
     }
     protected class GetModelImageAction extends fr.jmmc.mcs.util.MCSAction {
@@ -537,13 +534,10 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             }                        
             logger.entering(""+this.getClass(), "data received");
         
-            fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();            
-            c.xmlInit(result);            
-            javax.swing.JFrame frame = new javax.swing.JFrame();
-            frame.getContentPane().add(c);
-            frame.setTitle("Model Image");
-            frame.setSize(400, 400);
-            frame.setVisible(true);            
+            fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);            
+            v.setTitle("Model Image");
+            v.setSize(400, 400);
+            v.setVisible(true);           
         }
     }
     

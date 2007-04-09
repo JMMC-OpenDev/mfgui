@@ -16,12 +16,20 @@ public class ImageViewer extends javax.swing.JFrame {
     ImageCanvas imageCanvas;
     /** Creates new form ImageViewer */
     public ImageViewer() {
+        init();
+    }
+    
+    public ImageViewer(String xmlStr) {
+        init();
+        imageCanvas.xmlInit(xmlStr);
+    }
+    
+    
+    protected void init(){
         initComponents();
-        
         // add image canvas
         imageCanvas = new ImageCanvas();
         getContentPane().add(imageCanvas);
-        
         // set items for colormodels
         colorModelComboBox.setModel(new javax.swing.DefaultComboBoxModel(ColorModels.colorModelNames));
      }
