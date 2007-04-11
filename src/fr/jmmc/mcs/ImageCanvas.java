@@ -238,6 +238,6 @@ public class ImageCanvas extends Canvas{
         }
        
         // display canvas size
-        g2d.drawString(""+canvasWidth+"x"+canvasHeight, 14,14);        
+        g2d.drawString("Image size:"+w+"x"+h+" - Canvas size:"+canvasWidth+"x"+canvasHeight, 14,14);        
     }       
 }
