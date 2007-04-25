@@ -12,13 +12,14 @@ import java.awt.image.IndexColorModel;
  *
  */
 public class ColorModels {
+    static int nbColors=240;
     
     /** Give access to color model names */
     public final static String[] colorModelNames = new String[]{ "Earth","Rainbow","Gray"};    
     /** Give access to color models */
-    public final static IndexColorModel[] colorModels = new IndexColorModel[]{ getEarthColorModel(), getRainbowColorModel(), getGrayColorModel(256)};
+    public final static IndexColorModel[] colorModels = new IndexColorModel[]{ getEarthColorModel(), getRainbowColorModel(), getGrayColorModel(240)};
     
-    /** Returns one 256 'earth' color model */
+    /** Returns one 'earth' color model */
     private static IndexColorModel getEarthColorModel(){
         /* dk blue - lt blue - dk green - yellow green - lt brown - white */
         /* sort of like mapmakers colors from deep ocean to snow capped peak */
@@ -26,10 +27,10 @@ public class ColorModels {
         /* ntsc gray scale looks slightly better than straight intensity */
         /* ntsc= 1 */
         /* r   g   b */
-        
-        byte[] r = new byte[256];
-        byte[] g = new byte[256];
-        byte[] b = new byte[256];
+
+        byte[] r = new byte[nbColors];
+        byte[] g = new byte[nbColors];
+        byte[] b = new byte[nbColors];
         r[0] = (byte)0; g[0] = (byte)0; b[0] = (byte)0;
         r[1] = (byte)0; g[1] = (byte)0; b[1] = (byte)46;
         r[2] = (byte)0; g[2] = (byte)0; b[2] = (byte)58;
@@ -270,7 +271,7 @@ public class ColorModels {
         r[237] = (byte)252; g[237] = (byte)248; b[237] = (byte)248;
         r[238] = (byte)253; g[238] = (byte)251; b[238] = (byte)251;
         r[239] = (byte)255; g[239] = (byte)255; b[239] = (byte)255;
-        r[240] = (byte)72; g[240] = (byte)141; b[240] = (byte)26;
+/*        r[240] = (byte)72; g[240] = (byte)141; b[240] = (byte)26;
         r[241] = (byte)72; g[241] = (byte)142; b[241] = (byte)26;
         r[242] = (byte)72; g[242] = (byte)142; b[242] = (byte)26;
         r[243] = (byte)72; g[243] = (byte)143; b[243] = (byte)26;
@@ -286,19 +287,19 @@ public class ColorModels {
         r[253] = (byte)75; g[253] = (byte)149; b[253] = (byte)27;
         r[254] = (byte)76; g[254] = (byte)149; b[254] = (byte)27;
         r[255] = (byte)76; g[255] = (byte)150; b[255] = (byte)28;
-        return new IndexColorModel(8,256,r,g,b);
+*/        return new IndexColorModel(8,nbColors,r,g,b);
     }
     
-    /** Returns one 256 'rainbow' color model */
+    /** Returns one 'rainbow' color model */
     private static IndexColorModel getRainbowColorModel(){
 /* red - orange - yellow - green - blue - purple */
 /* colors in spectral order */
 /* ncolors= 240 */
 /* r       g       b */
-
-  byte[] r = new byte[256];
-  byte[] g = new byte[256];
-  byte[] b = new byte[256];
+//int nbColors = 240;
+  byte[] r = new byte[nbColors];
+  byte[] g = new byte[nbColors];
+  byte[] b = new byte[nbColors];
   r[0] = (byte)255; g[0] = (byte)0; b[0] = (byte)42;
   r[1] = (byte)255; g[1] = (byte)0; b[1] = (byte)36;
   r[2] = (byte)255; g[2] = (byte)0; b[2] = (byte)31;
@@ -538,7 +539,7 @@ public class ColorModels {
   r[236] = (byte)255; g[236] = (byte)0; b[236] = (byte)217;
   r[237] = (byte)255; g[237] = (byte)0; b[237] = (byte)211;
   r[238] = (byte)255; g[238] = (byte)0; b[238] = (byte)206;
-  r[239] = (byte)255; g[239] = (byte)0; b[239] = (byte)201;
+  r[239] = (byte)255; g[239] = (byte)0; b[239] = (byte)201;/*
   r[240] = (byte)72; g[240] = (byte)141; b[240] = (byte)26;
   r[241] = (byte)72; g[241] = (byte)142; b[241] = (byte)26;
   r[242] = (byte)72; g[242] = (byte)142; b[242] = (byte)26;
@@ -554,8 +555,8 @@ public class ColorModels {
   r[252] = (byte)75; g[252] = (byte)148; b[252] = (byte)27;
   r[253] = (byte)75; g[253] = (byte)149; b[253] = (byte)27;
   r[254] = (byte)76; g[254] = (byte)149; b[254] = (byte)27;
-  r[255] = (byte)76; g[255] = (byte)150; b[255] = (byte)28;
-  return new IndexColorModel(8,256,r,g,b);
+  r[255] = (byte)76; g[255] = (byte)150; b[255] = (byte)28;*/
+  return new IndexColorModel(8,nbColors,r,g,b);
 }
     
     /** Returns one gray color model */
@@ -564,7 +565,7 @@ public class ColorModels {
         byte[] g = new byte[nbElements];
         byte[] b = new byte[nbElements];
         
-        int mult=256/nbElements;
+        int mult=nbColors/nbElements;
         
         for (int i = 0; i < nbElements; i++) {
             byte v = (byte)(i*mult);
