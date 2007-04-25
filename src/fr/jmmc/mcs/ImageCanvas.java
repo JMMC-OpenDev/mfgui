@@ -13,6 +13,8 @@ import fr.jmmc.mf.gui.UtilsClass;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.geom.*;
+import java.util.Observable;
+import java.util.Observer;
 
 
 import org.eso.fits.*;
@@ -31,33 +33,48 @@ import org.xml.sax.*;
  * @author mella
  */
 public class ImageCanvas extends Canvas{
-    Image image;
-    WritableRaster imageRaster;
-    Image wedge;
-    IndexColorModel colorModel ;
-    int w,h;
+    Image image_;
+    WritableRaster imageRaster_;
+    Image wedge_;
+    IndexColorModel colorModel_ ;
+    int w_,h_;
+    int canvasWidth_,canvasHeight_;
+    static final int nbColors_=240;
     
     //properties
     private boolean antiAliasing;
     
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mcs.ImageCanvas");
     
+    ObservableImage observe_;
+    
     /**
      * Creates a new instance of ImageCanvas
      */
     public ImageCanvas() {
-        image=null;
-        imageRaster=null;
+        image_=null;
+        imageRaster_=null;
         // set default properties
-        colorModel = ColorModels.colorModels[0];
+        colorModel_ = ColorModels.colorModels[0];
         antiAliasing=false;
         
-        setColorModel(colorModel);
+        setColorModel(colorModel_);
+        w_=0;
+        h_=0;
+        canvasWidth_=0;
+        canvasHeight_=0;
+    
+        observe_ = new ObservableImage();
+        
     } 
+    
+    public void addObserver(Observer observer){ 
+        observe_.addObserver(observer);
+    }
     
     /** Change color model and repaint canvas */
     public void setColorModel(IndexColorModel cm){
-        colorModel=cm;    
+        colorModel_=cm;    
         
         buildWedge();
         buildImage();
@@ -66,17 +83,17 @@ public class ImageCanvas extends Canvas{
     }
     
     private void buildWedge(){
-        int wedgeSize=256;
-        wedge = Toolkit.getDefaultToolkit().createImage(
+        int wedgeSize=nbColors_;
+        wedge_ = Toolkit.getDefaultToolkit().createImage(
                 new MemoryImageSource(1, wedgeSize,
-                colorModel, generateWedge(0,wedgeSize,wedgeSize), 0, 1));        
+                colorModel_, generateWedge(0,wedgeSize,wedgeSize), 0, 1));        
     }
     
     
     protected void initImage(int w, int h, float[] array){
         logger.entering(""+this.getClass(), "initImage");
-        this.w=w;
-        this.h=h;
+        this.w_=w;
+        this.h_=h;
         
         // search min and max of input array
         float aMin=array[0];
@@ -94,7 +111,7 @@ public class ImageCanvas extends Canvas{
         
         // Define image min and image max values. And set coefficient to normalize image values
         int iMin=0;
-        int iMax=255;
+        int iMax=nbColors_-1;
         float c = (iMax-iMin)/(aMax-aMin);
         if(c==0){
             c=1;
@@ -107,8 +124,8 @@ public class ImageCanvas extends Canvas{
                 +", max="+aMax+", c="+c
                 +", array[0]="+array[0]);
         
-        imageRaster = Raster.createPackedRaster(DataBuffer.TYPE_BYTE, w, h, new int[]{0xFF}, new Point(0,0));
-        DataBuffer dataBuffer = imageRaster.getDataBuffer();
+        imageRaster_ = Raster.createPackedRaster(DataBuffer.TYPE_BYTE, w, h, new int[]{0xFF}, new Point(0,0));
+        DataBuffer dataBuffer = imageRaster_.getDataBuffer();
         
         // init raster pixels
         for (int i = 0; i < array.length; i++) {
@@ -125,8 +142,8 @@ public class ImageCanvas extends Canvas{
     }
     
     private void buildImage(){
-        if (imageRaster!= null){
-            image=new BufferedImage(colorModel, imageRaster,false, null);
+        if (imageRaster_!= null){
+            image_=new BufferedImage(colorModel_, imageRaster_,false, null);
         }
     }
     
@@ -158,13 +175,26 @@ public class ImageCanvas extends Canvas{
             FitsHeader header = new FitsHeader(file);
             FitsMatrix fitsImage = new FitsMatrix(header,file,false);
             int[] naxis = fitsImage.getNaxis();
-            w = naxis[0];
-            h = naxis[1];
-            float[] array = fitsImage.getFloatValues(0, w*h, null);
-            initImage(w,h,array);
+            w_ = naxis[0];
+            h_ = naxis[1];
+            float[] array = fitsImage.getFloatValues(0, w_*h_, null);
+            initImage(w_,h_,array);
         }catch(Exception exc){
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
+    }
+    
+    
+    public Dimension getCanvasDimension(){
+        Dimension canvasDim = new Dimension();
+        canvasDim.setSize(canvasHeight_, canvasWidth_);
+        return canvasDim;
+    }
+    
+    public Dimension getImageDimension(){
+        Dimension imageDim = new Dimension();
+        imageDim.setSize(h_, w_);
+        return imageDim;
     }
     
     /** Init image shown set width and height to fits naxis values.
@@ -212,32 +242,66 @@ public class ImageCanvas extends Canvas{
                     RenderingHints.VALUE_ANTIALIAS_OFF);
         }
         
-        Dimension d = new Dimension(this.getWidth(), this.getHeight());
-        int canvasWidth=(int)d.getWidth()-70;
-        int canvasHeight=(int)d.getHeight()-34;        
-        
-        int margin=15;
+        int leftInset=20;
+        int rightInset=30;
+        int topInset=10;
+        int bottomInset=25;
         int wedgeWidth=10;
+        int wedgeImageDist=10;
+        
+        Dimension d = new Dimension(this.getWidth(), this.getHeight());
+        canvasWidth_=(int)d.getWidth()-leftInset-rightInset-wedgeWidth-wedgeImageDist;
+        canvasHeight_=(int)d.getHeight()-topInset-bottomInset;        
+        
         g2d.setColor(Color.GRAY);
         g2d.fillRect(0, 0, (int)d.getWidth(), (int)d.getHeight());
         g2d.setColor(Color.BLACK);
                 
-        if (canvasWidth>0 && canvasHeight>0){
-            if (image!=null){
+        if (canvasWidth_>0 && canvasHeight_>0){
+            if (image_!=null){
                 // draw image into rect
-                g2d.drawImage(image, margin+1, margin+1, canvasWidth, canvasHeight, null);
-                g2d.drawRect(margin, margin, canvasWidth+1, canvasHeight+1);                
+                g2d.drawImage(image_, leftInset+1, topInset+1, canvasWidth_, canvasHeight_, null);
+                
+                // draw vertical tics
+                for (int i = 0; i < h_ ; i++) {
+                    int y = topInset+canvasHeight_*i/h_+ (canvasHeight_/(2*h_));
+                    g2d.drawLine(leftInset-2,y, leftInset, y);    
+                    g2d.drawString(""+i,leftInset-20, y+4);
+                }
+                
+                // draw horizontal tics
+                for (int i = 0; i < w_ ; i++) {
+                    int x = leftInset+canvasWidth_*i/w_+ (canvasWidth_/(2*w_));
+                    g2d.drawLine(x,topInset+canvasHeight_, x, topInset+canvasHeight_+3);    
+                    g2d.drawString(""+i,x-4, topInset+canvasHeight_+15);
+                }
+                
+                
+                g2d.drawRect(leftInset, topInset, canvasWidth_+1, canvasHeight_+1);                
             }
-            if (wedge!=null){
-                int wedgeImageDist=10;
-                g2d.drawRect(margin+canvasWidth+wedgeImageDist,margin, wedgeWidth+1, canvasHeight+1);
-                g2d.drawString("255", margin+canvasWidth+wedgeImageDist+wedgeWidth+3, margin+6 );
-                g2d.drawString("0", margin+canvasWidth+wedgeImageDist+wedgeWidth+3, canvasHeight+20 );
-                g2d.drawImage(wedge, margin+canvasWidth+wedgeImageDist+1, margin+1, wedgeWidth, canvasHeight, null);    
+            if (wedge_!=null){
+                g2d.drawRect(leftInset+canvasWidth_+wedgeImageDist,topInset, wedgeWidth+1, canvasHeight_+1);
+                g2d.drawString(""+nbColors_, leftInset+canvasWidth_+wedgeImageDist+wedgeWidth+3, topInset+6);
+                g2d.drawString("0", leftInset+canvasWidth_+wedgeImageDist+wedgeWidth+3, topInset+canvasHeight_);
+                g2d.drawImage(wedge_, leftInset+canvasWidth_+wedgeImageDist+1, topInset+1, wedgeWidth, canvasHeight_, null);    
             }
-        }
-       
-        // display canvas size
-        g2d.drawString("Image size:"+w+"x"+h+" - Canvas size:"+canvasWidth+"x"+canvasHeight, 14,14);        
+        }       
+        observe_.notifyImageObservers();
     }       
+    
+    private class ObservableImage extends Observable{
+        
+        public void notifyImageObservers(){
+            setChanged();
+            notifyObservers();
+        }
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        ImageViewer.main(args);
+    }
+    
 }
