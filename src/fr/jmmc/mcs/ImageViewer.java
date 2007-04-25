@@ -7,13 +7,17 @@
 package fr.jmmc.mcs;
 
 import java.awt.image.IndexColorModel;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
  * @author  mella
  */
-public class ImageViewer extends javax.swing.JFrame {
+public class ImageViewer extends javax.swing.JFrame implements Observer{
     ImageCanvas imageCanvas;
+    int nbColors=240; // colorModels have 
+    
     /** Creates new form ImageViewer */
     public ImageViewer() {
         init();
@@ -29,10 +33,24 @@ public class ImageViewer extends javax.swing.JFrame {
         initComponents();
         // add image canvas
         imageCanvas = new ImageCanvas();
+        imageCanvas.addObserver(this);
         getContentPane().add(imageCanvas);
         // set items for colormodels
         colorModelComboBox.setModel(new javax.swing.DefaultComboBoxModel(ColorModels.colorModelNames));
      }
+
+    public void update(Observable observable, Object object) {
+    String info =     +imageCanvas.getImageDimension().height
+                +"x"+imageCanvas.getImageDimension().width
+                + "Image "
+                +imageCanvas.getCanvasDimension().height
+                +"x"+imageCanvas.getCanvasDimension().width
+                +" px";
+        imageInfoTextField.setText(info);
+        imageInfoTextField.validate();
+    }
+    
+
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -41,15 +59,18 @@ public class ImageViewer extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         colorModelComboBox = new javax.swing.JComboBox();
-        infoTextfield = new javax.swing.JTextField();
+        imageInfoTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
         jLabel1.setText("Color model:");
-        jPanel1.add(jLabel1);
+        jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
 
         colorModelComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -57,11 +78,14 @@ public class ImageViewer extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.add(colorModelComboBox);
+        jPanel1.add(colorModelComboBox, new java.awt.GridBagConstraints());
 
-        infoTextfield.setEditable(false);
-        infoTextfield.setBorder(null);
-        jPanel1.add(infoTextfield);
+        imageInfoTextField.setBorder(null);
+        imageInfoTextField.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(imageInfoTextField, gridBagConstraints);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
@@ -81,13 +105,22 @@ public class ImageViewer extends javax.swing.JFrame {
                 ImageViewer  viewer = new ImageViewer();
                 viewer.setVisible(true);
                 viewer.setDefaultCloseOperation(viewer.EXIT_ON_CLOSE);
+                
+                int w=32;
+                int h=32;
+                float[] img= new float[w*h];
+                for (int i = 0; i < img.length; i++) {
+                    img[i]=i;
+                }
+                viewer.imageCanvas.initImage(w,h,img);
+                
             }
         });
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox colorModelComboBox;
-    private javax.swing.JTextField infoTextfield;
+    private javax.swing.JTextField imageInfoTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
