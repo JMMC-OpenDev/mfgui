@@ -61,8 +61,8 @@ public class ImageCanvas extends Canvas{
         setColorModel(colorModel_);
         w_=0;
         h_=0;
-        canvasWidth_=0;
-        canvasHeight_=0;
+        canvasWidth_=500;
+        canvasHeight_=500;
     
         observe_ = new ObservableImage();
         
@@ -197,6 +197,7 @@ public class ImageCanvas extends Canvas{
         return imageDim;
     }
     
+    
     /** Init image shown set width and height to fits naxis values.
      * Only first table is used to init pixel values.
      * Table is supporsed to be rectangular because dimension is obtained
@@ -289,6 +290,17 @@ public class ImageCanvas extends Canvas{
         }       
         observe_.notifyImageObservers();
     }       
+    
+    
+    public Dimension getPreferredSize(){                 
+      return this.getCanvasDimension();      
+    }
+    public Dimension getMinimumSize(){        
+      return this.getCanvasDimension();      
+    }
+    public Dimension getMaximumSize(){        
+        return this.getCanvasDimension();      
+    }
     
     private class ObservableImage extends Observable{
         
