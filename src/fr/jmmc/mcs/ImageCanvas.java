@@ -216,12 +216,13 @@ public class ImageCanvas extends Canvas{
             
             float[] array=new float[h*w];
             // init array content
-            for (int j = 0; j < h; j++) {
-                tr =  (Element)trList.item(j);
-                tdList = tr.getElementsByTagName("td");
+            
                 for (int i = 0; i < w; i++) {
-                    Element td =  (Element)tdList.item((w-1)-i);
-                    array[i+(j*w)]=Float.parseFloat(td.getTextContent());
+                tr =  (Element)trList.item(i);
+                tdList = tr.getElementsByTagName("td");
+            for (int j = 0; j < h; j++) {    
+                    Element td =  (Element)tdList.item(j);
+                    array[i+((h-j-1)*w)]=Float.parseFloat(td.getTextContent());
                 }
             }
             initImage(w,h,array);
