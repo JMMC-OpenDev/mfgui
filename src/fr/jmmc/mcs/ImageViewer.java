@@ -22,7 +22,7 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
     ImageCanvas imageCanvas;
     int nbColors = 240; // colorModels have 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JComboBox colorModelComboBox;
     private javax.swing.JTextField imageInfoTextField;
     private javax.swing.JLabel jLabel1;
@@ -53,7 +53,9 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
         String info = +imageCanvas.getImageDimension().height + "x" +
             imageCanvas.getImageDimension().width + "Image " +
             imageCanvas.getCanvasDimension().height + "x" +
-            imageCanvas.getCanvasDimension().width + " px";
+            imageCanvas.getCanvasDimension().width + " px ( " +
+            imageCanvas.mouseX_ + "," + imageCanvas.mouseY_ + " : " +
+            imageCanvas.mousePixel_ + " )";
         imageInfoTextField.setText(info);
         imageInfoTextField.validate();
     }
@@ -151,5 +153,5 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
             });
     }
 
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
