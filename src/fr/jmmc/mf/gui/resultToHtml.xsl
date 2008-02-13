@@ -27,7 +27,7 @@
                 <!-- disp parameters info -->
                 <h1> Parameters </h1>
                 
-                <table> 
+                <table border="1"> 
                     <tr>
                         <th>name</th>
                         <th>final value</th>
