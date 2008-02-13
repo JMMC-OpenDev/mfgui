@@ -245,7 +245,6 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
      * getting number of rows and number of columns in the first row. */
     public void xmlInit(String xmlStr) {
         logger.entering("" + this.getClass(), "xmlInit");
-        logger.finest(xmlStr);
 
         try {
             Document doc = UtilsClass.parseXmlString(xmlStr, false);
@@ -256,24 +255,21 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
             NodeList tdList = tr.getElementsByTagName("td");
             int h = trList.getLength();
             int w = tdList.getLength();
-            logger.finest("xmlInit: found " + w + "x" + h + " array");
+            logger.fine("xmlInit: found " + w + "x" + h + " array");
 
             float[] array = new float[h * w];
 
             // init array content
-            for (int i = 0; i < w; i++) {
+            for (int i = 0; i < h; i++) {
                 tr = (Element) trList.item(i);
                 tdList = tr.getElementsByTagName("td");
-
-                for (int j = 0; j < h; j++) {
-                    Element td = (Element) tdList.item(j);
-                    array[i + ((h - j - 1) * w)] = Float.parseFloat(td.getTextContent());
+                for (int j = 0; j < w; j++) {
+                    Element td = (Element) tdList.item(j);                               
+                    array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
                 }
             }
-
             initImage(w, h, array);
-        } catch (Exception exc) {
-            logger.finest(xmlStr);
+        } catch (Exception exc) {            
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
     }
