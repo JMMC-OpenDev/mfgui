@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.12 2007-02-26 10:28:05 mella Exp $"
+# "@(#) $Id: Makefile,v 1.13 2008-02-18 15:25:57 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2007/02/26 10:28:05  mella
+# General commit for 1.0.5beta
+#
 # Revision 1.11  2007/02/14 12:52:23  mella
 # Do simple cleanup
 #
@@ -173,7 +176,14 @@ MAN8 =
 #
 # other files to be installed
 #----------------------------
-INSTALL_FILES =
+INSTALL_FILES = ../lib/castor.jar \
+				../lib/commons-codec-1.2.jar \
+				../lib/commons-httpclient-3.0.1.jar \
+				../lib/commons-httpclient-3.1-beta1.jar \
+				../lib/commons-lang-2.1.jar \
+				../lib/commons-logging-1.0.3.jar \
+				../lib/topcat-full.jar
+																
 
 #
 # list of all possible C-sources (used to create automatic dependencies)
