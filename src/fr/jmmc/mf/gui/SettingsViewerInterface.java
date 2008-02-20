@@ -3,11 +3,9 @@
  *
  * Created on 6 decembre 2006, 12:07
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
  */
-
 package fr.jmmc.mf.gui;
+
 
 /**
  *
@@ -16,4 +14,8 @@ package fr.jmmc.mf.gui;
 public interface SettingsViewerInterface {
     /** Shows a given object */
     public void showSettingElement(Object o);
+
+    public SettingsModel getSettingsModel();
+
+    public SettingsPane getSettingsPane();
 }

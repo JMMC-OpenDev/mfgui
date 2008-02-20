@@ -3,21 +3,23 @@
  *
  * Created on 8 novembre 2006, 11:27
  */
-
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mf.models.File;
-import java.util.*;
 import fr.jmmc.mcs.gui.ReportDialog;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.net.URI;
 
-
-import uk.ac.starlink.topcat.plot.GraphSurface;
+import fr.jmmc.mf.models.File;
 
 //import nom.tam.fits.*;
 import org.eso.fits.FitsFile;
+
+import uk.ac.starlink.topcat.plot.GraphSurface;
+
+import java.net.URI;
+
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
 
 
 /**
@@ -25,107 +27,117 @@ import org.eso.fits.FitsFile;
  * @author  mella
  */
 public class FilePanel extends javax.swing.JPanel {
-    
-    static File current=null;    
+    static File current = null;
     static Action saveEmbeddedFileAction;
     static Action showEmbeddedFileAction;
     static DefaultListModel hduListModel = new DefaultListModel();
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("fr.jmmc.mf.gui.FilePanel");
-    
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            "fr.jmmc.mf.gui.FilePanel");
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JPopupMenu fileListPopupMenu;
+    private javax.swing.JList hduList;
+    private javax.swing.JTextField infosTextField;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu listenersMenu;
+    private javax.swing.JButton loadViewerButton;
+    private javax.swing.JTextField localNameTextField;
+    private javax.swing.JTextField locationTextField;
+    private javax.swing.JTextField nameTextField;
+    private javax.swing.JButton saveFileButton;
+    private javax.swing.JButton showSketchButton;
+    private javax.swing.JButton showUVCoverageButton;
+    private javax.swing.JTextField sizeTextField;
+
     /** Creates new form FilePanel */
     public FilePanel() {
         // Prepare action before gui construction
         saveEmbeddedFileAction = new SaveEmbeddedFileAction();
         showEmbeddedFileAction = new ShowEmbeddedFileAction();
-        initComponents();        
+        initComponents();
         hduList.addListSelectionListener(new MyListSelectionListener());
-  
     }
-    
-    // Enable or not the showUVCoverage Button on each new list selection
-    class MyListSelectionListener implements ListSelectionListener {        
-        public void valueChanged(ListSelectionEvent evt) {
-            // When the user release the mouse button and completes the selection,
-            // getValueIsAdjusting() becomes false
-            if (!evt.getValueIsAdjusting()) {
-                JList list = (JList)evt.getSource();    
-                // Get all selected items
-                Object[] selected = list.getSelectedValues();    
-                // Iterate all selected items
-                showUVCoverageButton.setEnabled(false);
-                for (int i=0; i<selected.length; i++) {
-                    String extName = (String)selected[i];
-                    if(extName.startsWith("OI_VIS")){
-                           showUVCoverageButton.setEnabled(true); 
-                    }                                        
-                }
+
+    public void show(File file) {
+        current = file;
+
+        nameTextField.setText(file.getName());
+        locationTextField.setText("");
+
+        // update name field
+        java.io.File f = new java.io.File(current.getName());
+        String filename = null;
+
+        try {
+            filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+                    current.getHref());
+        } catch (Exception exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        }
+
+        try {
+            if (!f.exists()) {
+                f = new java.io.File(filename);
             }
-            
+
+            localNameTextField.setText(f.getName());
+            locationTextField.setText(f.getParent());
+        } catch (Exception exc) {
+            localNameTextField.setText("Can't locate " + current.getName());
+        }
+
+        // update size field
+        sizeTextField.setText("" + (f.length() / 1000) + " kBytes");
+
+        // update info field
+        String list = "";
+
+        for (int i = 0; i < current.getOitargetCount(); i++) {
+            list += ("," + current.getOitarget(i).getTarget());
+        }
+
+        if (current.getOitargetCount() > 0) {
+            infosTextField.setText("Target list [" + list.substring(1) + "]");
+        } else {
+            infosTextField.setText("No Target present");
+        }
+
+        // update list of hdu list
+        try {
+            // clear and fill hduListModel
+            hduListModel.clear();
+
+            //current.setName(filename);
+
+            // scan given file and try to get reference of oi_target extension excepted primary hdu
+            FitsFile fits = new FitsFile(filename);
+            int index = fits.getNoHDUnits();
+
+            // start from 1 to skip primary hdu
+            for (int i = 1; i < index; i++) {
+                String extName = fits.getHDUnit(i).getHeader()
+                                     .getKeyword("EXTNAME").getString();
+                hduListModel.addElement(extName);
+            }
+        } catch (Exception exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
     }
-    public void show(File file){
-       current=file;
-       
-       nameTextField.setText(file.getName());
-       locationTextField.setText("");
-       
-       // update name field
-       java.io.File f = new java.io.File(current.getName());
-       String filename=null;
-       try{
-           filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-       }catch(Exception exc){
-           new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-       }          
-       try{
-           if(! f.exists()){
-               f=new java.io.File(filename);               
-           }
-           localNameTextField.setText(f.getName());
-           locationTextField.setText(f.getParent());                          
-       }catch(Exception exc){
-           localNameTextField.setText("Can't locate "+current.getName());
-           
-       }
-       // update size field
-       sizeTextField.setText(""+f.length()/1000+" kBytes");
 
-       // update info field
-       String list = "";
-       for (int i=0; i< current.getOitargetCount(); i++){
-           list+=","+current.getOitarget(i).getTarget();
-       }
-       if( current.getOitargetCount() > 0 ){
-           infosTextField.setText("Target list ["+list.substring(1)+"]");
-       }else{
-           infosTextField.setText("No Target present");       
-       }        
-       
-       // update list of hdu list
-       try{
-           // clear and fill hduListModel
-           hduListModel.clear();           
-           //current.setName(filename);
-           
-           
-           // scan given file and try to get reference of oi_target extension excepted primary hdu
-           FitsFile fits = new FitsFile(filename);
-           int index = fits.getNoHDUnits();
-           // start from 1 to skip primary hdu
-           for (int i = 1; i < index; i++) {               
-               String extName = fits.getHDUnit(i).getHeader().getKeyword("EXTNAME").getString();
-               hduListModel.addElement(extName);               
-           }                      
-       }catch(Exception exc){
-           new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-       }
-    }
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
+
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -266,18 +278,20 @@ public class FilePanel extends javax.swing.JPanel {
 
         hduList.setModel(hduListModel);
         hduList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                hduListValueChanged(evt);
-            }
-        });
+                public void valueChanged(
+                    javax.swing.event.ListSelectionEvent evt) {
+                    hduListValueChanged(evt);
+                }
+            });
         hduList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                hduListMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                hduListMousePressed(evt);
-            }
-        });
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    hduListMouseClicked(evt);
+                }
+
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    hduListMousePressed(evt);
+                }
+            });
 
         jScrollPane1.setViewportView(hduList);
 
@@ -290,10 +304,10 @@ public class FilePanel extends javax.swing.JPanel {
 
         showSketchButton.setText("Show interferometer sketch");
         showSketchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showSketchButtonActionPerformed(evt);
-            }
-        });
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    showSketchButtonActionPerformed(evt);
+                }
+            });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -304,10 +318,10 @@ public class FilePanel extends javax.swing.JPanel {
         showUVCoverageButton.setText("Show UV Coverage");
         showUVCoverageButton.setEnabled(false);
         showUVCoverageButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showUVCoverageButtonActionPerformed(evt);
-            }
-        });
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    showUVCoverageButtonActionPerformed(evt);
+                }
+            });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -316,312 +330,338 @@ public class FilePanel extends javax.swing.JPanel {
         jPanel1.add(showUVCoverageButton, gridBagConstraints);
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
+    } // </editor-fold>//GEN-END:initComponents
 
-    }// </editor-fold>//GEN-END:initComponents
+    private void showUVCoverageButtonActionPerformed(
+        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_showUVCoverageButtonActionPerformed
+                                          // Get all selected items
 
-    private void showUVCoverageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUVCoverageButtonActionPerformed
-        // Get all selected items
         int[] indices = hduList.getSelectedIndices();
-        
+
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-        String filename="";
-        try{
-            filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-            
-            for (int i=0; i<indices.length; i++) {
+
+        String filename = "";
+
+        try {
+            filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+                    current.getHref());
+
+            for (int i = 0; i < indices.length; i++) {
                 int indice = indices[i];
-                String extName = (String)hduList.getModel().getElementAt(indice);
+                String extName = (String) hduList.getModel().getElementAt(indice);
                 indice++; // 1 is not the first table
-                if(extName.startsWith("OI_VIS")){
-                    logger.fine("Plot UV coverage for ext '"+extName+"' nb "+indice);
+
+                if (extName.startsWith("OI_VIS")) {
+                    logger.fine("Plot UV coverage for ext '" + extName +
+                        "' nb " + indice);
                     showUVCoverageButton.setEnabled(true);
+
                     // @todo move next code part
                     // We could use the topcat.getTableListModel to open just once each tables
                     uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();
                     uk.ac.starlink.table.StarTableFactory stFact = new uk.ac.starlink.table.StarTableFactory();
-                    uk.ac.starlink.table.StarTable startab = stFact.makeStarTable(filename+"#"+indice);
-                    topcat.addTable(startab, filename+"#"+indice ,true);
-                    
+                    uk.ac.starlink.table.StarTable startab = stFact.makeStarTable(filename +
+                            "#" + indice);
+                    topcat.addTable(startab, filename + "#" + indice, true);
+
                     // add x column
-                    uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo("UCOORD");
-                    uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo("VCOORD");
+                    uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
+                            "UCOORD");
+                    uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
+                            "VCOORD");
                     uk.ac.starlink.topcat.SyntheticColumn c;
-                    
+
                     List l = new Vector();
                     l.add(uk.ac.starlink.topcat.RowSubset.ALL);
-                    c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo
-                            , startab , l , "UCOORD" , null);
-                    topcat.getCurrentModel().appendColumn( c, 0);
-                    c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo
-                            , startab, l, "VCOORD", null);
-                    topcat.getCurrentModel().appendColumn( c, 1 );
-                    
-                    uk.ac.starlink.topcat.plot.PlotWindow plot  = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);
+                    c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo,
+                            startab, l, "UCOORD", null);
+                    topcat.getCurrentModel().appendColumn(c, 0);
+                    c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo,
+                            startab, l, "VCOORD", null);
+                    topcat.getCurrentModel().appendColumn(c, 1);
+
+                    uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);
                     // setVisible must be called before model assignement
                     plot.setVisible(true);
-                    plot.setMainTable(topcat.getCurrentModel());   
-                    
-                   // complete code to plot symetric uv coverage with -UCOORD and -VCOORD
-                   // plot.getPointSelectors().addNewSelector(); 
+                    plot.setMainTable(topcat.getCurrentModel());
+
+                    // complete code to plot symetric uv coverage with -UCOORD and -VCOORD
+                    // plot.getPointSelectors().addNewSelector(); 
                 }
             }
-            
-        }catch (Exception exc){
+        } catch (Exception exc) {
             logger.warning("Can't do graph");
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-        }  
-    }//GEN-LAST:event_showUVCoverageButtonActionPerformed
+        }
+    } //GEN-LAST:event_showUVCoverageButtonActionPerformed
 
-    private void showSketchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSketchButtonActionPerformed
-        
-        try{
-            String filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
+    private void showSketchButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_showSketchButtonActionPerformed
+
+        try {
+            String filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+                    current.getHref());
+
             // scan given file and try to get reference of oi_target extension excepted primary hdu
             FitsFile fits = new FitsFile(filename);
             int index = fits.getNoHDUnits();
+
             // start from 1 to skip primary hdu
             for (int i = 1; i < index; i++) {
-                String extName = fits.getHDUnit(i).getHeader().getKeyword("EXTNAME").getString();
-                if(extName.trim().equalsIgnoreCase("OI_ARRAY")){
-                    filename=filename+"#"+i;
-                }                
-            }                                               
-                        
+                String extName = fits.getHDUnit(i).getHeader()
+                                     .getKeyword("EXTNAME").getString();
+
+                if (extName.trim().equalsIgnoreCase("OI_ARRAY")) {
+                    filename = filename + "#" + i;
+                }
+            }
+
             // We could use the topcat.getTableListModel to open just once each tables
-            uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();            
+            uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();
             uk.ac.starlink.table.StarTableFactory stFact = new uk.ac.starlink.table.StarTableFactory();
             uk.ac.starlink.table.StarTable startab = stFact.makeStarTable(filename);
-            topcat.addTable(startab, filename ,true);                      
-            
+            topcat.addTable(startab, filename, true);
+
             // add x column            
-            uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo("X");
-            uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo("Y");
+            uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
+                    "X");
+            uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
+                    "Y");
             uk.ac.starlink.topcat.SyntheticColumn c;
-                
+
             List l = new Vector();
             l.add(uk.ac.starlink.topcat.RowSubset.ALL);
-            c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo
-                    , startab , l , "STAXYZ[0]" , null);
-            topcat.getCurrentModel().appendColumn( c, 0);            
-            c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo
-                    , startab, l, "STAXYZ[1]", null);
-            topcat.getCurrentModel().appendColumn( c, 1 );
-           
-            uk.ac.starlink.topcat.plot.PlotWindow plot  = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);            
+            c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo, startab,
+                    l, "STAXYZ[0]", null);
+            topcat.getCurrentModel().appendColumn(c, 0);
+            c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo, startab,
+                    l, "STAXYZ[1]", null);
+            topcat.getCurrentModel().appendColumn(c, 1);
+
+            uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);
             // setVisible must be called before model assignement
-            plot.setVisible(true);            
-            plot.setMainTable(topcat.getCurrentModel());                                                
+            plot.setVisible(true);
+            plot.setMainTable(topcat.getCurrentModel());
 
             // choose other axis linke next lines seem imossible 
             // generated plotState uses n first column...
             // just gui seems too have access on it
             // next ps is generated one
             /*uk.ac.starlink.topcat.plot.PlotState ps = plot.getPlotState();
-            ps.setAxes(new uk.ac.starlink.table.ValueInfo[]{xValueInfo, yValueInfo});    
-             * maybe that one more line code could take prev modification        
+            ps.setAxes(new uk.ac.starlink.table.ValueInfo[]{xValueInfo, yValueInfo});
+             * maybe that one more line code could take prev modification
             */
-            
-            
-        }catch (Exception exc){
+        } catch (Exception exc) {
             logger.warning("Can't do graph");
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
-        
+    } //GEN-LAST:event_showSketchButtonActionPerformed
 
-        
-    }//GEN-LAST:event_showSketchButtonActionPerformed
-
-    
-    public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app){
-       
-        try{
+    public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app) {
+        try {
             URI loadFromURLURI = new URI("ivo://votech.org/votable/loadFromURL");
-            
-            if( app.getSupportedMessages().contains( loadFromURLURI )){
+
+            if (app.getSupportedMessages().contains(loadFromURLURI)) {
                 int[] indices = hduList.getSelectedIndices();
+
                 for (int i = 0; i < indices.length; i++) {
-                    String filename=current.getName();
+                    String filename = current.getName();
                     java.io.File f = new java.io.File(filename);
-                    if(!f.exists()){                        
-                        filename=UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-                        f=new java.io.File(filename);
+
+                    if (!f.exists()) {
+                        filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+                                current.getHref());
+                        f = new java.io.File(filename);
                     }
-                    java.util.Vector args=new Vector();
-                    args.addElement("file://localhost/"+filename+"#"+(indices[i]));         
-                    logger.warning("request app '"+app+"' to load:"+args.get(0) );
-                    MainFrame.getPlasticServer().perform(app.getId(), loadFromURLURI, args);            
-                }                                
-                
-            }else{
-                logger.info("app does not support:"+loadFromURLURI );
+
+                    java.util.Vector args = new Vector();
+                    args.addElement("file://localhost/" + filename + "#" +
+                        (indices[i]));
+                    logger.warning("request app '" + app + "' to load:" +
+                        args.get(0));
+                    MFGui.getPlasticServer()
+                         .perform(app.getId(), loadFromURLURI, args);
+                }
+            } else {
+                logger.info("app does not support:" + loadFromURLURI);
             }
-            
-        }catch(Exception exc){
+        } catch (Exception exc) {
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
-                            /*list.getElementAt();
-                            MainFrame.getPlasticServer().perform();
-                             **/
+
+        /*list.getElementAt();
+        MainFrame.getPlasticServer().perform();
+         **/
     }
-    
-    private void hduListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hduListMousePressed
-        logger.entering(""+this.getClass(), "hduListMousePressed");
+
+    private void hduListMousePressed(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_hduListMousePressed
+        logger.entering("" + this.getClass(), "hduListMousePressed");
 
         //if (evt.isPopupTrigger() && hduList.getSelectedIndex()>0 ) {
         if (evt.isPopupTrigger()) {
             logger.finest("Menu required");
             listenersMenu.removeAll();
-            ListModel list = MainFrame.getPlasticServer().getApplicationListModel();
+
+            ListModel list = MFGui.getPlasticServer().getApplicationListModel();
+
             for (int i = 0; i < list.getSize(); i++) {
-                final uk.ac.starlink.plastic.ApplicationItem app = (uk.ac.starlink.plastic.ApplicationItem)list.getElementAt(i);
-                String appName=""+app;
-                if(!appName.equalsIgnoreCase("hub") && !appName.equalsIgnoreCase("modelfitting")){
+                final uk.ac.starlink.plastic.ApplicationItem app = (uk.ac.starlink.plastic.ApplicationItem) list.getElementAt(i);
+                String appName = "" + app;
+
+                if (!appName.equalsIgnoreCase("hub") &&
+                        !appName.equalsIgnoreCase("modelfitting")) {
                     JMenuItem menuItem = new JMenuItem(appName);
                     menuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                            menuRequested(app);
-                        }
-                    });
-                    
+                            public void actionPerformed(
+                                java.awt.event.ActionEvent evt) {
+                                menuRequested(app);
+                            }
+                        });
+
                     listenersMenu.add(menuItem);
                 }
             }
-            
-            if(listenersMenu.getComponentCount()==0){
-                JMenuItem menuItem = new JMenuItem("Please register with plastic or start another interop application");
+
+            if (listenersMenu.getComponentCount() == 0) {
+                JMenuItem menuItem = new JMenuItem(
+                        "Please register with plastic or start another interop application");
                 menuItem.setEnabled(false);
-                listenersMenu.add(menuItem);            
+                listenersMenu.add(menuItem);
                 logger.fine("No application can handle the files");
-            }            
+            }
+
             fileListPopupMenu.validate();
             fileListPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        }else{
-            logger.finest("No menu required");                    
+        } else {
+            logger.finest("No menu required");
         }
-    }//GEN-LAST:event_hduListMousePressed
+    } //GEN-LAST:event_hduListMousePressed
 
-    private void hduListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hduListMouseClicked
-        logger.entering(""+this.getClass(), "hduListMouseClicked");
+    private void hduListMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_hduListMouseClicked
+        logger.entering("" + this.getClass(), "hduListMouseClicked");
+
         // launch viewer if double click else adjust view button state
-        if(evt.getClickCount() == 2){                        
+        if (evt.getClickCount() == 2) {
             loadViewerButton.doClick();
-        }        
-        if(hduList.getSelectedIndex()>=0){
-            loadViewerButton.setEnabled(true);            
-        }else{
-            loadViewerButton.setEnabled(false);                        
-        }       
-    }//GEN-LAST:event_hduListMouseClicked
+        }
 
-    private void hduListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_hduListValueChanged
-      
-        if(hduList.getSelectedIndex()>=0){
-            loadViewerButton.setEnabled(true);            
-        }else{
-            loadViewerButton.setEnabled(false);                        
-        }        
-    }//GEN-LAST:event_hduListValueChanged
-    
-    
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPopupMenu fileListPopupMenu;
-    private javax.swing.JList hduList;
-    private javax.swing.JTextField infosTextField;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JMenu listenersMenu;
-    private javax.swing.JButton loadViewerButton;
-    private javax.swing.JTextField localNameTextField;
-    private javax.swing.JTextField locationTextField;
-    private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton saveFileButton;
-    private javax.swing.JButton showSketchButton;
-    private javax.swing.JButton showUVCoverageButton;
-    private javax.swing.JTextField sizeTextField;
-    // End of variables declaration//GEN-END:variables
- 
-    public static void saveFile(java.io.File targetFile) throws java.io.IOException, java.io.FileNotFoundException {                
-       UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
+        if (hduList.getSelectedIndex() >= 0) {
+            loadViewerButton.setEnabled(true);
+        } else {
+            loadViewerButton.setEnabled(false);
+        }
+    } //GEN-LAST:event_hduListMouseClicked
+
+    private void hduListValueChanged(javax.swing.event.ListSelectionEvent evt) { //GEN-FIRST:event_hduListValueChanged
+
+        if (hduList.getSelectedIndex() >= 0) {
+            loadViewerButton.setEnabled(true);
+        } else {
+            loadViewerButton.setEnabled(false);
+        }
+    } //GEN-LAST:event_hduListValueChanged
+
+    // End of variables declaration                   
+    public static void saveFile(java.io.File targetFile)
+        throws java.io.IOException, java.io.FileNotFoundException {
+        UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
     }
-    
+
+    // Enable or not the showUVCoverage Button on each new list selection
+    class MyListSelectionListener implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent evt) {
+            // When the user release the mouse button and completes the selection,
+            // getValueIsAdjusting() becomes false
+            if (!evt.getValueIsAdjusting()) {
+                JList list = (JList) evt.getSource();
+
+                // Get all selected items
+                Object[] selected = list.getSelectedValues();
+                // Iterate all selected items
+                showUVCoverageButton.setEnabled(false);
+
+                for (int i = 0; i < selected.length; i++) {
+                    String extName = (String) selected[i];
+
+                    if (extName.startsWith("OI_VIS")) {
+                        showUVCoverageButton.setEnabled(true);
+                    }
+                }
+            }
+        }
+    }
+
     protected class ShowEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
-        
         public ShowEmbeddedFileAction() {
             super("showEmbeddedFile");
         }
-        
+
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            try{
-            int[] indices = hduList.getSelectedIndices();
-            for (int i = 0; i < indices.length; i++) {
-                java.io.File f = new java.io.File(current.getName());
-                String filename = current.getName();
-                if(!f.exists()){
-                    filename=UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());                    
+            try {
+                int[] indices = hduList.getSelectedIndices();
+
+                for (int i = 0; i < indices.length; i++) {
+                    java.io.File f = new java.io.File(current.getName());
+                    String filename = current.getName();
+
+                    if (!f.exists()) {
+                        filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+                                current.getHref());
+                    }
+
+                    ModelFitting.startFitsViewer(filename + "#" +
+                        ((indices[i]) + 1));
                 }
-                ModelFitting.startFitsViewer(filename+"#"+((indices[i])+1));
-            }           
-            
             } catch (Exception exc) {
                 new ReportDialog(null, true, exc).setVisible(true);
             }
         }
     }
-    
+
     protected class SaveEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
         public String lastDir = System.getProperty("user.dir");
-            
-            public SaveEmbeddedFileAction() {
-                super("saveEmbeddedFile");
+
+        public SaveEmbeddedFileAction() {
+            super("saveEmbeddedFile");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            //logger.entering(""+this.getClass(), "actionPerformed");
+            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+
+            // Set in previous save directory
+            if (lastDir != null) {
+                fileChooser.setCurrentDirectory(new java.io.File(lastDir));
             }
-            
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                //logger.entering(""+this.getClass(), "actionPerformed");
-                
-                javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-                
-                // Set in previous save directory
-                if (lastDir != null) {
-                    fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-                }
-                
-                try {
-                    // Open filechooser
-                    int returnVal = fileChooser.showSaveDialog(null);
-                    
-                    if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
-                        java.io.File file = fileChooser.getSelectedFile();
-                        lastDir = file.getParent();
-                        
-                        // Ask to overwrite
-                        if (file.exists()) {
-                            String message = "File '" + file.getName() +
-                                "' already exists\nDo you want to overwrite this file?";
-                            
-                            // Modal dialog with yes/no button
-                            int answer = javax.swing.JOptionPane.showConfirmDialog(null, message);
-                            
-                            if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                                saveFile(file);
-                            }
-                        } else {
+
+            try {
+                // Open filechooser
+                int returnVal = fileChooser.showSaveDialog(null);
+
+                if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                    java.io.File file = fileChooser.getSelectedFile();
+                    lastDir = file.getParent();
+
+                    // Ask to overwrite
+                    if (file.exists()) {
+                        String message = "File '" + file.getName() +
+                            "' already exists\nDo you want to overwrite this file?";
+
+                        // Modal dialog with yes/no button
+                        int answer = javax.swing.JOptionPane.showConfirmDialog(null,
+                                message);
+
+                        if (answer == javax.swing.JOptionPane.YES_OPTION) {
                             saveFile(file);
                         }
-                    }               
+                    } else {
+                        saveFile(file);
+                    }
+                }
             } catch (Exception exc) {
                 ReportDialog dialog = new ReportDialog(null, true, exc);
                 dialog.setVisible(true);
             }
         }
     }
-    
-
 }

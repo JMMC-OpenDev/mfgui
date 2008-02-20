@@ -100,7 +100,7 @@ Generate Html view of given xml settings files .
                     </table>
 
                     <h1>Correlation matrix</h1>
-                    <table>
+                    <table border="1">
                         <!-- append table headers first is empty-->
                         <tr>
                             <th></th>

@@ -90,7 +90,8 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
         mouseX_ = ((e.getX() - leftInset) * w_) / canvasWidth_;
         mouseY_ = ((e.getY() - topInset) * h_) / canvasHeight_;
 
-        if ((mouseX_ > 0) && (mouseY_ > 0) && (mouseX_ < w_) && (mouseY_ < h_)) {
+        if ((mouseX_ >= 0) && (mouseY_ >= 0) && (mouseX_ < w_) &&
+                (mouseY_ < h_)) {
             mousePixel_ = imageRaster_.getSample(mouseX_, mouseY_, 0);
             observe_.setChanged();
         }
@@ -263,13 +264,15 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
             for (int i = 0; i < h; i++) {
                 tr = (Element) trList.item(i);
                 tdList = tr.getElementsByTagName("td");
+
                 for (int j = 0; j < w; j++) {
-                    Element td = (Element) tdList.item(j);                               
+                    Element td = (Element) tdList.item(j);
                     array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
                 }
             }
+
             initImage(w, h, array);
-        } catch (Exception exc) {            
+        } catch (Exception exc) {
             new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
     }

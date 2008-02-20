@@ -29,7 +29,6 @@ public class MFGui extends javax.swing.JFrame {
             "fr.jmmc.mf.gui.MFGui");
     static Preferences myPreferences = Preferences.getInstance();
     static StatusBar statusBar;
-    static SettingsPane settingsPane;
 
     // Application actions
     public static Action getYogaVersionAction;
@@ -49,7 +48,6 @@ public class MFGui extends javax.swing.JFrame {
     public static Action loadModelAction;
     public static Action saveModelAction;
     private static PlasticListener plasticServer_;
-    private static javax.swing.JTabbedPane tabbedPane;
     private static MFGui instance = null;
 
     // Variables declaration - do not modify                     
@@ -106,18 +104,30 @@ public class MFGui extends javax.swing.JFrame {
     }
 
     private void addSettingsPane(SettingsPane p) {
-        settingsPane = p;
-        tabbedPane_.add(p,p.getSettingsModel().getAssociatedFilename());
+        tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
+    }
+
+    public SettingsPane getSelectedSettingsPane() {
+        int idx = tabbedPane_.getSelectedIndex();
+
+        if (idx < 0) {
+            return null;
+        }
+
+        logger.fine("Tabbed pane selected index:" + idx);
+        logger.fine("Tabbed pane title:" + tabbedPane_.getTitleAt(idx));
+
+        SettingsPane sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
+        logger.fine("Selected settingsPane name:" +
+            sp.rootSettingsModel.getAssociatedFilename());
+
+        return sp;
     }
 
     public static void closeTab(java.awt.Component c) {
         // not static logger.entering(""+this.getClass(), "closeTab");
         tabbedPane_.remove(c);
-    }
-    
-    public SettingsPane getSelectedSettingsPane() {
-        return settingsPane;
     }
 
     /** This method is called from within the constructor to
@@ -125,6 +135,7 @@ public class MFGui extends javax.swing.JFrame {
      */
     public void initMenuBar() {
         logger.entering("" + this.getClass(), "initMenuBar");
+
         JMenuBar jMenuBar = new JMenuBar();
         this.setJMenuBar(jMenuBar);
 
@@ -239,7 +250,6 @@ public class MFGui extends javax.swing.JFrame {
         menuItem.setAction(showLogGuiAction);
         advancedMenu.add(menuItem);
     }
- 
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -299,13 +309,18 @@ public class MFGui extends javax.swing.JFrame {
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
             // here will come a loop over every open settings
-            ModifyAndSaveObject[] objs;
-            objs = new ModifyAndSaveObject[] { settingsPane.rootSettingsModel };           
-            // next line should quit if no modification occurs
-            // or user answer yes to save every modifications
-            UtilsClass.checkUserModificationAndQuit(objs);
+            ModifyAndSaveObject[] objs = new ModifyAndSaveObject[] {  };
 
-            logger.info("Bye !");
+            if (getSelectedSettingsPane() != null) {
+                objs = new ModifyAndSaveObject[] {
+                        getSelectedSettingsPane().rootSettingsModel
+                    };
+
+                // next line should quit if no modification occurs
+                // or user answer yes to save every modifications
+            }
+
+            UtilsClass.checkUserModificationAndQuit(objs);
         }
     }
 
@@ -402,7 +417,7 @@ public class MFGui extends javax.swing.JFrame {
                               .getResource("fr/jmmc/mf/gui/Releases.html");
                 TabbedPanel rp = new TabbedPanel("");
                 rp.setPage(url);
-                tabbedPane.addTab("Revision", rp);
+                tabbedPane_.addTab("Revision", rp);
             } catch (Exception exc) {
                 new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
             }
@@ -493,37 +508,50 @@ public class MFGui extends javax.swing.JFrame {
         public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.entering("" + this.getClass(), "actionPerformed");
 
-            // Open a filechooser in previous save directory
-            JFileChooser fileChooser = new JFileChooser();
-
-            if (lastDir != null) {
-                fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-            }
-
             try {
-                // Open filechooser
-                int returnVal = fileChooser.showSaveDialog(null);
+                SettingsModel settingsModel = getSelectedSettingsPane().rootSettingsModel;
 
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    java.io.File file = fileChooser.getSelectedFile();
-                    lastDir = file.getParent();
+                java.io.File file;
+                file = settingsModel.associatedFile;
 
-                    // Ask to overwrite
-                    if (file.exists()) {
-                        String message = "File '" + file.getName() +
-                            "' already exists\nDo you want to overwrite this file?";
+                if (file == null) {
+                    // Open a filechooser in previous save directory
+                    JFileChooser fileChooser = new JFileChooser();
 
-                        // Modal dialog with yes/no button
-                        int answer = JOptionPane.showConfirmDialog(null, message);
-
-                        if (answer != JOptionPane.YES_OPTION) {
-                            return;
-                        }
+                    if (lastDir != null) {
+                        fileChooser.setCurrentDirectory(new java.io.File(
+                                lastDir));
                     }
 
-                    getSelectedSettingsPane().rootSettingsModel.saveSettingsFile(file,
-                        false);
+                    fileChooser.setDialogTitle("Save " +
+                        settingsModel.getAssociatedFilename() + "?");
+
+                    // Open filechooser
+                    int returnVal = fileChooser.showSaveDialog(null);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        file = fileChooser.getSelectedFile();
+
+                        // Ask to overwrite
+                        if (file.exists()) {
+                            String message = "File '" + file.getName() +
+                                "' already exists\nDo you want to overwrite this file?";
+
+                            // Modal dialog with yes/no button
+                            int answer = JOptionPane.showConfirmDialog(null,
+                                    message);
+
+                            if (answer != JOptionPane.YES_OPTION) {
+                                return;
+                            }
+                        }
+                    } else {
+                        return;
+                    }
                 }
+
+                lastDir = file.getParent();
+                settingsModel.saveSettingsFile(file, false);
             } catch (Exception exc) {
                 ReportDialog dialog = new ReportDialog(null, true, exc);
                 dialog.setVisible(true);
@@ -545,7 +573,7 @@ public class MFGui extends javax.swing.JFrame {
                               .getResource("fr/jmmc/mf/gui/Help.html");
                 TabbedPanel rp = new TabbedPanel("");
                 rp.setPage(url);
-                tabbedPane.addTab("Help", rp);
+                tabbedPane_.addTab("Help", rp);
             } catch (Exception exc) {
                 new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
             }

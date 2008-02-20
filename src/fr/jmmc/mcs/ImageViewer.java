@@ -36,8 +36,8 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
     public ImageViewer(String xmlStr) {
         init();
         imageCanvas.xmlInit(xmlStr);
-    }    
-    
+    }
+
     protected void init() {
         initComponents();
         // add image canvas
@@ -102,9 +102,9 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
     } // </editor-fold>//GEN-END:initComponents
 
     private void colorModelComboBoxActionPerformed(
-        java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorModelComboBoxActionPerformed
+        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_colorModelComboBoxActionPerformed
         imageCanvas.setColorModel(ColorModels.colorModels[colorModelComboBox.getSelectedIndex()]);
-    }//GEN-LAST:event_colorModelComboBoxActionPerformed
+    } //GEN-LAST:event_colorModelComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
