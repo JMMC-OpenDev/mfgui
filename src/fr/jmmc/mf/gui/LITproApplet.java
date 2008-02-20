@@ -7,6 +7,7 @@ import java.util.logging.*;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+
 /*
  * LITproApplet.java
  *
@@ -18,17 +19,19 @@ import javax.swing.JOptionPane;
  * @author  mella
  */
 public class LITproApplet extends javax.swing.JApplet {
+    final static String rcsId = "$Id: LITproApplet.java,v 1.7 2008-02-20 18:30:23 mella Exp $";
 
-    final static String rcsId="$Id: LITproApplet.java,v 1.6 2007-02-14 14:44:03 mella Exp $";
-    
+    // Variables declaration - do not modify
+    private javax.swing.JButton startButton;
+
     /** Initializes the applet LITproApplet */
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
-                public void run() {
-                    initComponents();
-                }
-            });
+                    public void run() {
+                        initComponents();
+                    }
+                });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -44,49 +47,36 @@ public class LITproApplet extends javax.swing.JApplet {
 
         startButton.setText("Start LITpro GUI");
         startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonActionPerformed(evt);
-            }
-        });
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    startButtonActionPerformed(evt);
+                }
+            });
 
         getContentPane().add(startButton, new java.awt.GridBagConstraints());
-
     }
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
-
-
-        try
-        {      
+        try {
             Logger logger = Logger.getLogger("fr.jmmc.mf");
-            logger.setLevel(java.util.logging.Level.ALL);            
+            logger.setLevel(java.util.logging.Level.ALL);
             logger.info("Starting ModelFitting");
-            logger.info("Rev:"+rcsId);           
+            logger.info("Rev:" + rcsId);
 
             // Create a specific console handler
             ConsoleHandler handler = new ConsoleHandler();
             handler.setLevel(java.util.logging.Level.ALL);
             //logger.addHandler(handler);                      
+            ReportDialog.setDefaultComment("Please complete above" +
+                " informations to improve this software.\n" + rcsId + "\n" +
+                "---\n");
 
-            ReportDialog.setDefaultComment( "Please complete above"+
-                    " informations to improve this software.\n"+
-                    rcsId+"\n"+
-                    "---\n");
-
-            MainFrame myFrame = new MainFrame();
+            MFGui myFrame = new MFGui(null);
             myFrame.setVisible(true);
-        }
-        catch (Exception e)
-        {            
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);            
+        } catch (Exception e) {
+            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
             System.exit(1);
-        }                
-
+        }
     }
 
-
-    // Variables declaration - do not modify
-    private javax.swing.JButton startButton;
     // End of variables declaration
-
 }

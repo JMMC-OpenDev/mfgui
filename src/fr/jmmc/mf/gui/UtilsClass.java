@@ -347,11 +347,11 @@ public class UtilsClass {
 
         return null;
     }
-    
+
     //
     // XML Parsing
     // 
-    
+
     /** Parses an XML file and returns a DOM document.
      * If validating is true, the contents is validated against the DTD
      * specified in the file.
@@ -361,9 +361,10 @@ public class UtilsClass {
             // Create a builder factory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(validating);
-            
+
             // Create the builder and parse the file
             Document doc = factory.newDocumentBuilder().parse(new File(filename));
+
             return doc;
         } catch (SAXException exc) {
             // A parsing error occurred; the xml input is not valid
@@ -373,9 +374,10 @@ public class UtilsClass {
         } catch (IOException exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
+
         return null;
     }
-    
+
     /** Parses an XML string and returns a DOM document.
      * If validating is true, the contents is validated against the DTD
      * specified in the file.
@@ -385,10 +387,11 @@ public class UtilsClass {
             // Create a builder factory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(validating);
-            
+
             // Create the builder and parse the buffer            
-            StringReader r= new StringReader(xmlBuffer);
+            StringReader r = new StringReader(xmlBuffer);
             Document doc = factory.newDocumentBuilder().parse(new InputSource(r));
+
             return doc;
         } catch (SAXException exc) {
             // A parsing error occurred; the xml input is not valid
@@ -398,7 +401,7 @@ public class UtilsClass {
         } catch (IOException exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
+
         return null;
     }
-    
 }
