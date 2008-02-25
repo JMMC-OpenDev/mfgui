@@ -214,11 +214,11 @@ public class ModelPanel extends javax.swing.JPanel {
         add(jPanel4, java.awt.BorderLayout.SOUTH);
     } // </editor-fold>//GEN-END:initComponents
 
-    private void parametersTableMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_parametersTableMouseClicked
+    private void parametersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMouseClicked
                                                                               // TODO add your handling code here:
-    } //GEN-LAST:event_parametersTableMouseClicked
+    }//GEN-LAST:event_parametersTableMouseClicked
 
-    private void parametersTableMousePressed(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_parametersTableMousePressed
+    private void parametersTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMousePressed
         logger.entering("" + this.getClass(), "parametersTableMousePressed");
 
         if (evt.isPopupTrigger()) {
@@ -274,10 +274,10 @@ public class ModelPanel extends javax.swing.JPanel {
         } else {
             logger.finest("No menu required");
         }
-    } //GEN-LAST:event_parametersTableMousePressed
+    }//GEN-LAST:event_parametersTableMousePressed
 
     private void addParameterButtonActionPerformed(
-        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_addParameterButtonActionPerformed
+        java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParameterButtonActionPerformed
         logger.entering("" + this.getClass(),
             "addParameterButtonActionPerformed");
 
@@ -286,12 +286,12 @@ public class ModelPanel extends javax.swing.JPanel {
         parameterNameTextField.setText("");
         //current.addParameter(p);
         parametersTableModel.setModel(current, false);
-    } //GEN-LAST:event_addParameterButtonActionPerformed
+    }//GEN-LAST:event_addParameterButtonActionPerformed
 
-    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_nameTextFieldActionPerformed
+    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTextFieldActionPerformed
         logger.entering("" + this.getClass(), "nameTextFieldActionPerformed");
         current.setName(nameTextField.getText());
-    } //GEN-LAST:event_nameTextFieldActionPerformed
+    }//GEN-LAST:event_nameTextFieldActionPerformed
 
     // End of variables declaration                   
 
@@ -338,7 +338,12 @@ public class ModelPanel extends javax.swing.JPanel {
                 modelOfParameters = new Model[params.size()];
 
                 for (int i = 0; i < parameters.length; i++) {
-                    parameters[i] = (Parameter) params.elementAt(i);
+                    parameters[i] = (Parameter) params.elementAt(i);                                                              
+                    // @todo MOVE THIS PART OF CODE IN A SAFER PLACE
+                     if (parameters[i].getId()==null){
+                           parameters[i].setId(parameters[i].getName()+
+                            Integer.toHexString(parameters[i].hashCode()));
+                       }                                       
                     modelOfParameters[i] = (Model) models.elementAt(i);
                 }
             }
