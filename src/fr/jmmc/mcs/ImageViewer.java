@@ -111,10 +111,37 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
      */
     public static void main(String[] args) {
         final String[] fargs = args;
-
         java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    if (fargs.length >= 1) {
+                    if (fargs.length >= 1 && fargs[0].equals("-png") ) {
+                        // Build images
+                        for (int i = 1; i < fargs.length; i++) {
+                            try {
+                                System.out.println("Reading "+fargs[i]);
+                                java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader(
+                                        fargs[i]));
+                                String str;
+                                StringBuffer sb = new StringBuffer();
+
+                                while ((str = in.readLine()) != null) {
+                                    sb.append(str);
+                                }
+
+                                in.close();
+
+                                ImageCanvas imageCanvas = new ImageCanvas();
+                                imageCanvas.xmlInit(""+sb);
+                                // Save as PNG
+                                java.io.File file = new java.io.File(fargs[i]+".png");
+                                System.out.println("Generating "+fargs[i]+".png");
+                                javax.imageio.ImageIO.write((java.awt.image.BufferedImage)imageCanvas.image_, "png", file);
+
+                            } catch (java.io.IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else if (fargs.length >= 1 ) {
+                        // show images
                         for (int i = 0; i < fargs.length; i++) {
                             try {
                                 java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader(
