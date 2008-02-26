@@ -339,6 +339,7 @@ public class SettingsPane extends javax.swing.JPanel
                 textArea.setEditable(false);
                 javax.swing.JOptionPane.showMessageDialog(controlPanel,
                     scrollPane, "Error ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                logger.severe("No xml returned by server side");
 
                 return;
             }
@@ -381,6 +382,15 @@ public class SettingsPane extends javax.swing.JPanel
                 rootSettingsModel.setLastXml(xml);
                 logger.info("Settings created");
             } catch (Exception ex) {
+                JTextArea textArea = new JTextArea(20, 100);
+                textArea.setText(result);
+
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setEditable(false);
+                javax.swing.JOptionPane.showMessageDialog(controlPanel,
+                    scrollPane, "Error ", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                logger.throwing(ex.getClass().getName(), "actionPerformed", ex);
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
             }
         }
