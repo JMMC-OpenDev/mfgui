@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.10 2008-02-20 18:30:23 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.11 2008-02-26 09:16:21 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2008/02/20 18:30:23  mella
+ * Jalopization on 1.0.7beta
+ *
  * Revision 1.9  2007/03/12 17:46:59  mella
  * Check if rev should use Dev or not dev url
  *
@@ -42,8 +45,8 @@ import java.util.Properties;
  * This is a preference dedicated to the java Model Fitting Client.
  */
 public class Preferences extends fr.jmmc.mcs.util.Preferences {
-    /** Preference file name */
-    static String _shortPreferenceFilename = "fr.jmmc.mf.gui.properties";
+    /** Preference file name . Its value depends on mf.version */
+    static String _shortPreferenceFilename;
 
     /** Singleton instance */
     private static Preferences _singleton = null;
@@ -68,12 +71,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
         // or return previous reference
         if (_singleton == null) {
             try {
-                _singleton = new Preferences();
-                _singleton.setShortPreferenceFilename(_shortPreferenceFilename);
-                _singleton.loadFromFile();
-
                 Preferences myDefaultProperties = new Preferences();
-
                 // Store preference file version number
                 myDefaultProperties.setPreference("mf.version",
                     fr.jmmc.mcs.util.Resources.getResource("mf.version"));
@@ -86,15 +84,20 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
                 /* Set Dev or standard branch according beta or not extension into mf.revision resource entry */
                 if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
                                                   .endsWith("beta")) {
+                    _shortPreferenceFilename = "fr.jmmc.mf.gui.beta.properties";
                     myDefaultProperties.setPreference("yoga.remote.url",
                         "http://jmmc.fr/~mella/LITproDev/run.php");
                 } else {
+                    _shortPreferenceFilename = "fr.jmmc.mf.gui.properties";
                     myDefaultProperties.setPreference("yoga.remote.url",
                         "http://jmmc.fr/modelfitting/ys/html/run.php");
                 }
 
                 myDefaultProperties.setPreference("yoga.local.home", "../ys");
 
+                _singleton = new Preferences();
+                _singleton.setShortPreferenceFilename(_shortPreferenceFilename);
+                _singleton.loadFromFile();
                 _singleton.setDefaultPreferences(myDefaultProperties);
                 _singleton.loadFromFile();
             } catch (Exception e) {
