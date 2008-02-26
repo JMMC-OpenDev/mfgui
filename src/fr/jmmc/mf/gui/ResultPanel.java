@@ -73,7 +73,7 @@ public class ResultPanel extends javax.swing.JPanel {
             logger.fine("End of transformation");
             resultEditorPane.setContentType("text/html");
             resultEditorPane.setText(htmlStr);
-            resultTextArea.setText(htmlStr);
+            resultTextArea.setText(xmlContent);
         } catch (Exception exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
