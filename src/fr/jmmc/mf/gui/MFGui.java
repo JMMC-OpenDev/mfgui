@@ -41,6 +41,7 @@ public class MFGui extends javax.swing.JFrame {
     public static Action restorePrefAction;
     public static Action showRevisionAction;
     public static Action showHelpAction;
+    public static Action showConfigAction;
     public static Action showLogGuiAction;
 
     // Model actions
@@ -64,6 +65,7 @@ public class MFGui extends javax.swing.JFrame {
         showPrefAction = new ShowPrefAction();
         showRevisionAction = new ShowRevisionAction();
         showHelpAction = new ShowHelpAction();
+        showConfigAction = new ShowConfigAction();
         showLogGuiAction = new ShowLogGuiAction();
         newModelAction = new NewModelAction();
         loadModelAction = new LoadModelAction();
@@ -108,20 +110,18 @@ public class MFGui extends javax.swing.JFrame {
         tabbedPane_.setSelectedComponent(p);
     }
 
+    
+    /* This method also update titles */
     public SettingsPane getSelectedSettingsPane() {
         int idx = tabbedPane_.getSelectedIndex();
-
         if (idx < 0) {
             return null;
-        }
-
-        logger.fine("Tabbed pane selected index:" + idx);
-        logger.fine("Tabbed pane title:" + tabbedPane_.getTitleAt(idx));
-
+        }               
+        
         SettingsPane sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
+        tabbedPane_.setTitleAt(idx, sp.rootSettingsModel.getAssociatedFilename());
         logger.fine("Selected settingsPane name:" +
             sp.rootSettingsModel.getAssociatedFilename());
-
         return sp;
     }
 
@@ -211,6 +211,11 @@ public class MFGui extends javax.swing.JFrame {
         // Add Help->ShowHelp
         menuItem = new JMenuItem();
         menuItem.setAction(showHelpAction);
+        helpMenu.add(menuItem);
+
+        // Add Help->ShowConfig
+        menuItem = new JMenuItem();
+        menuItem.setAction(showConfigAction);
         helpMenu.add(menuItem);
 
         helpMenu.add(new JSeparator());
@@ -514,13 +519,17 @@ public class MFGui extends javax.swing.JFrame {
                 java.io.File file;
                 file = settingsModel.associatedFile;
 
-                if (file == null) {
+                
                     // Open a filechooser in previous save directory
                     JFileChooser fileChooser = new JFileChooser();
 
                     if (lastDir != null) {
                         fileChooser.setCurrentDirectory(new java.io.File(
                                 lastDir));
+                    }
+                
+                    if (file != null) {
+                        fileChooser.setSelectedFile(file);
                     }
 
                     fileChooser.setDialogTitle("Save " +
@@ -548,10 +557,12 @@ public class MFGui extends javax.swing.JFrame {
                     } else {
                         return;
                     }
-                }
 
                 lastDir = file.getParent();
                 settingsModel.saveSettingsFile(file, false);
+                /* ask to update title */
+                getSelectedSettingsPane();
+                
             } catch (Exception exc) {
                 ReportDialog dialog = new ReportDialog(null, true, exc);
                 dialog.setVisible(true);
@@ -561,6 +572,7 @@ public class MFGui extends javax.swing.JFrame {
 
     /** Display another tab with help informations */
     protected class ShowHelpAction extends fr.jmmc.mcs.util.MCSAction {
+
         public ShowHelpAction() {
             super("showHelp");
         }
@@ -569,8 +581,29 @@ public class MFGui extends javax.swing.JFrame {
             logger.fine("Requesting Help display");
 
             try {
-                URL url = this.getClass().getClassLoader()
-                              .getResource("fr/jmmc/mf/gui/Help.html");
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");
+                TabbedPanel rp = new TabbedPanel("");
+                rp.setPage(url);
+                tabbedPane_.addTab("Help", rp);
+            } catch (Exception exc) {
+                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            }
+        }
+    }
+
+    
+    /** Display another tab with help informations */
+    protected class ShowConfigAction extends fr.jmmc.mcs.util.MCSAction {
+
+        public ShowConfigAction() {
+            super("showConfig");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting Help display");
+
+            try {
+                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");
                 TabbedPanel rp = new TabbedPanel("");
                 rp.setPage(url);
                 tabbedPane_.addTab("Help", rp);
