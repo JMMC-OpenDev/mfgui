@@ -111,17 +111,19 @@ public class MFGui extends javax.swing.JFrame {
     }
 
     
-    /* This method also update titles */
+    /* This method return selectedPane or null . It also updates titles */
     public SettingsPane getSelectedSettingsPane() {
         int idx = tabbedPane_.getSelectedIndex();
         if (idx < 0) {
             return null;
-        }               
-        
-        SettingsPane sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
-        tabbedPane_.setTitleAt(idx, sp.rootSettingsModel.getAssociatedFilename());
-        logger.fine("Selected settingsPane name:" +
-            sp.rootSettingsModel.getAssociatedFilename());
+        }
+        SettingsPane sp = null;
+        if (tabbedPane_.getComponentAt(idx) instanceof SettingsPane) {
+            sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
+            tabbedPane_.setTitleAt(idx, sp.rootSettingsModel.getAssociatedFilename());
+            logger.fine("Selected settingsPane name:" +
+                    sp.rootSettingsModel.getAssociatedFilename());
+        }
         return sp;
     }
 
@@ -514,6 +516,10 @@ public class MFGui extends javax.swing.JFrame {
             logger.entering("" + this.getClass(), "actionPerformed");
 
             try {
+                // @todo replace next coede part by enable and disabled event asociated to actions...
+                if (getSelectedSettingsPane()==null){
+                    return;                
+                }
                 SettingsModel settingsModel = getSelectedSettingsPane().rootSettingsModel;
 
                 java.io.File file;
@@ -603,10 +609,27 @@ public class MFGui extends javax.swing.JFrame {
             logger.fine("Requesting Help display");
 
             try {
-                URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/Help.html");
-                TabbedPanel rp = new TabbedPanel("");
-                rp.setPage(url);
-                tabbedPane_.addTab("Help", rp);
+                StringBuffer sb = new StringBuffer();
+                sb.append("LITpro GUI PROPERTIES--------------\n");
+                sb.append(fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+                sb.append("\n\n");
+                sb.append("SYSTEM PROPERTIES------------------\n");
+                // Get all system properties
+                Properties props = System.getProperties();
+                // Enumerate all system properties
+                Enumeration en = props.propertyNames();
+
+                for (; en.hasMoreElements();) {
+                    // Get property name
+                    String propName = (String) en.nextElement();
+                    // Get property value
+                    String propValue = (String) props.get(propName);
+                    sb.append(propName + "=" + propValue+"\n");
+                }
+
+
+                TabbedPanel t = new TabbedPanel(""+sb);
+                tabbedPane_.addTab("Config", t);
             } catch (Exception exc) {
                 new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
             }
