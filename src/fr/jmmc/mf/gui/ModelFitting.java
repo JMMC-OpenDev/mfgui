@@ -26,28 +26,13 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.10 2008-02-20 18:30:23 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.11 2008-02-28 07:04:22 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
 
     public ModelFitting(String[] args) {
         instance_ = this;
-
-        // Get all system properties
-        Properties props = System.getProperties();
-
-        // Enumerate all system properties
-        Enumeration e = props.propertyNames();
-
-        for (; e.hasMoreElements();) {
-            // Get property name
-            String propName = (String) e.nextElement();
-
-            // Get property value
-            String propValue = (String) props.get(propName);
-            logger.finest(propName + "=" + propValue);
-        }
 
         // Set default resource for application
         fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
