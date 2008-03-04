@@ -8,6 +8,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.ReportDialog;
 import fr.jmmc.mf.models.Result;
+import java.io.StringWriter;
 import ptolemy.plot.*;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
@@ -44,7 +45,10 @@ public class ResultPanel extends javax.swing.JPanel {
         settingsModel = s;
 
         try {
-            String xmlContent = s.getLastXml();
+            StringWriter sw = new StringWriter();
+            r.marshal(sw);
+            //String xmlContent = s.getLastXml();
+            String xmlContent = sw.toString();
             // Do simple xslt transform result
             logger.fine("Get url for xslt");
 
@@ -73,9 +77,10 @@ public class ResultPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        plotBaselinesButton = new javax.swing.JButton();
+        plotUVCoverageButton = new javax.swing.JButton();
+        plotRadialButton = new javax.swing.JButton();
+        plotTabbedPane = new javax.swing.JTabbedPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
@@ -89,26 +94,28 @@ public class ResultPanel extends javax.swing.JPanel {
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        jButton1.setAction(plotBaselinesAction);
-        jPanel2.add(jButton1);
+        plotBaselinesButton.setAction(plotBaselinesAction);
+        jPanel2.add(plotBaselinesButton);
 
-        jButton2.setAction(plotUVCoverageAction);
-        jPanel2.add(jButton2);
+        plotUVCoverageButton.setAction(plotUVCoverageAction);
+        jPanel2.add(plotUVCoverageButton);
 
-        jButton3.setAction(plotRadialAction);
-        jPanel2.add(jButton3);
+        plotRadialButton.setAction(plotRadialAction);
+        jPanel2.add(plotRadialButton);
 
         add(jPanel2);
+        add(plotTabbedPane);
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton plotBaselinesButton;
+    private javax.swing.JButton plotRadialButton;
+    private javax.swing.JTabbedPane plotTabbedPane;
+    private javax.swing.JButton plotUVCoverageButton;
     private javax.swing.JEditorPane resultEditorPane;
     // End of variables declaration//GEN-END:variables
     
@@ -130,15 +137,28 @@ public class ResultPanel extends javax.swing.JPanel {
 
             // Show plot into frame
             PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName,
-                    plot);
+                    plot);            
             plotMLFrame.setVisible(true);
-            plotMLFrame.setSize(new java.awt.Dimension(400, 400));
+            //plotMLFrame.setSize(new java.awt.Dimension(400, 400));
             plotMLFrame.validate();
+                                  
+            Plot plot2 = new Plot();
+        plotMLParser = new PlotMLParser(plot2);
+            plotMLParser.parse(null, xmlStr);
 
+            //plot2.read(xmlStr);
+            addPlotPanel(plotName,plot2);
+            
             logger.finest("plot ready to be shown");
         } catch (Exception exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
+    }
+    
+    protected void addPlotPanel(String title,JPanel pp)
+    {
+        plotTabbedPane.add(title,pp);
+        this.validate();
     }
 
     protected void plotImage(String plotName) {

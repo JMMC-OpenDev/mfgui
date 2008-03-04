@@ -13,28 +13,28 @@ Output must be follow plotml format:
 http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
 -->
 <xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:exslt="http://exslt.org/common"
-    xmlns:math="http://exslt.org/math"
-    xmlns:date="http://exslt.org/dates-and-times"
-    xmlns:func="http://exslt.org/functions"
-    xmlns:set="http://exslt.org/sets"
-    xmlns:str="http://exslt.org/strings"
-    xmlns:dyn="http://exslt.org/dynamic"
-    xmlns:saxon="http://icl.com/saxon"
-    xmlns:xt="http://www.jclark.com/xt"
-    xmlns:libxslt="http://xmlsoft.org/XSLT/namespace"
-    xmlns:test="http://xmlsoft.org/XSLT/"
-    extension-element-prefixes="exslt math date func set str dyn saxon xt libxslt test"
-    exclude-result-prefixes="math str" >
-
-       <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
-        doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:exslt="http://exslt.org/common"
+                xmlns:math="http://exslt.org/math"
+                xmlns:date="http://exslt.org/dates-and-times"
+                xmlns:func="http://exslt.org/functions"
+                xmlns:set="http://exslt.org/sets"
+                xmlns:str="http://exslt.org/strings"
+                xmlns:dyn="http://exslt.org/dynamic"
+                xmlns:saxon="http://icl.com/saxon"
+                xmlns:xt="http://www.jclark.com/xt"
+                xmlns:libxslt="http://xmlsoft.org/XSLT/namespace"
+                xmlns:test="http://xmlsoft.org/XSLT/"
+                extension-element-prefixes="exslt math date func set str dyn saxon xt libxslt test"
+                exclude-result-prefixes="math str" >
+    
+    <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
+                doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
     
     <!-- <xsl:output method="xml" standalone="yes" indent="yes"/>
 -->
     <xsl:param name="plotName">plotBaselines</xsl:param>
-
+    
     <!-- copy of definition collected from yoga/OIlib/yorick/oidata.i -->
     <xsl:variable name="OI_CLASS_NONE" select="'0'"/>
     <xsl:variable name="OI_CLASS_TARGET" select="'1'"/>
@@ -44,7 +44,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
     <xsl:variable name="OI_CLASS_VIS2" select="'5'"/>
     <xsl:variable name="OI_CLASS_T3" select="'6'"/>
     <xsl:variable name="OI_CLASS_SED" select="'7'"/>
-
+    
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="$plotName='plotBaselines'">
@@ -56,7 +56,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             <xsl:when test="$plotName='plotRadial'">
                 <xsl:call-template name="plotRadial"/>
             </xsl:when>
-             <xsl:when test="$plotName='plotRadialVOTABLE'">
+            <xsl:when test="$plotName='plotRadialVOTABLE'">
                 <xsl:call-template name="plotRadialVOTABLE"/>
             </xsl:when>
             <xsl:otherwise>
@@ -66,13 +66,13 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             </xsl:otherwise>
         </xsl:choose>                    
     </xsl:template>
-
+    
     <xsl:template name="plotBaselines">
         <plot>
             <title>Baselines plot</title>
             <xLabel>Ucoord (meters)</xLabel>
             <yLabel>Vcoord (meters)</yLabel>
-
+            
             <!-- we should follow crlst list according yorick code -> 
             //_modeler/dataset//crlst            
             -->
@@ -98,13 +98,13 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             </xsl:for-each>                
         </plot>
     </xsl:template>
-
+    
     <xsl:template name="plotUVCoverage">
         <plot>
             <title>UV coverage plot</title>
             <xLabel>Ucoord (1/rad)</xLabel>
             <yLabel>Vcoord (1/rad)</yLabel>
-
+            
             <!-- we should follow crlst list according yorick code -> 
             //_modeler/dataset//crlst            
             -->
@@ -132,6 +132,53 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
     </xsl:template>
     
     <xsl:template name="plotRadial">    
+        <plot>
+            <title>Plot versus radial distance</title>
+            <xLabel>spatial frequency (1/rad)</xLabel>
+            <yLabel>(VIS2 or T3)</yLabel>                        
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">                            
+                <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>                 
+                <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
+                <xsl:for-each select="visdata|visdata_model|vis2data|vis2data_model|t3amp|t3phi|t3amp_model|t3phi_model">                                                                                
+                    <xsl:variable name="source"><xsl:choose>
+                            <xsl:when test="contains(name(),'_model')">model</xsl:when>
+                            <xsl:otherwise>data</xsl:otherwise> 
+                    </xsl:choose></xsl:variable>
+                    <xsl:element name="dataset">
+                        <xsl:attribute name="name"> 
+                            <xsl:value-of select="concat($source,' ',$classname)"/>
+                        </xsl:attribute>                    
+                        <xsl:attribute name="connected">no</xsl:attribute>
+                        <xsl:attribute name="marks">
+                            <xsl:choose>
+                                <xsl:when test="$source='model'">points</xsl:when>
+                                <xsl:otherwise>dots</xsl:otherwise> 
+                            </xsl:choose>
+                        </xsl:attribute>          
+                        <xsl:for-each select=".//td">                                    
+                            <xsl:variable name="i" select="position()"/>
+                            <xsl:variable name="x" select="exslt:node-set($db)/ruv/table/tr[position()=$i]/td"/>
+                            <xsl:variable name="y" select="."/>               
+                            <xsl:element name="p">
+                                <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
+                                <xsl:attribute name="y"><xsl:value-of select="$y"/></xsl:attribute>
+                                <xsl:choose>
+                                <xsl:when test="$source='data'">
+                                <xsl:for-each select="exslt:node-set($db)/viserr|exslt:node-set($db)/vis2err|exslt:node-set($db)/t3amperr|exslt:node-set($db)/t3phierr">
+                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
+                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
+                                </xsl:for-each>    
+                                </xsl:when>
+                                </xsl:choose>                                
+                            </xsl:element>                    
+                        </xsl:for-each>                            
+                    </xsl:element>                        
+                </xsl:for-each>
+            </xsl:for-each>                                       
+        </plot>
+    </xsl:template>
+    
+    <xsl:template name="old_plotRadial">    
         <plot>
             <title>Plot versus radial distance</title>
             <xLabel>spatial frequency (1/rad)</xLabel>
@@ -184,7 +231,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                             </xsl:for-each>
                         </xsl:if>
                     </xsl:variable>
-
+                    
                     <xsl:comment><xsl:value-of select="count(.//vis2data//td | .//t3amp//td)"/> data points</xsl:comment>
                     <xsl:for-each select=".//vis2data//td | .//t3amp//td">
                         <xsl:variable name="i" select="position()"/>
@@ -196,10 +243,10 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                         </xsl:element>
                     </xsl:for-each>
                 </xsl:element>
-
+                
             </xsl:for-each>
-
-
+            
+            
             <!-- Plot model related --> 
             <!-- we should follow crlst list according yorick code -> 
             //_modeler/dataset//crlst            
@@ -252,7 +299,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                             </xsl:for-each>
                         </xsl:if>
                     </xsl:variable>
-
+                    
                     <xsl:comment><xsl:value-of select="count(.//vis2data//td | .//t3amp//td)"/> data points</xsl:comment>
                     <xsl:for-each select=".//vis2data//td | .//t3amp//td">
                         <xsl:variable name="i" select="position()"/>
@@ -267,12 +314,13 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             </xsl:for-each>
         </plot>
     </xsl:template>
-
+    
+    
     <xsl:template name="plotRadialVOTABLE">    
         <VOTABLE version="1.1"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
-            xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+                 xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
             <INFO>This votable has been generated from a xml LITpro result file.</INFO>
             <RESOURCE>
                 <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
@@ -281,9 +329,9 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                     <xsl:variable name="insname"><xsl:value-of select="insname"/></xsl:variable>
                     <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
                     <xsl:for-each select="visdata|vis2data|t3amp">
-                     <xsl:variable name="setname"><xsl:value-of select="name()"/></xsl:variable>                     
-                     <xsl:variable name="dataset">                                             
-                         <xsl:choose>
+                        <xsl:variable name="setname"><xsl:value-of select="name()"/></xsl:variable>                     
+                        <xsl:variable name="dataset">                                             
+                            <xsl:choose>
                                 <xsl:when test="name()='visdata'">
                                     <xsl:copy-of select="."/>                                                                    
                                     <xsl:copy-of select="../viserr"/>                                
@@ -303,73 +351,73 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                                     <xsl:copy-of select="../t3phi_model"/>                                
                                 </xsl:when>                                
                             </xsl:choose>                        
-                    </xsl:variable>                    
-                    <TABLE>
-                        <DESCRIPTION>This table contains <xsl:choose>
-                            <xsl:when test="contains(name(),'_model')">modelized data</xsl:when>
-                            <xsl:otherwise>observed data</xsl:otherwise> 
-                        </xsl:choose> of <xsl:value-of select="$classname"/>.</DESCRIPTION>
-                        <PARAM arraysize="*" datatype="char" name="EXTNAME" value="OI_VIS2">
-                            <DESCRIPTION>Name of this binary table extension</DESCRIPTION>
-                        </PARAM>
-                        <PARAM datatype="int" name="EXTVER" value="1">
-                            <DESCRIPTION>Extension version</DESCRIPTION>
-                        </PARAM>
-                        <PARAM datatype="int" name="OI_REVN" value="1">
-                            <DESCRIPTION>Revision number of the table definition</DESCRIPTION>
-                        </PARAM>
-                        <PARAM arraysize="*" datatype="char" name="DATE-OBS" value="2003-12-27">
-                            <DESCRIPTION>UTC start date of observations</DESCRIPTION>
-                        </PARAM>
-                        <PARAM arraysize="*" datatype="char" name="ARRNAME" value="{$arrname}">
-                            <DESCRIPTION>(optional) Identifies corresponding OI_ARRAY</DESCRIPTION>
-                        </PARAM>
-                        <PARAM arraysize="*" datatype="char" name="INSNAME" value="{$insname}">
-                            <DESCRIPTION>Identifies corresponding OI_WAVELENGTH table</DESCRIPTION>
-                        </PARAM>
-                        <xsl:for-each select="exslt:node-set($dataset)/*|../ucoord|../vcoord|../u1coord|../v1coord |../u2coord |../v2coord |../flags">
-                            <xsl:choose>
-                                <xsl:when test="contains(name(),'coord')">
-                                    <FIELD datatype="double" name="{name()}" unit="m"/>
-                                </xsl:when>
-                                <xsl:when test="name()='flags'">
-                                    <FIELD datatype="boolean" name="FLAG"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <FIELD datatype="double" name="{name()}"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                        <DATA>
-                            <TABLEDATA>
-                                <xsl:for-each select="../flags//tr">
-                                    <xsl:variable name="i" select="position()"/>
-                                    <TR>
-                                        <xsl:for-each select="exslt:node-set($dataset)/*">                                             
-                                            <xsl:for-each select=".//tr[position()=$i]/td">
-                                                <TD><xsl:value-of select="."/></TD>
+                        </xsl:variable>                    
+                        <TABLE>
+                            <DESCRIPTION>This table contains <xsl:choose>
+                                    <xsl:when test="contains(name(),'_model')">modelized data</xsl:when>
+                                    <xsl:otherwise>observed data</xsl:otherwise> 
+                            </xsl:choose> of <xsl:value-of select="$classname"/>.</DESCRIPTION>
+                            <PARAM arraysize="*" datatype="char" name="EXTNAME" value="OI_VIS2">
+                                <DESCRIPTION>Name of this binary table extension</DESCRIPTION>
+                            </PARAM>
+                            <PARAM datatype="int" name="EXTVER" value="1">
+                                <DESCRIPTION>Extension version</DESCRIPTION>
+                            </PARAM>
+                            <PARAM datatype="int" name="OI_REVN" value="1">
+                                <DESCRIPTION>Revision number of the table definition</DESCRIPTION>
+                            </PARAM>
+                            <PARAM arraysize="*" datatype="char" name="DATE-OBS" value="2003-12-27">
+                                <DESCRIPTION>UTC start date of observations</DESCRIPTION>
+                            </PARAM>
+                            <PARAM arraysize="*" datatype="char" name="ARRNAME" value="{$arrname}">
+                                <DESCRIPTION>(optional) Identifies corresponding OI_ARRAY</DESCRIPTION>
+                            </PARAM>
+                            <PARAM arraysize="*" datatype="char" name="INSNAME" value="{$insname}">
+                                <DESCRIPTION>Identifies corresponding OI_WAVELENGTH table</DESCRIPTION>
+                            </PARAM>
+                            <xsl:for-each select="exslt:node-set($dataset)/*|../ucoord|../vcoord|../u1coord|../v1coord |../u2coord |../v2coord |../flags">
+                                <xsl:choose>
+                                    <xsl:when test="contains(name(),'coord')">
+                                        <FIELD datatype="double" name="{name()}" unit="m"/>
+                                    </xsl:when>
+                                    <xsl:when test="name()='flags'">
+                                        <FIELD datatype="boolean" name="FLAG"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <FIELD datatype="double" name="{name()}"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:for-each>
+                            <DATA>
+                                <TABLEDATA>
+                                    <xsl:for-each select="../flags//tr">
+                                        <xsl:variable name="i" select="position()"/>
+                                        <TR>
+                                            <xsl:for-each select="exslt:node-set($dataset)/*">                                             
+                                                <xsl:for-each select=".//tr[position()=$i]/td">
+                                                    <TD><xsl:value-of select="."/></TD>
+                                                </xsl:for-each>
                                             </xsl:for-each>
-                                        </xsl:for-each>
-                                         <xsl:for-each select="exslt:node-set($db)/ucoord//td[position()=$i] |
-                                            exslt:node-set($db)/vcoord//td[position()=$i] |
-                                            exslt:node-set($db)/u1coord//td[position()=$i] |
-                                            exslt:node-set($db)/v1coord//td[position()=$i] |
-                                            exslt:node-set($db)/u2coord//td[position()=$i] |
-                                            exslt:node-set($db)/v2coord//td[position()=$i] |
+                                            <xsl:for-each select="exslt:node-set($db)/ucoord//td[position()=$i] |
+                                                          exslt:node-set($db)/vcoord//td[position()=$i] |
+                                                          exslt:node-set($db)/u1coord//td[position()=$i] |
+                                                          exslt:node-set($db)/v1coord//td[position()=$i] |
+                                                          exslt:node-set($db)/u2coord//td[position()=$i] |
+                                                          exslt:node-set($db)/v2coord//td[position()=$i] |
                                             exslt:node-set($db)/flags//tr[position()=$i]/td">
                                                 <TD><xsl:value-of select="."/></TD>
-                                        </xsl:for-each>
-                                    </TR>
-                                </xsl:for-each>
-                            </TABLEDATA>                    
-                        </DATA>
-                    </TABLE>
+                                            </xsl:for-each>
+                                        </TR>
+                                    </xsl:for-each>
+                                </TABLEDATA>                    
+                            </DATA>
+                        </TABLE>
+                    </xsl:for-each>
                 </xsl:for-each>
-                             </xsl:for-each>
             </RESOURCE>
         </VOTABLE>
     </xsl:template>
-
+    
     <xsl:template name="plotImage">    
         <plot>
             <title>Plot an image of the model</title>
@@ -385,10 +433,10 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             </xsl:for-each>
         </plot>
     </xsl:template>   
-
-
-
-
+    
+    
+    
+    
     <!-- Returns class name associated to .//class element -->
     <xsl:template name="getClassName">
         <xsl:param name="class" select=".//class"/>
@@ -404,5 +452,5 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             <xsl:otherwise>Unsupported class <xsl:value-of select="$class"/></xsl:otherwise>
         </xsl:choose>                            
     </xsl:template>
-
+    
 </xsl:stylesheet>

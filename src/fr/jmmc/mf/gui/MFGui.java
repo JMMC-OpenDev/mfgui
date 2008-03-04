@@ -32,7 +32,6 @@ public class MFGui extends javax.swing.JFrame {
 
     // Application actions
     public static Action getYogaVersionAction;
-    public static Action getModelListAction;
 
     // Preference and general actions
     public static Action quitAction;

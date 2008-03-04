@@ -255,7 +255,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     private void modelTypeComboBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_modelTypeComboBoxFocusGained
         logger.entering(""+this.getClass(), "modelTypeComboBoxFocusGained");
         if(modelTypeComboBox.getItemCount()<1){            
-            MFGui.getModelListAction.actionPerformed(null);                        
+            settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);                        
         }
     }//GEN-LAST:event_modelTypeComboBoxFocusGained
     
@@ -294,7 +294,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
         logger.entering(""+this.getClass(), "addModelButtonActionPerformed");
         if(modelTypeComboBox.getItemCount() < 1){            
-            MFGui.getModelListAction.actionPerformed(null);
+            settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);
             return;
         }
                 
