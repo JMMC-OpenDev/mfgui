@@ -30,7 +30,11 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template match="settings">
-        <xsl:for-each select="//error">
+        <xsl:apply-templates select=".//result"/>
+    </xsl:template>
+
+    <xsl:template match="result">
+    <xsl:for-each select=".//error">
             <h1> Error</h1>
             <div class="box">
                 <pre>
@@ -38,10 +42,8 @@ Generate Html view of given xml settings files .
                         select="."/>
                 </pre>
             </div>
-        </xsl:for-each>
-
-        
-        <xsl:for-each select="//_fitter">
+        </xsl:for-each>        
+        <xsl:for-each select=".//_fitter">
                     <xsl:variable name="fitter" select="."/>
                     <h1>Iterations</h1>
                     <!-- disp iteration info -->
