@@ -300,6 +300,68 @@ public class ModelPanel extends javax.swing.JPanel {
         }
     }
     
+    private void checkPopupMenu(java.awt.event.MouseEvent evt){
+        if (evt.isPopupTrigger()) {
+            logger.finest("Menu required");
+            parameterPopupMenu.removeAll();
+            
+            // Check if pointed row is positive
+            int rowIdx=parametersTable.rowAtPoint(evt.getPoint());
+            if (rowIdx==-1){
+                return ;
+            }
+            
+            // Show info
+            // @todo I would prefere to get the under mouse parameter selected before that menu appears
+            // to handle under the mouse param instead of the
+            final Parameter p = current.getParameter(rowIdx);
+            JMenuItem menuItem = new JMenuItem("Manage parameter " +
+                    p.getName() + " of type " + p.getType());
+            menuItem.setEnabled(false);
+            parameterPopupMenu.add(menuItem);
+            parameterPopupMenu.add(new JSeparator());
+            
+            // Show share parameter entry
+            menuItem = new JMenuItem("Share this parameter");
+            menuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    shareParameter(p);
+                }
+            });
+            parameterPopupMenu.add(menuItem);
+            
+            // Associate with shared parameter
+            JMenu shareMenu = new JMenu("Link to ");
+            parameterPopupMenu.add(shareMenu);
+            
+            Parameter[] sharedParams = settingsModel.getRootSettings()
+                    .getParameters()
+                    .getParameter();
+            
+            for (int i = 0; i < sharedParams.length; i++) {
+                final Parameter sp = sharedParams[i];
+                menuItem = new JMenuItem(sp.getName());
+                menuItem.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(
+                            java.awt.event.ActionEvent evt) {
+                        linkParameter(p, sp);
+                    }
+                });
+                /* we previously shared parameters with same types
+                if (!p.getType().equals(sp.getType())) {
+                    menuItem.setEnabled(false);
+                }
+                 */
+                
+                shareMenu.add(menuItem);
+            }
+            
+            parameterPopupMenu.validate();
+            parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        } else {
+            logger.finest("No menu required");
+        }
+    }
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -402,6 +464,9 @@ public class ModelPanel extends javax.swing.JPanel {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 parametersTableMousePressed(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                parametersTableMouseReleased(evt);
+            }
         });
         jScrollPane1.setViewportView(parametersTable);
 
@@ -422,72 +487,19 @@ public class ModelPanel extends javax.swing.JPanel {
 
     private void parametersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMouseClicked
         logger.entering("" + this.getClass(), "parametersTableMouseClicked");
+        checkPopupMenu(evt);
     }//GEN-LAST:event_parametersTableMouseClicked
 
+    
     private void parametersTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMousePressed
-        logger.entering("" + this.getClass(), "parametersTableMousePressed");
-        
-        if (evt.isPopupTrigger()) {
-            logger.finest("Menu required");
-            parameterPopupMenu.removeAll();
-            
-            // Check if pointed row is positive
-            int rowIdx=parametersTable.rowAtPoint(evt.getPoint());
-            if (rowIdx==-1){
-                return ;
-            }
-            
-            // Show info
-            // @todo I would prefere to get the under mouse parameter selected before that menu appears
-            // to handle under the mouse param instead of the
-            final Parameter p = current.getParameter(rowIdx);
-            JMenuItem menuItem = new JMenuItem("Manage parameter " +
-                    p.getName() + " of type " + p.getType());
-            menuItem.setEnabled(false);
-            parameterPopupMenu.add(menuItem);
-            parameterPopupMenu.add(new JSeparator());
-            
-            // Show share parameter entry
-            menuItem = new JMenuItem("Share this parameter");
-            menuItem.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    shareParameter(p);
-                }
-            });
-            parameterPopupMenu.add(menuItem);
-            
-            // Associate with shared parameter
-            JMenu shareMenu = new JMenu("Link to ");
-            parameterPopupMenu.add(shareMenu);
-            
-            Parameter[] sharedParams = settingsModel.getRootSettings()
-                    .getParameters()
-                    .getParameter();
-            
-            for (int i = 0; i < sharedParams.length; i++) {
-                final Parameter sp = sharedParams[i];
-                menuItem = new JMenuItem(sp.getName());
-                menuItem.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(
-                            java.awt.event.ActionEvent evt) {
-                        linkParameter(p, sp);
-                    }
-                });
-                /* we previously shared parameters with same types
-                if (!p.getType().equals(sp.getType())) {
-                    menuItem.setEnabled(false);
-                }
-                 */
-                
-                shareMenu.add(menuItem);
-            }
-            
-            parameterPopupMenu.validate();
-            parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        } else {
-            logger.finest("No menu required");
-        }
+        logger.entering("" + this.getClass(), "parametersTableMousePressed");        
+        checkPopupMenu(evt);
     }//GEN-LAST:event_parametersTableMousePressed
+
+    private void parametersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMouseReleased
+        logger.entering("" + this.getClass(), "parametersTableMouseReleased");
+        checkPopupMenu(evt);
+    }//GEN-LAST:event_parametersTableMouseReleased
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
