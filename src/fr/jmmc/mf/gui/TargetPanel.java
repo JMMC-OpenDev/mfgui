@@ -34,7 +34,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     ListSelectionModel selectedFiles = new DefaultListSelectionModel();
     DefaultListModel models = new DefaultListModel();
     
-    static SettingsViewerInterface settingsViewer;
+    SettingsViewerInterface settingsViewer;
     
     public Settings rootSettings=null;
     
@@ -46,6 +46,8 @@ public class TargetPanel extends javax.swing.JPanel implements
         
         fileList.addListSelectionListener(this);
         fileList.setSelectionModel(selectedFiles);
+        fileList.setCellRenderer(new FileListCellRenderer());
+        
         modelList.setModel(models);               
     }
     
@@ -120,6 +122,23 @@ public class TargetPanel extends javax.swing.JPanel implements
         settingsViewer.getSettingsModel().fireUpdate();
     }
     
+    class FileListCellRenderer extends JCheckBox implements ListCellRenderer {       
+        // This is the only method defined by ListCellRenderer.
+        // We just reconfigure the JLabel each time we're called.
+        public java.awt.Component getListCellRendererComponent(
+                JList list,
+                Object value, // value to display
+                int index, // cell index
+                boolean isSelected, // is the cell selected
+                boolean cellHasFocus) // the list and the cell have the focus
+        {                            
+            setText(value.toString());
+            setSelected(isSelected);
+            //setEnabled(list.isEnabled());
+            return this;
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -156,11 +175,6 @@ public class TargetPanel extends javax.swing.JPanel implements
 
         identComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
         identComboBox.setEnabled(false);
-        identComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                identComboBoxActionPerformed(evt);
-            }
-        });
         jPanel1.add(identComboBox);
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
@@ -267,7 +281,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     
     private void fileListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileListMouseClicked
         if(evt.getClickCount() == 2){
-            settingsViewer.showSettingElement(fileList.getSelectedValue());
+            settingsViewer.showSettingElement(fileList.getSelectedValue());            
         }
     }//GEN-LAST:event_fileListMouseClicked
     
@@ -329,18 +343,7 @@ public class TargetPanel extends javax.swing.JPanel implements
             logger.warning("No model selected");
         }
     }//GEN-LAST:event_addModelButtonActionPerformed
-    
-    private void identComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_identComboBoxActionPerformed
-        if(current!=null && evt.getSource()==identComboBox){
-            // This test was added because it changed even if user did not
-            // play with the combo
-            if (identComboBox.isShowing()){
-                logger.fine("Setting " + current.getIdent() + " ident to "+identComboBox.getSelectedItem());
-                current.setIdent(""+identComboBox.getSelectedItem());
-            }
-        }
-    }//GEN-LAST:event_identComboBoxActionPerformed
-    
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
     private javax.swing.JList fileList;
