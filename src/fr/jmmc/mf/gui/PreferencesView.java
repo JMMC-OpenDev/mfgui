@@ -3,30 +3,37 @@
  *
  * Created on 26 février 2008, 09:45
  */
-
 package fr.jmmc.mf.gui;
+
+import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
+import java.io.File;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
+
 /**
  *
  * @author  mella
  */
-public class PreferencesView extends javax.swing.JFrame implements Observer{
-      static Preferences myPreferences = Preferences.getInstance();
+public class PreferencesView extends javax.swing.JFrame implements Observer {
+
+    static Preferences myPreferences = Preferences.getInstance();
     static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.MFGui");
-  
+
     /** Creates new form PreferencesView */
     public PreferencesView() {
         initComponents();
         myPreferences.addObserver(this);
         preferenceFilenaTextfield.setText(myPreferences._shortPreferenceFilename);
+        update(null, null);
     }
-    
-     public void update(Observable o, Object arg) {
+
+    public void update(Observable o, Object arg) {
         // Adjust view and behaviour according preferences entries        
         // Keep eye on help.tooltips.show                        
         boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");
@@ -36,10 +43,23 @@ public class PreferencesView extends javax.swing.JFrame implements Observer{
         } else {
             logger.fine("Adjusting ToolTipManager to off");
         }
-
         toolTipManager.setEnabled(b);
+
+        File f = new File(myPreferences.getPreference("yoga.local.home") +
+                myPreferences.getPreference("yoga.local.progname"));
+        
+        if(f.exists()){
+            if(f.canExecute()){
+                jTextField2.setForeground(Color.GREEN);
+            }else{    
+                JOptionPane.showMessageDialog(this, f.getName()+" has been found but is not executable, please change execution right.");
+            }
+        }
+        else{                            
+                jTextField2.setForeground(Color.RED);
+        }
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -196,18 +216,21 @@ public class PreferencesView extends javax.swing.JFrame implements Observer{
     private void preferenceFilenaTextfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferenceFilenaTextfieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_preferenceFilenaTextfieldActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        // Set default resource for application
+        fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
+        Preferences.getInstance();
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new PreferencesView().setVisible(true);
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
@@ -226,5 +249,4 @@ public class PreferencesView extends javax.swing.JFrame implements Observer{
     private javax.swing.JPanel saveRestorePanel;
     private javax.swing.JPanel yogaPanel;
     // End of variables declaration//GEN-END:variables
-    
 }
