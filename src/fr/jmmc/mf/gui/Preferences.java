@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.11 2008-02-26 09:16:21 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.12 2008-05-14 11:50:07 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2008/02/26 09:16:21  mella
+ * Set different name for preference depending on beta version or not
+ *
  * Revision 1.10  2008/02/20 18:30:23  mella
  * Jalopization on 1.0.7beta
  *
@@ -94,6 +97,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
                 }
 
                 myDefaultProperties.setPreference("yoga.local.home", "../ys");
+                myDefaultProperties.setPreference("yoga.local.progname", "/bin/yoga.sh");
 
                 _singleton = new Preferences();
                 _singleton.setShortPreferenceFilename(_shortPreferenceFilename);
