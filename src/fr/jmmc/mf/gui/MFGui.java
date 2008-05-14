@@ -5,6 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.ReportDialog;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.*;
@@ -40,7 +41,8 @@ public class MFGui extends javax.swing.JFrame {
     public static Action restorePrefAction;
     public static Action showRevisionAction;
     public static Action showHelpAction;
-    public static Action showConfigAction;
+    public static Action showAboutAction;
+    public static Action showFeedbackFormAction;
     public static Action showLogGuiAction;
 
     // Model actions
@@ -64,7 +66,8 @@ public class MFGui extends javax.swing.JFrame {
         showPrefAction = new ShowPrefAction();
         showRevisionAction = new ShowRevisionAction();
         showHelpAction = new ShowHelpAction();
-        showConfigAction = new ShowConfigAction();
+        showAboutAction = new ShowAboutAction();
+        showFeedbackFormAction = new ShowFeedbackFormAction();
         showLogGuiAction = new ShowLogGuiAction();
         newModelAction = new NewModelAction();
         loadModelAction = new LoadModelAction();
@@ -213,10 +216,15 @@ public class MFGui extends javax.swing.JFrame {
         menuItem = new JMenuItem();
         menuItem.setAction(showHelpAction);
         helpMenu.add(menuItem);
-
-        // Add Help->ShowConfig
+        
+        // Add Help->ShowAbout
         menuItem = new JMenuItem();
-        menuItem.setAction(showConfigAction);
+        menuItem.setAction(showAboutAction);
+        helpMenu.add(menuItem);
+
+        // Add Help->ShowFeedbackForm
+        menuItem = new JMenuItem();
+        menuItem.setAction(showFeedbackFormAction);
         helpMenu.add(menuItem);
 
         helpMenu.add(new JSeparator());
@@ -595,43 +603,30 @@ public class MFGui extends javax.swing.JFrame {
             }
         }
     }
+       /** Display another tab with help informations */
+    protected class ShowAboutAction extends fr.jmmc.mcs.util.MCSAction {
 
-    
-    /** Display another tab with help informations */
-    protected class ShowConfigAction extends fr.jmmc.mcs.util.MCSAction {
-
-        public ShowConfigAction() {
-            super("showConfig");
+        public ShowAboutAction() {
+            super("showAbout");
         }
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting Help display");
+            logger.fine("Requesting About display");
+            ModelFitting.showAboutBox();           
+        }
+    }
 
-            try {
-                StringBuffer sb = new StringBuffer();
-                sb.append("LITpro GUI PROPERTIES--------------\n");
-                sb.append(fr.jmmc.mcs.util.Resources.getResource("mf.version"));
-                sb.append("\n\n");
-                sb.append("SYSTEM PROPERTIES------------------\n");
-                // Get all system properties
-                Properties props = System.getProperties();
-                // Enumerate all system properties
-                Enumeration en = props.propertyNames();
+    
+    /** Display another tab with help informations */
+    protected class ShowFeedbackFormAction extends fr.jmmc.mcs.util.MCSAction {
 
-                for (; en.hasMoreElements();) {
-                    // Get property name
-                    String propName = (String) en.nextElement();
-                    // Get property value
-                    String propValue = (String) props.get(propName);
-                    sb.append(propName + "=" + propValue+"\n");
-                }
+        public ShowFeedbackFormAction() {
+            super("showFeedbackForm");
+        }
 
-
-                TabbedPanel t = new TabbedPanel(""+sb);
-                tabbedPane_.addTab("Config", t);
-            } catch (Exception exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-            }
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.fine("Requesting feedback form display");
+            ModelFitting.showFeedbackReport();
         }
     }
 
