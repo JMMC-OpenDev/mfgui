@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
  *
  * @author mella
  */
-public class ModelFitting {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.11 2008-02-28 07:04:22 mella Exp $";
+public class ModelFitting extends fr.jmmc.mcs.gui.App{
+    final static String rcsId = "$Id: ModelFitting.java,v 1.12 2008-05-14 11:20:15 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
@@ -51,7 +51,8 @@ public class ModelFitting {
             "This forms does not actually works but present requirements....\n\n Please complete above" +
             " informations to improve model fitting software.\n" + //rcsId+"\n"+
             "---\n");
-
+        
+        showSplashScreen();
         MFGui gui = new MFGui(args);
         gui.setVisible(true);
     }
@@ -90,7 +91,7 @@ public class ModelFitting {
         throws Exception {
         String result = "";
         String yogaProgram = myPreferences.getPreference("yoga.local.home") +
-            "/bin/yoga.sh";
+            myPreferences.getPreference("yoga.local.progname");
         String filename = null;
 
         if (xmlFile != null) {
