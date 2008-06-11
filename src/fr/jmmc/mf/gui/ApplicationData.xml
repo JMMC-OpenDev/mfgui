@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationData link="http://jmmc.fr/modelfitting/">
+	<program name="ModelFitting" version="1.0.11.beta"/>
+	<compilation date="11/06/2008" compiler="javac 1.5.0_13"/>
+	<text>Brought to you by The JMMC Team.</text>
+	<copyright>Copyrights JMMC 2008</copyright>
+	<dependences>
+		<package name="TOPCAT" description="This software uses the VO table browser created at the TBD." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>		
+	</dependences>
+</ApplicationData>
