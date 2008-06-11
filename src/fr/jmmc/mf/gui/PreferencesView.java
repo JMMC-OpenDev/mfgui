@@ -49,11 +49,11 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
                 myPreferences.getPreference("yoga.local.progname"));
         
         if(f.exists()){
-            if(f.canExecute()){
+          //  Commented since it is was not in 1.5 API if(f.canExecute()){
                 jTextField2.setForeground(Color.GREEN);
-            }else{    
+           /* }else{    
                 JOptionPane.showMessageDialog(this, f.getName()+" has been found but is not executable, please change execution right.");
-            }
+            }*/
         }
         else{                            
                 jTextField2.setForeground(Color.RED);

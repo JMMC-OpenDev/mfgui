@@ -26,14 +26,25 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.12 2008-05-14 11:20:15 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.13 2008-06-11 13:37:12 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
-
+    static MFGui gui=null;
+    static String[] args_=null;
+    
     public ModelFitting(String[] args) {
-        instance_ = this;
+        super(args,true);
+        instance_ = this;        
+        args_=args;
+        run();
+    }
 
+    static String getVersion() {        
+        return rcsId;
+    }
+
+    protected void init(){
         // Set default resource for application
         fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
         myPreferences = Preferences.getInstance();
@@ -50,17 +61,18 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
         ReportDialog.setDefaultComment(
             "This forms does not actually works but present requirements....\n\n Please complete above" +
             " informations to improve model fitting software.\n" + //rcsId+"\n"+
-            "---\n");
-        
-        showSplashScreen();
-        MFGui gui = new MFGui(args);
+            "---\n");                            
+              gui = new MFGui(args_); 
+    }
+    
+    protected void execute(){
         gui.setVisible(true);
     }
 
-    static String getVersion() {
-        return rcsId;
+    protected void exit() {
+        logger.info("Thank you for using this software!");        
     }
-
+    
     /**
      * @param args the command line arguments
      */

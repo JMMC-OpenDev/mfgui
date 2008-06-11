@@ -311,7 +311,7 @@ public class TargetPanel extends javax.swing.JPanel implements
             settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);
             return;
         }
-                
+        
         try{
             // Construct a new copy
             Model selected = (Model)modelTypeComboBox.getSelectedItem();
@@ -341,7 +341,7 @@ public class TargetPanel extends javax.swing.JPanel implements
         }catch (Exception e){
             // this occurs when add button is pressed without selection
             logger.warning("No model selected");
-        }
+        }                      
     }//GEN-LAST:event_addModelButtonActionPerformed
         
     // Variables declaration - do not modify//GEN-BEGIN:variables

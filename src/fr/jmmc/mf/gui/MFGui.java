@@ -41,8 +41,6 @@ public class MFGui extends javax.swing.JFrame {
     public static Action restorePrefAction;
     public static Action showRevisionAction;
     public static Action showHelpAction;
-    public static Action showAboutAction;
-    public static Action showFeedbackFormAction;
     public static Action showLogGuiAction;
 
     // Model actions
@@ -66,9 +64,7 @@ public class MFGui extends javax.swing.JFrame {
         showPrefAction = new ShowPrefAction();
         showRevisionAction = new ShowRevisionAction();
         showHelpAction = new ShowHelpAction();
-        showAboutAction = new ShowAboutAction();
-        showFeedbackFormAction = new ShowFeedbackFormAction();
-        showLogGuiAction = new ShowLogGuiAction();
+         showLogGuiAction = new ShowLogGuiAction();
         newModelAction = new NewModelAction();
         loadModelAction = new LoadModelAction();
         saveModelAction = new SaveModelAction();
@@ -219,12 +215,12 @@ public class MFGui extends javax.swing.JFrame {
         
         // Add Help->ShowAbout
         menuItem = new JMenuItem();
-        menuItem.setAction(showAboutAction);
+        menuItem.setAction(ModelFitting.aboutBoxAction());
         helpMenu.add(menuItem);
 
         // Add Help->ShowFeedbackForm
         menuItem = new JMenuItem();
-        menuItem.setAction(showFeedbackFormAction);
+        menuItem.setAction(ModelFitting.feedbackReportAction());
         helpMenu.add(menuItem);
 
         helpMenu.add(new JSeparator());
@@ -602,33 +598,6 @@ public class MFGui extends javax.swing.JFrame {
                 new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
             }
         }
-    }
-       /** Display another tab with help informations */
-    protected class ShowAboutAction extends fr.jmmc.mcs.util.MCSAction {
-
-        public ShowAboutAction() {
-            super("showAbout");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting About display");
-            ModelFitting.showAboutBox();           
-        }
-    }
-
-    
-    /** Display another tab with help informations */
-    protected class ShowFeedbackFormAction extends fr.jmmc.mcs.util.MCSAction {
-
-        public ShowFeedbackFormAction() {
-            super("showFeedbackForm");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting feedback form display");
-            ModelFitting.showFeedbackReport();
-        }
-    }
-
+    }   
     // End of variables declaration                   
 }

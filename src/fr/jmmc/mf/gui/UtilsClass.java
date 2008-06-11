@@ -289,31 +289,23 @@ public class UtilsClass {
     // XML transformations
     //
 
-    /**
-     * Returns one string resulting of xslt transformation.
-     * If one error occur, then one ReportDialog show the problem
-     *
-     * @param params two by two processor parameter list or null
-     * @return the xslt output or null if one error occured
-     */
-    public static String xsl(String xmlBuffer, URL xslURL, String[] params) {
+    
+    private static String xsl(Source source, URL xslURL, String[] params) {
         logger.entering(className, "xsl");
-
         try {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
 
-            // Use the factory to create a template containing the xsl file
+             // Use the factory to create a template containing the xsl file
             Templates template = factory.newTemplates(new StreamSource(
-                        xslURL.openStream()));
-
+                xslURL.openStream()));
+            
             // Use the template to create a transformer
             Transformer xformer = template.newTransformer();
 
-            // Prepare the input and output files
-            Source source = new StreamSource(new StringReader(xmlBuffer));
+            // Prepare the output
             StringWriter sw = new StringWriter();
-            javax.xml.transform.Result result = new StreamResult(sw);
+            Result result = new StreamResult(sw);
 
             // Apply the xsl file to the source file and return the result                 
             if (params != null) {
@@ -321,15 +313,12 @@ public class UtilsClass {
                     xformer.setParameter(params[i], params[i + 1]);
                 }
             }
-
+            // Apply the xsl file to the source file and write the result to the output file
             xformer.transform(source, result);
-            logger.exiting(className, "xsl");
-
             return sw.toString();
         } catch (TransformerConfigurationException exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
-
-            // An error occurred in the XSL file
+        // An error occurred in the XSL file
         } catch (TransformerException exc) {
             // An error occurred while applying the XSL file
             // Get location of error in input file
@@ -347,7 +336,40 @@ public class UtilsClass {
 
         return null;
     }
+  
+    /**
+     * Returns one string resulting of xslt transformation.
+     * If one error occur, then one ReportDialog show the problem
+     *
+     * @param params two by two processor parameter list or null
+     * @return the xslt output or null if one error occured
+     */
+    public static String xsl(String xmlBuffer, URL xslURL, String[] params) {
+        // Prepare the input
+        Source source = new StreamSource(new StringReader(xmlBuffer));
+        return xsl(source, xslURL, params);
+    }
 
+     /**
+     * Returns one string resulting of xslt transformation.
+     * If one error occur, then one ReportDialog show the problem
+     *
+     * @param params two by two processor parameter list or null
+     * @return the xslt output or null if one error occured
+     */
+     public static String xsl(java.io.File inFile, URL xslURL, String[] params) {
+        try {
+            // Prepare the input and output files
+            Source source = new StreamSource(new FileInputStream(inFile));
+            return xsl(source, xslURL, params);
+        } catch (Exception exc) {
+            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+        }
+        logger.exiting(className, "xsl");
+        return null;
+    }
+
+    
     //
     // XML Parsing
     // 
