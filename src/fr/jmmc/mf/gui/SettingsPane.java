@@ -312,12 +312,8 @@ public class SettingsPane extends javax.swing.JPanel
             String result = "";
 
             try {
-                // Create temp file.
-                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings",
-                        ".xml");
-                // Delete temp file when program exits.
-                tmpFile.deleteOnExit();
-                rootSettingsModel.saveSettingsFile(tmpFile, true);
+                // Get xml temp file with content of model
+                java.io.File tmpFile = rootSettingsModel.getTempFile(false);
                 result = ModelFitting.instance_.execMethod(methodName, tmpFile);
                 setStatus("Fitting process finished");
             } catch (Exception ex) {
@@ -379,7 +375,8 @@ public class SettingsPane extends javax.swing.JPanel
 
                 rootSettingsModel.setRootSettings(newModel);
                 showSettingElement(rootSettingsModel.getRootSettings());
-                rootSettingsModel.setLastXml(xml);
+                rootSettingsModel.setLastXml(xml);            
+
                 logger.info("Settings created");
             } catch (Exception ex) {
                 JTextArea textArea = new JTextArea(20, 100);
@@ -408,14 +405,8 @@ public class SettingsPane extends javax.swing.JPanel
 
             String result = "";
 
-            try {
-                // Create temp file.
-                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings",
-                        ".xml");
-                // Delete temp file when program exits.
-                tmpFile.deleteOnExit();
-                rootSettingsModel.saveSettingsFile(tmpFile, true);
-                result = ModelFitting.instance_.execMethod(methodName, tmpFile);
+            try {                                
+                result = ModelFitting.instance_.execMethod(methodName, rootSettingsModel.getTempFile(false));
                 setStatus(methodName + " process finished");
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
@@ -445,14 +436,8 @@ public class SettingsPane extends javax.swing.JPanel
 
             String result = "";
 
-            try {
-                // Create temp file.
-                java.io.File tmpFile = java.io.File.createTempFile("tmpSettings",
-                        ".xml");
-                // Delete temp file when program exits.
-                tmpFile.deleteOnExit();
-                rootSettingsModel.saveSettingsFile(tmpFile, true);
-                result = ModelFitting.instance_.execMethod(methodName, tmpFile);
+            try {                
+              result = ModelFitting.instance_.execMethod(methodName, rootSettingsModel.getTempFile(false));              
                 setStatus(methodName + " process finished");
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
