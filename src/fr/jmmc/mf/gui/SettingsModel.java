@@ -46,6 +46,7 @@ import org.exolab.castor.xml.Marshaller;
 //import java.nio.*;
 import java.io.FileOutputStream;
 
+import java.io.IOException;
 import java.net.URL;
 
 import java.util.Hashtable;
@@ -144,6 +145,16 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         }
 
         return this.lastXml;
+    }
+    
+    public java.io.File getTempFile(boolean keepResult)throws Exception{
+         logger.entering("" + this.getClass(), "getTempFile");
+         java.io.File tmpFile ;
+         tmpFile=java.io.File.createTempFile("tmpSettings", ".xml");
+         // Delete temp file when program exits.
+          tmpFile.deleteOnExit();
+         saveSettingsFile(tmpFile, keepResult);
+         return tmpFile;
     }
 
     // respond to ModifyAndSaveObject interface
@@ -528,21 +539,21 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Write serialisation into given file.
      * @todo place this method into fr.jmmc.mf.util
-     * @param temporaryRequest indicates that this file is not save by user but for internal use
-     * and for internal use result informations are removed
+     * @param keepResult indicates that this file will not get result section. It is used in the runFit action for example.
      */
     public void saveSettingsFile(java.io.File fileToSave,
-        boolean temporaryRequest)
+        boolean keepResult)
         throws java.io.IOException, org.exolab.castor.xml.MarshalException,
             org.exolab.castor.xml.ValidationException,
             org.exolab.castor.mapping.MappingException {
         logger.entering("" + this.getClass(), "saveSettingsFile");
 
-        if (temporaryRequest) {
+        /* replace old result section by a new empty one according keepResult parameter */
+        if (keepResult==false) {
             rootSettings.setResult(new Result());
         }
-
-        logger.fine("start file writting");
+        
+        logger.fine("start setting file writting");
 
         // Read a File to unmarshal from
         java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
@@ -561,10 +572,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.validate();
         marshaller.marshal(rootSettings);
         writer.flush();
-        logger.fine("end file writting");
+        logger.fine("Ending file writting into "+fileToSave);
 
-        if (!temporaryRequest) {
-            associatedFile = fileToSave;
+        if (fileToSave.equals(associatedFile)) {            
             setModified(false);
         }
     }

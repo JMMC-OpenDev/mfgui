@@ -40,26 +40,21 @@ public class ResultPanel extends javax.swing.JPanel {
         plotRadialAction = new PlotAction("plotRadial");
         initComponents();
     }
+    
      public void show(Result r, SettingsModel s) {
         current = r;
-        settingsModel = s;
-
-        try {
-            StringWriter sw = new StringWriter();
-            r.marshal(sw);
-            //String xmlContent = s.getLastXml();
-            String xmlContent = sw.toString();
-            // Do simple xslt transform result
-            logger.fine("Get url for xslt");
-
+        settingsModel = s;        
+        try {                       
+            String xslPath="fr/jmmc/mf/gui/resultToHtml.xsl";
+            logger.finest("Get url for xslt from "+xslPath);
             java.net.URL url = this.getClass().getClassLoader()
-                                   .getResource("fr/jmmc/mf/gui/resultToHtml.xsl");
-            logger.fine("Start of transformation with :" + url);
-
-            String htmlStr = UtilsClass.xsl(xmlContent, url, null);
-            logger.fine("End of transformation");
+                                   .getResource(xslPath);
+            logger.finest("Start of transformation with :" + url);
+            //String htmlStr = UtilsClass.xsl(s.getTempFile(true), url, null);
+            String htmlStr = UtilsClass.xsl(s.getLastXml(), url, null);
+            logger.fine("End of transformation ");
             resultEditorPane.setContentType("text/html");
-            resultEditorPane.setText(htmlStr);    
+            resultEditorPane.setText(htmlStr);        
         } catch (Exception exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
         }
@@ -73,9 +68,11 @@ public class ResultPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
+        jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         plotBaselinesButton = new javax.swing.JButton();
         plotUVCoverageButton = new javax.swing.JButton();
@@ -86,11 +83,14 @@ public class ResultPanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
+        resultEditorPane.setEditable(false);
         jScrollPane2.setViewportView(resultEditorPane);
 
         jPanel1.add(jScrollPane2);
 
-        add(jPanel1);
+        jTabbedPane1.addTab("Text report", jPanel1);
+
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -103,15 +103,21 @@ public class ResultPanel extends javax.swing.JPanel {
         plotRadialButton.setAction(plotRadialAction);
         jPanel2.add(plotRadialButton);
 
-        add(jPanel2);
-        add(plotTabbedPane);
+        jPanel3.add(jPanel2);
+        jPanel3.add(plotTabbedPane);
+
+        jTabbedPane1.addTab("Plots", jPanel3);
+
+        add(jTabbedPane1);
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton plotBaselinesButton;
     private javax.swing.JButton plotRadialButton;
     private javax.swing.JTabbedPane plotTabbedPane;
@@ -122,13 +128,13 @@ public class ResultPanel extends javax.swing.JPanel {
      /** Plots using ptplot widgets */
     protected void ptplot(String plotName) {
         logger.entering("" + this.getClass(), "ptplot");
-
+        String xmlStr=null;
         try {
             // Contruct xml document to plot
             java.net.URL url = this.getClass().getClassLoader()
                                    .getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
-            String xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
-                    new String[] { "plotName", plotName });
+            xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
+           new String[] { "plotName", plotName });
 
             // Construct plot and parse xml
             Plot plot = new Plot();
@@ -141,11 +147,11 @@ public class ResultPanel extends javax.swing.JPanel {
             plotMLFrame.setVisible(true);
             //plotMLFrame.setSize(new java.awt.Dimension(400, 400));
             plotMLFrame.validate();
-                                  
+              
+            // a second plot must be done else it stole display into previous frame
             Plot plot2 = new Plot();
-        plotMLParser = new PlotMLParser(plot2);
+            plotMLParser = new PlotMLParser(plot2);
             plotMLParser.parse(null, xmlStr);
-
             //plot2.read(xmlStr);
             addPlotPanel(plotName,plot2);
             
