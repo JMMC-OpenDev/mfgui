@@ -175,7 +175,7 @@ public class SettingsPane extends javax.swing.JPanel
             filesPanel.show((Files) o, rootSettingsModel);
             modifierPanel.add(filesPanel);
         } else if (o instanceof Target) {
-            targetPanel.show((Target) o, rootSettingsModel.getRootSettings());
+            targetPanel.show((Target) o, rootSettingsModel);
             modifierPanel.add(targetPanel);
         } else if (o instanceof Model) {
             modelPanel.show((Model) o, rootSettingsModel);
