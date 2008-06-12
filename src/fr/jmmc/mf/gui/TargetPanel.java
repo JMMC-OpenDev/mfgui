@@ -53,6 +53,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     
     public void refresh(){
         show(current, rootSettings);
+        settingsViewer.getSettingsModel().fireUpdate();
     }
     
     public void show(Target t,Settings rootSettings){
@@ -334,8 +335,7 @@ public class TargetPanel extends javax.swing.JPanel implements
             // add the new element to current target
             current.addModel(m);
             
-            refresh();
-            settingsViewer.getSettingsModel().fireUpdate();
+            refresh();            
         }catch (Exception e){
             // this occurs when add button is pressed without selection
             logger.warning("No model selected");
