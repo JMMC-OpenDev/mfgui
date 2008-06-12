@@ -568,7 +568,9 @@ public class MFGui extends javax.swing.JFrame {
                     }
 
                 lastDir = file.getParent();
-                settingsModel.saveSettingsFile(file, false);
+                // Fix user associated file and save it with result
+                settingsModel.setAssociatedFile(file);
+                settingsModel.saveSettingsFile(file, true);
                 /* ask to update title */
                 getSelectedSettingsPane();
                 
