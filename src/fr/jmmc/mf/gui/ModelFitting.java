@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.13 2008-06-11 13:37:12 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.14 2008-06-12 15:15:36 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
@@ -69,7 +69,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
         gui.setVisible(true);
     }
 
-    protected void exit() {
+    protected static void exit() {
         logger.info("Thank you for using this software!");        
     }
     
