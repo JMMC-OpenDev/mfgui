@@ -110,6 +110,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         return associatedFile.getName();
     }
 
+    /**
+     *  Tell to the model that given file is used by user to store its data
+     * @param fileToSave
+     */
+    public void setAssociatedFile(java.io.File fileToSave) {
+        logger.entering("" + this.getClass(), "saveAssociatedFile");
+        associatedFile=fileToSave;        
+    }
+       
     // respond to ModifyAndSaveObject interface
     public boolean isModified() {
         logger.entering("" + this.getClass(), "isModified");
