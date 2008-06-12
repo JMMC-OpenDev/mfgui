@@ -83,6 +83,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     // ModifyAndSaveObject interface
     public boolean isModified = false;
     public java.io.File associatedFile = null;
+    
+    // counter used to generate uniq model ids
+    private int modelIdCounter_=0;
 
     public SettingsModel() {
         // Init members
@@ -102,6 +105,12 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         setRootSettings(rootSettings);
     }
 
+    public int getNewModelId()
+    {
+        modelIdCounter_+=1;
+        return modelIdCounter_;
+    }
+    
     public String getAssociatedFilename() {
         if (associatedFile == null) {
             return "*";
