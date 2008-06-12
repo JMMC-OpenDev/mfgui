@@ -24,7 +24,8 @@ public class ResultPanel extends javax.swing.JPanel {
     /* actions  (definitions are at end of file) */
     static Action plotBaselinesAction;
     static Action plotUVCoverageAction;
-    static Action plotRadialAction;
+    static Action plotRadialVisAction;
+    static Action plotRadialT3Action;
     static Action plotImageAction;
 
     //ParametersTableModel parametersTableModel;
@@ -37,7 +38,8 @@ public class ResultPanel extends javax.swing.JPanel {
          /* actions must be inited before component init */
         plotBaselinesAction = new PlotAction("plotBaselines");
         plotUVCoverageAction = new PlotAction("plotUVCoverage");
-        plotRadialAction = new PlotAction("plotRadial");
+        plotRadialVisAction = new PlotAction("plotRadialVIS");
+        plotRadialT3Action = new PlotAction("plotRadialT3");
         initComponents();
     }
     
@@ -76,7 +78,8 @@ public class ResultPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         plotBaselinesButton = new javax.swing.JButton();
         plotUVCoverageButton = new javax.swing.JButton();
-        plotRadialButton = new javax.swing.JButton();
+        plotRadialVisButton = new javax.swing.JButton();
+        plotRadialT3Button = new javax.swing.JButton();
         plotTabbedPane = new javax.swing.JTabbedPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
@@ -100,8 +103,11 @@ public class ResultPanel extends javax.swing.JPanel {
         plotUVCoverageButton.setAction(plotUVCoverageAction);
         jPanel2.add(plotUVCoverageButton);
 
-        plotRadialButton.setAction(plotRadialAction);
-        jPanel2.add(plotRadialButton);
+        plotRadialVisButton.setAction(plotRadialVisAction);
+        jPanel2.add(plotRadialVisButton);
+
+        plotRadialT3Button.setAction(plotRadialT3Action);
+        jPanel2.add(plotRadialT3Button);
 
         jPanel3.add(jPanel2);
         jPanel3.add(plotTabbedPane);
@@ -119,7 +125,8 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton plotBaselinesButton;
-    private javax.swing.JButton plotRadialButton;
+    private javax.swing.JButton plotRadialT3Button;
+    private javax.swing.JButton plotRadialVisButton;
     private javax.swing.JTabbedPane plotTabbedPane;
     private javax.swing.JButton plotUVCoverageButton;
     private javax.swing.JEditorPane resultEditorPane;
@@ -136,25 +143,32 @@ public class ResultPanel extends javax.swing.JPanel {
             xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
            new String[] { "plotName", plotName });
 
-            // Construct plot and parse xml
-            Plot plot = new Plot();
-            PlotMLParser plotMLParser = new PlotMLParser(plot);
-            plotMLParser.parse(null, xmlStr);
-
-            // Show plot into frame
-            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName,
-                    plot);            
-            plotMLFrame.setVisible(true);
-            //plotMLFrame.setSize(new java.awt.Dimension(400, 400));
-            plotMLFrame.validate();
-              
-            // a second plot must be done else it stole display into previous frame
-            Plot plot2 = new Plot();
-            plotMLParser = new PlotMLParser(plot2);
-            plotMLParser.parse(null, xmlStr);
-            //plot2.read(xmlStr);
-            addPlotPanel(plotName,plot2);
+            PlotMLParser plotMLParser;
             
+            // Do not display the plot in another window
+            // @TODO give access to save export print menus
+            if (false) {
+                // Construct plot and parse xml
+                Plot plot = new Plot();
+                plotMLParser = new PlotMLParser(plot);
+                plotMLParser.parse(null, xmlStr);
+
+                // Show plot into frame
+                PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName,
+                        plot);
+                plotMLFrame.setVisible(true);
+                //plotMLFrame.setSize(new java.awt.Dimension(400, 400));
+                plotMLFrame.validate();
+
+            } else {
+                // a second plot must be done else it stole display into previous frame
+                Plot plot2 = new Plot();
+                plotMLParser = new PlotMLParser(plot2);
+                plotMLParser.parse(null, xmlStr);
+                //plot2.read(xmlStr);
+                addPlotPanel(plotName, plot2);
+            }
+
             logger.finest("plot ready to be shown");
         } catch (Exception exc) {
             new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
@@ -164,6 +178,7 @@ public class ResultPanel extends javax.swing.JPanel {
     protected void addPlotPanel(String title,JPanel pp)
     {
         plotTabbedPane.add(title,pp);
+        plotTabbedPane.setSelectedComponent(pp);
         this.validate();
     }
 
@@ -195,7 +210,7 @@ public class ResultPanel extends javax.swing.JPanel {
 
             if (plotName.equals("plotBaselines") ||
                     plotName.equals("plotUVCoverage") ||
-                    plotName.equals("plotRadial")) {
+                    plotName.startsWith("plotRadial")) {
                 ptplot(plotName);
             } else {
                 plotImage(plotName);
