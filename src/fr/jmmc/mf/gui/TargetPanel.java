@@ -37,6 +37,7 @@ public class TargetPanel extends javax.swing.JPanel implements
     SettingsViewerInterface settingsViewer;
     
     public Settings rootSettings=null;
+    public SettingsModel rootSettingsModel=null;
     
     /** Creates new form TargetPanel */
     public TargetPanel(SettingsViewerInterface viewer) {
@@ -52,14 +53,15 @@ public class TargetPanel extends javax.swing.JPanel implements
     }
     
     public void refresh(){
-        show(current, rootSettings);
+        show(current, rootSettingsModel);
         settingsViewer.getSettingsModel().fireUpdate();
     }
     
-    public void show(Target t,Settings rootSettings){
+    public void show(Target t,SettingsModel settingsModel){
         logger.entering(""+this.getClass(), "show");
         
-        this.rootSettings = rootSettings;                
+        this.rootSettings = settingsModel.getRootSettings();                
+        this.rootSettingsModel=settingsModel;
         
         listenToFileSelection=false;
         current = t;
@@ -72,6 +74,7 @@ public class TargetPanel extends javax.swing.JPanel implements
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
         if(targetFiles != null){
             fileList.setModel(targetFiles);
+            
             // define selected files reading fileLinks
             Vector filesId = new Vector();
             File[] files =rootSettings.getFiles().getFile();
@@ -321,7 +324,7 @@ public class TargetPanel extends javax.swing.JPanel implements
             m = Model.unmarshal(reader);
             
             // force another name with given position
-            int position = current.getModelCount()+1;
+            int position = rootSettingsModel.getNewModelId();
             String type = selected.getType();
             m.setName(type+position);
             
