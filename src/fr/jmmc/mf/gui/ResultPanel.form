@@ -79,10 +79,17 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="plotRadialButton">
+                <Component class="javax.swing.JButton" name="plotRadialVisButton">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="plotRadialAction" type="code"/>
+                      <Connection code="plotRadialVisAction" type="code"/>
+                    </Property>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="plotRadialT3Button">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="plotRadialT3Action" type="code"/>
                     </Property>
                   </Properties>
                 </Component>
