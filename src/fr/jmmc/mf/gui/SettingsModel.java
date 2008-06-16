@@ -610,7 +610,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             supportedModelsModel.addElement(newModel);
             logger.info("Adding supported model:" + newModel.getType());
             supportedModels.put(newModel.getType(), newModel);
-        }
+        }        
     }
 
     public Model getSupportedModel(String type) {
