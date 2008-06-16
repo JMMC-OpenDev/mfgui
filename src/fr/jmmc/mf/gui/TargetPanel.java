@@ -49,7 +49,7 @@ public class TargetPanel extends javax.swing.JPanel implements
         fileList.setSelectionModel(selectedFiles);
         fileList.setCellRenderer(new FileListCellRenderer());
         
-        modelList.setModel(models);               
+        modelList.setModel(models);             
     }
     
     public void refresh(){
@@ -111,7 +111,8 @@ public class TargetPanel extends javax.swing.JPanel implements
             models.addElement(current.getModel(i));
         }
         
-        // check addModel button
+        // Set normalizeCheckBox
+        normalizeCheckBox.setSelected(current.getNormalize());                
     }
     
     public void valueChanged(ListSelectionEvent e){
@@ -170,6 +171,8 @@ public class TargetPanel extends javax.swing.JPanel implements
         addModelButton = new javax.swing.JButton();
         modelTypeComboBox = new javax.swing.JComboBox();
         removeModelButton = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        normalizeCheckBox = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -207,14 +210,14 @@ public class TargetPanel extends javax.swing.JPanel implements
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
-        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                modelListValueChanged(evt);
-            }
-        });
         modelList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 modelListMouseClicked(evt);
+            }
+        });
+        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                modelListValueChanged(evt);
             }
         });
         jScrollPane2.setViewportView(modelList);
@@ -263,6 +266,25 @@ public class TargetPanel extends javax.swing.JPanel implements
         jPanel4.add(removeModelButton, gridBagConstraints);
 
         jPanel3.add(jPanel4);
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
+        jPanel6.setLayout(new java.awt.GridBagLayout());
+
+        normalizeCheckBox.setText("Normalise residuals");
+        normalizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                normalizeCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel6.add(normalizeCheckBox, gridBagConstraints);
+
+        jPanel3.add(jPanel6);
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
 
@@ -344,6 +366,10 @@ public class TargetPanel extends javax.swing.JPanel implements
             logger.warning("No model selected");
         }                      
     }//GEN-LAST:event_addModelButtonActionPerformed
+
+private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
+    current.setNormalize(normalizeCheckBox.isSelected());    
+}//GEN-LAST:event_normalizeCheckBoxActionPerformed
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
@@ -357,10 +383,12 @@ public class TargetPanel extends javax.swing.JPanel implements
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
+    private javax.swing.JCheckBox normalizeCheckBox;
     private javax.swing.JButton removeModelButton;
     // End of variables declaration//GEN-END:variables
     
