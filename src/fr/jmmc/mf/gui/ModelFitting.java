@@ -26,33 +26,26 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.14 2008-06-12 15:15:36 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.15 2008-06-18 06:25:48 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
     static MFGui gui=null;
-    static String[] args_=null;
     
     public ModelFitting(String[] args) {
-        super(args,true);
-        instance_ = this;        
-        args_=args;
-        run();
+        super(args);
+        instance_ = this;                
     }
 
     static String getVersion() {        
         return rcsId;
     }
 
-    protected void init(){
+    protected void init(String args[]){
         // Set default resource for application
         fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
         myPreferences = Preferences.getInstance();
-
-        logger.info("Starting ModelFitting Rev:" + rcsId);
-        logger.info("Version:" +
-            fr.jmmc.mcs.util.Resources.getResource("mf.version"));
-
+     
         // Set the default locale to custom locale
         Locale locale = Locale.US;
         Locale.setDefault(locale);
@@ -62,7 +55,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
             "This forms does not actually works but present requirements....\n\n Please complete above" +
             " informations to improve model fitting software.\n" + //rcsId+"\n"+
             "---\n");                            
-              gui = new MFGui(args_); 
+              gui = new MFGui(args); 
     }
     
     protected void execute(){
