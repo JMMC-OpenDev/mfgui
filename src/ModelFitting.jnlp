@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<jnlp spec="1.0+" codebase="REPLACECODEBASE" href="REPLACEHREF">
+	<information>
+		<title>Model Fitting GUI</title>
+		<vendor>JMMC</vendor>
+        <homepage href="http://www.jmmc.fr/model_fitting_page.htm"/>
+		<description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
+		<icon href="LITpro_splash.gif" kind="splash"/>
+		<icon href="mf6464.jpg"/>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+        <j2se version="1.5+"/>
+        <jar href="jar/mfgui.jar" />
+        <jar href="jar/Jmcs.jar" />
+        <extension href="topcat-parts.jnlp" />
+	</resources>
+	<application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>
+</jnlp>
