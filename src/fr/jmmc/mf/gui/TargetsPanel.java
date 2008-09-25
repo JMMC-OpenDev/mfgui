@@ -28,16 +28,18 @@ public class TargetsPanel extends javax.swing.JPanel {
     private javax.swing.JButton removeTargetButton;
     private javax.swing.JList targetList;
     private javax.swing.JComboBox targetNameComboBox;
-
+    private SettingsModel rootSettingsModel;
+    
     /** Creates new form TargetsPanel */
     public TargetsPanel(SettingsViewerInterface viewer) {
         settingsViewer = viewer;
         initComponents();
     }
 
-    public void show(Targets t) {
+    public void show(Targets t,SettingsModel s) {
         logger.fine("Showing data for " + t);
         current = t;
+        rootSettingsModel=s;
         targetList.setModel(settingsViewer.getSettingsModel().targetListModel);
         targetNameComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
     }
@@ -165,10 +167,13 @@ public class TargetsPanel extends javax.swing.JPanel {
         logger.fine("Adding on target to current settings");
 
         Target t = new Target();
-
-        String targetIdent = "" + targetNameComboBox.getSelectedItem();
+        String targetIdent = "" 
+            + targetNameComboBox.getSelectedItem();
+         /*   + "_"
+            +rootSettingsModel.getNewTargetId();*/
         t.setIdent(targetIdent);
-
+        t.setNormalize(true);
+        
         // Add list of currently files that contain this target        
         ListModel targetFiles = settingsViewer.getSettingsModel()
                                               .getFileListModelForOiTarget(targetIdent);
