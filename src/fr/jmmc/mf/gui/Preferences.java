@@ -1,15 +1,18 @@
 /*
- JMMC
-*/
+   JMMC
+ */
 
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.12 2008-05-14 11:50:07 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.13 2008-09-25 09:24:29 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.12  2008/05/14 11:50:07  mella
+ * add yoga.local.progname preference
+ *
  * Revision 1.11  2008/02/26 09:16:21  mella
  * Set different name for preference depending on beta version or not
  *
@@ -42,7 +45,7 @@
 package fr.jmmc.mf.gui;
 
 import java.util.Properties;
-
+import fr.jmmc.mcs.util.*;
 
 /**
  * This is a preference dedicated to the java Model Fitting Client.
@@ -69,47 +72,46 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
      *
      * @return the singleton preference instance
      */
-    public static Preferences getInstance() {
+    public final synchronized static Preferences getInstance() {
         // Build new reference if singleton does not already exist
         // or return previous reference
         if (_singleton == null) {
-            try {
-                Preferences myDefaultProperties = new Preferences();
-                // Store preference file version number
-                myDefaultProperties.setPreference("mf.version",
-                    fr.jmmc.mcs.util.Resources.getResource("mf.version"));
-
-                /* Place general preferences  */
-                myDefaultProperties.setPreference("show.recursive.parameters",
-                    "false");
-                myDefaultProperties.setPreference("yoga.remote.use", "true");
-
-                /* Set Dev or standard branch according beta or not extension into mf.revision resource entry */
-                if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
-                                                  .endsWith("beta")) {
-                    _shortPreferenceFilename = "fr.jmmc.mf.gui.beta.properties";
-                    myDefaultProperties.setPreference("yoga.remote.url",
-                        "http://jmmc.fr/~mella/LITproDev/run.php");
-                } else {
-                    _shortPreferenceFilename = "fr.jmmc.mf.gui.properties";
-                    myDefaultProperties.setPreference("yoga.remote.url",
-                        "http://jmmc.fr/modelfitting/ys/html/run.php");
-                }
-
-                myDefaultProperties.setPreference("yoga.local.home", "../ys");
-                myDefaultProperties.setPreference("yoga.local.progname", "/bin/yoga.sh");
-
-                _singleton = new Preferences();
-                _singleton.setShortPreferenceFilename(_shortPreferenceFilename);
-                _singleton.loadFromFile();
-                _singleton.setDefaultPreferences(myDefaultProperties);
-                _singleton.loadFromFile();
-            } catch (Exception e) {
-                logger.warning("Default preference values creation FAILED.");
-                e.printStackTrace();
-            }
+            _singleton = new Preferences();
         }
-
         return _singleton;
+    }
+
+    protected void setDefaultPreferences() throws PreferencesException{
+        setDefaultPreference("mf.version",
+                fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+        /* Place general preferences  */
+        setDefaultPreference("show.recursive.parameters", "false");
+        setDefaultPreference("yoga.remote.use", "true");
+        setDefaultPreference("yoga.local.home", "../ys");
+        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
+        if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
+                .endsWith("beta")) {
+            setDefaultPreference("yoga.remote.url",
+                    "http://jmmc.fr/~mella/LITproDev/run.php");
+        } else {
+            setDefaultPreference("yoga.remote.url",
+                    "http://jmmc.fr/modelfitting/ys/html/run.php");
+        }
+    }
+
+    protected String getPreferenceFilename()
+    {
+        logger.entering("Preferences", "getPreferenceFilename");
+        if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
+                .endsWith("beta")) {
+            return "fr.jmmc.modelfitting.beta.properties";
+                } 
+
+        return "fr.jmmc.modelfitting.properties";
+    }
+
+    protected int getPreferencesVersionNumber(){
+        logger.entering("Preferences", "getPreferencesVersionNumber");
+        return 1;
     }
 }
