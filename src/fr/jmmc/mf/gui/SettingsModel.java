@@ -87,6 +87,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     // counter used to generate uniq model ids
     private int modelIdCounter_=0;
 
+    // counter used to generate uniq target ids
+    private int targetIdCounter_=0;
+    
     public SettingsModel() {
         // Init members
         allFilesListModel = new DefaultListModel();
@@ -110,7 +113,14 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         modelIdCounter_+=1;
         return modelIdCounter_;
     }
+ 
+    public int getNewTargetId()
+    {
+        modelIdCounter_+=1;
+        return modelIdCounter_;
+    }
     
+   
     public String getAssociatedFilename() {
         if (associatedFile == null) {
             return "*";
@@ -124,7 +134,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * @param fileToSave
      */
     public void setAssociatedFile(java.io.File fileToSave) {
-        logger.entering("" + this.getClass(), "saveAssociatedFile");
+        logger.entering("" + this.getClass(), "setAssociatedFile");
         associatedFile=fileToSave;        
     }
        
