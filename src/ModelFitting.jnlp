@@ -3,7 +3,7 @@
 	<information>
 		<title>Model Fitting GUI</title>
 		<vendor>JMMC</vendor>
-        <homepage href="http://www.jmmc.fr/model_fitting_page.htm"/>
+        <homepage href="http://www.jmmc.fr/modelfitting"/>
 		<description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
 		<icon href="LITpro_splash.gif" kind="splash"/>
 		<icon href="mf6464.jpg"/>
