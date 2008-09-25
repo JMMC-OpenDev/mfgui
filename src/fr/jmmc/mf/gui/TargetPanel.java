@@ -345,10 +345,10 @@ public class TargetPanel extends javax.swing.JPanel implements
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
             
-            // force another name with given position
+            // force another name with unique position
             int position = rootSettingsModel.getNewModelId();
             String type = selected.getType();
-            m.setName(type+position);
+            m.setName(type+"_"+position);
             
             // and change parameters name also
             Parameter[] params = m.getParameter();
