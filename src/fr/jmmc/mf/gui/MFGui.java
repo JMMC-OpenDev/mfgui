@@ -452,7 +452,7 @@ public class MFGui extends javax.swing.JFrame {
     }
 
     protected class NewModelAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.dir");
+        public String lastDir = System.getProperty("user.home");
 
         public NewModelAction() {
             super("newModel");
@@ -466,7 +466,7 @@ public class MFGui extends javax.swing.JFrame {
     }
 
     protected class LoadModelAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.dir");
+        public String lastDir = System.getProperty("user.home");
 
         public LoadModelAction() {
             super("loadModel");
@@ -498,7 +498,7 @@ public class MFGui extends javax.swing.JFrame {
     }
 
     protected class SaveModelAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.dir");
+        public String lastDir = System.getProperty("user.home");
 
         public SaveModelAction() {
             super("saveModel");
@@ -559,7 +559,7 @@ public class MFGui extends javax.swing.JFrame {
                 lastDir = file.getParent();
                 // Fix user associated file and save it with result
                 settingsModel.setAssociatedFile(file);
-                settingsModel.saveSettingsFile(file, true);
+                settingsModel.saveSettingsFile(file, false);
                 /* ask to update title */
                 getSelectedSettingsPane();
                 

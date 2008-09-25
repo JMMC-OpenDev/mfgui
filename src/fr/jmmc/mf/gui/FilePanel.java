@@ -619,7 +619,7 @@ public class FilePanel extends javax.swing.JPanel {
     }
 
     protected class SaveEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.dir");
+        public String lastDir = System.getProperty("user.home");
 
         public SaveEmbeddedFileAction() {
             super("saveEmbeddedFile");

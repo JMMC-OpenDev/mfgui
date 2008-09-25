@@ -97,7 +97,7 @@ public class FilesPanel extends javax.swing.JPanel {
     // Inner classes used to manage actions
     //
     protected class LoadFilesAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.dir");
+        public String lastDir = System.getProperty("user.home");
 
         public LoadFilesAction() {
             super("loadFiles");
