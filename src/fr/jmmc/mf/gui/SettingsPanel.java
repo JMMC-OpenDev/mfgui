@@ -73,7 +73,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         // Set File list
         filesPanel.show(current.getFiles(), sm);
         // Set Target List
-        targetsPanel.show(current.getTargets());
+        targetsPanel.show(current.getTargets(),sm);
         // Set fitter
         fitterPanel.show(current);
         // Set userInfo

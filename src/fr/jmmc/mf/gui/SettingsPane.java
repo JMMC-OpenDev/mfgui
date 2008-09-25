@@ -21,6 +21,7 @@ import fr.jmmc.mf.models.Targets;
 import java.awt.Color;
 import java.awt.Component;
 
+import java.awt.Dimension;
 import java.lang.reflect.*;
 
 import java.util.*;
@@ -99,6 +100,9 @@ public class SettingsPane extends javax.swing.JPanel
         rootSettingsModel = new SettingsModel();
 
         initComponents();
+        settingsTree.setMinimumSize(new Dimension(200,200));
+        settingsTree.setPreferredSize(new Dimension(200,200));
+        
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
 
         targetsPanel = new TargetsPanel(this);
@@ -169,7 +173,7 @@ public class SettingsPane extends javax.swing.JPanel
                 rootSettingsModel);
             modifierPanel.add(settingsPanel);
         } else if (o instanceof Targets) {
-            targetsPanel.show((Targets) o);
+            targetsPanel.show((Targets) o,rootSettingsModel);
             modifierPanel.add(targetsPanel);
         } else if (o instanceof Files) {
             filesPanel.show((Files) o, rootSettingsModel);
