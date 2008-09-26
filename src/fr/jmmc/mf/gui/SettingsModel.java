@@ -3,7 +3,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.Files;
@@ -193,7 +193,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             try {
                 saveSettingsFile(associatedFile, false);
             } catch (Exception exc) {
-                new ReportDialog(null, true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         } else {
             // trigger saveModelAction

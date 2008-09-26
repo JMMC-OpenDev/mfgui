@@ -6,7 +6,7 @@
 
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.models.Result;
 import java.io.StringWriter;
 import ptolemy.plot.*;
@@ -58,7 +58,7 @@ public class ResultPanel extends javax.swing.JPanel {
             resultEditorPane.setContentType("text/html");
             resultEditorPane.setText(htmlStr);        
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
     }
 
@@ -171,7 +171,7 @@ public class ResultPanel extends javax.swing.JPanel {
 
             logger.finest("plot ready to be shown");
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
     }
     

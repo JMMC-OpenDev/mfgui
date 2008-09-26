@@ -3,7 +3,7 @@ JMMC
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.15 2008-06-18 06:25:48 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.16 2008-09-26 08:26:34 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
@@ -51,11 +51,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
         Locale.setDefault(locale);
         logger.info("Setting locale to:" + locale);
 
-        ReportDialog.setDefaultComment(
-            "This forms does not actually works but present requirements....\n\n Please complete above" +
-            " informations to improve model fitting software.\n" + //rcsId+"\n"+
-            "---\n");                            
-              gui = new MFGui(args); 
+        gui = new MFGui(args); 
     }
     
     protected void execute(){

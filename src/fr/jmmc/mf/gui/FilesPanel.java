@@ -5,7 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.Files;
 
@@ -129,7 +129,7 @@ public class FilesPanel extends javax.swing.JPanel {
                     settingsViewer.showSettingElement(settingsModel.getRootSettings());
                 }
             } catch (Exception exc) {
-                new ReportDialog(null, true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }

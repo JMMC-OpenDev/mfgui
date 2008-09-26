@@ -1,6 +1,6 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import java.util.logging.*;
 
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  * @author  mella
  */
 public class LITproApplet extends javax.swing.JApplet {
-    final static String rcsId = "$Id: LITproApplet.java,v 1.7 2008-02-20 18:30:23 mella Exp $";
+    final static String rcsId = "$Id: LITproApplet.java,v 1.8 2008-09-26 08:26:34 mella Exp $";
 
     // Variables declaration - do not modify
     private javax.swing.JButton startButton;
@@ -66,15 +66,11 @@ public class LITproApplet extends javax.swing.JApplet {
             ConsoleHandler handler = new ConsoleHandler();
             handler.setLevel(java.util.logging.Level.ALL);
             //logger.addHandler(handler);                      
-            ReportDialog.setDefaultComment("Please complete above" +
-                " informations to improve this software.\n" + rcsId + "\n" +
-                "---\n");
 
             MFGui myFrame = new MFGui(null);
             myFrame.setVisible(true);
         } catch (Exception e) {
-            new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
-            System.exit(1);
+            new FeedbackReport(null, true, e);
         }
     }
 
