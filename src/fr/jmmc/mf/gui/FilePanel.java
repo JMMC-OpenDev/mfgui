@@ -5,7 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.File;
 
@@ -80,7 +80,7 @@ public class FilePanel extends javax.swing.JPanel {
             filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
                     current.getHref());
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
 
         try {
@@ -128,7 +128,7 @@ public class FilePanel extends javax.swing.JPanel {
                 hduListModel.addElement(extName);
             }
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
     }
 
@@ -613,7 +613,7 @@ public class FilePanel extends javax.swing.JPanel {
                         ((indices[i]) + 1));
                 }
             } catch (Exception exc) {
-                new ReportDialog(null, true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }
@@ -659,8 +659,7 @@ public class FilePanel extends javax.swing.JPanel {
                     }
                 }
             } catch (Exception exc) {
-                ReportDialog dialog = new ReportDialog(null, true, exc);
-                dialog.setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }

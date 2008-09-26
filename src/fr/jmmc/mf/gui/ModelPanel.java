@@ -6,7 +6,7 @@
 
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
@@ -248,7 +248,7 @@ public class ModelPanel extends javax.swing.JPanel {
 
                 return ret;
             } catch (Exception e) {
-                new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
+                new FeedbackReport(null, true, e);
 
                 return "Error";
             }
@@ -294,7 +294,7 @@ public class ModelPanel extends javax.swing.JPanel {
                     set.invoke(p, o);
                     logger.fine("methode invoked using reflexion");
                 } catch (Exception e) {
-                    new ReportDialog(new javax.swing.JFrame(), true, e).setVisible(true);
+                    new FeedbackReport(null, true, e);
                 }
             }
         }

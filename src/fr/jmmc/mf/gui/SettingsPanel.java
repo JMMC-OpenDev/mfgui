@@ -3,7 +3,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.util.*;
 
 import fr.jmmc.mf.models.Settings;

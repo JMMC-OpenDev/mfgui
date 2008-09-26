@@ -8,7 +8,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 
 import org.w3c.dom.*;
 import org.w3c.dom.Document;
@@ -272,7 +272,7 @@ public class UtilsClass {
                     }
                 }
             } catch (Exception exc) {
-                ReportDialog dialog = new ReportDialog(null, true, exc);
+                new FeedbackReport(null, true, exc);
                 dialog.setVisible(true);
                 // if (dialog.returnedValue="Report")
             }
@@ -317,7 +317,7 @@ public class UtilsClass {
             xformer.transform(source, result);
             return sw.toString();
         } catch (TransformerConfigurationException exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         // An error occurred in the XSL file
         } catch (TransformerException exc) {
             // An error occurred while applying the XSL file
@@ -327,9 +327,9 @@ public class UtilsClass {
             int line = locator.getLineNumber();
             String publicId = locator.getPublicId();
             String systemId = locator.getSystemId();
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
 
         logger.exiting(className, "xsl");
@@ -363,7 +363,7 @@ public class UtilsClass {
             Source source = new StreamSource(new FileInputStream(inFile));
             return xsl(source, xslURL, params);
         } catch (Exception exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
         logger.exiting(className, "xsl");
         return null;
@@ -390,11 +390,11 @@ public class UtilsClass {
             return doc;
         } catch (SAXException exc) {
             // A parsing error occurred; the xml input is not valid
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         } catch (ParserConfigurationException exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         } catch (IOException exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
 
         return null;
@@ -417,11 +417,11 @@ public class UtilsClass {
             return doc;
         } catch (SAXException exc) {
             // A parsing error occurred; the xml input is not valid
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         } catch (ParserConfigurationException exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         } catch (IOException exc) {
-            new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, exc);
         }
 
         return null;

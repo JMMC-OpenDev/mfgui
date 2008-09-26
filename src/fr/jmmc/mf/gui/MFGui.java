@@ -6,7 +6,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.ReportDialog;
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.gui.WindowCenterer;
 import fr.jmmc.mcs.util.*;
@@ -90,7 +90,7 @@ public class MFGui extends javax.swing.JFrame {
                 java.io.File file = new java.io.File(filenames[0]);
                 addSettingsPane(new SettingsPane(file));
             } catch (Exception exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
         
@@ -418,7 +418,7 @@ public class MFGui extends javax.swing.JFrame {
                 rp.setPage(url);
                 tabbedPane_.addTab("Revision", rp);
             } catch (Exception exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }
@@ -492,7 +492,7 @@ public class MFGui extends javax.swing.JFrame {
                     addSettingsPane(new SettingsPane(file));
                 }
             } catch (Exception exc) {
-                new ReportDialog(null, true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }
@@ -564,8 +564,7 @@ public class MFGui extends javax.swing.JFrame {
                 getSelectedSettingsPane();
                 
             } catch (Exception exc) {
-                ReportDialog dialog = new ReportDialog(null, true, exc);
-                dialog.setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }
@@ -586,7 +585,7 @@ public class MFGui extends javax.swing.JFrame {
                 rp.setPage(url);
                 tabbedPane_.addTab("Help", rp);
             } catch (Exception exc) {
-                new ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+                new FeedbackReport(null, true, exc);
             }
         }
     }       
