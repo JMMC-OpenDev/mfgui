@@ -222,7 +222,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
             float[] array = fitsImage.getFloatValues(0, w_ * h_, null);
             initImage(w_, h_, array);
         } catch (Exception exc) {
-            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, e);
         }
     }
 
@@ -273,7 +273,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
 
             initImage(w, h, array);
         } catch (Exception exc) {
-            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, e);
         }
     }
 
