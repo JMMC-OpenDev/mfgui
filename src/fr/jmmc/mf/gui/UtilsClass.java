@@ -339,7 +339,7 @@ public class UtilsClass {
   
     /**
      * Returns one string resulting of xslt transformation.
-     * If one error occur, then one ReportDialog show the problem
+     * If one error occur, then one FeedbackReport show the problem
      *
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
@@ -352,7 +352,7 @@ public class UtilsClass {
 
      /**
      * Returns one string resulting of xslt transformation.
-     * If one error occur, then one ReportDialog show the problem
+     * If one error occur, then one FeedbackReport show the problem
      *
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured

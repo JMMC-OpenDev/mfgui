@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.16 2008-09-26 08:26:34 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.17 2008-09-26 12:37:39 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
@@ -69,7 +69,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
         try {
             ModelFitting mf = new ModelFitting(args);
         } catch (Exception exc) {
-            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, e);
             System.exit(1);
         }
     }
@@ -177,7 +177,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
             topcat.addTable(topcat.getTableFactory().makeStarTable(filename),
                 filename, true);
         } catch (Exception exc) {
-            new fr.jmmc.mcs.gui.ReportDialog(new javax.swing.JFrame(), true, exc).setVisible(true);
+            new FeedbackReport(null, true, e);
         }
     }
 
