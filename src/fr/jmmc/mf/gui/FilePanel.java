@@ -392,7 +392,7 @@ public class FilePanel extends javax.swing.JPanel {
             }
         } catch (Exception exc) {
             logger.warning("Can't do graph");
-            new FeedbackReport(null, true, e);
+            new FeedbackReport(null, true, exc);
         }
     } //GEN-LAST:event_showUVCoverageButtonActionPerformed
 
@@ -453,7 +453,7 @@ public class FilePanel extends javax.swing.JPanel {
             */
         } catch (Exception exc) {
             logger.warning("Can't do graph");
-            new FeedbackReport(null, true, e);
+            new FeedbackReport(null, true, exc);
         }
     } //GEN-LAST:event_showSketchButtonActionPerformed
 
@@ -486,7 +486,7 @@ public class FilePanel extends javax.swing.JPanel {
                 logger.info("app does not support:" + loadFromURLURI);
             }
         } catch (Exception exc) {
-            new FeedbackReport(null, true, e);
+            new FeedbackReport(null, true, exc);
         }
 
         /*list.getElementAt();

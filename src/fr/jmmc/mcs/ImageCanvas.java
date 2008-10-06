@@ -27,7 +27,7 @@ import java.io.RandomAccessFile;
 
 import java.util.Observable;
 import java.util.Observer;
-
+import fr.jmmc.mcs.gui.FeedbackReport;
 /*
 import nom.tam.fits.*;
  */
@@ -222,7 +222,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
             float[] array = fitsImage.getFloatValues(0, w_ * h_, null);
             initImage(w_, h_, array);
         } catch (Exception exc) {
-            new FeedbackReport(null, true, e);
+            new FeedbackReport(null, true, exc);
         }
     }
 
@@ -273,7 +273,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener {
 
             initImage(w, h, array);
         } catch (Exception exc) {
-            new FeedbackReport(null, true, e);
+            new FeedbackReport(null, true, exc);
         }
     }
 
