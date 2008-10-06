@@ -8,91 +8,99 @@
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>		
     </dependences>
     <releasenotes>
-        <release version="V1.0.11beta">
-            <change type="bug">File Browser are open into user home directory on mac OS X</change>
-            <change>Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
-            <change>Models and Targets name have uniq suffixes</change>
+        <release version="V1.0.11">
+            <prerelease version="V1.0.11beta3">
+                <change type="FEATURE">NULL</change>
+            </prerelease>
+            <prerelease version="V1.0.11beta2">
+                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
+                <change>Models and Targets name have uniq suffixes</change>
+            </prerelease>
+            <prerelease version="V1.0.11beta1">
+                <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
+            </prerelease>
         </release>
         <release version="V1.0.10">
-            <change>Fix bug of non solicited target ident changes during model construction </change>
-            <change>Fix right click support on windows platform view <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064"> bug description</a></change>
-            <change>Do not close application on preference window closing event</change>
+            <prerelease version="V1.0.10beta">
+                <change>Fix bug of non solicited target ident changes during model construction </change>
+                <change>Fix right click support on windows platform view <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064"> bug description</a></change>
+                <change>Do not close application on preference window closing event</change>
+            </prerelease>
         </release>
         <release version="1.0.9">
-            <change>Second level support of radial plots (T3 and VIS2 appears on same plot)</change>
-            <change>Textarea of result panel is not editable anymore</change>
-        </release>
-        <release version="1.0.8.beta">
-            <change>First level support of radial plots (T3 do not yet work)</change>
-            <change> Show description of models in the <em>Model Panel</em>.Description is returned by getModelList script that extracts yorick informations through hashtable</change>
-            <change> Right click on parameters is direct (no more selection need
-                before click)</change>
-            <change> Removed limitation of param sharing based one same
-                <em>type</em>User MUST take care of what he tries... </change>
+            <prerelease version="V1.0.9beta">
+                <change>Second level support of radial plots (T3 and VIS2 appears on same plot)</change>
+                <change>Textarea of result panel is not editable anymore</change>
+            </prerelease>
         </release>
         <release version="1.0.8">
-            <change>Fix paramater sharing </change>
+            <prerelease version="1.0.8.beta">
+                <change>First level support of radial plots (T3 do not yet work)</change>
+                <change> Show description of models in the <em>Model Panel</em>.Description is returned by getModelList script that extracts yorick informations through hashtable</change>
+                <change> Right click on parameters is direct (no more selection need before click)</change>
+                <change> Removed limitation of param sharing based one same <em>type</em>User MUST take care of what he tries... </change>
+                <change>Fix paramater sharing </change>
+            </prerelease>
         </release>
-        <release version=" 1.0.7" >
-            <change>Fix save bug</change>
-            <change>A dialog box is displayed when error occured on yorick side</change>
+        <release version="1.0.7" >
+            <prerelease version="1.0.7.beta">
+                <change>Fix save bug</change>
+                <change>A dialog box is displayed when error occured on yorick side</change>
+            </prerelease>
         </release>
-        <release version="1.0.6.beta" >
-            <change>Show most of informations about fitting process into result
-                panel</change>
-            <change>Result panel starts to plot yoga results </change>
-            <change>baselines</change><change>uvcoverage</change><change>model
-                image</change><change>model uv map</change>
-
-            <change>Do not return error <em>not enough data point</em> anymore due
-                to blank names into oitarget names</change>
-            <change>A simple image viewer has been implemented with 3 selectable
-                color models. Image should be in right sense and get correct values.</change> 
-            <change>Velocity of result display has been improved</change>
-            <change>Parameter display has been fixed concerning exlid
-                values</change>
+        <release version="1.0.6" >
+            <prerelease version="1.0.6.beta">
+                <change>Show most of informations about fitting process into result panel</change>
+                <change>Result panel starts to plot yoga results (baselines,uvcoverage,model image,model uv map)</change>
+                <change>Do not return error <em>not enough data point</em> anymore due to blank names into oitarget names</change>
+                <change>A simple image viewer has been implemented with 3 selectable color models. Image should be in right sense and get correct values.</change> 
+                <change>Velocity of result display has been improved</change>
+                <change>Parameter display has been fixed concerning exchanged values</change>
+            </prerelease>
         </release>
-        <release version="1.0.5.beta" >
-            <change>Handle better oitargets name even if new fits library places some spaces into oitarget names</change>
-            <change>Use advanced menu to group interop menu and logging utility</change>
-            <change>Show covariance matrix into result panel</change>
+        <release version="1.0.5" >
+            <prerelease version="1.0.5.beta">
+                <change>Handle better oitargets name even if new fits library places some spaces into oitarget names</change>
+                <change>Use advanced menu to group interop menu and logging utility</change>
+                <change>Show covariance matrix into result panel</change>
+            </prerelease>
         </release>
         <release version="1.0.4" >
-            <change> Fitting results are taken into account for parameters values</change>
-            <change> Models can share parameters </change>
-            <change> Fits files with zero length column supported </change>
-            <change> Fits viewer do not close anymore main application while quitting fits viewer</change>
-            <change> UV Coverage plot and interferometer sketch are automated at one basic level </change>
+            <prerelease version="1.0.4.beta">
+                <change> Fitting results are taken into account for parameters values</change>
+                <change> Models can share parameters </change>
+                <change> Fits files with zero length column supported </change>
+                <change> Fits viewer do not close anymore main application while quitting fits viewer</change>
+                <change> UV Coverage plot and interferometer sketch are automated at one basic level </change>
+            </prerelease>
         </release>
         <release version="1.0.3" >
-            <change> Select by default oifiles associated to the added target </change>
-            <change> Display more info on observed data files </change>
+            <prerelease version="1.0.3.beta">
+                <change> Select by default oifiles associated to the added target </change>
+                <change> Display more info on observed data files </change>
 
-            <change> Make possible to use xml model without embedded b64 files. If
-                the file is not found during opening, a dialog asks to locate it.</change>  
-            <change> Quit action checks that every document have been saved </change>
-            </release><release version="1.0.2" >
-            <change> Display the release panel </change>
+                <change> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</change>  
+                <change> Quit action checks that every document have been saved </change>
+            </prerelease>
+        </release>
+        <release version="1.0.2" >
+            <prerelease version="1.0.2.beta">
+                <change> Display the release panel </change>
 
-            <change> Saving file does not use openDialog anymore but saveDialog
-                instead</change>
-            </release><release version="1.0.1" >
-            <change> Fits file viewers can show selected tables with topcat defaut
-                viewer </change>
-            <change> Embedded data extracted one time for every
-                actions(viewing,saving...) </change>
-            </release><release version="1.0" > 
-            <change> FilePanel permits to save embedded file </change>
-            <change> Delete button used to supress target refreshes the left tree
-            </change>
-            <change> Preference window close button does not quit the application
-                anylonger </change>
-
-            <change> Double clicks into list select view on clicked element </change>
-            <change> Settings splits sub components grouping FilesPanel and
-                TargetsPanel </change>
-            <change> Report error loading bad format files (oifiles and settings
-                ones) </change>
+                <change> Saving file does not use openDialog anymore but saveDialog instead</change>
+            </prerelease>
+        </release>
+        <release version="1.0.1" >
+            <prerelease version="1.0.1.beta">
+                <change> Fits file viewers can show selected tables with topcat defaut viewer </change>
+                <change> Embedded data extracted one time for every actions(viewing,saving...) </change>
+                <change> FilePanel permits to save embedded file </change>
+                <change> Delete button used to supress target refreshes the left tree </change>
+                <change> Preference window close button does not quit the application anylonger </change>
+                <change> Double clicks into list select view on clicked element </change>
+                <change> Settings splits sub components grouping FilesPanel and TargetsPanel </change>
+                <change> Report error loading bad format files (oifiles and settings ones) </change>
+            </prerelease>
         </release>
     </releasenotes>
 </ApplicationData>
