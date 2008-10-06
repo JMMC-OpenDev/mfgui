@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.15 2008-09-26 08:27:18 mella Exp $"
+# "@(#) $Id: Makefile,v 1.16 2008-10-06 15:06:29 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2008/09/26 08:27:18  mella
+# Force castor to build classe on make 'all'
+#
 # Revision 1.14  2008/03/04 12:16:06  mella
 # general commit  for V1.0.9.beta
 #
@@ -203,15 +206,13 @@ CSOURCENAMES = \
 #
 #>>>>> END OF standard rules
 
-do_castor:
-	./mfguiGenerateClasses.sh
-
 #
 # INCLUDE STANDARDS
 # -----------------
 MAKEDIR = $(MCSROOT)/include
 include $(MAKEDIR)/mkfMakefile
 
+JNLP=ModelFitting
 #
 # TARGETS
 # -------
@@ -226,11 +227,13 @@ clean : clean_all
 man   : do_man 
 	@echo " . . . man page(s) done"
 
-JNLP=ModelFitting
 install : install_all
 	@echo "Deploy $(JNLP).jnlp and install $(JNLP).jar"
 	jmcsDeployJnlp $(JNLP).jnlp
 	@cp $$HOME/public_html/$(JNLP)/$(JNLP).jar $(INSTALL_ROOT)/lib
 	@echo " . . . installation done"
+
+do_castor:
+	./mfguiGenerateClasses.sh
 
 #___oOo___
