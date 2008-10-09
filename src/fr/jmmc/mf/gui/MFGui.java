@@ -20,6 +20,7 @@ import java.util.logging.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -47,6 +48,7 @@ public class MFGui extends javax.swing.JFrame {
     // Model actions
     public static Action newModelAction;
     public static Action loadModelAction;
+    public static Action loadRemoteModelAction;
     public static Action saveModelAction;
     private static PlasticListener plasticServer_;
     private static MFGui instance = null;
@@ -67,6 +69,7 @@ public class MFGui extends javax.swing.JFrame {
          showLogGuiAction = new ShowLogGuiAction();
         newModelAction = new NewModelAction();
         loadModelAction = new LoadModelAction();
+        loadRemoteModelAction = new LoadRemoteModelAction();
         saveModelAction = new SaveModelAction();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);        
@@ -178,6 +181,12 @@ public class MFGui extends javax.swing.JFrame {
         // Add File->LoadModel
         menuItem = new JMenuItem();
         action = loadModelAction;
+        menuItem.setAction(action);
+        fileMenu.add(menuItem);
+
+        // Add File->LoadRemoteModel
+        menuItem = new JMenuItem();
+        action = loadRemoteModelAction;
         menuItem.setAction(action);
         fileMenu.add(menuItem);
 
@@ -491,6 +500,29 @@ public class MFGui extends javax.swing.JFrame {
                     lastDir = file.getParent();
                     addSettingsPane(new SettingsPane(file));
                 }
+            } catch (Exception exc) {
+                new FeedbackReport(null, true, exc);
+            }
+        }
+    }
+
+     protected class LoadRemoteModelAction extends fr.jmmc.mcs.util.MCSAction {
+        public String lastDir = System.getProperty("user.home");
+
+        public LoadRemoteModelAction() {
+            super("loadRemoteModel");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.entering("" + this.getClass(), "actionPerformed");
+            try {
+                String s = (String) JOptionPane.showInputDialog(
+                        "Enter URL");
+                if (s!=null && s.length()>5){
+                URL url = new URL(s);
+                    addSettingsPane(new SettingsPane(url));
+                }
+
             } catch (Exception exc) {
                 new FeedbackReport(null, true, exc);
             }
