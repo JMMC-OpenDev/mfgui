@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App{
-    final static String rcsId = "$Id: ModelFitting.java,v 1.18 2008-10-06 15:06:55 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.19 2008-10-10 09:27:14 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static ModelFitting instance_;
@@ -87,33 +87,52 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
             return doExec(methodName, xmlFile);
         }
     }
+    /** This is the main wrappers method to execute yoga actions
+     *  @param methodName name of method to wrap
+     *  @param xmlFile file to give as argument of the method or null if
+     *         no one is requested
+     */
+    public String execMethod(String methodName, java.io.File xmlFile, String methodArg)
+        throws Exception {
+        if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
+            return doPost(methodName, xmlFile, methodArg);
+        } else {
+            return doExec(methodName, xmlFile, methodArg);
+        }
+    }
 
     private String doExec(String methodName, java.io.File xmlFile)
+        throws Exception {
+        return doExec(methodName, xmlFile, "");
+    }
+
+    
+    private String doExec(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception {
         String result = "";
         String yogaProgram = myPreferences.getPreference("yoga.local.home") +
             myPreferences.getPreference("yoga.local.progname");
         String filename = null;
 
+        // Run main application waiting for end of cat process
+        fr.jmmc.mcs.util.ProcessHandler ph;
+        
         if (xmlFile != null) {
             filename = xmlFile.getAbsolutePath();
         }
-
-        // Run main application waiting for end of cat process
-        fr.jmmc.mcs.util.ProcessHandler ph;
-
+        
         if (xmlFile == null) {
             ph = new fr.jmmc.mcs.util.ProcessHandler(new String[] {
-                        yogaProgram, methodName
+                        yogaProgram, methodName, methodArg
                     });
             logger.fine("Making call using yoga script:" + yogaProgram + " " +
-                methodName);
+                methodName+" "+methodArg);
         } else {
             ph = new fr.jmmc.mcs.util.ProcessHandler(new String[] {
-                        yogaProgram, methodName, filename
+                        yogaProgram, methodName, filename, methodArg
                     });
             logger.fine("Making call using yoga script:" + yogaProgram + " " +
-                methodName + " " + filename);
+                methodName + " " + filename+" "+methodArg);
         }
 
         YogaExec pm = new YogaExec();
@@ -126,18 +145,32 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
     }
 
     public static String doPost(String methodName, java.io.File xmlFile)
+            throws Exception {
+        return doPost(methodName, xmlFile, null);
+    }
+
+    public static String doPost(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception {
         String result = "";
         String targetURL = myPreferences.getPreference("yoga.remote.url");
         PostMethod myPost = new PostMethod(targetURL);
         Part[] parts;
 
-        if (xmlFile == null) {
+        if (xmlFile == null && methodArg == null) {
             parts = new Part[] { new StringPart("method", methodName) };
-        } else {
+        } else if (xmlFile == null && methodArg !=null) {
+            parts = new Part[] { new StringPart("method", methodName),
+                                new StringPart("arg", methodArg)};
+        }else if (xmlFile != null && methodArg ==null){
             parts = new Part[] {
                     new StringPart("method", methodName),
                     new FilePart("userfile", xmlFile.getName(), xmlFile)
+                };
+        }else{
+            parts = new Part[] {
+                    new StringPart("method", methodName),
+                    new FilePart("userfile", xmlFile.getName(), xmlFile),
+                    new StringPart("arg", methodArg)
                 };
         }
 
@@ -151,10 +184,11 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App{
 
             int status = client.executeMethod(myPost);
 
-            if (status == HttpStatus.SC_OK) {
+            if (status == HttpStatus.SC_OK) {                
                 result = myPost.getResponseBodyAsString();
+                logger.fine("Post for '" + methodName+" "+methodArg + "' ok");
             } else {
-                logger.fine("Post for '" + methodName + "' failed");
+                logger.fine("Post for '" + methodName+" "+methodArg + "' failed");
                 throw new Exception("Requets failed, response=" +
                     HttpStatus.getStatusText(status));
             }
