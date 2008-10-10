@@ -6,6 +6,7 @@
 
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Model;
@@ -288,10 +289,22 @@ public class TargetPanel extends javax.swing.JPanel implements
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
 
-        jButton1.setAction(settingsViewer.getSettingsPane().getModelImageAction);
+        jButton1.setText("Plot Image");
+        jButton1.setToolTipText("Plot model image");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel5.add(jButton1);
 
-        jButton2.setAction(settingsViewer.getSettingsPane().getModelUVMapAction);
+        jButton2.setText("Plot UV map");
+        jButton2.setToolTipText("Plot model UV map");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel5.add(jButton2);
 
         add(jPanel5, java.awt.BorderLayout.SOUTH);
@@ -367,9 +380,51 @@ public class TargetPanel extends javax.swing.JPanel implements
         }                      
     }//GEN-LAST:event_addModelButtonActionPerformed
 
+    
+
+    private void plotModelUVMap(Target targetToPlot) {
+        plot("getModelUVMap",targetToPlot,"UV map");
+    }
+    private void plotModelImage(Target targetToPlot) {
+        plot("getModelImage",targetToPlot,"Model Image");
+    }        
+    private void plot(String methodName, Target targetToPlot, String title) {
+        
+        logger.fine("Requesting yoga '" + methodName + "' call");
+
+        String result = "";
+
+        int groupValue=settingsViewer.getSettingsModel().targetListModel.indexOf(targetToPlot)+1;
+
+        try {
+            result = ModelFitting.instance_.execMethod(methodName, rootSettingsModel.getTempFile(false), ""+groupValue);
+            StatusBar.show(methodName + " process finished");
+        } catch (Exception ex) {
+            logger.warning(ex.getClass().getName() + " " + ex.getMessage());
+            ex.printStackTrace();
+            result = "Error:" + ex.getMessage();
+            StatusBar.show("Error during process of " + methodName);
+            return;
+        }
+        logger.entering("" + this.getClass(), "data received");
+        fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
+        v.setTitle(title);
+        v.setSize(400, 400);
+        v.setVisible(true);
+    }
+
 private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
     current.setNormalize(normalizeCheckBox.isSelected());    
 }//GEN-LAST:event_normalizeCheckBoxActionPerformed
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+   plotModelImage(current);
+
+}//GEN-LAST:event_jButton1ActionPerformed
+
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    plotModelUVMap(current);
+}//GEN-LAST:event_jButton2ActionPerformed
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
