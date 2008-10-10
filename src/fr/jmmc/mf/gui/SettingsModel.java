@@ -540,7 +540,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public void loadSettingsFile(java.io.File fileToLoad)
         throws java.io.FileNotFoundException,
             org.exolab.castor.xml.MarshalException, java.lang.Exception {
-        logger.entering("" + this.getClass(), "loadSettingsFile");
+        logger.entering("" + this.getClass(), "loadSettingsFile("+fileToLoad+")");
 
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel = (Settings) Settings.unmarshal(reader);
@@ -563,7 +563,18 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         in.close();
         setLastXml(sb.toString());
     }
-
+    
+    // @todo place this method into fr.jmmc.mf.util
+    public void loadSettingsFile(java.net.URL urlToLoad)
+            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, java.lang.Exception {
+        logger.entering("" + this.getClass(), "loadSettingsFile(" + urlToLoad + ")");
+        java.io.InputStreamReader reader = new java.io.InputStreamReader(urlToLoad.openStream());
+        Settings newModel = (Settings) Settings.unmarshal(reader);
+        checkSettingsFormat(newModel);
+        setRootSettings(newModel);
+        setModified(false);
+        associatedFile = null;
+    }
     /**
      * Write serialisation into given file.
      * @todo place this method into fr.jmmc.mf.util
