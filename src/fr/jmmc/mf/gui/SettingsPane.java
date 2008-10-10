@@ -5,6 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.*;
 
 import fr.jmmc.mf.models.File;
@@ -45,8 +46,6 @@ public class SettingsPane extends javax.swing.JPanel
 
     // Application actions
     public static Action runFitAction;
-    public static Action getModelImageAction;
-    public static Action getModelUVMapAction;
 
     /** Model reference */
     public SettingsModel rootSettingsModel = null;
@@ -83,6 +82,13 @@ public class SettingsPane extends javax.swing.JPanel
         // finaly ask to show top level element
         showSettingElement(rootSettingsModel.getRootSettings());
     }
+    /** Creates new form SettingsPane */
+    public SettingsPane(java.net.URL url) throws Exception {
+        init();
+        rootSettingsModel.loadSettingsFile(url);
+        // finaly ask to show top level element
+        showSettingElement(rootSettingsModel.getRootSettings());
+    }
 
     /** Creates new form SettingsPane */
     public SettingsPane() {
@@ -92,8 +98,6 @@ public class SettingsPane extends javax.swing.JPanel
     private void init() {
         // instanciate actions
         runFitAction = new RunFitAction();
-        getModelImageAction = new GetModelImageAction();
-        getModelUVMapAction = new GetModelUVMapAction();
 
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
@@ -135,9 +139,7 @@ public class SettingsPane extends javax.swing.JPanel
         //McsClass.expandAll(settingsTree,true);
     }
 
-    public void setStatus(String s) {
-        fr.jmmc.mcs.gui.StatusBar.show(s);
-    }
+    
 
     /**
     * Responds to tree selection events.
@@ -298,7 +300,7 @@ public class SettingsPane extends javax.swing.JPanel
                 rootSettingsModel.setSupportedModels(newModel.getModel());
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-                setStatus("Can't get available models");
+                StatusBar.show("Can't get available models");
             }
         }
     }
@@ -319,12 +321,12 @@ public class SettingsPane extends javax.swing.JPanel
                 // Get xml temp file with content of model
                 java.io.File tmpFile = rootSettingsModel.getTempFile(false);
                 result = ModelFitting.instance_.execMethod(methodName, tmpFile);
-                setStatus("Fitting process finished");
+                StatusBar.show("Fitting process finished");
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
                 ex.printStackTrace();
                 result = "Error:" + ex.getMessage();
-                setStatus("Error during fitting process");
+                StatusBar.show("Error during fitting process");
             }
 
             int i1 = result.indexOf("START_XML_RESULT");
@@ -332,7 +334,7 @@ public class SettingsPane extends javax.swing.JPanel
 
             //logger.finest("Xml result is:"+result);
             if ((i1 < 0) || (i2 < 0)) {
-                JTextArea textArea = new JTextArea(20, 100);
+                JTextArea textArea = new JTextArea(20, 80);
                 textArea.setText(result);
 
                 JScrollPane scrollPane = new JScrollPane(textArea);
@@ -395,69 +397,7 @@ public class SettingsPane extends javax.swing.JPanel
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
             }
         }
-    }
-
-    protected class GetModelImageAction extends fr.jmmc.mcs.util.MCSAction {
-        String methodName = "getModelImage";
-
-        public GetModelImageAction() {
-            super("getModelImage");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting yoga '" + methodName + "' call");
-
-            String result = "";
-
-            try {                                
-                result = ModelFitting.instance_.execMethod(methodName, rootSettingsModel.getTempFile(false));
-                setStatus(methodName + " process finished");
-            } catch (Exception ex) {
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-                ex.printStackTrace();
-                result = "Error:" + ex.getMessage();
-                setStatus("Error during process of " + methodName);
-            }
-
-            logger.entering("" + this.getClass(), "data received");
-
-            fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
-            v.setTitle("Model Image");
-            v.setSize(400, 400);
-            v.setVisible(true);
-        }
-    }
-
-    protected class GetModelUVMapAction extends fr.jmmc.mcs.util.MCSAction {
-        String methodName = "getModelUVMap";
-
-        public GetModelUVMapAction() {
-            super("getModelUVMap");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting yoga '" + methodName + "' call");
-
-            String result = "";
-
-            try {                
-              result = ModelFitting.instance_.execMethod(methodName, rootSettingsModel.getTempFile(false));              
-                setStatus(methodName + " process finished");
-            } catch (Exception ex) {
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-                ex.printStackTrace();
-                result = "Error:" + ex.getMessage();
-                setStatus("Error during process of " + methodName);
-            }
-
-            logger.entering("" + this.getClass(), "data received");
-
-            fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
-            v.setTitle("UV map");
-            v.setSize(400, 400);
-            v.setVisible(true);
-        }
-    }
+    }    
 
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
