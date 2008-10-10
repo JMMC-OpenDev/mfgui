@@ -22,13 +22,7 @@ public class TargetsPanel extends javax.swing.JPanel {
     Targets current = null;
     SettingsViewerInterface settingsViewer;
 
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton addTargetButton;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton removeTargetButton;
-    private javax.swing.JList targetList;
-    private javax.swing.JComboBox targetNameComboBox;
-    private SettingsModel rootSettingsModel;
+   
     
     /** Creates new form TargetsPanel */
     public TargetsPanel(SettingsViewerInterface viewer) {
@@ -127,15 +121,15 @@ public class TargetsPanel extends javax.swing.JPanel {
         add(removeTargetButton, gridBagConstraints);
     } // </editor-fold>//GEN-END:initComponents
 
-    private void targetListMouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_targetListMouseClicked
+    private void targetListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_targetListMouseClicked
 
         if (evt.getClickCount() == 2) {
             settingsViewer.showSettingElement(targetList.getSelectedValue());
         }
-    } //GEN-LAST:event_targetListMouseClicked
+    }//GEN-LAST:event_targetListMouseClicked
 
     private void removeTargetButtonActionPerformed(
-        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_removeTargetButtonActionPerformed
+        java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTargetButtonActionPerformed
         logger.entering("" + this.getClass(),
             "removeTargetButtonActionPerformed");
 
@@ -150,10 +144,10 @@ public class TargetsPanel extends javax.swing.JPanel {
         removeTargetButton.setEnabled(false);
         // fire tree event to refresh
         settingsViewer.getSettingsModel().fireUpdate();
-    } //GEN-LAST:event_removeTargetButtonActionPerformed
+    }//GEN-LAST:event_removeTargetButtonActionPerformed
 
     private void targetNameComboBoxActionPerformed(
-        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_targetNameComboBoxActionPerformed
+        java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetNameComboBoxActionPerformed
 
         if ((targetNameComboBox.getItemCount() > 0) &&
                 (targetNameComboBox.getSelectedIndex() != -1)) {
@@ -161,9 +155,9 @@ public class TargetsPanel extends javax.swing.JPanel {
         } else {
             addTargetButton.setEnabled(false);
         }
-    } //GEN-LAST:event_targetNameComboBoxActionPerformed
+    }//GEN-LAST:event_targetNameComboBoxActionPerformed
 
-    private void addTargetButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_addTargetButtonActionPerformed
+    private void addTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTargetButtonActionPerformed
         logger.fine("Adding on target to current settings");
 
         Target t = new Target();
@@ -189,17 +183,24 @@ public class TargetsPanel extends javax.swing.JPanel {
         current.addTarget(t);
         // fire tree event to refresh
         settingsViewer.getSettingsModel().fireUpdate();
-    } //GEN-LAST:event_addTargetButtonActionPerformed
+    }//GEN-LAST:event_addTargetButtonActionPerformed
 
     private void targetListValueChanged(
-        javax.swing.event.ListSelectionEvent evt) { //GEN-FIRST:event_targetListValueChanged
+        javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_targetListValueChanged
 
         if (targetList.getSelectedIndex() != -1) {
             removeTargetButton.setEnabled(true);
         } else {
             removeTargetButton.setEnabled(false);
         }
-    } //GEN-LAST:event_targetListValueChanged
+    }//GEN-LAST:event_targetListValueChanged
 
+    // Variables declaration - do not modify                     
+    private javax.swing.JButton addTargetButton;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton removeTargetButton;
+    private javax.swing.JList targetList;
+    private javax.swing.JComboBox targetNameComboBox;
+    private SettingsModel rootSettingsModel;
     // End of variables declaration                   
 }
