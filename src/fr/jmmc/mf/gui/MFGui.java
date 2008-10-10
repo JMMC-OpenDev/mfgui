@@ -11,6 +11,8 @@ import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.gui.WindowCenterer;
 import fr.jmmc.mcs.util.*;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.lang.reflect.*;
 
 import java.net.URL;
@@ -27,7 +29,7 @@ import javax.swing.JOptionPane;
  *
  * @author  mella
  */
-public class MFGui extends javax.swing.JFrame {
+public class MFGui extends javax.swing.JFrame implements WindowListener{
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.MFGui");
     static Preferences myPreferences = Preferences.getInstance();
@@ -72,7 +74,10 @@ public class MFGui extends javax.swing.JFrame {
         loadRemoteModelAction = new LoadRemoteModelAction();
         saveModelAction = new SaveModelAction();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(this);
+
+
         tabbedPane_ = new javax.swing.JTabbedPane();        
         tabbedPane_.setMinimumSize(new java.awt.Dimension(640, 480));
         tabbedPane_.setPreferredSize(new java.awt.Dimension(640, 480));
@@ -154,7 +159,7 @@ public class MFGui extends javax.swing.JFrame {
         JMenu fileMenu = new JMenu();
         fileMenu.setText("File");
         jMenuBar.add(fileMenu);
-
+        
         // Add Edit
         JMenu editMenu = new JMenu();
         editMenu.setText("Edit");
@@ -190,6 +195,45 @@ public class MFGui extends javax.swing.JFrame {
         menuItem.setAction(action);
         fileMenu.add(menuItem);
 
+        // Add LoadDemo File
+        JMenu demoMenu = new JMenu();
+        demoMenu.setText("Load demos");
+        fileMenu.add(demoMenu);
+
+        
+        Hashtable<String,String> demo = new Hashtable();
+        demo.put("Obj1 binary disk",
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_disk_with_oidata/Obj1_binary_disk_with_oidata.xml"
+            );
+        demo.put("Obj1 binary punct",
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj1_binary_punct_with_oidata.xml"
+            );
+        demo.put("Obj1 uniform disk",        
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
+        );
+        demo.put("Obj2 binary punct",
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
+            );
+        demo.put("Obj2 disk and punct",
+        "http://jmmc.fr/~mella/mfRes/ref5/Obj2_disk_and_punct_with_oidata/Obj2_disk_and_punct_with_oidata.xml"
+                );
+        demo.put("Obj2 triple punct",
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_triple_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
+            );
+        demo.put("Obj2 uniform disk",
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
+        );
+        
+        Enumeration keys = demo.keys();
+        while (keys.hasMoreElements()){
+            String title = (String)keys.nextElement();
+            // Add demoMenu->demo1
+            menuItem = new JMenuItem();
+            action = new LoadDemoModelAction(demo.get(title), title);
+            menuItem.setAction(action);
+            demoMenu.add(menuItem);
+        }
+        
         // Add File->SaveModel
         menuItem = new JMenuItem();
         action = saveModelAction;
@@ -286,6 +330,28 @@ public class MFGui extends javax.swing.JFrame {
                     new MFGui(fargs).setVisible(true);
                 }
             });
+    }
+
+    public void windowOpened(WindowEvent e) {        
+    }
+
+    public void windowClosing(WindowEvent e) {
+       quitAction.actionPerformed(null);
+    }
+
+    public void windowClosed(WindowEvent e) {     
+    }
+
+    public void windowIconified(WindowEvent e) {        
+    }
+
+    public void windowDeiconified(WindowEvent e) {        
+    }
+
+    public void windowActivated(WindowEvent e) {        
+    }
+
+    public void windowDeactivated(WindowEvent e) {        
     }
 
     protected class GetYogaVersionAction extends fr.jmmc.mcs.util.MCSAction {
@@ -506,8 +572,25 @@ public class MFGui extends javax.swing.JFrame {
         }
     }
 
+    protected class LoadDemoModelAction extends javax.swing.AbstractAction {
+        String demoURL_ = "";
+
+        public LoadDemoModelAction(String demoURL, String demoDesc) {
+            this.putValue(Action.NAME,demoDesc);
+            demoURL_=demoURL;
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            logger.entering("" + this.getClass(), "actionPerformed");
+            try {               
+                    addSettingsPane(new SettingsPane(new URL(demoURL_)));
+            } catch (Exception exc) {
+                new FeedbackReport(null, true, exc);
+            }
+        }
+    }
      protected class LoadRemoteModelAction extends fr.jmmc.mcs.util.MCSAction {
-        public String lastDir = System.getProperty("user.home");
+        public String lastURL = "";
 
         public LoadRemoteModelAction() {
             super("loadRemoteModel");
@@ -517,9 +600,10 @@ public class MFGui extends javax.swing.JFrame {
             logger.entering("" + this.getClass(), "actionPerformed");
             try {
                 String s = (String) JOptionPane.showInputDialog(
-                        "Enter URL");
-                if (s!=null && s.length()>5){
-                URL url = new URL(s);
+                        "Enter URL", lastURL);
+                if (s != null && s.length() > 5) {
+                    lastURL = s;
+                    URL url = new URL(s);
                     addSettingsPane(new SettingsPane(url));
                 }
 
