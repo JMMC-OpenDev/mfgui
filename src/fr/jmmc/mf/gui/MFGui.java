@@ -43,7 +43,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
     public static Action showPrefAction;
     public static Action savePrefAction;
     public static Action restorePrefAction;
-    public static Action showRevisionAction;
     public static Action showHelpAction;
     public static Action showLogGuiAction;
 
@@ -66,7 +65,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
         savePrefAction = new SavePrefAction();
         restorePrefAction = new RestorePrefAction();
         showPrefAction = new ShowPrefAction();
-        showRevisionAction = new ShowRevisionAction();
         showHelpAction = new ShowHelpAction();
          showLogGuiAction = new ShowLogGuiAction();
         newModelAction = new NewModelAction();
@@ -197,30 +195,30 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
 
         // Add LoadDemo File
         JMenu demoMenu = new JMenu();
-        demoMenu.setText("Load demos");
+        demoMenu.setText(" Load demos");
         fileMenu.add(demoMenu);
 
         
         Hashtable<String,String> demo = new Hashtable();
-        demo.put("Obj1 binary disk",
+        demo.put("Binary disk (Obj1)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_disk_with_oidata/Obj1_binary_disk_with_oidata.xml"
             );
-        demo.put("Obj1 binary punct",
+        demo.put("Binary punct (Obj1)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj1_binary_punct_with_oidata.xml"
             );
-        demo.put("Obj1 uniform disk",        
+        demo.put("Uniform disk (Obj1)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj1_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
         );
-        demo.put("Obj2 binary punct",
+        demo.put("Binary punct (Obj2)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
             );
-        demo.put("Obj2 disk and punct",
+        demo.put("Disk and punct (Obj2)",
         "http://jmmc.fr/~mella/mfRes/ref5/Obj2_disk_and_punct_with_oidata/Obj2_disk_and_punct_with_oidata.xml"
                 );
-        demo.put("Obj2 triple punct",
+        demo.put("Triple punct (Obj2)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj2_triple_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
             );
-        demo.put("Obj2 uniform disk",
+        demo.put("Uniform disk (Obj2)",
             "http://jmmc.fr/~mella/mfRes/ref5/Obj2_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
         );
         
@@ -261,12 +259,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
         menuItem.setAction(restorePrefAction);
         editMenu.add(menuItem);
         editMenu.add(new JSeparator());
-
-        // Add Help->ShowRevision
-        menuItem = new JMenuItem();
-        menuItem.setAction(showRevisionAction);
-        helpMenu.add(menuItem);
-
+     
         // Add Help->ShowHelp
         menuItem = new JMenuItem();
         menuItem.setAction(showHelpAction);
@@ -473,27 +466,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
             } catch (Exception exc) {
                 // @todo handle this error at user level
                 exc.printStackTrace();
-            }
-        }
-    }
-
-    /** Display another tab with revision informations */
-    protected class ShowRevisionAction extends fr.jmmc.mcs.util.MCSAction {
-        public ShowRevisionAction() {
-            super("showRevision");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting revision display");
-
-            try {
-                URL url = this.getClass().getClassLoader()
-                              .getResource("fr/jmmc/mf/gui/Releases.html");
-                TabbedPanel rp = new TabbedPanel("");
-                rp.setPage(url);
-                tabbedPane_.addTab("Revision", rp);
-            } catch (Exception exc) {
-                new FeedbackReport(null, true, exc);
             }
         }
     }
