@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.13 2008-09-25 09:24:29 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.14 2008-10-10 09:27:42 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.13  2008/09/25 09:24:29  mella
+ * follow rules of new jmcs Preferences
+ *
  * Revision 1.12  2008/05/14 11:50:07  mella
  * add yoga.local.progname preference
  *
@@ -85,6 +88,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
         setDefaultPreference("mf.version",
                 fr.jmmc.mcs.util.Resources.getResource("mf.version"));
         /* Place general preferences  */
+        setDefaultPreference("help.tooltips.show", "true");
         setDefaultPreference("show.recursive.parameters", "false");
         setDefaultPreference("yoga.remote.use", "true");
         setDefaultPreference("yoga.local.home", "../ys");
