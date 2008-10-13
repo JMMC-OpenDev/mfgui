@@ -210,16 +210,16 @@ public class MFGui extends javax.swing.JFrame implements WindowListener{
             "http://jmmc.fr/~mella/mfRes/ref5/Obj1_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
         );
         demo.put("Binary punct (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_binary_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
             );
         demo.put("Disk and punct (Obj2)",
         "http://jmmc.fr/~mella/mfRes/ref5/Obj2_disk_and_punct_with_oidata/Obj2_disk_and_punct_with_oidata.xml"
                 );
         demo.put("Triple punct (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_triple_punct_with_oidata/Obj2_binary_punct_with_oidata.xml"
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_triple_punct_with_oidata/Obj2_triple_punct_with_oidata.xml"
             );
         demo.put("Uniform disk (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml"
+            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_uniform_disk_with_oidata/Obj2_uniform_disk_with_oidata.xml"
         );
         
         Enumeration keys = demo.keys();
