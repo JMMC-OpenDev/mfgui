@@ -312,8 +312,11 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             File newFile = new File();
             newFile.setName(fitsFileName);
             newFile.setId("id" + rootSettings.getFiles().getFileCount());
-
             checkFile(newFile);
+            // make shorter filename (this line must be kept after checkFile,
+            // because is must be retrieved using full qualified name)
+            newFile.setName(fileToAdd.getName());
+            
             // test succedded let's continue
             rootSettings.getFiles().addFile(newFile);
             logger.info("'" + fitsFileName + "' oifile added to file list");
