@@ -18,21 +18,34 @@ import javax.swing.JOptionPane;
  *
  * @author  mella
  */
-public class LITproApplet extends javax.swing.JApplet {
-    final static String rcsId = "$Id: LITproApplet.java,v 1.8 2008-09-26 08:26:34 mella Exp $";
+public class LITproApplet extends javax.swing.JApplet
+{
+    /**
+     * DOCUMENT ME!
+     */
+    final static String rcsId = "$Id: LITproApplet.java,v 1.9 2008-10-17 10:11:27 mella Exp $";
 
     // Variables declaration - do not modify
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JButton startButton;
 
     /** Initializes the applet LITproApplet */
-    public void init() {
-        try {
-            java.awt.EventQueue.invokeAndWait(new Runnable() {
-                    public void run() {
+    public void init()
+    {
+        try
+        {
+            java.awt.EventQueue.invokeAndWait(new Runnable()
+                {
+                    public void run()
+                    {
                         initComponents();
                     }
                 });
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             ex.printStackTrace();
         }
     }
@@ -40,14 +53,17 @@ public class LITproApplet extends javax.swing.JApplet {
     /** This method is called from within the init() method to
      * initialize the form.
      */
-    private void initComponents() {
+    private void initComponents()
+    {
         startButton = new javax.swing.JButton();
 
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         startButton.setText("Start LITpro GUI");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
+        startButton.addActionListener(new java.awt.event.ActionListener()
+            {
+                public void actionPerformed(java.awt.event.ActionEvent evt)
+                {
                     startButtonActionPerformed(evt);
                 }
             });
@@ -55,8 +71,15 @@ public class LITproApplet extends javax.swing.JApplet {
         getContentPane().add(startButton, new java.awt.GridBagConstraints());
     }
 
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param evt DOCUMENT ME!
+     */
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt)
+    {
+        try
+        {
             Logger logger = Logger.getLogger("fr.jmmc.mf");
             logger.setLevel(java.util.logging.Level.ALL);
             logger.info("Starting ModelFitting");
@@ -65,11 +88,13 @@ public class LITproApplet extends javax.swing.JApplet {
             // Create a specific console handler
             ConsoleHandler handler = new ConsoleHandler();
             handler.setLevel(java.util.logging.Level.ALL);
-            //logger.addHandler(handler);                      
 
+            //logger.addHandler(handler);                      
             MFGui myFrame = new MFGui(null);
             myFrame.setVisible(true);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             new FeedbackReport(null, true, e);
         }
     }

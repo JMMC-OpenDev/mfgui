@@ -11,11 +11,22 @@ package fr.jmmc.mf.gui;
  *
  * @author mella
  */
-public interface SettingsViewerInterface {
+public interface SettingsViewerInterface
+{
     /** Shows a given object */
     public void showSettingElement(Object o);
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public SettingsModel getSettingsModel();
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public SettingsPane getSettingsPane();
 }

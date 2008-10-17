@@ -12,19 +12,33 @@ import java.awt.event.*;
 /**
  * Try to plot one image
  */
-public class ImagePanel extends javax.swing.JPanel {
+public class ImagePanel extends javax.swing.JPanel
+{
+    /**
+     * DOCUMENT ME!
+     */
     Image image;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    /**
+     * DOCUMENT ME!
+     */
     private java.awt.Canvas canvas1;
 
     /** Creates new form ImagePanel */
-    public ImagePanel() {
+    public ImagePanel()
+    {
         final ImageCanvas canvas = new ImageCanvas();
         initComponents();
     }
 
-    public void initWithFitsImage(String fitsFilename) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param fitsFilename DOCUMENT ME!
+     */
+    public void initWithFitsImage(String fitsFilename)
+    {
     }
 
     /** This method is called from within the constructor to
@@ -34,27 +48,32 @@ public class ImagePanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         canvas1 = new java.awt.Canvas();
 
         setLayout(new java.awt.GridBagLayout());
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints             = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill        = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx     = 1.0;
+        gridBagConstraints.weighty     = 1.0;
         add(canvas1, gridBagConstraints);
     } // </editor-fold>//GEN-END:initComponents
 
     // End of variables declaration//GEN-END:variables
-    protected class ImageCanvas extends Canvas {
-        ImageCanvas() {
+    protected class ImageCanvas extends Canvas
+    {
+        ImageCanvas()
+        {
             // Add a listener for resize events
-            addComponentListener(new ComponentAdapter() {
+            addComponentListener(new ComponentAdapter()
+                {
                     // This method is called when the component's size changes
-                    public void componentResized(ComponentEvent evt) {
+                    public void componentResized(ComponentEvent evt)
+                    {
                         Component c = (Component) evt.getSource();
 
                         // Get new size
@@ -66,9 +85,9 @@ public class ImagePanel extends javax.swing.JPanel {
                 });
         }
 
-        public void paint(Graphics g) {
-            System.out.println(
-                "ImageCanvas.paint_______________________________________________");
+        public void paint(Graphics g)
+        {
+            System.out.println("ImageCanvas.paint_______________________________________________");
             g.drawOval(0, 0, 10, 10);
         }
     }

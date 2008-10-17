@@ -1,49 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.11.beta"/>
+    <program name="ModelFitting" version="1.0.11.betA2"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>Brought to you by The JMMC Team.</text>
     <!--	<copyright>Copyrights JMMC 2008</copyright> -->
     <dependences>
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>		
-    </dependences>
-    <!--
+    </dependences>    
     <menubar>
       <menu label="File">
-        <menu label="Open..." classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_openFileAction" accelerator="O"/>
+        <menu label="New setting..." classpath="fr.jmmc.mf.gui.MFGui" action="newModel" accelerator="N"/>
         <menu/>
-        <menu label="Save" classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_saveFileAction" accelerator="S"/>
-        <menu label="Save As..." classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_saveFileAsAction" accelerator="shift S"/>
-        <menu label="Revert to Saved" classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_revertToSavedFileAction"/>
+        <menu label="Open setting file..." classpath="fr.jmmc.mf.gui.MFGui" action="loadModel" accelerator="O"/>
+        <menu label="Open setting url..." classpath="fr.jmmc.mf.gui.MFGui" action="loadRemoteModel"/>
+        <menu label="Open demo setting">
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel1"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel2"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel3"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel4"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
+            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
+        </menu>
         <menu/>
-        <menu label="Export to CSV..." classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_exportToCSVFileAction"/>
-        <menu label="Export to HTML..." classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_exportToHTMLFileAction"/>
-        <menu/>
-        <menu label="Page Setup..." classpath="fr.jmmc.scalib.sclgui.MainWindow" action="_pageSetupAction" accelerator="shift P"/>
-        <menu label="Print..." classpath="fr.jmmc.scalib.sclgui.MainWindow" action="_printAction" accelerator="P"/>
+        <menu label="Save setting" classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
       </menu>
-      <menu label="Edit">
-        <menu label="Delete" classpath="fr.jmmc.scalib.sclgui.CalibratorsView" action="_deleteAction"/>
-        <menu label="Undelete" classpath="fr.jmmc.scalib.sclgui.CalibratorsView" action="_undeleteAction"/>
-      </menu>
-      <menu label="Query">
-        <menu label="Reset Values" classpath="fr.jmmc.scalib.sclgui.QueryView" action="_resetValuesAction"/>
-        <menu label="Load Default Values" classpath="fr.jmmc.scalib.sclgui.QueryView" action="_loadDefaultValuesAction"/>
-        <menu label="Save Values as Default" classpath="fr.jmmc.scalib.sclgui.QueryView" action="_saveValuesAction"/>
-        <menu/>
-        <menu label="Get Star" classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_getStarAction"/>
-      </menu>
-      <menu label="Calibrators">
-        <menu label="Show Details" classpath="fr.jmmc.scalib.sclgui.CalibratorsView" action="_showDetailsAction" checkbox="true" checkboxPreferenceName="view.details.show"/>
-        <menu label="Show Legend" classpath="fr.jmmc.scalib.sclgui.CalibratorsView" action="_showLegendAction" checkbox="true" checkboxPreferenceName="view.legend.show"/>
-        <menu/>
-        <menu label="Get Calibrators" classpath="fr.jmmc.scalib.sclgui.VirtualObservatory" action="_getCalAction"/>
-      </menu>
-    </menubar>
-    -->
+       <menu label="Edit">
+            <menu label="Preferences..." classpath="fr.jmmc.mf.gui.MFGui" action="showPreferences"/>
+       </menu>
+    </menubar>    
     <releasenotes>
-        <release version="V1.0.11">
-            <prerelease version="V1.0.11beta2">
+        <release version="1.0.11">
+            <prerelease version="1.0.11beta2">
 <!-- <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -64,12 +52,12 @@
                 <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
                 <!--<change>Models and Targets name have uniq suffixes</change>-->
             </prerelease>
-            <prerelease version="V1.0.11beta1">
+            <prerelease version="1.0.11beta1">
                 <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
             </prerelease>
         </release>
-        <release version="V1.0.10">
-            <prerelease version="V1.0.10beta">
+        <release version="1.0.10">
+            <prerelease version="1.0.10beta">
                 <change>Fix bug of non solicited target ident changes during model construction </change>
                 <change>Fix right click support on windows platform view
                     <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064"> bug description</a>
@@ -158,5 +146,6 @@
                 <change> Report error loading bad format files (oifiles and settings ones) </change>
             </prerelease>
         </release>
-    </releasenotes>
+    </releasenotes>     
+    <!--<acknowledgment><![CDATA[blah ]]></acknowledgment>-->
 </ApplicationData>

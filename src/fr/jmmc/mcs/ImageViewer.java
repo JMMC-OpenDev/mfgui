@@ -18,27 +18,61 @@ import javax.swing.JPanel;
  *
  * @author  mella
  */
-public class ImageViewer extends javax.swing.JFrame implements Observer {
+public class ImageViewer extends javax.swing.JFrame implements Observer
+{
+    /**
+     * DOCUMENT ME!
+     */
     ImageCanvas imageCanvas;
+
+    /**
+     * DOCUMENT ME!
+     */
     int nbColors = 240; // colorModels have 
 
     // Variables declaration - do not modify                     
-    private javax.swing.JComboBox colorModelComboBox;
+    /**
+     * DOCUMENT ME!
+     */
+    private javax.swing.JComboBox  colorModelComboBox;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JTextField imageInfoTextField;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JLabel jLabel1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JPanel jPanel1;
 
     /** Creates new form ImageViewer */
-    public ImageViewer() {
+    public ImageViewer()
+    {
         init();
     }
 
-    public ImageViewer(String xmlStr) {
+    /**
+     * Creates a new ImageViewer object.
+     *
+     * @param xmlStr DOCUMENT ME!
+     */
+    public ImageViewer(String xmlStr)
+    {
         init();
         imageCanvas.xmlInit(xmlStr);
     }
 
-    protected void init() {
+    /**
+     * DOCUMENT ME!
+     */
+    protected void init()
+    {
         initComponents();
         // add image canvas
         imageCanvas = new ImageCanvas();
@@ -49,12 +83,18 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
                 ColorModels.colorModelNames));
     }
 
-    public void update(Observable observable, Object object) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param observable DOCUMENT ME!
+     * @param object DOCUMENT ME!
+     */
+    public void update(Observable observable, Object object)
+    {
         String info = +imageCanvas.getImageDimension().height + "x" +
             imageCanvas.getImageDimension().width + "Image " +
-            imageCanvas.getCanvasDimension().height + "x" +
-            imageCanvas.getCanvasDimension().width + " px ( " +
-            imageCanvas.mouseX_ + "," + imageCanvas.mouseY_ + " : " +
+            imageCanvas.getCanvasDimension().height + "x" + imageCanvas.getCanvasDimension().width +
+            " px ( " + imageCanvas.mouseX_ + "," + imageCanvas.mouseY_ + " : " +
             imageCanvas.mousePixel_ + " )";
         imageInfoTextField.setText(info);
         imageInfoTextField.validate();
@@ -67,13 +107,14 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        colorModelComboBox = new javax.swing.JComboBox();
-        imageInfoTextField = new javax.swing.JTextField();
+        jPanel1                = new javax.swing.JPanel();
+        jLabel1                = new javax.swing.JLabel();
+        colorModelComboBox     = new javax.swing.JComboBox();
+        imageInfoTextField     = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -82,8 +123,10 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
         jLabel1.setText("Color model:");
         jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
 
-        colorModelComboBox.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
+        colorModelComboBox.addActionListener(new java.awt.event.ActionListener()
+            {
+                public void actionPerformed(java.awt.event.ActionEvent evt)
+                {
                     colorModelComboBoxActionPerformed(evt);
                 }
             });
@@ -91,9 +134,9 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
 
         imageInfoTextField.setBorder(null);
         imageInfoTextField.setOpaque(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints             = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill        = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx     = 1.0;
         jPanel1.add(imageInfoTextField, gridBagConstraints);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
@@ -101,55 +144,76 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
         pack();
     } // </editor-fold>//GEN-END:initComponents
 
-    private void colorModelComboBoxActionPerformed(
-        java.awt.event.ActionEvent evt) { //GEN-FIRST:event_colorModelComboBoxActionPerformed
+    /**
+     * DOCUMENT ME!
+     *
+     * @param evt DOCUMENT ME!
+     */
+    private void colorModelComboBoxActionPerformed(java.awt.event.ActionEvent evt)
+    { //GEN-FIRST:event_colorModelComboBoxActionPerformed
         imageCanvas.setColorModel(ColorModels.colorModels[colorModelComboBox.getSelectedIndex()]);
     } //GEN-LAST:event_colorModelComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         final String[] fargs = args;
-        java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    if (fargs.length >= 1 && fargs[0].equals("-png") ) {
+        java.awt.EventQueue.invokeLater(new Runnable()
+            {
+                public void run()
+                {
+                    if ((fargs.length >= 1) && fargs[0].equals("-png"))
+                    {
                         // Build images
-                        for (int i = 1; i < fargs.length; i++) {
-                            try {
-                                System.out.println("Reading "+fargs[i]);
-                                java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader(
-                                        fargs[i]));
-                                String str;
-                                StringBuffer sb = new StringBuffer();
+                        for (int i = 1; i < fargs.length; i++)
+                        {
+                            try
+                            {
+                                System.out.println("Reading " + fargs[i]);
 
-                                while ((str = in.readLine()) != null) {
+                                java.io.BufferedReader in  = new java.io.BufferedReader(new java.io.FileReader(
+                                            fargs[i]));
+                                String                 str;
+                                StringBuffer           sb  = new StringBuffer();
+
+                                while ((str = in.readLine()) != null)
+                                {
                                     sb.append(str);
                                 }
 
                                 in.close();
 
                                 ImageCanvas imageCanvas = new ImageCanvas();
-                                imageCanvas.xmlInit(""+sb);
-                                // Save as PNG
-                                java.io.File file = new java.io.File(fargs[i]+".png");
-                                System.out.println("Generating "+fargs[i]+".png");
-                                javax.imageio.ImageIO.write((java.awt.image.BufferedImage)imageCanvas.image_, "png", file);
+                                imageCanvas.xmlInit("" + sb);
 
-                            } catch (java.io.IOException e) {
+                                // Save as PNG
+                                java.io.File file = new java.io.File(fargs[i] + ".png");
+                                System.out.println("Generating " + fargs[i] + ".png");
+                                javax.imageio.ImageIO.write((java.awt.image.BufferedImage) imageCanvas.image_,
+                                    "png", file);
+                            }
+                            catch (java.io.IOException e)
+                            {
                                 e.printStackTrace();
                             }
                         }
-                    }else if (fargs.length >= 1 ) {
+                    }
+                    else if (fargs.length >= 1)
+                    {
                         // show images
-                        for (int i = 0; i < fargs.length; i++) {
-                            try {
-                                java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader(
+                        for (int i = 0; i < fargs.length; i++)
+                        {
+                            try
+                            {
+                                java.io.BufferedReader in  = new java.io.BufferedReader(new java.io.FileReader(
                                             fargs[i]));
-                                String str;
-                                StringBuffer sb = new StringBuffer();
+                                String                 str;
+                                StringBuffer           sb  = new StringBuffer();
 
-                                while ((str = in.readLine()) != null) {
+                                while ((str = in.readLine()) != null)
+                                {
                                     sb.append(str);
                                 }
 
@@ -159,19 +223,24 @@ public class ImageViewer extends javax.swing.JFrame implements Observer {
                                 viewer.setVisible(true);
                                 viewer.setTitle(fargs[i]);
                                 viewer.pack();
-                            } catch (java.io.IOException e) {
+                            }
+                            catch (java.io.IOException e)
+                            {
                                 e.printStackTrace();
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         ImageViewer viewer = new ImageViewer();
                         viewer.setVisible(true);
 
-                        int w = 32;
-                        int h = 32;
+                        int     w   = 32;
+                        int     h   = 32;
                         float[] img = new float[w * h];
 
-                        for (int i = 0; i < img.length; i++) {
+                        for (int i = 0; i < img.length; i++)
+                        {
                             img[i] = i;
                         }
 

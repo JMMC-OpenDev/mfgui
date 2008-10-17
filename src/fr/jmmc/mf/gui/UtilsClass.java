@@ -45,15 +45,23 @@ import javax.xml.xpath.*;
  * one jmmc.mcs.* package
  * @author mella
  */
-public class UtilsClass {
+public class UtilsClass
+{
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.McsClass");
+
+    /**
+     * DOCUMENT ME!
+     */
     static String className = "UtilsClass";
 
     //
-    //
-    // Base64 content handling
-    //
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.Hashtable alreadyExpandedFiles = new java.util.Hashtable();
 
     /*
@@ -62,85 +70,116 @@ public class UtilsClass {
      * contents, then you can just use column.sizeWidthToFit().
      *@todo move this function into one mcs common area
      */
-    public static void initColumnSizes(JTable table, int maxWidth) {
-        TableModel model = table.getModel();
-        TableColumn column = null;
-        Component comp = null;
-        int headerWidth = 0;
-        int cellWidth = 0;
-        TableCellRenderer headerRenderer = table.getTableHeader()
-                                                .getDefaultRenderer();
+    /**
+     * DOCUMENT ME!
+     *
+     * @param table DOCUMENT ME!
+     * @param maxWidth DOCUMENT ME!
+     */
+    public static void initColumnSizes(JTable table, int maxWidth)
+    {
+        TableModel        model          = table.getModel();
+        TableColumn       column         = null;
+        Component         comp           = null;
+        int               headerWidth    = 0;
+        int               cellWidth      = 0;
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
 
-        for (int i = 0; i < model.getRowCount(); i++) {
-            for (int j = 0; j < model.getColumnCount(); j++) {
-                column = table.getColumnModel().getColumn(j);
+        for (int i = 0; i < model.getRowCount(); i++)
+        {
+            for (int j = 0; j < model.getColumnCount(); j++)
+            {
+                column          = table.getColumnModel().getColumn(j);
 
-                comp = headerRenderer.getTableCellRendererComponent(null,
+                comp            = headerRenderer.getTableCellRendererComponent(null,
                         column.getHeaderValue(), false, false, 0, j);
-                headerWidth = comp.getPreferredSize().width;
+                headerWidth     = comp.getPreferredSize().width;
 
-                comp = table.getDefaultRenderer(model.getColumnClass(j))
-                            .getTableCellRendererComponent(table,
+                comp            = table.getDefaultRenderer(model.getColumnClass(j))
+                                       .getTableCellRendererComponent(table,
                         model.getValueAt(i, j), false, false, i, j);
-                cellWidth = comp.getPreferredSize().width;
+                cellWidth       = comp.getPreferredSize().width;
 
-                column.setPreferredWidth(Math.min(maxWidth,
-                        Math.max(headerWidth, cellWidth)));
+                column.setPreferredWidth(Math.min(maxWidth, Math.max(headerWidth, cellWidth)));
             }
         }
     }
 
     //
-    //
-    //  JTREES
-    //
-    //
-
-    // If expand is true, expands all nodes in the tree.
-    // Otherwise, collapses all nodes in the tree.
-    public static void expandAll(JTree tree, boolean expand) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param tree DOCUMENT ME!
+     * @param expand DOCUMENT ME!
+     */
+    public static void expandAll(JTree tree, boolean expand)
+    {
         TreeNode root = (TreeNode) tree.getModel().getRoot();
 
         // Traverse tree from root
         expandAll(tree, new TreePath(root), expand);
     }
 
-    private static void expandAll(JTree tree, TreePath parent, boolean expand) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param tree DOCUMENT ME!
+     * @param parent DOCUMENT ME!
+     * @param expand DOCUMENT ME!
+     */
+    private static void expandAll(JTree tree, TreePath parent, boolean expand)
+    {
         // Traverse children
         TreeNode node = (TreeNode) parent.getLastPathComponent();
 
-        if (node.getChildCount() >= 0) {
-            for (Enumeration e = node.children(); e.hasMoreElements();) {
-                TreeNode n = (TreeNode) e.nextElement();
+        if (node.getChildCount() >= 0)
+        {
+            for (Enumeration e = node.children(); e.hasMoreElements();)
+            {
+                TreeNode n    = (TreeNode) e.nextElement();
                 TreePath path = parent.pathByAddingChild(n);
                 expandAll(tree, path, expand);
             }
         }
 
         // Expansion or collapse must be done bottom-up
-        if (expand) {
+        if (expand)
+        {
             tree.expandPath(parent);
-        } else {
+        }
+        else
+        {
             tree.collapsePath(parent);
         }
     }
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @param b64 DOCUMENT ME!
+     * @param outputFile DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     *
+     * @throws IOException DOCUMENT ME!
+     */
     public static String saveBASE64OifitsToFile(String b64, File outputFile)
-        throws IOException {
+        throws IOException
+    {
         // fill file with href content
-        StringBuffer sb = new StringBuffer();
-        java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(
-                    23));
+        StringBuffer              sb = new StringBuffer();
+        java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(23));
 
-        while (st.hasMoreTokens()) {
+        while (st.hasMoreTokens())
+        {
             sb.append(st.nextToken());
         }
 
-        if (b64.startsWith("data:image/fits;base64,")) {
-            logger.fine("decoding base64 file into " +
-                outputFile.getAbsolutePath());
+        if (b64.startsWith("data:image/fits;base64,"))
+        {
+            logger.fine("decoding base64 file into " + outputFile.getAbsolutePath());
 
-            byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+            byte[]           buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
             FileOutputStream out = new FileOutputStream(outputFile);
             out.write(buf);
             out.flush();
@@ -150,15 +189,27 @@ public class UtilsClass {
         return outputFile.getAbsolutePath();
     }
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @param fileId DOCUMENT ME!
+     * @param b64 DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     *
+     * @throws IOException DOCUMENT ME!
+     */
     public static String saveBASE64OifitsToFile(String fileId, String b64)
-        throws IOException {
+        throws IOException
+    {
         Object key = fileId;
 
         // Search if this string has already been loaded
         java.io.File outputFile = (java.io.File) alreadyExpandedFiles.get(key);
         ;
 
-        if (outputFile == null) {
+        if (outputFile == null)
+        {
             // Create temp file.
             outputFile = java.io.File.createTempFile("tmpOifile", ".oifits");
             // Delete temp file when program exits.
@@ -168,8 +219,7 @@ public class UtilsClass {
             return saveBASE64OifitsToFile(b64, outputFile);
         }
 
-        logger.fine("file '" + key + "' was already expanded into " +
-            outputFile.getAbsolutePath());
+        logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());
 
         return outputFile.getAbsolutePath();
     }
@@ -182,30 +232,35 @@ public class UtilsClass {
      * @return true indicates that user has saved data or that object has
      * not been modified
      */
-    public static boolean askToSaveUserModification(ModifyAndSaveObject object) {
+    public static boolean askToSaveUserModification(ModifyAndSaveObject object)
+    {
         logger.entering(className, "askToSaveUserModification");
 
-        if (object.isModified()) {
+        if (object.isModified())
+        {
             // Ask the user if he wants to save modifications
             Object[] options = { "Save", "Cancel", "Don't Save" };
-            int result = JOptionPane.showOptionDialog(object.getComponent(),
+            int      result  = JOptionPane.showOptionDialog(object.getComponent(),
                     "Do you want to save changes to this document before closing ?\nIf you don't save, your changes will be lost.\n\n",
-                    null, JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    null, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options,
+                    options[0]);
 
             // If the User clicked the "Save" button, save
-            if (result == 0) {
+            if (result == 0)
+            {
                 object.save();
 
                 // assert that file has been saved
-                if (object.isModified()) {
+                if (object.isModified())
+                {
                     //ask again
                     return askToSaveUserModification(object);
                 }
             }
 
             // If the user clicked the "Cancel" button, return true
-            if (result == 1) {
+            if (result == 1)
+            {
                 return false;
             }
         }
@@ -217,118 +272,83 @@ public class UtilsClass {
      * Check that every objects does not have been modify before application quitting.
      * If one object has been modified, ask object one filename and propose a dialog to save
      */
-    public static void checkUserModificationAndQuit(
-        ModifyAndSaveObject[] objects) {
+    public static boolean checkUserModificationToQuit(ModifyAndSaveObject[] objects)
+    {
         logger.entering(className, "checkUserModificationAndQuit");
 
-        for (int i = 0; i < objects.length; i++) {
-            if (!askToSaveUserModification(objects[i])) {
-                return;
+        for (int i = 0; i < objects.length; i++)
+        {
+            if (! askToSaveUserModification(objects[i]))
+            {
+                return false;
             }
         }
 
-        // Quitting
-        logger.fine("Exiting application");
-        System.exit(0);
+        return true;
     }
 
     //
-    //
-    // Files
-    //
-
-    /*
-    public static File askToSaveFile(java.io.File fileToSave, String selectedDirectory){
-        //logger.entering(""+this.getClass(), "askToSaveFile");
-
-            JFileChooser fileChooser = new JFileChooser();
-
-            // Set in previous save directory
-            if (selectedDirectory != null) {
-                fileChooser.setCurrentDirectory(new java.io.File(selectedDirectory));
-            }
-
-            try {
-                // Open filechooser
-                int returnVal = fileChooser.showSaveDialog(null);
-
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    java.io.File file = fileChooser.getSelectedFile();
-
-                    // Ask to overwrite
-                    if (file.exists()) {
-                        String message = "File '" + file.getName() +
-                            "' already exists\nDo you want to overwrite this file?";
-                        // Modal dialog with yes/no button
-                        int answer = JOptionPane.showConfirmDialog(null, message);
-
-                        if (answer == JOptionPane.YES_OPTION) {
-                            // TODO copy file
-                            return file.getParent();
-                        }
-                    } else {
-                        saveSettingsFile(file);
-                        return file.getParent();
-                    }
-                }
-            } catch (Exception exc) {
-                new FeedbackReport(null, true, exc);
-                dialog.setVisible(true);
-                // if (dialog.returnedValue="Report")
-            }
-            return null;
-
-    }
-
-    public static File askToSaveFile(java.io.File fileToSave){
-        return askToSaveFile(fileToSave, null);
-    }
+    /**
+     * DOCUMENT ME!
+     *
+     * @param source DOCUMENT ME!
+     * @param xslURL DOCUMENT ME!
+     * @param params DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
      */
-
-    //
-    // XML transformations
-    //
-
-    
-    private static String xsl(Source source, URL xslURL, String[] params) {
+    private static String xsl(Source source, URL xslURL, String[] params)
+    {
         logger.entering(className, "xsl");
-        try {
+
+        try
+        {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
 
-             // Use the factory to create a template containing the xsl file
-            Templates template = factory.newTemplates(new StreamSource(
-                xslURL.openStream()));
-            
+            // Use the factory to create a template containing the xsl file
+            Templates template = factory.newTemplates(new StreamSource(xslURL.openStream()));
+
             // Use the template to create a transformer
             Transformer xformer = template.newTransformer();
 
             // Prepare the output
-            StringWriter sw = new StringWriter();
-            Result result = new StreamResult(sw);
+            StringWriter sw     = new StringWriter();
+            Result       result = new StreamResult(sw);
 
             // Apply the xsl file to the source file and return the result                 
-            if (params != null) {
-                for (int i = 0; i < params.length; i += 2) {
+            if (params != null)
+            {
+                for (int i = 0; i < params.length; i += 2)
+                {
                     xformer.setParameter(params[i], params[i + 1]);
                 }
             }
+
             // Apply the xsl file to the source file and write the result to the output file
             xformer.transform(source, result);
+
             return sw.toString();
-        } catch (TransformerConfigurationException exc) {
+        }
+        catch (TransformerConfigurationException exc)
+        {
             new FeedbackReport(null, true, exc);
-        // An error occurred in the XSL file
-        } catch (TransformerException exc) {
+
+            // An error occurred in the XSL file
+        }
+        catch (TransformerException exc)
+        {
             // An error occurred while applying the XSL file
             // Get location of error in input file
-            SourceLocator locator = exc.getLocator();
-            int col = locator.getColumnNumber();
-            int line = locator.getLineNumber();
-            String publicId = locator.getPublicId();
-            String systemId = locator.getSystemId();
+            SourceLocator locator  = exc.getLocator();
+            int           col      = locator.getColumnNumber();
+            int           line     = locator.getLineNumber();
+            String        publicId = locator.getPublicId();
+            String        systemId = locator.getSystemId();
             new FeedbackReport(null, true, exc);
-        } catch (Exception exc) {
+        }
+        catch (Exception exc)
+        {
             new FeedbackReport(null, true, exc);
         }
 
@@ -336,7 +356,7 @@ public class UtilsClass {
 
         return null;
     }
-  
+
     /**
      * Returns one string resulting of xslt transformation.
      * If one error occur, then one FeedbackReport show the problem
@@ -344,32 +364,40 @@ public class UtilsClass {
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
      */
-    public static String xsl(String xmlBuffer, URL xslURL, String[] params) {
+    public static String xsl(String xmlBuffer, URL xslURL, String[] params)
+    {
         // Prepare the input
         Source source = new StreamSource(new StringReader(xmlBuffer));
+
         return xsl(source, xslURL, params);
     }
 
-     /**
+    /**
      * Returns one string resulting of xslt transformation.
      * If one error occur, then one FeedbackReport show the problem
      *
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
      */
-     public static String xsl(java.io.File inFile, URL xslURL, String[] params) {
-        try {
+    public static String xsl(java.io.File inFile, URL xslURL, String[] params)
+    {
+        try
+        {
             // Prepare the input and output files
             Source source = new StreamSource(new FileInputStream(inFile));
+
             return xsl(source, xslURL, params);
-        } catch (Exception exc) {
+        }
+        catch (Exception exc)
+        {
             new FeedbackReport(null, true, exc);
         }
+
         logger.exiting(className, "xsl");
+
         return null;
     }
 
-    
     //
     // XML Parsing
     // 
@@ -378,8 +406,10 @@ public class UtilsClass {
      * If validating is true, the contents is validated against the DTD
      * specified in the file.
      */
-    public static Document parseXmlFile(String filename, boolean validating) {
-        try {
+    public static Document parseXmlFile(String filename, boolean validating)
+    {
+        try
+        {
             // Create a builder factory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(validating);
@@ -388,12 +418,18 @@ public class UtilsClass {
             Document doc = factory.newDocumentBuilder().parse(new File(filename));
 
             return doc;
-        } catch (SAXException exc) {
+        }
+        catch (SAXException exc)
+        {
             // A parsing error occurred; the xml input is not valid
             new FeedbackReport(null, true, exc);
-        } catch (ParserConfigurationException exc) {
+        }
+        catch (ParserConfigurationException exc)
+        {
             new FeedbackReport(null, true, exc);
-        } catch (IOException exc) {
+        }
+        catch (IOException exc)
+        {
             new FeedbackReport(null, true, exc);
         }
 
@@ -404,23 +440,31 @@ public class UtilsClass {
      * If validating is true, the contents is validated against the DTD
      * specified in the file.
      */
-    public static Document parseXmlString(String xmlBuffer, boolean validating) {
-        try {
+    public static Document parseXmlString(String xmlBuffer, boolean validating)
+    {
+        try
+        {
             // Create a builder factory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(validating);
 
             // Create the builder and parse the buffer            
-            StringReader r = new StringReader(xmlBuffer);
-            Document doc = factory.newDocumentBuilder().parse(new InputSource(r));
+            StringReader r   = new StringReader(xmlBuffer);
+            Document     doc = factory.newDocumentBuilder().parse(new InputSource(r));
 
             return doc;
-        } catch (SAXException exc) {
+        }
+        catch (SAXException exc)
+        {
             // A parsing error occurred; the xml input is not valid
             new FeedbackReport(null, true, exc);
-        } catch (ParserConfigurationException exc) {
+        }
+        catch (ParserConfigurationException exc)
+        {
             new FeedbackReport(null, true, exc);
-        } catch (IOException exc) {
+        }
+        catch (IOException exc)
+        {
             new FeedbackReport(null, true, exc);
         }
 
