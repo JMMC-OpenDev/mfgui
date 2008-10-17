@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.14 2008-10-10 09:27:42 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.15 2008-10-17 10:11:27 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.14  2008/10/10 09:27:42  mella
+ * Add default true help.tooltips.show pref
+ *
  * Revision 1.13  2008/09/25 09:24:29  mella
  * follow rules of new jmcs Preferences
  *
@@ -47,27 +50,38 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import java.util.Properties;
 import fr.jmmc.mcs.util.*;
+
+
 
 /**
  * This is a preference dedicated to the java Model Fitting Client.
  */
-public class Preferences extends fr.jmmc.mcs.util.Preferences {
-    /** Preference file name . Its value depends on mf.version */
-    static String _shortPreferenceFilename;
+public class Preferences extends fr.jmmc.mcs.util.Preferences
+{    
 
     /** Singleton instance */
     private static Preferences _singleton = null;
 
+    /** Class Name */
+    private final static String className_= "fr.jmmc.mf.gui.Preferences";
     /** Logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.Preferences");
+            className_);
 
+    SavePrefAction savePrefAction_;
+    RestorePrefAction restorePrefAction_;
+    
+    private static String _version=ModelFitting.getSharedApplicationDataModel().getProgramVersion();
     /**
      * Privatized constructor that must be empty.
      */
-    private Preferences() {
+    private Preferences()
+    {
+        //_version=ApplicationDataModel.getProgramVersion();
+        //_version=ModelFitting.getVersion()
+        savePrefAction_=new SavePrefAction();
+        restorePrefAction_=new RestorePrefAction();
     }
 
     /**
@@ -75,47 +89,116 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences {
      *
      * @return the singleton preference instance
      */
-    public final synchronized static Preferences getInstance() {
+    public final synchronized static Preferences getInstance()
+    {
         // Build new reference if singleton does not already exist
         // or return previous reference
-        if (_singleton == null) {
+        if (_singleton == null)
+        {
             _singleton = new Preferences();
         }
+
         return _singleton;
     }
 
-    protected void setDefaultPreferences() throws PreferencesException{
-        setDefaultPreference("mf.version",
-                fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+    /**
+     * DOCUMENT ME!
+     *
+     * @throws PreferencesException DOCUMENT ME!
+     */
+    protected void setDefaultPreferences() throws PreferencesException
+    {
+        setDefaultPreference("mf.version", _version);
         /* Place general preferences  */
         setDefaultPreference("help.tooltips.show", "true");
         setDefaultPreference("show.recursive.parameters", "false");
         setDefaultPreference("yoga.remote.use", "true");
         setDefaultPreference("yoga.local.home", "../ys");
-        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
-        if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
-                .endsWith("beta")) {
-            setDefaultPreference("yoga.remote.url",
-                    "http://jmmc.fr/~mella/LITproDev/run.php");
-        } else {
-            setDefaultPreference("yoga.remote.url",
-                    "http://jmmc.fr/modelfitting/ys/html/run.php");
+        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");       
+        if (_version.contains("beta"))
+        {
+            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproDev/run.php");
+        }
+        else
+        {
+            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~swmgr/LITproWebService/run.php");
         }
     }
 
+    /**
+     * Return preference filename.
+     * 
+     * @return preference filename.    
+     */
     protected String getPreferenceFilename()
     {
         logger.entering("Preferences", "getPreferenceFilename");
-        if (fr.jmmc.mcs.util.Resources.getResource("mf.version")
-                .endsWith("beta")) {
+
+        if (_version.contains("beta"))
+        {
             return "fr.jmmc.modelfitting.beta.properties";
-                } 
+        }
 
         return "fr.jmmc.modelfitting.properties";
     }
 
-    protected int getPreferencesVersionNumber(){
+    /**
+     *  Return preference version number.
+     *
+     * @return preference version number.
+     */
+    protected int getPreferencesVersionNumber()
+    {
         logger.entering("Preferences", "getPreferencesVersionNumber");
+
         return 1;
     }
+    
+     // @todo try to move it into the mcs preferences area
+    protected class SavePrefAction extends RegisteredAction
+    {
+        public SavePrefAction()
+        {
+            super(className_,"savePreferences");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
+            try
+            {
+                saveToFile();
+                //@todo move next line into Preferences
+                logger.fine("Saving preferences");
+            }
+            catch (Exception exc)
+            {
+                // @todo handle this error at user level
+                exc.printStackTrace();
+            }
+        }
+    }
+
+    protected class RestorePrefAction extends RegisteredAction
+    {
+        public RestorePrefAction()
+        {
+            super(className_,"restorePreferences");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
+            try
+            {
+                resetToDefaultPreferences();
+                //@todo move next line into Preferences
+                logger.fine("Restoring preferences");
+            }
+            catch (Exception exc)
+            {
+                // @todo handle this error at user level
+                exc.printStackTrace();
+            }
+        }
+    }
+    
 }

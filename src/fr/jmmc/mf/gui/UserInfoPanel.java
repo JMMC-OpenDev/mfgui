@@ -12,27 +12,54 @@ import fr.jmmc.mf.models.Settings;
  *
  * @author  mella
  */
-public class UserInfoPanel extends javax.swing.JPanel {
+public class UserInfoPanel extends javax.swing.JPanel
+{
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.UserInfoPanel");
+
+    /**
+     * DOCUMENT ME!
+     */
     Settings current = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     SettingsViewerInterface settingsViewer = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JScrollPane jScrollPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JTextArea userInfoTextArea;
 
     /** Creates new form UserInfoPanel */
-    public UserInfoPanel(SettingsViewerInterface viewer) {
+    public UserInfoPanel(SettingsViewerInterface viewer)
+    {
         settingsViewer = viewer;
         initComponents();
     }
 
-    public void show(Settings s) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param s DOCUMENT ME!
+     */
+    public void show(Settings s)
+    {
         logger.entering("" + this.getClass(), "show");
         current = s;
 
-        if (s.getUserInfo() != null) {
+        if (s.getUserInfo() != null)
+        {
             userInfoTextArea.setText(s.getUserInfo());
         }
     }
@@ -44,17 +71,20 @@ public class UserInfoPanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        jScrollPane1 = new javax.swing.JScrollPane();
-        userInfoTextArea = new javax.swing.JTextArea();
+    private void initComponents()
+    {
+        jScrollPane1         = new javax.swing.JScrollPane();
+        userInfoTextArea     = new javax.swing.JTextArea();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("User info:"));
         userInfoTextArea.setColumns(20);
         userInfoTextArea.setRows(5);
-        userInfoTextArea.addCaretListener(new javax.swing.event.CaretListener() {
-                public void caretUpdate(javax.swing.event.CaretEvent evt) {
+        userInfoTextArea.addCaretListener(new javax.swing.event.CaretListener()
+            {
+                public void caretUpdate(javax.swing.event.CaretEvent evt)
+                {
                     userInfoTextAreaCaretUpdate(evt);
                 }
             });
@@ -64,8 +94,14 @@ public class UserInfoPanel extends javax.swing.JPanel {
         add(jScrollPane1);
     } // </editor-fold>//GEN-END:initComponents
 
-    private void userInfoTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) { //GEN-FIRST:event_userInfoTextAreaCaretUpdate
-                                                                                 //logger.entering(""+this.getClass(), "userInfoTextAreaCaretUpdate");
+    /**
+     * DOCUMENT ME!
+     *
+     * @param evt DOCUMENT ME!
+     */
+    private void userInfoTextAreaCaretUpdate(javax.swing.event.CaretEvent evt)
+    { //GEN-FIRST:event_userInfoTextAreaCaretUpdate
+      //logger.entering(""+this.getClass(), "userInfoTextAreaCaretUpdate");
         current.setUserInfo(userInfoTextArea.getText());
     } //GEN-LAST:event_userInfoTextAreaCaretUpdate
 

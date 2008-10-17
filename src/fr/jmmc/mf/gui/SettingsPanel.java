@@ -27,31 +27,73 @@ import javax.swing.tree.*;
  *
  * @author  mella
  */
-public class SettingsPanel extends javax.swing.JPanel {
+public class SettingsPanel extends javax.swing.JPanel
+{
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.SettingsPanel");
+
+    /**
+     * DOCUMENT ME!
+     */
     FilesPanel filesPanel = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     TargetsPanel targetsPanel = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     FitterPanel fitterPanel = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     UserInfoPanel userInfoPanel = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     Settings current = null;
 
     // Variables declaration - do not modify                     
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JSplitPane jSplitPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JSplitPane jSplitPane2;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JSplitPane jSplitPane3;
 
     /** Creates new form ModelPanel */
-    public SettingsPanel(FilesPanel fp, TargetsPanel tp, FitterPanel fitp,
-        UserInfoPanel uip) {
-        filesPanel = fp;
-        targetsPanel = tp;
-        fitterPanel = fitp;
-        userInfoPanel = uip;
+    public SettingsPanel(FilesPanel fp, TargetsPanel tp, FitterPanel fitp, UserInfoPanel uip)
+    {
+        filesPanel        = fp;
+        targetsPanel      = tp;
+        fitterPanel       = fitp;
+        userInfoPanel     = uip;
         initComponents();
     }
 
-    public void show(Settings s, SettingsModel sm) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param s DOCUMENT ME!
+     * @param sm DOCUMENT ME!
+     */
+    public void show(Settings s, SettingsModel sm)
+    {
         logger.entering("" + this.getClass(), "show");
         current = s;
 
@@ -59,10 +101,13 @@ public class SettingsPanel extends javax.swing.JPanel {
         // !(( why component disapears???  does their parent change or???
         jSplitPane2.setTopComponent(filesPanel);
 
-        if (current.getFiles().getFileCount() >= 1) {
+        if (current.getFiles().getFileCount() >= 1)
+        {
             jSplitPane2.setBottomComponent(targetsPanel);
             jSplitPane3.setTopComponent(fitterPanel);
-        } else {
+        }
+        else
+        {
             logger.finest("Current settings has no file");
             jSplitPane2.setBottomComponent(null);
             jSplitPane3.setTopComponent(null);
@@ -73,7 +118,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         // Set File list
         filesPanel.show(current.getFiles(), sm);
         // Set Target List
-        targetsPanel.show(current.getTargets(),sm);
+        targetsPanel.show(current.getTargets(), sm);
         // Set fitter
         fitterPanel.show(current);
         // Set userInfo
@@ -87,10 +132,11 @@ public class SettingsPanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        jSplitPane3 = new javax.swing.JSplitPane();
+    private void initComponents()
+    {
+        jSplitPane1     = new javax.swing.JSplitPane();
+        jSplitPane2     = new javax.swing.JSplitPane();
+        jSplitPane3     = new javax.swing.JSplitPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 

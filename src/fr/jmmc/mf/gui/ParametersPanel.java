@@ -21,33 +21,63 @@ import javax.swing.table.*;
  *
  * @author  mella
  */
-public class ParametersPanel extends javax.swing.JPanel {
+public class ParametersPanel extends javax.swing.JPanel
+{
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ModelPanel");
 
     //ParametersTableModel parametersTableModel;
-    Parameters current;
+    /**
+     * DOCUMENT ME!
+     */
+    Parameters              current;
+
+    /**
+     * DOCUMENT ME!
+     */
     SettingsViewerInterface settingsViewer = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     DefaultListModel parameterListModel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JScrollPane jScrollPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JList parameterList;
 
     /** Creates new form ParametersPanel */
-    public ParametersPanel(SettingsViewerInterface viewer) {
+    public ParametersPanel(SettingsViewerInterface viewer)
+    {
         parameterListModel = new DefaultListModel();
         initComponents();
     }
 
-    public void show(Parameters p) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param p DOCUMENT ME!
+     */
+    public void show(Parameters p)
+    {
         current = p;
 
         parameterListModel.clear();
 
         Parameter[] params = current.getParameter();
 
-        for (int i = 0; i < params.length; i++) {
+        for (int i = 0; i < params.length; i++)
+        {
             parameterListModel.addElement(params[i]);
         }
     }
@@ -59,11 +89,12 @@ public class ParametersPanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        parameterList = new javax.swing.JList();
+        jScrollPane1      = new javax.swing.JScrollPane();
+        parameterList     = new javax.swing.JList();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -73,10 +104,10 @@ public class ParametersPanel extends javax.swing.JPanel {
         parameterList.setFocusable(false);
         jScrollPane1.setViewportView(parameterList);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints             = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill        = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx     = 1.0;
+        gridBagConstraints.weighty     = 1.0;
         add(jScrollPane1, gridBagConstraints);
     } // </editor-fold>//GEN-END:initComponents
 

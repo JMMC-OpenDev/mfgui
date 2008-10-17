@@ -15,6 +15,7 @@
         <j2se version="1.5+"/>
         <jar href="jar/mfgui.jar" />
         <jar href="jar/Jmcs.jar" />
+        <jar href="jar/commons-math-1.2-RC2.jar" />
         <extension href="topcat-parts.jnlp" />
 	</resources>
 	<application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>

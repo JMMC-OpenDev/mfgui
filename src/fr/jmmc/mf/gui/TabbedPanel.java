@@ -10,28 +10,65 @@ package fr.jmmc.mf.gui;
  *
  * @author  mella
  */
-public class TabbedPanel extends javax.swing.JPanel {
+public class TabbedPanel extends javax.swing.JPanel
+{
     // Variables declaration - do not modify                     
-    private javax.swing.JButton closeButton;
+    /**
+     * DOCUMENT ME!
+     */
+    private javax.swing.JButton     closeButton;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JTextField dateTextField;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JPanel jPanel1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JScrollPane jScrollPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JEditorPane resultPane;
 
     /**
      * Creates new form TabbedPanel
      */
-    public TabbedPanel(String result) {
+    public TabbedPanel(String result)
+    {
         initComponents();
         resultPane.setText(result);
         dateTextField.setText("" + new java.util.Date());
     }
 
-    public void setPage(String url) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param url DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void setPage(String url) throws Exception
+    {
         resultPane.setPage(url);
     }
 
-    public void setPage(java.net.URL url) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param url DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void setPage(java.net.URL url) throws Exception
+    {
         resultPane.setPage(url);
     }
 
@@ -42,25 +79,27 @@ public class TabbedPanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        jPanel1 = new javax.swing.JPanel();
-        dateTextField = new javax.swing.JTextField();
-        closeButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        resultPane = new javax.swing.JEditorPane();
+    private void initComponents()
+    {
+        jPanel1           = new javax.swing.JPanel();
+        dateTextField     = new javax.swing.JTextField();
+        closeButton       = new javax.swing.JButton();
+        jScrollPane1      = new javax.swing.JScrollPane();
+        resultPane        = new javax.swing.JEditorPane();
 
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1,
-                javax.swing.BoxLayout.X_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
 
         dateTextField.setEditable(false);
         dateTextField.setFont(new java.awt.Font("Dialog", 0, 10));
         jPanel1.add(dateTextField);
 
         closeButton.setText("Close this tab");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new java.awt.event.ActionListener()
+            {
+                public void actionPerformed(java.awt.event.ActionEvent evt)
+                {
                     closeButtonActionPerformed(evt);
                 }
             });
@@ -75,7 +114,13 @@ public class TabbedPanel extends javax.swing.JPanel {
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     } // </editor-fold>//GEN-END:initComponents
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_closeButtonActionPerformed
+    /**
+     * DOCUMENT ME!
+     *
+     * @param evt DOCUMENT ME!
+     */
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt)
+    { //GEN-FIRST:event_closeButtonActionPerformed
         MFGui.closeTab(this);
     } //GEN-LAST:event_closeButtonActionPerformed
 

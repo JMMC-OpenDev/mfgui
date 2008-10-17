@@ -21,8 +21,8 @@ import fr.jmmc.mf.models.Targets;
 
 import java.awt.Color;
 import java.awt.Component;
-
 import java.awt.Dimension;
+
 import java.lang.reflect.*;
 
 import java.util.*;
@@ -37,53 +37,127 @@ import javax.swing.tree.*;
  *
  * @author  mella
  */
-public class SettingsPane extends javax.swing.JPanel
-    implements TreeSelectionListener, TreeModelListener,
-        SettingsViewerInterface {
+public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
+    TreeModelListener, SettingsViewerInterface
+{
     /** Main logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.SettingsPane");
 
     // Application actions
+    /**
+     * DOCUMENT ME!
+     */
     public static Action runFitAction;
 
     /** Model reference */
     public SettingsModel rootSettingsModel = null;
 
     // List of viewer panel used to display sub components
-    TargetsPanel targetsPanel;
+    /**
+     * DOCUMENT ME!
+     */
+    TargetsPanel    targetsPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     FilesPanel filesPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     UserInfoPanel userInfoPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     FitterPanel fitterPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     SettingsPanel settingsPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     TargetPanel targetPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     FilePanel filePanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     ModelPanel modelPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     ParametersPanel parametersPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     ResultPanel resultPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     public Action getModelListAction = new GetModelListAction();
 
     // adjusted to true after user modification
-    // toggled again to false after saving action
+    /**
+     * DOCUMENT ME!
+     */
     protected boolean modified;
 
     // Variables declaration - do not modify                     
-    private javax.swing.JPanel controlPanel;
+    /**
+     * DOCUMENT ME!
+     */
+    private javax.swing.JPanel      controlPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JScrollPane jScrollPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JSplitPane jSplitPane1;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JSplitPane jSplitPane2;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JPanel modifierPanel;
+
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JTree settingsTree;
 
     /** Creates new form SettingsPane */
-    public SettingsPane(java.io.File file) throws Exception {
+    public SettingsPane(java.io.File file) throws Exception
+    {
         init();
         rootSettingsModel.loadSettingsFile(file);
         // finaly ask to show top level element
         showSettingElement(rootSettingsModel.getRootSettings());
     }
+
     /** Creates new form SettingsPane */
-    public SettingsPane(java.net.URL url) throws Exception {
+    public SettingsPane(java.net.URL url) throws Exception
+    {
         init();
         rootSettingsModel.loadSettingsFile(url);
         // finaly ask to show top level element
@@ -91,35 +165,39 @@ public class SettingsPane extends javax.swing.JPanel
     }
 
     /** Creates new form SettingsPane */
-    public SettingsPane() {
+    public SettingsPane()
+    {
         init();
     }
 
-    private void init() {
+    /**
+     * DOCUMENT ME!
+     */
+    private void init()
+    {
         // instanciate actions
-        runFitAction = new RunFitAction();
+        runFitAction          = new RunFitAction();
 
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
-        rootSettingsModel = new SettingsModel();
+        rootSettingsModel     = new SettingsModel();
 
         initComponents();
-        settingsTree.setMinimumSize(new Dimension(200,200));
-        settingsTree.setPreferredSize(new Dimension(200,200));
-        
+        settingsTree.setMinimumSize(new Dimension(200, 200));
+        settingsTree.setPreferredSize(new Dimension(200, 200));
+
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
 
-        targetsPanel = new TargetsPanel(this);
-        filesPanel = new FilesPanel(this);
-        fitterPanel = new FitterPanel(this);
-        userInfoPanel = new UserInfoPanel(this);
-        settingsPanel = new SettingsPanel(filesPanel, targetsPanel,
-                fitterPanel, userInfoPanel);
-        targetPanel = new TargetPanel(this);
-        filePanel = new FilePanel();
-        modelPanel = new ModelPanel();
-        parametersPanel = new ParametersPanel(this);
-        resultPanel = new ResultPanel(this);
+        targetsPanel        = new TargetsPanel(this);
+        filesPanel          = new FilesPanel(this);
+        fitterPanel         = new FitterPanel(this);
+        userInfoPanel       = new UserInfoPanel(this);
+        settingsPanel       = new SettingsPanel(filesPanel, targetsPanel, fitterPanel, userInfoPanel);
+        targetPanel         = new TargetPanel(this);
+        filePanel           = new FilePanel();
+        modelPanel          = new ModelPanel();
+        parametersPanel     = new ParametersPanel(this);
+        resultPanel         = new ResultPanel(this);
 
         // To permit modifier panel changes,
         // Register myself as treeselectionListener
@@ -134,34 +212,47 @@ public class SettingsPane extends javax.swing.JPanel
         controlPanel.add(runFitButton);
     }
 
-    public static void expandSettingsTree() {
+    /**
+     * DOCUMENT ME!
+     */
+    public static void expandSettingsTree()
+    {
         // Next line does not work because node doesn't respond to treeNode interface
         //McsClass.expandAll(settingsTree,true);
     }
 
-    
-
     /**
-    * Responds to tree selection events.
-    */
-    public void valueChanged(TreeSelectionEvent e) {
+     * Responds to tree selection events.
+     */
+    public void valueChanged(TreeSelectionEvent e)
+    {
         logger.entering("" + this.getClass(), "valueChanged");
 
         Object o = e.getPath().getLastPathComponent();
         showSettingElement(o);
     }
 
-    public void showSettingElement(Object o) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param o DOCUMENT ME!
+     */
+    public void showSettingElement(Object o)
+    {
         logger.entering("" + this.getClass(), "showSettingElement");
 
-        if (o == null) {
+        if (o == null)
+        {
             return;
         }
 
-        if (getSettingsModel().isModified()) {
+        if (getSettingsModel().isModified())
+        {
             //tabbedPane.setTitleAt(0, "Settings *");
             System.out.println("Flag modification");
-        } else {
+        }
+        else
+        {
             // tabbedPane.setTitleAt(0, "Settings");
         }
 
@@ -169,44 +260,65 @@ public class SettingsPane extends javax.swing.JPanel
 
         modifierPanel.removeAll();
 
-        if (o instanceof Settings) {
+        if (o instanceof Settings)
+        {
             //settingsPanel.show((Settings)o);
-            settingsPanel.show(rootSettingsModel.getRootSettings(),
-                rootSettingsModel);
+            settingsPanel.show(rootSettingsModel.getRootSettings(), rootSettingsModel);
             modifierPanel.add(settingsPanel);
-        } else if (o instanceof Targets) {
-            targetsPanel.show((Targets) o,rootSettingsModel);
+        }
+        else if (o instanceof Targets)
+        {
+            targetsPanel.show((Targets) o, rootSettingsModel);
             modifierPanel.add(targetsPanel);
-        } else if (o instanceof Files) {
+        }
+        else if (o instanceof Files)
+        {
             filesPanel.show((Files) o, rootSettingsModel);
             modifierPanel.add(filesPanel);
-        } else if (o instanceof Target) {
+        }
+        else if (o instanceof Target)
+        {
             targetPanel.show((Target) o, rootSettingsModel);
             modifierPanel.add(targetPanel);
-        } else if (o instanceof Model) {
+        }
+        else if (o instanceof Model)
+        {
             modelPanel.show((Model) o, rootSettingsModel);
             modifierPanel.add(modelPanel);
-        } else if (o instanceof File) {
+        }
+        else if (o instanceof File)
+        {
             filePanel.show((File) o);
             modifierPanel.add(filePanel);
-        } else if (o instanceof FileLink) {
+        }
+        else if (o instanceof FileLink)
+        {
             FileLink link = (FileLink) o;
             filePanel.show((File) link.getFileRef());
             modifierPanel.add(filePanel);
-        } else if (o instanceof Parameters) {
+        }
+        else if (o instanceof Parameters)
+        {
             parametersPanel.show((Parameters) o);
             modifierPanel.add(parametersPanel);
-        } else if (o instanceof Result) {
+        }
+        else if (o instanceof Result)
+        {
             resultPanel.show((Result) o, rootSettingsModel);
             modifierPanel.add(resultPanel);
-        } else {
-            modifierPanel.add(new JLabel("missing modifier panel for '" +
-                    o.getClass() + "' objects"));
+        }
+        else
+        {
+            modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
+                    "' objects"));
 
-            if (o instanceof Files) {
+            if (o instanceof Files)
+            {
                 Files f = (Files) o;
                 logger.fine("Selected files contains " + f.getFileCount());
-            } else if (o instanceof Targets) {
+            }
+            else if (o instanceof Targets)
+            {
                 Targets t = (Targets) o;
                 logger.fine("Selected targets contains " + t.getTargetCount());
             }
@@ -219,25 +331,56 @@ public class SettingsPane extends javax.swing.JPanel
     /**
      * Responds to tree structure changes
      */
-    public void treeStructureChanged(javax.swing.event.TreeModelEvent e) {
+    public void treeStructureChanged(javax.swing.event.TreeModelEvent e)
+    {
         logger.entering("" + this.getClass(), "treeStructureChanged");
         showSettingElement(rootSettingsModel.getRoot());
     }
 
-    public void treeNodesRemoved(javax.swing.event.TreeModelEvent e) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     */
+    public void treeNodesRemoved(javax.swing.event.TreeModelEvent e)
+    {
     }
 
-    public void treeNodesInserted(javax.swing.event.TreeModelEvent e) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     */
+    public void treeNodesInserted(javax.swing.event.TreeModelEvent e)
+    {
     }
 
-    public void treeNodesChanged(javax.swing.event.TreeModelEvent e) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     */
+    public void treeNodesChanged(javax.swing.event.TreeModelEvent e)
+    {
     }
 
-    public SettingsModel getSettingsModel() {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public SettingsModel getSettingsModel()
+    {
         return rootSettingsModel;
     }
 
-    public SettingsPane getSettingsPane() {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public SettingsPane getSettingsPane()
+    {
         return this;
     }
 
@@ -248,16 +391,16 @@ public class SettingsPane extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        controlPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        settingsTree = new javax.swing.JTree();
-        modifierPanel = new javax.swing.JPanel();
+    private void initComponents()
+    {
+        jSplitPane1       = new javax.swing.JSplitPane();
+        jSplitPane2       = new javax.swing.JSplitPane();
+        controlPanel      = new javax.swing.JPanel();
+        jScrollPane1      = new javax.swing.JScrollPane();
+        settingsTree      = new javax.swing.JTree();
+        modifierPanel     = new javax.swing.JPanel();
 
-        setLayout(new javax.swing.BoxLayout(this,
-                javax.swing.BoxLayout.LINE_AXIS));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(1.0);
@@ -277,52 +420,64 @@ public class SettingsPane extends javax.swing.JPanel
         add(jSplitPane1);
     } // </editor-fold>//GEN-END:initComponents
 
-    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
+    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction
+    {
         String methodName = "getModelList";
 
-        public GetModelListAction() {
+        public GetModelListAction()
+        {
             super("getModelList");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
             String result = "";
 
-            try {
+            try
+            {
                 result = ModelFitting.instance_.execMethod(methodName, null);
                 logger.fine("Supported models:" + result);
 
                 // Search model into return result
-                java.io.StringReader reader = new java.io.StringReader(result);
-                Model newModel = (Model) Model.unmarshal(reader);
+                java.io.StringReader reader   = new java.io.StringReader(result);
+                Model                newModel = (Model) Model.unmarshal(reader);
                 // Indicates to the rootSettingsModel list of availables models
                 rootSettingsModel.setSupportedModels(newModel.getModel());
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
                 StatusBar.show("Can't get available models");
             }
         }
     }
 
-    protected class RunFitAction extends fr.jmmc.mcs.util.MCSAction {
+    protected class RunFitAction extends fr.jmmc.mcs.util.MCSAction
+    {
         String methodName = "runFit";
 
-        public RunFitAction() {
+        public RunFitAction()
+        {
             super("runFit");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
             String result = "";
 
-            try {
+            try
+            {
                 // Get xml temp file with content of model
                 java.io.File tmpFile = rootSettingsModel.getTempFile(false);
                 result = ModelFitting.instance_.execMethod(methodName, tmpFile);
                 StatusBar.show("Fitting process finished");
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
                 ex.printStackTrace();
                 result = "Error:" + ex.getMessage();
@@ -333,14 +488,15 @@ public class SettingsPane extends javax.swing.JPanel
             int i2 = result.indexOf("END_XML_RESULT");
 
             //logger.finest("Xml result is:"+result);
-            if ((i1 < 0) || (i2 < 0)) {
+            if ((i1 < 0) || (i2 < 0))
+            {
                 JTextArea textArea = new JTextArea(20, 80);
                 textArea.setText(result);
 
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 textArea.setEditable(false);
-                javax.swing.JOptionPane.showMessageDialog(controlPanel,
-                    scrollPane, "Error ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(controlPanel, scrollPane, "Error ",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
                 logger.severe("No xml returned by server side");
 
                 return;
@@ -348,31 +504,36 @@ public class SettingsPane extends javax.swing.JPanel
 
             String xml = result.substring(i1 + "START_XML_RESULT".length(), i2);
 
-            try {
-                java.io.StringReader reader = new java.io.StringReader(xml);
-                Settings newModel = (Settings) Settings.unmarshal(reader);
-                Settings prevModel = rootSettingsModel.getRootSettings();
-                Model m;
+            try
+            {
+                java.io.StringReader reader    = new java.io.StringReader(xml);
+                Settings             newModel  = (Settings) Settings.unmarshal(reader);
+                Settings             prevModel = rootSettingsModel.getRootSettings();
+                Model                m;
 
                 // add href from previous files
-                File[] newFiles = newModel.getFiles().getFile();
+                File[] newFiles  = newModel.getFiles().getFile();
                 File[] prevFiles = prevModel.getFiles().getFile();
 
                 // no check is done to assert that every newFile have been updated
-                for (int i = 0; i < newFiles.length; i++) {
-                    File newFile = newFiles[i];
-                    String newId = newFile.getId();
+                for (int i = 0; i < newFiles.length; i++)
+                {
+                    File   newFile = newFiles[i];
+                    String newId   = newFile.getId();
 
-                    for (int j = 0; j < prevFiles.length; j++) {
-                        File prevFile = prevFiles[j];
-                        String prevId = prevFile.getId();
+                    for (int j = 0; j < prevFiles.length; j++)
+                    {
+                        File   prevFile = prevFiles[j];
+                        String prevId   = prevFile.getId();
 
-                        if (prevId.equals(newId)) {
+                        if (prevId.equals(newId))
+                        {
                             newFile.setHref(prevFile.getHref());
 
                             Oitarget[] oitargets = prevFile.getOitarget();
 
-                            for (int k = 0; k < oitargets.length; k++) {
+                            for (int k = 0; k < oitargets.length; k++)
+                            {
                                 newFile.addOitarget(oitargets[i]);
                             }
                         }
@@ -381,51 +542,59 @@ public class SettingsPane extends javax.swing.JPanel
 
                 rootSettingsModel.setRootSettings(newModel);
                 showSettingElement(rootSettingsModel.getRootSettings());
-                rootSettingsModel.setLastXml(xml);            
+                rootSettingsModel.setLastXml(xml);
 
                 logger.info("Settings created");
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 JTextArea textArea = new JTextArea(20, 100);
                 textArea.setText(result);
 
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 textArea.setEditable(false);
-                javax.swing.JOptionPane.showMessageDialog(controlPanel,
-                    scrollPane, "Error ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(controlPanel, scrollPane, "Error ",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
 
                 logger.throwing(ex.getClass().getName(), "actionPerformed", ex);
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
             }
         }
-    }    
+    }
 
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
-    protected class MyCellRenderer extends DefaultTreeCellRenderer {
+    protected class MyCellRenderer extends DefaultTreeCellRenderer
+    {
         //getTreeCellRendererComponent
-        public Component getTreeCellRendererComponent(JTree tree, Object value,
-            boolean sel, boolean expanded, boolean leaf, int row,
-            boolean hasFocus) {
-            super.getTreeCellRendererComponent(tree, value, sel, expanded,
-                leaf, row, hasFocus);
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
+            boolean expanded, boolean leaf, int row, boolean hasFocus)
+        {
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
             setToolTipText("TBD");
 
             // Next part try to get valide state of serialized xml objects
-            try {
-                String methodName = "validate";
-                Class[] c = new Class[0];
-                Method m = value.getClass().getMethod(methodName, c);
-                Object[] o = new Object[0];
+            try
+            {
+                String   methodName = "validate";
+                Class[]  c          = new Class[0];
+                Method   m          = value.getClass().getMethod(methodName, c);
+                Object[] o          = new Object[0];
                 m.invoke(value, o);
 
                 //logger.fine("method invoked using reflexion");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 setForeground(Color.red);
 
-                if (e.getCause() != null) {
+                if (e.getCause() != null)
+                {
                     setToolTipText(e.getCause().getMessage());
-                } else {
+                }
+                else
+                {
                     setToolTipText(e.getMessage());
                 }
             }

@@ -21,17 +21,17 @@ import nom.tam.util.BufferedFile;
 import org.eso.fits.FitsColumn;
 
 /*
-import nom.tam.fits.*;
-import uk.ac.starlink.datanode.nodes.FITSDataNode;
-import uk.ac.starlink.datanode.nodes.FITSDataNode.ArrayDataMaker;
-import uk.ac.starlink.fits.FitsConstants;
-import uk.ac.starlink.table.*;
-import uk.ac.starlink.fits.FitsStarTable;
-import uk.ac.starlink.datanode.nodes.FITSFileDataNode;
-import uk.ac.starlink.datanode.nodes.TableHDUDataNode;
-import uk.ac.starlink.datanode.nodes.HDUDataNode;
-import uk.ac.starlink.datanode.nodes.DataType;
-*/
+   import nom.tam.fits.*;
+   import uk.ac.starlink.datanode.nodes.FITSDataNode;
+   import uk.ac.starlink.datanode.nodes.FITSDataNode.ArrayDataMaker;
+   import uk.ac.starlink.fits.FitsConstants;
+   import uk.ac.starlink.table.*;
+   import uk.ac.starlink.fits.FitsStarTable;
+   import uk.ac.starlink.datanode.nodes.FITSFileDataNode;
+   import uk.ac.starlink.datanode.nodes.TableHDUDataNode;
+   import uk.ac.starlink.datanode.nodes.HDUDataNode;
+   import uk.ac.starlink.datanode.nodes.DataType;
+ */
 import org.eso.fits.FitsFile;
 import org.eso.fits.FitsHDUnit;
 import org.eso.fits.FitsHDUnit;
@@ -45,8 +45,8 @@ import org.exolab.castor.xml.Marshaller;
 
 //import java.nio.*;
 import java.io.FileOutputStream;
-
 import java.io.IOException;
+
 import java.net.URL;
 
 import java.util.Hashtable;
@@ -60,69 +60,147 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 
-public class SettingsModel implements TreeModel, ModifyAndSaveObject {
+/**
+ * DOCUMENT ME!
+ *
+ * @author $author$
+ * @version $Revision: 1.19 $
+  */
+public class SettingsModel implements TreeModel, ModifyAndSaveObject
+{
     /* both following members can be used to associate models to some GUI components.
      * while no settings can be loaded several times, some are static while other are not
      */
-    public static Hashtable supportedModels = new Hashtable();
+    /**
+     * DOCUMENT ME!
+     */
+    public static Hashtable            supportedModels      = new Hashtable();
+
+    /**
+     * DOCUMENT ME!
+     */
     public static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
 
     // Logging
-    static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.SettingsModel");
+    /**
+     * DOCUMENT ME!
+     */
+    static Logger               logger             = Logger.getLogger(
+            "fr.jmmc.mf.gui.SettingsModel");
+
+    /**
+     * DOCUMENT ME!
+     */
     private Vector treeModelListeners = new Vector();
+
+    /**
+     * DOCUMENT ME!
+     */
     private Settings rootSettings = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     private Hashtable fileListModels = new Hashtable();
+
+    /**
+     * DOCUMENT ME!
+     */
     public DefaultListModel allFilesListModel;
+
+    /**
+     * DOCUMENT ME!
+     */
     public DefaultListModel targetListModel;
+
+    /**
+     * DOCUMENT ME!
+     */
     public DefaultComboBoxModel oiTargets;
 
     // Store last xml buffer  (it has been done to save on marshal required for
-    // result display
+    /**
+     * DOCUMENT ME!
+     */
     private String lastXml;
 
     // ModifyAndSaveObject interface
-    public boolean isModified = false;
+    /**
+     * DOCUMENT ME!
+     */
+    public boolean      isModified     = false;
+
+    /**
+     * DOCUMENT ME!
+     */
     public java.io.File associatedFile = null;
-    
+
     // counter used to generate uniq model ids
-    private int modelIdCounter_=0;
+    /**
+     * DOCUMENT ME!
+     */
+    private int modelIdCounter_ = 0;
 
     // counter used to generate uniq target ids
-    private int targetIdCounter_=0;
-    
-    public SettingsModel() {
+    /**
+     * DOCUMENT ME!
+     */
+    private int targetIdCounter_ = 0;
+
+    /**
+     * Creates a new SettingsModel object.
+     */
+    public SettingsModel()
+    {
         // Init members
-        allFilesListModel = new DefaultListModel();
-        targetListModel = new DefaultListModel();
-        oiTargets = new DefaultComboBoxModel();
+        allFilesListModel     = new DefaultListModel();
+        targetListModel       = new DefaultListModel();
+        oiTargets             = new DefaultComboBoxModel();
 
         // Init children for a new settings 
-        rootSettings = new Settings();
+        rootSettings          = new Settings();
         rootSettings.setFiles(new Files());
         rootSettings.setTargets(new Targets());
         rootSettings.setParameters(new Parameters());
         rootSettings.setFitter("standard");
         rootSettings.setUserInfo("Created on " + new java.util.Date() +
-            " by ModelFitting GUI rev. " +
-            fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+            " by ModelFitting GUI rev. " + fr.jmmc.mcs.util.Resources.getResource("mf.version"));
         setRootSettings(rootSettings);
     }
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public int getNewModelId()
     {
-        modelIdCounter_+=1;
+        modelIdCounter_ += 1;
+
         return modelIdCounter_;
     }
- 
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public int getNewTargetId()
     {
-        modelIdCounter_+=1;
+        modelIdCounter_ += 1;
+
         return modelIdCounter_;
     }
-    
-   
-    public String getAssociatedFilename() {
-        if (associatedFile == null) {
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getAssociatedFilename()
+    {
+        if (associatedFile == null)
+        {
             return "*";
         }
 
@@ -133,34 +211,62 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      *  Tell to the model that given file is used by user to store its data
      * @param fileToSave
      */
-    public void setAssociatedFile(java.io.File fileToSave) {
+    public void setAssociatedFile(java.io.File fileToSave)
+    {
         logger.entering("" + this.getClass(), "setAssociatedFile");
-        associatedFile=fileToSave;        
+        associatedFile = fileToSave;
     }
-       
+
     // respond to ModifyAndSaveObject interface
-    public boolean isModified() {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public boolean isModified()
+    {
         logger.entering("" + this.getClass(), "isModified");
         logger.finest("isModified=" + isModified);
 
         return isModified;
     }
 
-    public void setModified(boolean flag) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param flag DOCUMENT ME!
+     */
+    public void setModified(boolean flag)
+    {
         logger.entering("" + this.getClass(), "setModified");
         logger.finest("setModified to " + flag);
         isModified = flag;
     }
 
-    public void setLastXml(String xml) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param xml DOCUMENT ME!
+     */
+    public void setLastXml(String xml)
+    {
         logger.entering("" + this.getClass(), "setLastXml");
         this.lastXml = xml;
     }
 
-    public String getLastXml() throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public String getLastXml() throws Exception
+    {
         logger.entering("" + this.getClass(), "getLastXml");
 
-        if (lastXml == null) {
+        if (lastXml == null)
+        {
             logger.fine("Start of marshalling");
 
             java.io.StringWriter writer = new java.io.StringWriter();
@@ -174,35 +280,64 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         return this.lastXml;
     }
-    
-    public java.io.File getTempFile(boolean keepResult)throws Exception{
-         logger.entering("" + this.getClass(), "getTempFile");
-         java.io.File tmpFile ;
-         tmpFile=java.io.File.createTempFile("tmpSettings", ".xml");
-         // Delete temp file when program exits.
-          tmpFile.deleteOnExit();
-         saveSettingsFile(tmpFile, keepResult);
-         return tmpFile;
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param keepResult DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public java.io.File getTempFile(boolean keepResult)
+        throws Exception
+    {
+        logger.entering("" + this.getClass(), "getTempFile");
+
+        java.io.File tmpFile;
+        tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
+        // Delete temp file when program exits.
+        tmpFile.deleteOnExit();
+        saveSettingsFile(tmpFile, keepResult);
+
+        return tmpFile;
     }
 
     // respond to ModifyAndSaveObject interface
-    public void save() {
+    /**
+     * DOCUMENT ME!
+     */
+    public void save()
+    {
         logger.entering("" + this.getClass(), "save");
 
-        if (associatedFile != null) {
-            try {
+        if (associatedFile != null)
+        {
+            try
+            {
                 saveSettingsFile(associatedFile, false);
-            } catch (Exception exc) {
+            }
+            catch (Exception exc)
+            {
                 new FeedbackReport(null, true, exc);
             }
-        } else {
+        }
+        else
+        {
             // trigger saveModelAction
             MFGui.saveModelAction.actionPerformed(null);
         }
     }
 
     // respond to ModifyAndSaveObject interface
-    public java.awt.Component getComponent() {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public java.awt.Component getComponent()
+    {
         return MFGui.getInstance();
     }
 
@@ -210,13 +345,20 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * This method must be called by anyone that has modified the xml binded
      * document.
      */
-    public void fireUpdate() {
+    public void fireUpdate()
+    {
         logger.entering("" + this.getClass(), "fireUpdate");
         logger.fine("update signal triggered");
         setRootSettings(rootSettings);
     }
 
-    public void setRootSettings(Settings newRootModel) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param newRootModel DOCUMENT ME!
+     */
+    public void setRootSettings(Settings newRootModel)
+    {
         logger.entering("" + this.getClass(), "setRootSettings");
         rootSettings = newRootModel;
 
@@ -226,14 +368,17 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         oiTargets.removeAllElements();
         fileListModels.clear();
 
-        for (int i = 0; i < rootSettings.getFiles().getFileCount(); i++) {
+        for (int i = 0; i < rootSettings.getFiles().getFileCount(); i++)
+        {
             File f = rootSettings.getFiles().getFile(i);
             allFilesListModel.addElement(f);
 
-            for (int j = 0; j < f.getOitargetCount(); j++) {
+            for (int j = 0; j < f.getOitargetCount(); j++)
+            {
                 String t = f.getOitarget(j).getTarget();
 
-                if (oiTargets.getIndexOf(t) < 0) {
+                if (oiTargets.getIndexOf(t) < 0)
+                {
                     oiTargets.addElement(t);
                 }
 
@@ -243,17 +388,18 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         targetListModel.clear();
 
-        for (int i = 0; i < rootSettings.getTargets().getTargetCount(); i++) {
+        for (int i = 0; i < rootSettings.getTargets().getTargetCount(); i++)
+        {
             Target t = rootSettings.getTargets().getTarget(i);
             targetListModel.addElement(t);
         }
 
-        String desc = "This rootSettings contains " +
-            rootSettings.getFiles().getFileCount() + " files," +
-            rootSettings.getTargets().getTargetCount() + " targets," +
-            "User info: [ " + rootSettings.getUserInfo() + " ]";
+        String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
+            " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ " +
+            rootSettings.getUserInfo() + " ]";
 
-        if (rootSettings.getResult() != null) {
+        if (rootSettings.getResult() != null)
+        {
             desc = desc + " with result section";
         }
 
@@ -263,36 +409,60 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         fireTreeStructureChanged(rootSettings);
     }
 
-    public Settings getRootSettings() {
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Settings getRootSettings()
+    {
         logger.entering("" + this.getClass(), "getRootSettings");
 
         return rootSettings;
     }
 
-    private void addFileListModelForOiTarget(Oitarget target, File file) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param target DOCUMENT ME!
+     * @param file DOCUMENT ME!
+     */
+    private void addFileListModelForOiTarget(Oitarget target, File file)
+    {
         logger.entering("" + this.getClass(), "addFileListModelForTarget");
 
         // we use target name as key
-        String key = target.getTarget().trim();
-        DefaultListModel lm = (DefaultListModel) fileListModels.get(key);
+        String           key = target.getTarget().trim();
+        DefaultListModel lm  = (DefaultListModel) fileListModels.get(key);
 
-        if (lm == null) {
+        if (lm == null)
+        {
             // We need to create one new fileModel for this ident
             lm = new DefaultListModel();
             fileListModels.put(key, lm);
         }
 
-        if (!lm.contains(file)) {
-            logger.fine("adding file '" + file.getName() +
-                "' to listmodel for '" + key + "'");
+        if (! lm.contains(file))
+        {
+            logger.fine("adding file '" + file.getName() + "' to listmodel for '" + key + "'");
             lm.addElement(file);
-        } else {
-            logger.fine("file " + file.getName() +
-                " already registered to listmodel for '" + key + "'");
+        }
+        else
+        {
+            logger.fine("file " + file.getName() + " already registered to listmodel for '" + key +
+                "'");
         }
     }
 
-    public ListModel getFileListModelForOiTarget(String oiTargetName) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param oiTargetName DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public ListModel getFileListModelForOiTarget(String oiTargetName)
+    {
         logger.entering("" + this.getClass(), "getFileListModelForTarget");
 
         // we use target name as key
@@ -302,21 +472,30 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     }
 
     // @todo place this method into fr.jmmc.mf.util
-    public void addFile(java.io.File fileToAdd) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param fileToAdd DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void addFile(java.io.File fileToAdd) throws Exception
+    {
         logger.entering("" + this.getClass(), "addFile");
 
         // Try to add list to comboModel if it is not already inside the listModel
-        if (!allFilesListModel.contains(fileToAdd)) {
+        if (! allFilesListModel.contains(fileToAdd))
+        {
             // The file must be one oidata file            
             String fitsFileName = fileToAdd.getAbsolutePath();
-            File newFile = new File();
+            File   newFile      = new File();
             newFile.setName(fitsFileName);
             newFile.setId("id" + rootSettings.getFiles().getFileCount());
             checkFile(newFile);
             // make shorter filename (this line must be kept after checkFile,
             // because is must be retrieved using full qualified name)
             newFile.setName(fileToAdd.getName());
-            
+
             // test succedded let's continue
             rootSettings.getFiles().addFile(newFile);
             logger.info("'" + fitsFileName + "' oifile added to file list");
@@ -325,40 +504,65 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             fireUpdate();
             /*
              *@todo return a invalidFormat exception instead of Simple exception
-                        }catch(Exception exc){
-                            logger.warning("Rejecting non valid file '"+fileToAdd.getAbsolutePath()+"'");
-                            throw new ...
-                        }
+                          }catch(Exception exc){
+                              logger.warning("Rejecting non valid file '"+fileToAdd.getAbsolutePath()+"'");
+                              throw new ...
+                          }
              */
             setModified(true);
-        } else {
-            logger.warning("File '" + fileToAdd.getAbsolutePath() +
-                "' already present");
+        }
+        else
+        {
+            logger.warning("File '" + fileToAdd.getAbsolutePath() + "' already present");
         }
     }
 
     // @todo place this method into fr.jmmc.mf.util
-    public void addFileHref(File bindedFile) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param bindedFile DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void addFileHref(File bindedFile) throws Exception
+    {
         logger.entering("" + this.getClass(), "addFileHref");
 
         java.io.File realFile = new java.io.File(bindedFile.getName());
 
         // Create a read-only memory-mapped file
-        java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(realFile,
-                "r").getChannel();
-        java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
+        java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(realFile, "r").getChannel();
+        java.nio.ByteBuffer           roBuf     = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
                 0, (int) roChannel.size());
-        String b64 = "data:image/fits;base64," +
+        String                        b64       = "data:image/fits;base64," +
             new sun.misc.BASE64Encoder().encode(roBuf);
         bindedFile.setHref(b64);
     }
 
-    public void addFileOiTargets(File bindedFile) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param bindedFile DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void addFileOiTargets(File bindedFile) throws Exception
+    {
         logger.entering("" + this.getClass(), "addFileOiTarget");
     }
 
     // @todo place this method into fr.jmmc.mf.util
-    public void checkFile(File bindedFile) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param bindedFile DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     * @throws . DOCUMENT ME!
+     */
+    public void checkFile(File bindedFile) throws Exception
+    {
         logger.entering("" + this.getClass(), "checkFile");
 
         String filename = bindedFile.getName();
@@ -366,30 +570,35 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         // Check href and return if no file exists
         java.io.File realFile = new java.io.File(filename);
-        String href = bindedFile.getHref();
+        String       href     = bindedFile.getHref();
 
-        if (href != null) {
+        if (href != null)
+        {
             logger.fine("Href already present");
 
             //@todo decode b64 and test filesize or md5sum 
             // and then test on oitarget list could be done...
-            if (bindedFile.getOitargetCount() < 1) {
+            if (bindedFile.getOitargetCount() < 1)
+            {
                 logger.warning("No oitarget found");
                 // try to continue next test creating a file based on the base64 href                                
-                filename = UtilsClass.saveBASE64OifitsToFile(bindedFile.getId(),
-                        href);
-            } else {
+                filename = UtilsClass.saveBASE64OifitsToFile(bindedFile.getId(), href);
+            }
+            else
+            {
                 return;
             }
-        } else if (!realFile.exists()) {
+        }
+        else if (! realFile.exists())
+        {
             logger.warning("User should try to locate not found file");
 
-            JFileChooser fc = new JFileChooser(realFile.getParentFile());
-            int returnVal = fc.showDialog(new JFrame(),
-                    "Please try to locate requested file:" +
-                    realFile.getAbsolutePath());
+            JFileChooser fc        = new JFileChooser(realFile.getParentFile());
+            int          returnVal = fc.showDialog(new JFrame(),
+                    "Please try to locate requested file:" + realFile.getAbsolutePath());
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+            {
                 filename = fc.getSelectedFile().getCanonicalPath();
                 bindedFile.setName(filename);
                 logger.info("User asked to try again with new file ");
@@ -397,11 +606,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                 checkFile(bindedFile);
 
                 return;
-            } else {
+            }
+            else
+            {
                 logger.warning("Can't locate file");
                 throw new java.io.FileNotFoundException();
             }
-        } else {
+        }
+        else
+        {
             addFileHref(bindedFile);
         }
 
@@ -411,126 +624,142 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         int nbOfOiTargetExtensions = 0;
 
         /*
-                // scan given file and try to get reference of oi_target extension excepted primary hdu
-                Fits fits = new Fits(filename);
-                FITSFileDataNode dataNode = new FITSFileDataNode(new java.io.File(filename));
-                for (Iterator i = dataNode.getChildIterator(); i.hasNext();) {
-                    Object elem = (Object) i.next();
-                    logger.fine("next el is "+ elem.getClass()+" named "+elem);
-                    if (elem  instanceof TableHDUDataNode){
-                        TableHDUDataNode hdu = (TableHDUDataNode)elem;
-                        logger.fine("allows children -> " +hdu.allowsChildren());
-                        StarTable table = hdu.getStarTable();
-                        // le problem est que l'on a pas a cces au header qui est en privé dans hdu
-                    }
-                }
-
-                fits = new Fits(filename);
-                String list="";
-                int index=0;
-                BasicHDU hdu;
-                while((hdu=fits.readHDU())!=null){
-                    String extName = hdu.getTrimmedString("EXTNAME");
-                    logger.fine("reading hdu n "+index+ "["+extName+"]");
-                    list=list+" "+extName;
-                    // search for oi_targets
-                    if(extName!=null){
-                        if(extName.equals("OI_TARGET")){
-                            nbOfOiTargetExtensions++;
-                            oiTargetHDU = (TableHDU) hdu;
-                        }
-                    }
-                    index++;
-                }
-                logger.fine("file contains "+index+" named extensions [ "+list+"]");
-
+           // scan given file and try to get reference of oi_target extension excepted primary hdu
+           Fits fits = new Fits(filename);
+           FITSFileDataNode dataNode = new FITSFileDataNode(new java.io.File(filename));
+           for (Iterator i = dataNode.getChildIterator(); i.hasNext();) {
+               Object elem = (Object) i.next();
+               logger.fine("next el is "+ elem.getClass()+" named "+elem);
+               if (elem  instanceof TableHDUDataNode){
+                   TableHDUDataNode hdu = (TableHDUDataNode)elem;
+                   logger.fine("allows children -> " +hdu.allowsChildren());
+                   StarTable table = hdu.getStarTable();
+                   // le problem est que l'on a pas a cces au header qui est en privé dans hdu
+               }
+           }
+           fits = new Fits(filename);
+           String list="";
+           int index=0;
+           BasicHDU hdu;
+           while((hdu=fits.readHDU())!=null){
+               String extName = hdu.getTrimmedString("EXTNAME");
+               logger.fine("reading hdu n "+index+ "["+extName+"]");
+               list=list+" "+extName;
+               // search for oi_targets
+               if(extName!=null){
+                   if(extName.equals("OI_TARGET")){
+                       nbOfOiTargetExtensions++;
+                       oiTargetHDU = (TableHDU) hdu;
+                   }
+               }
+               index++;
+           }
+           logger.fine("file contains "+index+" named extensions [ "+list+"]");
          */
-        String list = "";
+        String     list        = "";
         FitsHDUnit oiTargetHDU = null;
-        FitsFile fits = new FitsFile(filename);
-        int index = fits.getNoHDUnits();
+        FitsFile   fits        = new FitsFile(filename);
+        int        index       = fits.getNoHDUnits();
 
-        for (int i = 0; i < index; i++) {
-            FitsHDUnit hdu = fits.getHDUnit(i);
-            FitsHeader header = hdu.getHeader();
+        for (int i = 0; i < index; i++)
+        {
+            FitsHDUnit  hdu     = fits.getHDUnit(i);
+            FitsHeader  header  = hdu.getHeader();
             FitsKeyword extName = header.getKeyword("EXTNAME");
 
-            list = list + " " + extName;
+            list                = list + " " + extName;
 
             // search for oi_targets
-            if (extName != null) {
-                logger.fine("reading hdu n " + i + "[" + extName.getString() +
-                    "]");
+            if (extName != null)
+            {
+                logger.fine("reading hdu n " + i + "[" + extName.getString() + "]");
 
-                if (extName.getString().equals("OI_TARGET")) {
+                if (extName.getString().equals("OI_TARGET"))
+                {
                     nbOfOiTargetExtensions++;
                     oiTargetHDU = hdu;
                 }
             }
         }
 
-        if (nbOfOiTargetExtensions != 1) {
-            throw new Exception("File does no contain one OI_TARGET but " +
-                nbOfOiTargetExtensions);
+        if (nbOfOiTargetExtensions != 1)
+        {
+            throw new Exception("File does no contain one OI_TARGET but " + nbOfOiTargetExtensions);
         }
 
-        FitsColumn targetsColumn = ((FitsTable) oiTargetHDU.getData()).getColumn(
-                "TARGET");
+        FitsColumn targetsColumn = ((FitsTable) oiTargetHDU.getData()).getColumn("TARGET");
 
         //String[] targets = (String[])oiTargetHDU.getColumn("TARGET");
         int targetNb = ((FitsTable) oiTargetHDU.getData()).getNoRows();
 
         // Collect previous
-        Oitarget[] modelOiTargets = bindedFile.getOitarget();
-        Vector modelOiTargetVector = new Vector();
+        Oitarget[] modelOiTargets      = bindedFile.getOitarget();
+        Vector     modelOiTargetVector = new Vector();
 
-        for (int i = 0; i < modelOiTargets.length; i++) {
+        for (int i = 0; i < modelOiTargets.length; i++)
+        {
             modelOiTargetVector.addElement(((Oitarget) modelOiTargets[i]).getTarget());
         }
 
         // And update list
-        if (targetNb > 0) {
-            for (int i = 0; i < targetNb; i++) {
+        if (targetNb > 0)
+        {
+            for (int i = 0; i < targetNb; i++)
+            {
                 String s = targetsColumn.getString(i).trim();
 
-                if (!modelOiTargetVector.contains(s)) {
+                if (! modelOiTargetVector.contains(s))
+                {
                     Oitarget t = new Oitarget();
                     t.setTarget(s);
                     bindedFile.addOitarget(t);
                     logger.info("'" + s + "' oitarget associated");
-                } else {
+                }
+                else
+                {
                     logger.info("'" + s + "' oitarget was already associated");
                 }
             }
         }
 
-        if (bindedFile.getOitargetCount() != targetNb) {
-            throw new Exception(
-                "File does not contain same number of oitargets");
+        if (bindedFile.getOitargetCount() != targetNb)
+        {
+            throw new Exception("File does not contain same number of oitargets");
         }
     }
 
     // @todo think to move this method into fr.jmmc.mf.util
-    public void checkSettingsFormat(Settings s) throws Exception {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param s DOCUMENT ME!
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void checkSettingsFormat(Settings s) throws Exception
+    {
         logger.entering("" + this.getClass(), "checkSettingsFormat");
 
         // try to locate files
         File[] files = s.getFiles().getFile();
 
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++)
+        {
             // Check file           
             checkFile(files[i]);
         }
 
         // assert that one parameters section is present to allow param sharing
-        if (s.getParameters() == null) {
+        if (s.getParameters() == null)
+        {
             logger.fine("no parameter section, -> new one created");
             s.setParameters(new Parameters());
             setModified(true);
         }
 
         // assert that one userInfo section is present to allow traces
-        if (s.getUserInfo() == null) {
+        if (s.getUserInfo() == null)
+        {
             logger.fine("no userInfo section, -> new one created");
             s.setUserInfo("UserInfo added on " + new java.util.Date() +
                 " by ModelFitting GUI rev. " +
@@ -540,68 +769,86 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     }
 
     // @todo place this method into fr.jmmc.mf.util
+    /**
+     * DOCUMENT ME!
+     *
+     * @param fileToLoad DOCUMENT ME!
+     *
+     */
     public void loadSettingsFile(java.io.File fileToLoad)
-        throws java.io.FileNotFoundException,
-            org.exolab.castor.xml.MarshalException, java.lang.Exception {
-        logger.entering("" + this.getClass(), "loadSettingsFile("+fileToLoad+")");
+        throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException,
+            java.lang.Exception
+    {
+        logger.entering("" + this.getClass(), "loadSettingsFile(" + fileToLoad + ")");
 
-        java.io.FileReader reader = new java.io.FileReader(fileToLoad);
-        Settings newModel = (Settings) Settings.unmarshal(reader);
+        java.io.FileReader reader   = new java.io.FileReader(fileToLoad);
+        Settings           newModel = (Settings) Settings.unmarshal(reader);
 
         checkSettingsFormat(newModel);
         setRootSettings(newModel);
         setModified(false);
-        associatedFile = fileToLoad;
+        associatedFile     = fileToLoad;
 
-        reader = new java.io.FileReader(fileToLoad);
+        reader             = new java.io.FileReader(fileToLoad);
 
         java.io.BufferedReader in = new java.io.BufferedReader(reader);
-        StringBuffer sb = new StringBuffer();
-        String str;
+        StringBuffer           sb = new StringBuffer();
+        String                 str;
 
-        while ((str = in.readLine()) != null) {
+        while ((str = in.readLine()) != null)
+        {
             sb.append(str);
         }
 
         in.close();
         setLastXml(sb.toString());
     }
-    
+
     // @todo place this method into fr.jmmc.mf.util
+    /**
+     * DOCUMENT ME!
+     *
+     * @param urlToLoad DOCUMENT ME!
+     *
+     */
     public void loadSettingsFile(java.net.URL urlToLoad)
-            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, java.lang.Exception {
+        throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException,
+            java.lang.Exception
+    {
         logger.entering("" + this.getClass(), "loadSettingsFile(" + urlToLoad + ")");
+
         java.io.InputStreamReader reader = new java.io.InputStreamReader(urlToLoad.openStream());
-        Settings newModel = (Settings) Settings.unmarshal(reader);
+        Settings                  newModel = (Settings) Settings.unmarshal(reader);
         checkSettingsFormat(newModel);
         setRootSettings(newModel);
         setModified(false);
         associatedFile = null;
     }
+
     /**
      * Write serialisation into given file.
      * @todo place this method into fr.jmmc.mf.util
      * @param keepResult indicates that this file will not get result section. It is used in the runFit action for example.
      */
-    public void saveSettingsFile(java.io.File fileToSave,
-        boolean keepResult)
+    public void saveSettingsFile(java.io.File fileToSave, boolean keepResult)
         throws java.io.IOException, org.exolab.castor.xml.MarshalException,
-            org.exolab.castor.xml.ValidationException,
-            org.exolab.castor.mapping.MappingException {
+            org.exolab.castor.xml.ValidationException, org.exolab.castor.mapping.MappingException
+    {
         logger.entering("" + this.getClass(), "saveSettingsFile");
 
         /* replace old result section by a new empty one according keepResult parameter */
-        if (keepResult==false) {
+        if (keepResult == false)
+        {
             rootSettings.setResult(new Result());
         }
-        
+
         logger.fine("start setting file writting");
 
         // Read a File to unmarshal from
-        java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
+        java.io.FileWriter writer     = new java.io.FileWriter(fileToSave);
 
-        URL mappingURL = this.getClass().getClassLoader()
-                             .getResource("fr/jmmc/mf/gui/mapping.xml");
+        URL                mappingURL = this.getClass().getClassLoader()
+                                            .getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Using mapping file :" + mappingURL);
 
         // Do marshalling
@@ -614,30 +861,46 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.validate();
         marshaller.marshal(rootSettings);
         writer.flush();
-        logger.fine("Ending file writting into "+fileToSave);
+        logger.fine("Ending file writting into " + fileToSave);
 
-        if (fileToSave.equals(associatedFile)) {            
+        if (fileToSave.equals(associatedFile))
+        {
             setModified(false);
         }
     }
 
     // 
-    public void setSupportedModels(Model[] models) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param models DOCUMENT ME!
+     */
+    public void setSupportedModels(Model[] models)
+    {
         logger.entering("" + this.getClass(), "setSupportedModels");
         // update list of supported models
         supportedModels.clear();
         // update MVC model of available models checkboxes
         supportedModelsModel.removeAllElements();
 
-        for (int i = 0; i < models.length; i++) {
+        for (int i = 0; i < models.length; i++)
+        {
             Model newModel = models[i];
             supportedModelsModel.addElement(newModel);
             logger.info("Adding supported model:" + newModel.getType());
             supportedModels.put(newModel.getType(), newModel);
-        }        
+        }
     }
 
-    public Model getSupportedModel(String type) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param type DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Model getSupportedModel(String type)
+    {
         logger.entering("" + this.getClass(), "getSupportedModel");
 
         return (Model) supportedModels.get(type);
@@ -649,20 +912,25 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * One event raised by this model is TreeStructureChanged with the
      * root as path, i.e. the whole tree has changed.
      */
-    protected void fireTreeStructureChanged(Settings newRoot) {
+    protected void fireTreeStructureChanged(Settings newRoot)
+    {
         logger.entering("" + this.getClass(), "fireTreeStructureChanged");
 
-        int len = treeModelListeners.size();
+        int            len      = treeModelListeners.size();
         TreeModelEvent e;
-        TreePath treePath = null;
+        TreePath       treePath = null;
 
-        if (newRoot == null) {
+        if (newRoot == null)
+        {
             e = new TreeModelEvent(this, treePath);
-        } else {
+        }
+        else
+        {
             e = new TreeModelEvent(this, new Object[] { newRoot });
         }
 
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++)
+        {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeStructureChanged(e);
         }
     }
@@ -671,13 +939,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * One event raised by this model is TreeStructureChanged with the
      * changed node in argument.
      */
-    protected void fireTreeNodesChanged(Object changedNode) {
+    protected void fireTreeNodesChanged(Object changedNode)
+    {
         logger.entering("" + this.getClass(), "fireTreeNodesChanged");
 
-        int len = treeModelListeners.size();
-        TreeModelEvent e = new TreeModelEvent(this, new Object[] { changedNode });
+        int            len = treeModelListeners.size();
+        TreeModelEvent e   = new TreeModelEvent(this, new Object[] { changedNode });
 
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++)
+        {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
         }
     }
@@ -687,7 +957,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Adds a listener for the TreeModelEvent posted after the tree changes.
      */
-    public void addTreeModelListener(TreeModelListener l) {
+    public void addTreeModelListener(TreeModelListener l)
+    {
         logger.entering("" + this.getClass(), "addTreeModelListener");
         treeModelListeners.addElement(l);
     }
@@ -695,46 +966,68 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Returns the child of parent at index index in the parent's child array.
      */
-    public Object getChild(Object parent, int index) {
+    public Object getChild(Object parent, int index)
+    {
         //logger.entering(""+this.getClass(), "getChild");
-        if (parent instanceof Settings) {
+        if (parent instanceof Settings)
+        {
             Settings s = (Settings) parent;
 
             // select which settings child it is
-            if (index == 0) {
+            if (index == 0)
+            {
                 return s.getFiles();
-            } else if (index == 1) {
+            }
+            else if (index == 1)
+            {
                 return s.getTargets();
-            } else if ((index == 2) &&
-                    (s.getParameters().getParameterCount() >= 1)) {
+            }
+            else if ((index == 2) && (s.getParameters().getParameterCount() >= 1))
+            {
                 return s.getParameters();
-            } else if ((index == 2) &&
-                    (s.getParameters().getParameterCount() == 0)) {
+            }
+            else if ((index == 2) && (s.getParameters().getParameterCount() == 0))
+            {
                 return s.getResult();
-            } else if (index == 3) {
+            }
+            else if (index == 3)
+            {
                 return s.getResult();
-            } else {
+            }
+            else
+            {
                 logger.warning("This line must not occur");
 
                 return "??";
             }
-        } else if (parent instanceof Files) {
+        }
+        else if (parent instanceof Files)
+        {
             Files f = (Files) parent;
 
             return f.getFile(index);
-        } else if (parent instanceof Targets) {
+        }
+        else if (parent instanceof Targets)
+        {
             Targets t = (Targets) parent;
 
             return t.getTarget(index);
-        } else if (parent instanceof Target) {
+        }
+        else if (parent instanceof Target)
+        {
             Target t = (Target) parent;
 
-            if (index < t.getFileLinkCount()) {
+            if (index < t.getFileLinkCount())
+            {
                 return t.getFileLink(index);
-            } else {
+            }
+            else
+            {
                 return t.getModel(index - t.getFileLinkCount());
             }
-        } else {
+        }
+        else
+        {
             logger.warning("child n " + index + " is a not handled");
 
             return "TBD";
@@ -744,44 +1037,58 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Returns the number of children of parent.
      */
-    public int getChildCount(Object parent) {
+    public int getChildCount(Object parent)
+    {
         //logger.entering(""+this.getClass(), "getChildCount");
-        if (parent instanceof Settings) {
+        if (parent instanceof Settings)
+        {
             Settings s = (Settings) parent;
 
             // return files, targets, and parameters
             int i = 1;
 
-            if (s.getFiles().getFileCount() >= 1) {
+            if (s.getFiles().getFileCount() >= 1)
+            {
                 i++;
             }
 
-            if (s.getParameters() != null) {
-                if (s.getParameters().getParameterCount() >= 1) {
+            if (s.getParameters() != null)
+            {
+                if (s.getParameters().getParameterCount() >= 1)
+                {
                     i++;
                 }
             }
 
-            if (s.getResult() != null) {
+            if (s.getResult() != null)
+            {
                 i++;
             }
 
             return i;
-        } else if (parent instanceof Files) {
+        }
+        else if (parent instanceof Files)
+        {
             Files f = (Files) parent;
 
             return f.getFileCount();
-        } else if (parent instanceof Targets) {
+        }
+        else if (parent instanceof Targets)
+        {
             Targets t = (Targets) parent;
 
             return t.getTargetCount();
-        } else if (parent instanceof Target) {
+        }
+        else if (parent instanceof Target)
+        {
             Target t = (Target) parent;
 
             // return number of files and models
             // ident node is represented on target tree node
             return t.getFileLinkCount() + t.getModelCount();
-        } else {
+        }
+        else
+        {
             return 1;
         }
     }
@@ -789,10 +1096,12 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Returns the index of child in parent.
      */
-    public int getIndexOfChild(Object parent, Object child) {
+    public int getIndexOfChild(Object parent, Object child)
+    {
         logger.entering("" + this.getClass(), "getIndexOfChild");
 
-        if ((parent == null) || (child == null)) {
+        if ((parent == null) || (child == null))
+        {
             return 0;
         }
 
@@ -800,12 +1109,10 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
            Settings   s        = (Settings) parent;
            Settings[] children = p.getModel();
            int     count    = 0;
-
            for (int i = 0; i < children.length; i++) {
            if (children[i].equals(child)) {
            return count;
            }
-
            count++;
            }
          **/
@@ -815,7 +1122,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Returns the root of the tree.
      */
-    public Object getRoot() {
+    public Object getRoot()
+    {
         logger.entering("" + this.getClass(), "getRoot");
 
         return rootSettings;
@@ -824,11 +1132,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Returns true if node is a leaf.
      */
-    public boolean isLeaf(Object node) {
-        if ((node instanceof Settings) || (node instanceof Files) ||
-                (node instanceof Targets) || (node instanceof Target)) {
+    public boolean isLeaf(Object node)
+    {
+        if ((node instanceof Settings) || (node instanceof Files) || (node instanceof Targets) ||
+                (node instanceof Target))
+        {
             return false;
-        } else {
+        }
+        else
+        {
             return true;
         }
     }
@@ -836,7 +1148,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /**
      * Removes a listener previously added with addTreeModelListener().
      */
-    public void removeTreeModelListener(TreeModelListener l) {
+    public void removeTreeModelListener(TreeModelListener l)
+    {
         logger.entering("" + this.getClass(), "removeTreeModelListener");
         treeModelListeners.removeElement(l);
     }
@@ -845,12 +1158,13 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * Messaged when the user has altered the value for the item
      * identified by path to newValue.  Not used by this model.
      */
-    public void valueForPathChanged(TreePath path, Object newValue) {
+    public void valueForPathChanged(TreePath path, Object newValue)
+    {
         logger.entering("" + this.getClass(), "valueForPathChanged");
 
         Object modifiedObject = path.getLastPathComponent();
         /*Settings m = (Settings) path.getLastPathComponent();
-          m.setName("" + newValue);
+           m.setName("" + newValue);
          */
         fireTreeNodesChanged(modifiedObject);
     }

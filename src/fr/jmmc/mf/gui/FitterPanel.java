@@ -12,26 +12,49 @@ import fr.jmmc.mf.models.Settings;
  *
  * @author  mella
  */
-public class FitterPanel extends javax.swing.JPanel {
+public class FitterPanel extends javax.swing.JPanel
+{
+    /**
+     * DOCUMENT ME!
+     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.FitterPanel");
+
+    /**
+     * DOCUMENT ME!
+     */
     Settings current = null;
+
+    /**
+     * DOCUMENT ME!
+     */
     SettingsViewerInterface settingsViewer = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    /**
+     * DOCUMENT ME!
+     */
     private javax.swing.JComboBox fitterComboBox;
 
     /** Creates new form FitterPanel */
-    public FitterPanel(SettingsViewerInterface viewer) {
+    public FitterPanel(SettingsViewerInterface viewer)
+    {
         settingsViewer = viewer;
         initComponents();
     }
 
-    public void show(Settings s) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param s DOCUMENT ME!
+     */
+    public void show(Settings s)
+    {
         logger.entering("" + this.getClass(), "show");
         current = s;
 
-        if (s.getFitter() != null) {
+        if (s.getFitter() != null)
+        {
             fitterComboBox.setSelectedItem(s.getFitter());
         }
     }
@@ -43,16 +66,18 @@ public class FitterPanel extends javax.swing.JPanel {
      */
 
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         fitterComboBox = new javax.swing.JComboBox();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
-        fitterComboBox.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { "standard" }));
-        fitterComboBox.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
+        fitterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "standard" }));
+        fitterComboBox.addActionListener(new java.awt.event.ActionListener()
+            {
+                public void actionPerformed(java.awt.event.ActionEvent evt)
+                {
                     fitterComboBoxActionPerformed(evt);
                 }
             });
@@ -60,7 +85,13 @@ public class FitterPanel extends javax.swing.JPanel {
         add(fitterComboBox);
     } // </editor-fold>//GEN-END:initComponents
 
-    private void fitterComboBoxActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_fitterComboBoxActionPerformed
+    /**
+     * DOCUMENT ME!
+     *
+     * @param evt DOCUMENT ME!
+     */
+    private void fitterComboBoxActionPerformed(java.awt.event.ActionEvent evt)
+    { //GEN-FIRST:event_fitterComboBoxActionPerformed
         logger.entering("" + this.getClass(), "fitterComboBoxActionPerformed");
         current.setFitter((String) fitterComboBox.getSelectedItem());
     } //GEN-LAST:event_fitterComboBoxActionPerformed

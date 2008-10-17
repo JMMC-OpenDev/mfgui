@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.16 2008-10-06 15:06:29 mella Exp $"
+# "@(#) $Id: Makefile,v 1.17 2008-10-17 10:11:26 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2008/10/06 15:06:29  mella
+# set all target as first one
+#
 # Revision 1.15  2008/09/26 08:27:18  mella
 # Force castor to build classe on make 'all'
 #
@@ -193,6 +196,7 @@ INSTALL_FILES = ../lib/castor.jar \
 				../lib/commons-httpclient-3.1-beta1.jar \
 				../lib/commons-lang-2.1.jar \
 				../lib/commons-logging-1.0.3.jar \
+				../lib/commons-math-1.2-RC2.jar \
 				../lib/topcat-full.jar
 																
 
