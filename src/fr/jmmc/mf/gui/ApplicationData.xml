@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.11.betA2"/>
+    <program name="ModelFitting" version="1.0.11"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>Brought to you by The JMMC Team.</text>
     <!--	<copyright>Copyrights JMMC 2008</copyright> -->
@@ -44,11 +44,12 @@
                 <change type="REQUEST">Permit user to select installed programs as fits viewer </change>
                 <change type="REQUEST">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
-                <change type="REQUEST">User would like to plot uv map of model for multiple targets (actually only first one is returned)</change>
+                
                 <change type="REQUEST">Fix parameter name conflict when one new target is added to an old setting file</change>
+                <change type="FEATURE">User can plot observed data from the file panels (even if abscissae is not yet in spectral freq but meters)</change>
                 <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
                 <change type="FEATURE">Window closing button now quits application</change>
-                <change type="FEATURE">User can plot image of model for multiple targets</change>
+                <change type="FEATURE">User can plot image or uv map of model for multiple targets</change>
                 <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
                 <!--<change>Models and Targets name have uniq suffixes</change>-->
             </prerelease>
