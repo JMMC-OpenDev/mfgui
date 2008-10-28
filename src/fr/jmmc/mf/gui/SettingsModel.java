@@ -15,43 +15,16 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 
-import nom.tam.util.ArrayDataInput;
-import nom.tam.util.BufferedFile;
 
-import org.eso.fits.FitsColumn;
-
-/*
-   import nom.tam.fits.*;
-   import uk.ac.starlink.datanode.nodes.FITSDataNode;
-   import uk.ac.starlink.datanode.nodes.FITSDataNode.ArrayDataMaker;
-   import uk.ac.starlink.fits.FitsConstants;
-   import uk.ac.starlink.table.*;
-   import uk.ac.starlink.fits.FitsStarTable;
-   import uk.ac.starlink.datanode.nodes.FITSFileDataNode;
-   import uk.ac.starlink.datanode.nodes.TableHDUDataNode;
-   import uk.ac.starlink.datanode.nodes.HDUDataNode;
-   import uk.ac.starlink.datanode.nodes.DataType;
- */
-import org.eso.fits.FitsFile;
-import org.eso.fits.FitsHDUnit;
-import org.eso.fits.FitsHDUnit;
-import org.eso.fits.FitsHeader;
-import org.eso.fits.FitsKeyword;
-import org.eso.fits.FitsTable;
 
 import org.exolab.castor.mapping.Mapping;
-import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.Marshaller;
 
 //import java.nio.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import java.net.URL;
 
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -59,12 +32,14 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
+import fr.jmmc.oifits.*;
+import fr.jmmc.oifits.validator.GUIValidator;
 
 /**
  * DOCUMENT ME!
  *
  * @author $author$
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
   */
 public class SettingsModel implements TreeModel, ModifyAndSaveObject
 {
@@ -135,17 +110,11 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
      */
     public java.io.File associatedFile = null;
 
-    // counter used to generate uniq model ids
-    /**
-     * DOCUMENT ME!
-     */
+    // 
+    /** Counter used to generate uniq model ids     */
     private int modelIdCounter_ = 0;
 
-    // counter used to generate uniq target ids
-    /**
-     * DOCUMENT ME!
-     */
-    private int targetIdCounter_ = 0;
+    // counter used to generate uniq target ids    
 
     /**
      * Creates a new SettingsModel object.
@@ -166,6 +135,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
         rootSettings.setUserInfo("Created on " + new java.util.Date() +
             " by ModelFitting GUI rev. " + fr.jmmc.mcs.util.Resources.getResource("mf.version"));
         setRootSettings(rootSettings);
+        
+        modelIdCounter_=rootSettings.getTargets().getTarget().length;
     }
 
     /**
@@ -176,22 +147,31 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
     public int getNewModelId()
     {
         modelIdCounter_ += 1;
-
         return modelIdCounter_;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getNewTargetId()
-    {
-        modelIdCounter_ += 1;
-
-        return modelIdCounter_;
+    /** Returns a new file Id */
+    public String getNewFileId(){       
+        File[] files = rootSettings.getFiles().getFile();
+        String[] ids = new String[files.length];
+        for (int i = 0; i < files.length; i++)
+        {
+            File file = files[i];
+            ids[i]=file.getId();            
+        }                
+        return getNewId("fileId",ids.length, ids);
     }
-
+    
+    protected String getNewId(String prefix, int firstId, String[] previousIds){        
+        String newId = prefix+firstId;
+        Vector v = new Vector();
+        while(v.contains(newId)){
+            firstId++;
+            newId = prefix+firstId;
+        }
+        return newId;
+    }
+    
     /**
      * DOCUMENT ME!
      *
@@ -490,8 +470,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
             String fitsFileName = fileToAdd.getAbsolutePath();
             File   newFile      = new File();
             newFile.setName(fitsFileName);
-            newFile.setId("id" + rootSettings.getFiles().getFileCount());
-            checkFile(newFile);
+            newFile.setId(getNewFileId());
+            if (checkFile(newFile)){
             // make shorter filename (this line must be kept after checkFile,
             // because is must be retrieved using full qualified name)
             newFile.setName(fileToAdd.getName());
@@ -510,6 +490,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
                           }
              */
             setModified(true);
+            }
         }
         else
         {
@@ -561,12 +542,12 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
      * @throws Exception DOCUMENT ME!
      * @throws . DOCUMENT ME!
      */
-    public void checkFile(File bindedFile) throws Exception
+    public boolean checkFile(File bindedFile) throws Exception
     {
         logger.entering("" + this.getClass(), "checkFile");
 
         String filename = bindedFile.getName();
-        logger.fine("Checking file named '" + filename + "'");
+        logger.fine("Checking file from xml name '" + filename + "'");
 
         // Check href and return if no file exists
         java.io.File realFile = new java.io.File(filename);
@@ -582,11 +563,11 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
             {
                 logger.warning("No oitarget found");
                 // try to continue next test creating a file based on the base64 href                                
-                filename = UtilsClass.saveBASE64OifitsToFile(bindedFile.getId(), href);
+                filename = UtilsClass.saveBASE64OifitsToFile(bindedFile, href);
             }
             else
             {
-                return;
+                return true;
             }
         }
         else if (! realFile.exists())
@@ -602,10 +583,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
                 filename = fc.getSelectedFile().getCanonicalPath();
                 bindedFile.setName(filename);
                 logger.info("User asked to try again with new file ");
-                addFileHref(bindedFile);
-                checkFile(bindedFile);
-
-                return;
+                addFileHref(bindedFile);                
+                return checkFile(bindedFile);
             }
             else
             {
@@ -616,116 +595,26 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject
         else
         {
             addFileHref(bindedFile);
-        }
-
-        //  oi_target HDU
-        //        TableHDU oiTargetHDU=null; 
-        // will tell if there is one OI_TARGET extension in this file        
-        int nbOfOiTargetExtensions = 0;
-
-        /*
-           // scan given file and try to get reference of oi_target extension excepted primary hdu
-           Fits fits = new Fits(filename);
-           FITSFileDataNode dataNode = new FITSFileDataNode(new java.io.File(filename));
-           for (Iterator i = dataNode.getChildIterator(); i.hasNext();) {
-               Object elem = (Object) i.next();
-               logger.fine("next el is "+ elem.getClass()+" named "+elem);
-               if (elem  instanceof TableHDUDataNode){
-                   TableHDUDataNode hdu = (TableHDUDataNode)elem;
-                   logger.fine("allows children -> " +hdu.allowsChildren());
-                   StarTable table = hdu.getStarTable();
-                   // le problem est que l'on a pas a cces au header qui est en privé dans hdu
-               }
-           }
-           fits = new Fits(filename);
-           String list="";
-           int index=0;
-           BasicHDU hdu;
-           while((hdu=fits.readHDU())!=null){
-               String extName = hdu.getTrimmedString("EXTNAME");
-               logger.fine("reading hdu n "+index+ "["+extName+"]");
-               list=list+" "+extName;
-               // search for oi_targets
-               if(extName!=null){
-                   if(extName.equals("OI_TARGET")){
-                       nbOfOiTargetExtensions++;
-                       oiTargetHDU = (TableHDU) hdu;
-                   }
-               }
-               index++;
-           }
-           logger.fine("file contains "+index+" named extensions [ "+list+"]");
-         */
-        String     list        = "";
-        FitsHDUnit oiTargetHDU = null;
-        FitsFile   fits        = new FitsFile(filename);
-        int        index       = fits.getNoHDUnits();
-
-        for (int i = 0; i < index; i++)
+        }   
+        
+        bindedFile.removeAllOitarget();
+        OifitsFile   fits        = new OifitsFile(filename);
+        try{
+        OiTarget oiTarget = fits.getOiTarget();
+        String [] targetNames = oiTarget.getTargetNames();
+        for (int i = 0; i < targetNames.length; i++)
         {
-            FitsHDUnit  hdu     = fits.getHDUnit(i);
-            FitsHeader  header  = hdu.getHeader();
-            FitsKeyword extName = header.getKeyword("EXTNAME");
-
-            list                = list + " " + extName;
-
-            // search for oi_targets
-            if (extName != null)
-            {
-                logger.fine("reading hdu n " + i + "[" + extName.getString() + "]");
-
-                if (extName.getString().equals("OI_TARGET"))
-                {
-                    nbOfOiTargetExtensions++;
-                    oiTargetHDU = hdu;
-                }
-            }
+            String targetName = targetNames[i];
+            Oitarget t = new Oitarget();
+            t.setTarget(targetName);        
+            bindedFile.addOitarget(t);
+        }        
+        }catch(Exception e){
+            GUIValidator val = new GUIValidator(null);
+            val.checkFile(fits);
+            return false;
         }
-
-        if (nbOfOiTargetExtensions != 1)
-        {
-            throw new Exception("File does no contain one OI_TARGET but " + nbOfOiTargetExtensions);
-        }
-
-        FitsColumn targetsColumn = ((FitsTable) oiTargetHDU.getData()).getColumn("TARGET");
-
-        //String[] targets = (String[])oiTargetHDU.getColumn("TARGET");
-        int targetNb = ((FitsTable) oiTargetHDU.getData()).getNoRows();
-
-        // Collect previous
-        Oitarget[] modelOiTargets      = bindedFile.getOitarget();
-        Vector     modelOiTargetVector = new Vector();
-
-        for (int i = 0; i < modelOiTargets.length; i++)
-        {
-            modelOiTargetVector.addElement(((Oitarget) modelOiTargets[i]).getTarget());
-        }
-
-        // And update list
-        if (targetNb > 0)
-        {
-            for (int i = 0; i < targetNb; i++)
-            {
-                String s = targetsColumn.getString(i).trim();
-
-                if (! modelOiTargetVector.contains(s))
-                {
-                    Oitarget t = new Oitarget();
-                    t.setTarget(s);
-                    bindedFile.addOitarget(t);
-                    logger.info("'" + s + "' oitarget associated");
-                }
-                else
-                {
-                    logger.info("'" + s + "' oitarget was already associated");
-                }
-            }
-        }
-
-        if (bindedFile.getOitargetCount() != targetNb)
-        {
-            throw new Exception("File does not contain same number of oitargets");
-        }
+        return true;
     }
 
     // @todo think to move this method into fr.jmmc.mf.util
