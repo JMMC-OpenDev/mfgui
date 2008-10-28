@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.11"/>
+    <program name="ModelFitting" version="1.0.12beta"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
-    <text>Brought to you by The JMMC Team.</text>
+    <text>
+        
+    </text>
     <!--	<copyright>Copyrights JMMC 2008</copyright> -->
     <dependences>
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>		
     </dependences>    
     <menubar>
-      <menu label="File">
-        <menu label="New setting..." classpath="fr.jmmc.mf.gui.MFGui" action="newModel" accelerator="N"/>
-        <menu/>
-        <menu label="Open setting file..." classpath="fr.jmmc.mf.gui.MFGui" action="loadModel" accelerator="O"/>
-        <menu label="Open setting url..." classpath="fr.jmmc.mf.gui.MFGui" action="loadRemoteModel"/>
-        <menu label="Open demo setting">
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel1"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel2"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel3"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel4"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
-            <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
-        </menu>
-        <menu/>
-        <menu label="Save setting" classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
-      </menu>
-       <menu label="Edit">
-            <menu label="Preferences..." classpath="fr.jmmc.mf.gui.MFGui" action="showPreferences"/>
-       </menu>
+        <menu label="File">
+            <menu label="New setting..." classpath="fr.jmmc.mf.gui.MFGui" action="newModel" accelerator="N"/>
+            <menu/>
+            <menu label="Open setting file..." classpath="fr.jmmc.mf.gui.MFGui" action="loadModel" accelerator="O"/>
+            <menu label="Open setting url..." classpath="fr.jmmc.mf.gui.MFGui" action="loadRemoteModel"/>
+            <menu label="Open demo setting">
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel1"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel2"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel3"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel4"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
+            </menu>
+            <menu/>
+            <menu label="Save setting" classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
+        </menu>        
     </menubar>    
     <releasenotes>
-        <release version="1.0.11">
-            <prerelease version="1.0.11beta2">
+        <release version="1.0.12">
+            <prerelease version="1.0.12beta2"> 
 <!-- <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -43,9 +42,14 @@
                 <change type="REQUEST">Use checkboxes to file selection instead of the simple list widget</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer </change>
                 <change type="REQUEST">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>
-                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
-                
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                
                 <change type="REQUEST">Fix parameter name conflict when one new target is added to an old setting file</change>
+                <change type="FEATURE">File panel gets one new button to use oifits validator.</change>
+                <change type="FEATURE">File panel gets new plotting capabilities.</change>
+            </prerelease>
+        </release>           
+        <release version="1.0.11">
+            <prerelease version="1.0.11beta2">
                 <change type="FEATURE">User can plot observed data from the file panels (even if abscissae is not yet in spectral freq but meters)</change>
                 <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
                 <change type="FEATURE">Window closing button now quits application</change>
