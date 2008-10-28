@@ -72,8 +72,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         this.addWindowListener(this);
 
         tabbedPane_ = new javax.swing.JTabbedPane();
-        tabbedPane_.setMinimumSize(new java.awt.Dimension(640, 480));
-        tabbedPane_.setPreferredSize(new java.awt.Dimension(640, 480));
+        tabbedPane_.setMinimumSize(new java.awt.Dimension(800, 800));
+        tabbedPane_.setPreferredSize(new java.awt.Dimension(800, 800));
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
 
         /* Plastic transmitter. */
@@ -108,53 +108,33 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     }
 
     /**
-     * DOCUMENT ME!
+     * Return the singleton instance.
      *
-     * @return DOCUMENT ME!
+     * @return the singleton instance of MFGui.
      */
     public static MFGui getInstance()
     {
         return instance;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static PlasticListener getPlasticServer()
+   public static PlasticListener getPlasticServer()
     {
         return plasticServer_;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param text DOCUMENT ME!
-     */
-    public void setStatus(String text)
+   public void setStatus(String text)
     {
         statusBar.show(text);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param p DOCUMENT ME!
-     */
-    private void addSettingsPane(SettingsPane p)
+   private void addSettingsPane(SettingsPane p)
     {
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
     }
 
     /* This method return selectedPane or null . It also updates titles */
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public SettingsPane getSelectedSettingsPane()
+   public SettingsPane getSelectedSettingsPane()
     {
         int idx = tabbedPane_.getSelectedIndex();
 
@@ -176,12 +156,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         return sp;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param c DOCUMENT ME!
-     */
-    public static void closeTab(java.awt.Component c)
+   public static void closeTab(java.awt.Component c)
     {
         // not static logger.entering(""+this.getClass(), "closeTab");
         tabbedPane_.remove(c);
@@ -257,7 +232,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
       
     }
 
-    /**
+    /** 
+     * Main entry point.
      * @param args the command line arguments
      */
     public static void main(String[] args)
@@ -273,18 +249,16 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowOpened(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowClosing(WindowEvent e)
     {
@@ -292,54 +266,49 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowClosed(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowIconified(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowDeiconified(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowActivated(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
+     * Listen window event.
+     * @param e window event.
      */
     public void windowDeactivated(WindowEvent e)
     {
     }
 
     /**
-     * DOCUMENT ME!
+     * App lifecycle finish step.
      *
-     * @return DOCUMENT ME!
+     * @return true if App can quit or false.
      */
     protected boolean finish()
     {
@@ -389,6 +358,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         public ShowPrefAction()
         {
             super(className_,"showPreferences");
+            flagAsPreferenceAction();
             preferencesView = new PreferencesView();
         }
 
