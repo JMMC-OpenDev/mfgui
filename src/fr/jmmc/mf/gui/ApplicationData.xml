@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.12beta"/>
+    <program name="ModelFitting" version="1.0.12"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>
         
@@ -30,22 +30,24 @@
     </menubar>    
     <releasenotes>
         <release version="1.0.12">
-            <prerelease version="1.0.12beta2"> 
+            <prerelease version="1.0.12beta"> 
 <!-- <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
                  and propose converter tools)
-     </li>  -->
-                <change type="REQUEST">Enhance error message displayed that occures on yorick side</change>
+     </li>  --><change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>                
+                <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>                
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Add sniffer capability</change>
                 <change type="REQUEST">Use checkboxes to file selection instead of the simple list widget</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer </change>
                 <change type="REQUEST">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                
-                <change type="REQUEST">Fix parameter name conflict when one new target is added to an old setting file</change>
+                <change type="REQUEST">Add a close setting feature in the 'file' menu.</change>
+                <change type="REQUEST">Fix parameter name conflict when one new target is added to an old setting file.</change>
                 <change type="FEATURE">File panel gets one new button to use oifits validator.</change>
                 <change type="FEATURE">File panel gets new plotting capabilities.</change>
+                <change type="CHANGE">Yorick side errors are extracted for display, no more big xml document :-)</change>
             </prerelease>
         </release>           
         <release version="1.0.11">
