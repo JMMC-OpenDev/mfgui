@@ -199,12 +199,12 @@ public class UtilsClass
      *
      * @throws IOException DOCUMENT ME!
      */
-    public static String saveBASE64OifitsToFile(String fileId, String b64)
+    public static String saveBASE64OifitsToFile(fr.jmmc.mf.models.File file, String b64)
         throws IOException
     {
-        Object key = fileId;
+        Object key = file;
 
-        // Search if this string has already been loaded
+        // Search if this file has already been loaded
         java.io.File outputFile = (java.io.File) alreadyExpandedFiles.get(key);
         ;
 
