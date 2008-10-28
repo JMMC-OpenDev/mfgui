@@ -37,7 +37,7 @@ public class FilesPanel extends javax.swing.JPanel
     /**
      * DOCUMENT ME!
      */
-    public Action loadFilesAction;
+    public static Action loadFilesAction;
 
     /**
      * DOCUMENT ME!
