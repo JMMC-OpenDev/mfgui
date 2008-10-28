@@ -10,10 +10,8 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
-import org.w3c.dom.*;
 import org.w3c.dom.Document;
 
-import org.xml.sax.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -35,9 +33,7 @@ import javax.swing.tree.TreePath;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
-import javax.xml.xpath.*;
 
 
 /**
@@ -300,7 +296,7 @@ public class UtilsClass
     private static String xsl(Source source, URL xslURL, String[] params)
     {
         logger.entering(className, "xsl");
-
+        logger.fine("using next url for transformation" + xslURL);
         try
         {
             // Create transformer factory
@@ -352,8 +348,8 @@ public class UtilsClass
             new FeedbackReport(null, true, exc);
         }
 
+        logger.fine("End of transformation ");
         logger.exiting(className, "xsl");
-
         return null;
     }
 
@@ -408,6 +404,7 @@ public class UtilsClass
      */
     public static Document parseXmlFile(String filename, boolean validating)
     {
+        logger.entering(className, "parseXmlString");
         try
         {
             // Create a builder factory
@@ -442,6 +439,7 @@ public class UtilsClass
      */
     public static Document parseXmlString(String xmlBuffer, boolean validating)
     {
+        logger.entering(className, "parseXmlString");
         try
         {
             // Create a builder factory
