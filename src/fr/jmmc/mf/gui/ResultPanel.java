@@ -72,7 +72,7 @@ public class ResultPanel extends javax.swing.JPanel
      */
     SettingsModel settingsModel = null;
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     /**
      * DOCUMENT ME!
      */
@@ -152,15 +152,9 @@ public class ResultPanel extends javax.swing.JPanel
 
         try
         {
-            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
-            logger.finest("Get url for xslt from " + xslPath);
-
-            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
-            logger.finest("Start of transformation with :" + url);
-
-            //String htmlStr = UtilsClass.xsl(s.getTempFile(true), url, null);
+            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";            
+            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);                        
             String htmlStr = UtilsClass.xsl(s.getLastXml(), url, null);
-            logger.fine("End of transformation ");
             resultEditorPane.setContentType("text/html");
             resultEditorPane.setText(htmlStr);
         }
@@ -226,7 +220,7 @@ public class ResultPanel extends javax.swing.JPanel
         add(jTabbedPane1);
     } // </editor-fold>//GEN-END:initComponents
 
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 
     /** Plots using ptplot widgets */
     protected void ptplot(String plotName)
