@@ -9,17 +9,18 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.File;
 
+import fr.jmmc.oifits.*;
+
+import fr.jmmc.oifits.validator.GUIValidator;
 import org.apache.commons.math.linear.RealVectorImpl;
 
 //import nom.tam.fits.*;
 import org.eso.fits.FitsFile;
-import org.eso.fits.FitsTable;
 
 import ptolemy.plot.*;
 
 import ptolemy.plot.plotml.*;
 
-import uk.ac.starlink.topcat.plot.GraphSurface;
 
 import java.net.URI;
 
@@ -27,8 +28,7 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import org.eso.fits.FitsColumn;
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+import org.apache.commons.math.linear.RealMatrixImpl;
 
 
 /**
@@ -42,10 +42,16 @@ public class FilePanel extends javax.swing.JPanel
      */
     static File current = null;
 
+    static OifitsFile oifitsFile_=null;
     /**
      * DOCUMENT ME!
      */
     static Action saveEmbeddedFileAction;
+
+    /**
+     * DOCUMENT ME!
+     */
+    static Action checkEmbeddedFileAction;
 
     /**
      * DOCUMENT ME!
@@ -60,7 +66,7 @@ public class FilePanel extends javax.swing.JPanel
     /**
      * DOCUMENT ME!
      */
-    static DefaultListModel hduListModel = new DefaultListModel();
+    static ListModel hduListModel = new DefaultListModel();
 
     /**
      * DOCUMENT ME!
@@ -69,17 +75,15 @@ public class FilePanel extends javax.swing.JPanel
             "fr.jmmc.mf.gui.FilePanel");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton checkFileButton;
     private javax.swing.JPopupMenu fileListPopupMenu;
     private javax.swing.JList hduList;
-    private javax.swing.JTextField infosTextField;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu listenersMenu;
     private javax.swing.JButton loadViewerButton;
@@ -91,7 +95,10 @@ public class FilePanel extends javax.swing.JPanel
     private javax.swing.JButton showUVCoverageButton;
     private javax.swing.JButton showVis2Button;
     private javax.swing.JButton showVisButton;
-    private javax.swing.JTextField sizeTextField;
+    private javax.swing.JCheckBox t3ampCheckBox;
+    private javax.swing.JCheckBox t3phiCheckBox;
+    private javax.swing.JCheckBox visampCheckBox;
+    private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
 
     /** Creates new form FilePanel */
@@ -100,6 +107,7 @@ public class FilePanel extends javax.swing.JPanel
         // Prepare action before gui construction
         saveEmbeddedFileAction     = new SaveEmbeddedFileAction();
         showEmbeddedFileAction     = new ShowEmbeddedFileAction();
+        checkEmbeddedFileAction     = new CheckEmbeddedFileAction();
         initComponents();
 
         MyListSelectionListener myListSelectionListener = new MyListSelectionListener();
@@ -109,74 +117,40 @@ public class FilePanel extends javax.swing.JPanel
     }
 
     /**
-     * DOCUMENT ME!
+     * This must be doced and improvedbecause it build a new fitsfile instance for each show method call...
      *
      * @param file DOCUMENT ME!
      */
     public void show(File file)
     {
+        // Try to load data file
+        oifitsFile_=null;
         try
         {
-            current = file;
-
-            nameTextField.setText(file.getName());
-
-            // update name field
-            java.io.File f        = new java.io.File(current.getName());
-            String       filename = null;
-
-            filename              = UtilsClass.saveBASE64OifitsToFile(current.getId(),
+            current = file;            
+            String     filename   = UtilsClass.saveBASE64OifitsToFile(current,
                     current.getHref());
+            java.io.File f        = new java.io.File(filename);
+            oifitsFile_  = new OifitsFile(filename);
 
-            try
-            {
-                if (! f.exists())
-                {
-                    f = new java.io.File(filename);
-                }
-
-                localNameTextField.setText(f.getAbsolutePath());
-            }
-            catch (Exception exc)
-            {
-                localNameTextField.setText("Can't locate " + current.getName());
-            }
-
-            // update size field
-            sizeTextField.setText("" + (f.length() / 1000) + " kBytes");
-
-            // update info field
-            String list = "";
-
-            for (int i = 0; i < current.getOitargetCount(); i++)
-            {
-                list += ("," + current.getOitarget(i).getTarget());
-            }
-
-            if (current.getOitargetCount() > 0)
-            {
-                infosTextField.setText("Target list [" + list.substring(1) + "]");
-            }
-            else
-            {
-                infosTextField.setText("No Target present");
-            }
-
-            // update list of hdu list
-            // clear and fill hduListModel
-            hduListModel.clear();
-
-            // scan given file and try to get reference of oi_target extension excepted primary hdu
-            FitsFile fits  = new FitsFile(filename);
-            int      index = fits.getNoHDUnits();
-
-            // start from 1 to skip primary hdu
-            for (int i = 1; i < index; i++)
-            {
-                String extName = fits.getHDUnit(i).getHeader().getKeyword("EXTNAME").getString() +
-                    "[" + i + "]";
-                hduListModel.addElement(extName);
-            }
+            // update file info fields
+            nameTextField.setText(file.getName());
+            localNameTextField.setText(f.getAbsolutePath() +"  ("+(f.length() / 1000) + " kBytes)");         
+           
+            // update lists
+            hduList.setListData(oifitsFile_.getOiTables());
+            hduListModel=hduList.getModel();            
+            showUVCoverageButton.setEnabled(false);
+            showSketchButton.setEnabled(oifitsFile_.hasOiArray());
+            showVisButton.setEnabled(oifitsFile_.hasOiVis());
+            visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
+            visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
+            showVis2Button.setEnabled(oifitsFile_.hasOiVis2());
+            showT3Button.setEnabled(oifitsFile_.hasOiT3());
+            t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
+            t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
+            // update button state
+            hduList.setSelectedIndices(new int[]{});                            
         }
         catch (Exception exc)
         {
@@ -200,17 +174,13 @@ public class FilePanel extends javax.swing.JPanel
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        infosTextField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        sizeTextField = new javax.swing.JTextField();
         localNameTextField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         saveFileButton = new javax.swing.JButton();
+        checkFileButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         loadViewerButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         hduList = new javax.swing.JList();
         showSketchButton = new javax.swing.JButton();
@@ -218,61 +188,35 @@ public class FilePanel extends javax.swing.JPanel
         showVisButton = new javax.swing.JButton();
         showVis2Button = new javax.swing.JButton();
         showT3Button = new javax.swing.JButton();
+        t3ampCheckBox = new javax.swing.JCheckBox();
+        t3phiCheckBox = new javax.swing.JCheckBox();
+        visampCheckBox = new javax.swing.JCheckBox();
+        visphiCheckBox = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
 
         listenersMenu.setText("Send to application"); // NOI18N
         fileListPopupMenu.add(listenersMenu);
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("File panel"));
-        setLayout(new java.awt.BorderLayout());
+        setLayout(new java.awt.GridBagLayout());
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jLabel3.setText("First Name:"); // NOI18N
+        jLabel3.setText("Name:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel2.add(jLabel3, gridBagConstraints);
 
         nameTextField.setEditable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         jPanel2.add(nameTextField, gridBagConstraints);
-
-        infosTextField.setEditable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel2.add(infosTextField, gridBagConstraints);
-
-        jLabel5.setText("Infos:"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel2.add(jLabel5, gridBagConstraints);
-
-        jLabel2.setText("Size:"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel2.add(jLabel2, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel2.add(sizeTextField, gridBagConstraints);
 
         localNameTextField.setEditable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         jPanel2.add(localNameTextField, gridBagConstraints);
@@ -287,14 +231,24 @@ public class FilePanel extends javax.swing.JPanel
         saveFileButton.setAction(this.saveEmbeddedFileAction);
         saveFileButton.setForeground(new java.awt.Color(51, 51, 52));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
         jPanel2.add(saveFileButton, gridBagConstraints);
 
-        add(jPanel2, java.awt.BorderLayout.NORTH);
+        checkFileButton.setAction(this.checkEmbeddedFileAction);
+        checkFileButton.setForeground(new java.awt.Color(51, 51, 52));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel2.add(checkFileButton, gridBagConstraints);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(jPanel2, gridBagConstraints);
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(388, 291));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         loadViewerButton.setAction(showEmbeddedFileAction);
@@ -302,29 +256,21 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(loadViewerButton, gridBagConstraints);
 
         jLabel1.setForeground(new java.awt.Color(153, 153, 153));
         jLabel1.setText("Use Shift or Ctrl keys to select multiple tables");
-        jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jPanel1.add(jPanel3, gridBagConstraints);
+        jPanel1.add(jLabel1, gridBagConstraints);
+
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(22, 130));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(259, 431));
 
         hduList.setModel(hduListModel);
-        hduList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
-        {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt)
-            {
-                hduListValueChanged(evt);
-            }
-        });
         hduList.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
@@ -341,6 +287,7 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
         jPanel1.add(jScrollPane1, gridBagConstraints);
@@ -356,6 +303,7 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showSketchButton, gridBagConstraints);
 
@@ -371,10 +319,11 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showUVCoverageButton, gridBagConstraints);
 
-        showVisButton.setText("Plot VISDATA"); // NOI18N
+        showVisButton.setText("showVisButton label inited in code"); // NOI18N
         showVisButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -388,7 +337,7 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showVisButton, gridBagConstraints);
 
-        showVis2Button.setText("Plot VIS2DATA"); // NOI18N
+        showVis2Button.setText("showVis2Button label inited in code"); // NOI18N
         showVis2Button.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -402,7 +351,7 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showVis2Button, gridBagConstraints);
 
-        showT3Button.setText("Plot T3AMP"); // NOI18N
+        showT3Button.setText("showT3Button label inited in code"); // NOI18N
         showT3Button.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -416,7 +365,50 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showT3Button, gridBagConstraints);
 
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        t3ampCheckBox.setSelected(true);
+        t3ampCheckBox.setText("T3AMP");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        jPanel1.add(t3ampCheckBox, gridBagConstraints);
+
+        t3phiCheckBox.setSelected(true);
+        t3phiCheckBox.setText("T3PHI");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        jPanel1.add(t3phiCheckBox, gridBagConstraints);
+
+        visampCheckBox.setSelected(true);
+        visampCheckBox.setText("VISAMP");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        jPanel1.add(visampCheckBox, gridBagConstraints);
+
+        visphiCheckBox.setSelected(true);
+        visphiCheckBox.setText("VISPHI");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        jPanel1.add(visphiCheckBox, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jPanel1, gridBagConstraints);
+
+        jButton1.setAction(FilesPanel.loadFilesAction);
+        jButton1.setText("Load one other file...");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -429,8 +421,7 @@ public class FilePanel extends javax.swing.JPanel
 
         try
         {
-            String filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-
+           String filename= oifitsFile_.getName();
             // scan given file and try to get reference of oi_target extension excepted primary hdu
             FitsFile fits  = new FitsFile(filename);
             int      index = fits.getNoHDUnits();
@@ -466,7 +457,7 @@ public class FilePanel extends javax.swing.JPanel
             c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo, startab, l, "STAXYZ[1]", null);
             topcat.getCurrentModel().appendColumn(c, 1);
 
-            uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);
+            uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel1);
             // setVisible must be called before model assignement
             plot.setVisible(true);
             plot.setMainTable(topcat.getCurrentModel());
@@ -504,16 +495,8 @@ public class FilePanel extends javax.swing.JPanel
 
                 for (int i = 0; i < indices.length; i++)
                 {
-                    String       filename = current.getName();
-                    java.io.File f        = new java.io.File(filename);
-
-                    if (! f.exists())
-                    {
-                        filename     = UtilsClass.saveBASE64OifitsToFile(current.getId(),
-                                current.getHref());
-                        f            = new java.io.File(filename);
-                    }
-
+                    String       filename = oifitsFile_.getName();
+                    
                     java.util.Vector args = new Vector();
                     args.addElement("file://localhost/" + filename + "#" + (indices[i]));
                     logger.warning("request app '" + app + "' to load:" + args.get(0));
@@ -599,231 +582,168 @@ public class FilePanel extends javax.swing.JPanel
     private void hduListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMouseClicked
         logger.entering("" + this.getClass(), "hduListMouseClicked");
-
-        // launch viewer if double click else adjust view button state
+        // launch viewer if double click
         if (evt.getClickCount() == 2)
         {
             loadViewerButton.doClick();
         }
-
-        if (hduList.getSelectedIndex() >= 0)
-        {
-            loadViewerButton.setEnabled(true);
-        }
-        else
-        {
-            loadViewerButton.setEnabled(false);
-        }
     }//GEN-LAST:event_hduListMouseClicked
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
-    private void hduListValueChanged(javax.swing.event.ListSelectionEvent evt)
-    {//GEN-FIRST:event_hduListValueChanged
-
-        if (hduList.getSelectedIndex() >= 0)
-        {
-            loadViewerButton.setEnabled(true);
-        }
-        else
-        {
-            loadViewerButton.setEnabled(false);
-        }
-    }//GEN-LAST:event_hduListValueChanged
-
     /*TO PUT ON ANOTHER PLACE*/
-    /** Build a ptplot xml file of given data */
-    private String buildXmlPtPlot()
-    {
-        StringBuffer sb = new StringBuffer();
-
-        return sb.toString();
-    }
-
-    /*TO PUT ON ANOTHER PLACE*/
-    /** Build a ptplot xml file of given data */
+    /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[] x, double[] y,
-        double[] lowErrorBar, double[] highErrorBar)
+        double[] errorBar)
     {
         StringBuffer sb = new StringBuffer();
+        if(errorBar!=null){
+            logger.fine("x,y,err dimensions :"+x.length+","+y.length+","+errorBar.length);
+        }   else{
+            logger.fine("x,y dimensions :"+x.length+","+y.length);
+        }
+            
         sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
-
         for (int i = 0; i < x.length; i++)
         {
             sb.append("<m x=\"" + x[i] + "\" y=\"" + y[i] + "\"");
-
-            if (lowErrorBar != null)
+            if (errorBar != null)
             {
-                sb.append(" lowErrorBar=\"" + lowErrorBar[i] + "\"");
+                double lowEB=y[i]-errorBar[i]/2;
+                double highEB=y[i]+errorBar[i]/2;                
+                sb.append(" lowErrorBar=\"" + lowEB + "\"");
+                sb.append(" highErrorBar=\"" + highEB + "\"");
             }
-
-            if (highErrorBar != null)
-            {
-                sb.append(" highErrorBar=\"" + highErrorBar[i] + "\"");
-            }
-
             sb.append("/>\n");
         }
-
-        sb.append("</dataset>");
-
+        sb.append("</dataset>");        
         return sb.toString();
     }
-
-    /*TO PUT ON ANOTHER PLACE*/
-    /** Build a double array from a single column*/
-    private double[] getRealsOfColumn(FitsTable table, String label)
+    /** Build a ptplot xml file for given data */
+    private String buildXmlPtPlotDataSet(String datasetName, double[][] x, double[][] y,
+            double[][] errorBar)
     {
-        int      nbRows = table.getNoRows();
-        double[] d      = new double[nbRows];
-        FitsColumn c = table.getColumn(label);
-        if (c==null){
-            return new double[0];
-        }
-
-        for (int rowIndex = 0; rowIndex < nbRows; rowIndex++)
+        StringBuffer sb = new StringBuffer();
+        logger.fine("Dims=" + x.length + "," + y.length + "," + errorBar.length + "," + errorBar.length + ",");
+        sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
+        for (int i = 0; i < x.length; i++)
         {
-            d[rowIndex] = table.getColumn(label).getReal(rowIndex);
-        }
-
-        return d;
+            for (int j = 0; j < x[0].length; j++)
+            {
+                sb.append("<m x=\"" + x[i][j] + "\" y=\"" + y[i][j] + "\"");
+                if (errorBar != null)
+                {
+                    double lowEB = y[i][j] - errorBar[i][j] / 2;
+                    double highEB = y[i][j] + errorBar[i][j] / 2;
+                    sb.append(" lowErrorBar=\"" + lowEB + "\"");
+                    sb.append(" highErrorBar=\"" + highEB + "\"");
+                }
+                sb.append("/>\n");
+            }
+        }        
+        sb.append("</dataset>");
+        return sb.toString();
     }
-   
+    
     /**
      * DOCUMENT ME!     
      */
-    public void showData(String requestedTables)
+    public void showData(String requestedTables, String [] requestedColumns)
     {
         logger.fine("Searching to plot "+requestedTables);
         try
-        {
-            String filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-
-            // scan given file and try to get reference of oi_target extension excepted primary hdu
-            FitsFile fits  = new FitsFile(filename);
-            int      index = fits.getNoHDUnits();
-
-            // Selecte indices from selected items (or not) and requested plot 
-            int[]        firstIndices  = hduList.getSelectedIndices();
-            if(firstIndices.length==0)
+        {        
+            int retainedHdu = 0;
+            // Select requested tables:
+            // plot all reqeusted if nothing selected or selection does not contains requested
+            // else plot only selected
+            Object[] selected = hduList.getSelectedValues();
+            OiTable[] oiTables = oifitsFile_.getOiTables();
+            selected = hduList.getSelectedValues();
+            // Search in selection
+            for (int i = 0; i < selected.length; i++)
             {
-                System.out.println("No selection , check from all tables");
-                int nbElements=hduList.getModel().getSize();
-                firstIndices=new int[nbElements];
-                for (int i=0; i< nbElements-1; i++){
-                    firstIndices[i]=i+1 ;
-                }
-            }            
-            int[]        indices  = firstIndices;
-            int retainedHdu=0;
-            for (int i = 0; i < firstIndices.length; i++)
-            {
-                int indice=firstIndices[i];
-                String label  = (String) hduList.getModel().getElementAt(indice);
-                System.out.println("Found "+label);
-                if(label.startsWith(requestedTables+"[")){
-                    System.out.println("Requesting "+indice);
-                    indices[retainedHdu]=indice;
+                OiTable t = (OiTable) selected[i];
+                if (t.getExtName().equals(requestedTables))
+                {
+                    oiTables[retainedHdu] = t;
                     retainedHdu++;
                 }
             }
-            if (retainedHdu==0){
-                 System.out.println("No were found in selection, check all");
+            // or search on all if nothing found
+            if (retainedHdu == 0)
+            {
                 // no hdu found, we will try again on all hdu
-                int nbElements=hduList.getModel().getSize();
-                indices=new int[nbElements];
-                for (int i=0; i< nbElements-1; i++){
-                    int indice=i+1 ;
-                    String label  = (String) hduList.getModel().getElementAt(indice);
-                    System.out.println("Found "+label);
-                if(label.startsWith(requestedTables+"[")){
-                    System.out.println("Requesting "+indice);
-                    indices[retainedHdu]=indice;
-                    retainedHdu++;
+                for (int i = 0; i < oiTables.length; i++)
+                {
+                    OiTable t = (OiTable) oiTables[i];
+                    if (t.getExtName().equals(requestedTables))
+                    {
+                        oiTables[retainedHdu] = t;
+                        retainedHdu++;
+                    }
                 }
-            }
             }
 
             /* Start plotting loop on retained HDU*/
-            System.out.println("Starting plot");
-            
-            StringBuffer sb       = new StringBuffer();
-            String       dataName;
-            String       errName;
+            StringBuffer sb = new StringBuffer();
+            String dataName;
+            String errName;
             sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" +
-                "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
-                " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">" + "<plot>" +
-                "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
-                "<title>"+requestedTables+ " versus (radial) distance</title>" +
-                "<xLabel>distance (meter)</xLabel>" + "<yLabel>"+requestedTables+"</yLabel>");
-
-                //"<title>"+requestedTables+ " versus radial distance</title>" +
-                //"<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>"+requestedTables+"</yLabel>");
+                    "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
+                    " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">" + "<plot>" +
+                    "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
+                    "<title>data versus radial distance</title>" +
+                    "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + requestedTables + "</yLabel>");
 
             for (int i = 0; i < retainedHdu; i++)
             {
-                int    indice = indices[i];
-                String label  = (String) hduList.getModel().getElementAt(indice);
+                OiTable table = oiTables[i];
 
-                boolean isOiVis2=label.startsWith("OI_VIS2");
-                boolean isOiT3=label.startsWith("OI_T3");
-                boolean isOiVis=!(isOiVis2 || isOiT3);
-                
-                if (isOiVis2)
+                for (int j = 0; j < requestedColumns.length; j++)
                 {
-                    dataName     = "VIS2DATA";
-                    errName      = "VIS2ERR";
-                }
-                else if (isOiVis)
-                {
-                    dataName     = "VISDATA";
-                    errName      = "VISERR";
-                }else
-                {
-                    dataName     = "T3AMP";
-                    errName      = "T3AMPERR";
-                }
-
-                indice++; // 1 is not the first table
-                FitsTable      table    = (FitsTable) fits.getHDUnit(indice).getData();
-                int            nbRows   = table.getNoRows();
-                RealVectorImpl data = new RealVectorImpl(getRealsOfColumn(table, dataName));
-                RealVectorImpl err  = new RealVectorImpl(getRealsOfColumn(table, errName));                
-                
-                RealVectorImpl dist;
-                if (isOiT3)
-                {
-                    RealVectorImpl u1coord = new RealVectorImpl(getRealsOfColumn(table, "U1COORD"));
-                    RealVectorImpl v1coord = new RealVectorImpl(getRealsOfColumn(table, "V1COORD"));
-                    RealVectorImpl u2coord = new RealVectorImpl(getRealsOfColumn(table, "U2COORD"));
-                    RealVectorImpl v2coord = new RealVectorImpl(getRealsOfColumn(table, "V2COORD"));
-
-                    RealVectorImpl u3coord = u1coord.subtract(u2coord);
-                    RealVectorImpl v3coord = v1coord.subtract(v2coord);
-
-                    RealVectorImpl dist1 = (RealVectorImpl) u1coord.ebeMultiply(u1coord).add(v1coord.ebeMultiply(v1coord)).mapSqrt();
-                    RealVectorImpl dist2 = (RealVectorImpl) u2coord.ebeMultiply(u2coord).add(v2coord.ebeMultiply(v2coord)).mapSqrt();
-                    RealVectorImpl dist3 = (RealVectorImpl) u3coord.ebeMultiply(u3coord).add(v3coord.ebeMultiply(v3coord)).mapSqrt();
-                    dist = new RealVectorImpl(nbRows);
-                    for (int j = 0; j < nbRows; j++)
+                    String requestedColumn = requestedColumns[j];
+                    String label = table.getExtName()+"#"+table.getExtNb()+":"+requestedColumn;
+                    double data[][] = null;
+                    double err[][] = null;
+                    double dist[][] = null;
+                    if (table instanceof OiT3)
                     {
-                        dist.set(j, Math.max(dist1.getEntry(j), Math.max(dist2.getEntry(j), dist3.getEntry(j))));
+                        OiT3 t = (OiT3) table;
+                        if (requestedColumn.equals("T3AMP"))
+                        {
+                            data = t.getT3Amp();
+                            err = t.getT3AmpErr();
+                        }
+                        if (requestedColumn.equals("T3PHI"))
+                        {
+                            RealMatrixImpl m = new RealMatrixImpl(t.getT3Phi());
+                            data = m.scalarMultiply(Math.PI/180).getData();                            
+                            err = t.getT3PhiErr();
+                        }
+                        dist = t.getSpacial();
+                    } else if (table instanceof OiVis)
+                    {
+                        OiVis t = (OiVis) table;
+                        if (requestedColumn.equals("VISAMP"))
+                        {                            
+                            data = t.getVisAmp();
+                            err = t.getVisAmpErr();
+                        }
+                        if (requestedColumn.equals("VISPHI"))
+                        {
+                            RealMatrixImpl m = new RealMatrixImpl(t.getVisPhi());
+                            data = m.scalarMultiply(Math.PI/180).getData();                            
+                            err = t.getVisPhiErr();
+                        }
+                        dist = t.getSpacial();
+                    } else
+                    {
+                        OiVis2 t = (OiVis2) table;
+                        data = t.getVis2Data();
+                        err = t.getVis2Err();
+                        dist = t.getSpacial();
                     }
-
-                } else
-                {
-                    RealVectorImpl ucoord = new RealVectorImpl(getRealsOfColumn(table, "UCOORD"));
-                    RealVectorImpl vcoord = new RealVectorImpl(getRealsOfColumn(table, "VCOORD"));
-                    dist = (RealVectorImpl) ucoord.ebeMultiply(ucoord).add(vcoord.ebeMultiply(vcoord)).mapSqrt();
-
+                    sb.append(buildXmlPtPlotDataSet(label, dist, data, err));
                 }
-
-                sb.append(buildXmlPtPlotDataSet(label, dist.getData(), data.getData(),
-                        data.add(err.mapMultiply(-0.5)).getData(),
-                        data.add(err.mapMultiply(0.5)).getData()));
             }
 
             sb.append("</plot>");
@@ -851,7 +771,24 @@ public class FilePanel extends javax.swing.JPanel
      */
     private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVisButtonActionPerformed
-        showData("OI_VIS");
+        final String [] ampAndPhi=new String[]{"VISAMP", "VISPHI"};
+        final String [] amp=new String[]{"VISAMP"};
+        final String [] phi=new String[]{"VISPHI"};
+        final String [] nothing = new String[]{};
+        
+        if(visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
+            showData("OI_VIS", ampAndPhi);    
+        }
+        if(visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
+            showData("OI_VIS", amp);    
+        }
+        if(!visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
+            showData("OI_VIS", phi);    
+        }
+        if(!visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
+            showData("OI_VIS", nothing);    
+        }
+        
     }//GEN-LAST:event_showVisButtonActionPerformed
 
     /**
@@ -861,7 +798,7 @@ public class FilePanel extends javax.swing.JPanel
      */
     private void showVis2ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVis2ButtonActionPerformed
-        showData("OI_VIS2");
+        showData("OI_VIS2", new String[]{"VIS2DATA"});
     }//GEN-LAST:event_showVis2ButtonActionPerformed
 
     /**
@@ -871,54 +808,31 @@ public class FilePanel extends javax.swing.JPanel
      */
     private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showT3ButtonActionPerformed
-        showData("OI_T3");
+        final String [] ampAndPhi=new String[]{"T3AMP", "T3PHI"};
+        final String [] amp=new String[]{"T3AMP"};
+        final String [] phi=new String[]{"T3PHI"};
+        final String [] nothing = new String[]{};
+        
+        if(t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()){
+            showData("OI_T3", ampAndPhi);    
+        }
+        if(t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()){
+            showData("OI_T3", amp);    
+        }
+        if(!t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()){
+            showData("OI_T3", phi);    
+        }
+        if(!t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()){
+            showData("OI_T3", nothing);    
+        }
     }//GEN-LAST:event_showT3ButtonActionPerformed
 
     private void showUVCoverageButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_showUVCoverageButtonActionPerformed
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
-                                                            
-
-        /*previously used code:
-           // @todo move next code part
-                      // We could use the topcat.getTableListModel to open just once each tables
-                      uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();
-                      uk.ac.starlink.table.StarTableFactory stFact = new uk.ac.starlink.table.StarTableFactory();
-                      uk.ac.starlink.table.StarTable startab = stFact.makeStarTable(filename +
-                              "#" + indice);
-                      topcat.addTable(startab, filename + "#" + indice, true);
-                      // add x column
-                      uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
-                              "UCOORD");
-                      uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
-                              "VCOORD");
-                      uk.ac.starlink.topcat.SyntheticColumn c;
-                      List l = new Vector();
-                      l.add(uk.ac.starlink.topcat.RowSubset.ALL);
-                      c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo,
-                              startab, l, "UCOORD", null);
-                      topcat.getCurrentModel().appendColumn(c, 0);
-                      c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo,
-                              startab, l, "VCOORD", null);
-                      topcat.getCurrentModel().appendColumn(c, 1);
-                      uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel3);
-                      // setVisible must be called before model assignement
-                      plot.setVisible(true);
-                      plot.setMainTable(topcat.getCurrentModel());
-         */
-
-        // Get all selected items 
-        int[] indices = hduList.getSelectedIndices();
-
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-
-        String filename = "";
-
         try
-        {
-            filename = UtilsClass.saveBASE64OifitsToFile(current.getId(), current.getHref());
-
-            FitsFile     fits = new FitsFile(filename);
+        {           
             StringBuffer sb   = new StringBuffer();
             sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" +
                 "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
@@ -926,40 +840,40 @@ public class FilePanel extends javax.swing.JPanel
                 "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
                 "<title>UV coverage</title>" + "<xLabel>UCOORD</xLabel>" +
                 "<yLabel>VCOORD</yLabel>");
-
-            for (int i = 0; i < indices.length; i++)
+            
+            Object selected[] = hduList.getSelectedValues();
+            for (int i = 0; i < selected.length; i++)
             {
-                int    indice = indices[i];
-                String label  = (String) hduList.getModel().getElementAt(indice);
-                indice++; // 1 is not the first table
+                OiTable table  = (OiTable)selected[i];
+                String label = table.getExtName();
+                RealVectorImpl ucoord=null;                        
+                RealVectorImpl vcoord=null;
 
-                FitsTable      table  = (FitsTable) fits.getHDUnit(indice).getData();
-                RealVectorImpl ucoord;
-                        
-                RealVectorImpl vcoord;
-
-                if (table.getColumn("UCOORD") != null)
+                if (table instanceof OiVis )
                 {
-                    ucoord = new RealVectorImpl(getRealsOfColumn(table, "UCOORD"));
-                    vcoord = new RealVectorImpl(getRealsOfColumn(table, "VCOORD"));
-                    // add symetrical part
-                    sb.append(buildXmlPtPlotDataSet(label,
-                            ucoord.append(ucoord.mapMultiply(-1)).getData(),
-                            vcoord.append(vcoord.mapMultiply(-1)).getData(), null, null));
+                    OiVis t=(OiVis)table;
+                    ucoord = new RealVectorImpl(t.getUCoord()); 
+                    vcoord = new RealVectorImpl(t.getVCoord());                    
                 }
-                if (table.getColumn("U1COORD") != null)
+                if (table instanceof OiVis2 )
                 {
-                    ucoord = new RealVectorImpl(getRealsOfColumn(table, "U1COORD"));
-                    ucoord.append(new RealVectorImpl(getRealsOfColumn(table, "U2COORD")));
-                    vcoord = new RealVectorImpl(getRealsOfColumn(table, "V1COORD"));
-                    vcoord.append(new RealVectorImpl(getRealsOfColumn(table, "V2COORD")));
-                    // add symetrical part
-                    sb.append(buildXmlPtPlotDataSet(label,
-                            ucoord.append(ucoord.mapMultiply(-1)).getData(),
-                            vcoord.append(vcoord.mapMultiply(-1)).getData(), null, null));
-                }                
+                    OiVis2 t=(OiVis2)table;
+                    ucoord = new RealVectorImpl(t.getUCoord()); 
+                    vcoord = new RealVectorImpl(t.getVCoord());
+                }
+                if (table instanceof OiT3 )
+                {
+                    OiT3 t=(OiT3)table;
+                    ucoord = new RealVectorImpl(t.getU1Coord()); 
+                    vcoord = new RealVectorImpl(t.getV1Coord());
+                    ucoord.append(new RealVectorImpl(t.getU2Coord()));
+                    vcoord.append(new RealVectorImpl(t.getV2Coord()));           
+                }
+                // add symetrical part and request plot file building
+                sb.append(buildXmlPtPlotDataSet(label,
+                        ucoord.append(ucoord.mapMultiply(-1)).getData(),
+                        vcoord.append(vcoord.mapMultiply(-1)).getData(),  null));
             }
-
             sb.append("</plot>");
 
             Plot         plot         = new Plot();
@@ -993,56 +907,63 @@ public class FilePanel extends javax.swing.JPanel
         UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
     }
 
-    // Enable or not the showUVCoverage Button on each new list selection
+    // THIS CLASS handles button states according to the table selection
     class MyListSelectionListener implements ListSelectionListener
     {
         public void valueChanged(ListSelectionEvent evt)
         {
+            // Iterate all selected items                
+            showUVCoverageButton.setEnabled(false);
+            showVisButton.setText("Plot VISPHI of all OI_VIS");
+            showVis2Button.setText("Plot VIS2AMP of all OI_VIS2");
+            showT3Button.setText("Plot T3PHI of all OI_T3");
+
             if (evt == null)
             {
                 return;
-            }
-
+            }            
+            
             // When the user release the mouse button and completes the selection,
             // getValueIsAdjusting() becomes false
             if (! evt.getValueIsAdjusting())
-            {
+            {                
                 if (! (evt.getSource() instanceof JList))
                 {
                     return;
                 }
-
-                JList list = (JList) evt.getSource();
-
+                         
+                if (hduList.getSelectedIndex() >= 0)
+                {
+                    loadViewerButton.setEnabled(true);
+                } else
+                {
+                    loadViewerButton.setEnabled(false);
+                }
+                
                 // Get all selected items
-                Object[] selected = list.getSelectedValues();
-                // Iterate all selected items
-                showUVCoverageButton.setEnabled(false);
-                showVisButton.setText("Plot all OI_VIS");
-                showVis2Button.setText("Plot all OI_VIS2");
-                showT3Button.setText("Plot all OI_T3");
+                Object[] selected=hduList.getSelectedValues();                
          
                 for (int i = 0; i < selected.length; i++)
                 {
-                    String extName = (String) selected[i];
+                    OiTable t = (OiTable) selected[i];
 
-                    if (extName.startsWith("OI_VIS")||extName.startsWith("OI_T3"))
+                    if (t instanceof OiData)
                     {
                         showUVCoverageButton.setEnabled(true);
                     }
-                    if (extName.startsWith("OI_VIS["))
+                    if (t instanceof OiVis)
                     {
-                        showVisButton.setText("Plot selected OI_VIS");
+                        showVisButton.setText("Plot VISPHI of selected OI_VIS");
                     }
 
-                    if (extName.startsWith("OI_VIS2["))
+                    if (t instanceof OiVis2)
                     {
-                        showVis2Button.setText("Plot selected OI_VIS2");
+                        showVis2Button.setText("Plot VIS2AMP of selected OI_VIS2");
                     }
 
-                    if (extName.startsWith("OI_T3["))
+                    if (t instanceof OiT3)
                     {
-                        showT3Button.setText("Plot selected OI_T3");
+                        showT3Button.setText("Plot T3PHI of selected OI_T3");
                     }
 
                 }
@@ -1050,6 +971,20 @@ public class FilePanel extends javax.swing.JPanel
         }
     }
 
+     protected class CheckEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction
+    {
+        public CheckEmbeddedFileAction()
+        {
+            super("checkEmbeddedFile");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
+            GUIValidator val = new GUIValidator(null);
+            val.checkFile(oifitsFile_);
+        }
+    }
+     
     protected class ShowEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction
     {
         public ShowEmbeddedFileAction()
@@ -1065,15 +1000,7 @@ public class FilePanel extends javax.swing.JPanel
 
                 for (int i = 0; i < indices.length; i++)
                 {
-                    java.io.File f        = new java.io.File(current.getName());
-                    String       filename = current.getName();
-
-                    if (! f.exists())
-                    {
-                        filename = UtilsClass.saveBASE64OifitsToFile(current.getId(),
-                                current.getHref());
-                    }
-
+                   String       filename = oifitsFile_.getName();
                     ModelFitting.startFitsViewer(filename + "#" + ((indices[i]) + 1));
                 }
             }
