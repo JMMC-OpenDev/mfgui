@@ -547,17 +547,22 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 logger.info("Settings created");
             }
             catch (Exception ex)
-            {
-                JTextArea textArea = new JTextArea(20, 100);
-                textArea.setText(result);
+            {                
+                logger.log(Level.WARNING, "Can't use returned xml as result", ex);
+
+                JTextArea textArea = new JTextArea(30, 50);
+
+                String xslPath = "fr/jmmc/mf/gui/extractError.xsl";            
+                java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
+                String str = UtilsClass.xsl(xml, url, null);
+                
+                textArea.setText(str);
 
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 textArea.setEditable(false);
                 javax.swing.JOptionPane.showMessageDialog(controlPanel, scrollPane, "Error ",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
-
-                logger.throwing(ex.getClass().getName(), "actionPerformed", ex);
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
+             
             }
         }
     }
