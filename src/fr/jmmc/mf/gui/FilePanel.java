@@ -914,9 +914,9 @@ public class FilePanel extends javax.swing.JPanel
         {
             // Iterate all selected items                
             showUVCoverageButton.setEnabled(false);
-            showVisButton.setText("Plot VISPHI of all OI_VIS");
-            showVis2Button.setText("Plot VIS2AMP of all OI_VIS2");
-            showT3Button.setText("Plot T3PHI of all OI_T3");
+            showVisButton.setText("Plot data of all OI_VIS");
+            showVis2Button.setText("Plot VIS2DATA of all OI_VIS2");
+            showT3Button.setText("Plot data of all OI_T3");
 
             if (evt == null)
             {
@@ -953,17 +953,17 @@ public class FilePanel extends javax.swing.JPanel
                     }
                     if (t instanceof OiVis)
                     {
-                        showVisButton.setText("Plot VISPHI of selected OI_VIS");
+                        showVisButton.setText("Plot data of selected OI_VIS");
                     }
 
                     if (t instanceof OiVis2)
                     {
-                        showVis2Button.setText("Plot VIS2AMP of selected OI_VIS2");
+                        showVis2Button.setText("Plot VIS2DATA of selected OI_VIS2");
                     }
 
                     if (t instanceof OiT3)
                     {
-                        showT3Button.setText("Plot T3PHI of selected OI_T3");
+                        showT3Button.setText("Plot data of selected OI_T3");
                     }
 
                 }
