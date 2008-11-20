@@ -88,9 +88,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.setFitter("standard");
         rootSettings.setUserInfo("Created on " + new java.util.Date() +
                 " by ModelFitting GUI rev. " + fr.jmmc.mcs.util.Resources.getResource("mf.version"));
-        setRootSettings(rootSettings);
-
-        modelIdCounter_ = rootSettings.getTargets().getTarget().length+1;
+        setRootSettings(rootSettings);        
     }
 
     /** Tell if the inner model is well filled */
