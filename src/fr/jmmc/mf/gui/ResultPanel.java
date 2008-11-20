@@ -157,6 +157,7 @@ public class ResultPanel extends javax.swing.JPanel
             String htmlStr = UtilsClass.xsl(s.getLastXml(), url, null);
             resultEditorPane.setContentType("text/html");
             resultEditorPane.setText(htmlStr);
+            resultEditorPane.setCaretPosition(0);
         }
         catch (Exception exc)
         {
