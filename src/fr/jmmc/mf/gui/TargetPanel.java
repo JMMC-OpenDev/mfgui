@@ -5,35 +5,22 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.StatusBar;
-
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
-
 import java.io.StringReader;
 import java.io.StringWriter;
-
-import java.util.Hashtable;
 import java.util.Vector;
-
 import javax.swing.*;
 import javax.swing.event.*;
 
-
-/**
- *
- *
- * @author  mella
- */
+/** Display GUI for Target elements */
 public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener
 {
-    /**
-     * DOCUMENT ME!
-     */
+    /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.TargetPanel");
 
@@ -77,24 +64,25 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
      */
     public SettingsModel rootSettingsModel = null;
 
+    private PlotModelPanel plotModelImagePanel;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton     addModelButton;
+    private javax.swing.JButton addModelButton;
     private javax.swing.JList fileList;
     private javax.swing.JComboBox identComboBox;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
+    private javax.swing.JPanel plotPanel;
     private javax.swing.JButton removeModelButton;
     // End of variables declaration//GEN-END:variables
 
@@ -110,22 +98,23 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         fileList.setCellRenderer(new FileListCellRenderer());
 
         modelList.setModel(models);
+
+        plotModelImagePanel = new PlotModelPanel();
+        plotPanel.add(plotModelImagePanel);
     }
 
-    /**
-     * DOCUMENT ME!
-     */
+    /** Call it after any internal modification  */
     public void refresh()
     {
-        show(current, rootSettingsModel);
         settingsViewer.getSettingsModel().fireUpdate();
+        settingsViewer.showSettingElement(current);
     }
 
     /**
-     * DOCUMENT ME!
+     * Display graphical view of given target.
      *
-     * @param t DOCUMENT ME!
-     * @param settingsModel DOCUMENT ME!
+     * @param t the target to show
+     * @param settingsModel its associated settingsModel
      */
     public void show(Target t, SettingsModel settingsModel)
     {
@@ -199,7 +188,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         // Set normalizeCheckBox
-        normalizeCheckBox.setSelected(current.getNormalize());
+        normalizeCheckBox.setSelected(current.getNormalize());        
+        plotModelImagePanel.show(settingsModel,current);
     }
 
     /**
@@ -242,175 +232,192 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1               = new javax.swing.JPanel();
-        jLabel1               = new javax.swing.JLabel();
-        identComboBox         = new javax.swing.JComboBox();
-        jPanel3               = new javax.swing.JPanel();
-        jPanel2               = new javax.swing.JPanel();
-        jScrollPane1          = new javax.swing.JScrollPane();
-        fileList              = new javax.swing.JList();
-        jPanel4               = new javax.swing.JPanel();
-        jScrollPane2          = new javax.swing.JScrollPane();
-        modelList             = new javax.swing.JList();
-        addModelButton        = new javax.swing.JButton();
-        modelTypeComboBox     = new javax.swing.JComboBox();
-        removeModelButton     = new javax.swing.JButton();
-        jPanel6               = new javax.swing.JPanel();
-        normalizeCheckBox     = new javax.swing.JCheckBox();
-        jPanel5               = new javax.swing.JPanel();
-        jButton1              = new javax.swing.JButton();
-        jButton2              = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        identComboBox = new javax.swing.JComboBox();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        fileList = new javax.swing.JList();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        modelList = new javax.swing.JList();
+        addModelButton = new javax.swing.JButton();
+        modelTypeComboBox = new javax.swing.JComboBox();
+        removeModelButton = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        normalizeCheckBox = new javax.swing.JCheckBox();
+        plotPanel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Target panel"));
-        setLayout(new java.awt.BorderLayout());
+        setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Ident:");
-        jPanel1.add(jLabel1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel3.add(jLabel1, gridBagConstraints);
 
         identComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
         identComboBox.setEnabled(false);
-        jPanel1.add(identComboBox);
-
-        add(jPanel1, java.awt.BorderLayout.NORTH);
-
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel3.add(identComboBox, gridBagConstraints);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(22, 82));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(259, 82));
+
         fileList.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                public void mouseClicked(java.awt.event.MouseEvent evt)
-                {
-                    fileListMouseClicked(evt);
-                }
-            });
+                fileListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(fileList);
 
         jPanel2.add(jScrollPane1);
 
-        jPanel3.add(jPanel2);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel3.add(jPanel2, gridBagConstraints);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 122));
+
         modelList.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                public void mouseClicked(java.awt.event.MouseEvent evt)
-                {
-                    modelListMouseClicked(evt);
-                }
-            });
+                modelListMouseClicked(evt);
+            }
+        });
         modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
+        {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt)
             {
-                public void valueChanged(javax.swing.event.ListSelectionEvent evt)
-                {
-                    modelListValueChanged(evt);
-                }
-            });
+                modelListValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(modelList);
 
-        gridBagConstraints               = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth     = 3;
-        gridBagConstraints.fill          = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx       = 1.0;
-        gridBagConstraints.weighty       = 1.0;
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
         addModelButton.setText("Add model");
         addModelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    addModelButtonActionPerformed(evt);
-                }
-            });
-        gridBagConstraints           = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx     = 0;
-        gridBagConstraints.gridy     = 1;
+                addModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         jPanel4.add(addModelButton, gridBagConstraints);
 
         modelTypeComboBox.setModel(settingsViewer.getSettingsModel().supportedModelsModel);
         modelTypeComboBox.addFocusListener(new java.awt.event.FocusAdapter()
+        {
+            public void focusGained(java.awt.event.FocusEvent evt)
             {
-                public void focusGained(java.awt.event.FocusEvent evt)
-                {
-                    modelTypeComboBoxFocusGained(evt);
-                }
-            });
-        gridBagConstraints             = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx       = 1;
-        gridBagConstraints.gridy       = 1;
-        gridBagConstraints.fill        = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx     = 1.0;
+                modelTypeComboBoxFocusGained(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         jPanel4.add(modelTypeComboBox, gridBagConstraints);
 
         removeModelButton.setText("Remove");
         removeModelButton.setEnabled(false);
         removeModelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    removeModelButtonActionPerformed(evt);
-                }
-            });
-        gridBagConstraints           = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx     = 2;
-        gridBagConstraints.gridy     = 1;
+                removeModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         jPanel4.add(removeModelButton, gridBagConstraints);
 
-        jPanel3.add(jPanel4);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel3.add(jPanel4, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
-        jPanel6.setLayout(new java.awt.GridBagLayout());
+        jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
         normalizeCheckBox.setText("Normalise residuals");
         normalizeCheckBox.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    normalizeCheckBoxActionPerformed(evt);
-                }
-            });
-        gridBagConstraints             = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx       = 0;
-        gridBagConstraints.gridy       = 0;
-        gridBagConstraints.fill        = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor      = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx     = 1.0;
-        jPanel6.add(normalizeCheckBox, gridBagConstraints);
+                normalizeCheckBoxActionPerformed(evt);
+            }
+        });
+        jPanel6.add(normalizeCheckBox);
 
-        jPanel3.add(jPanel6);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel3.add(jPanel6, gridBagConstraints);
 
-        add(jPanel3, java.awt.BorderLayout.CENTER);
+        plotPanel.setLayout(new javax.swing.BoxLayout(plotPanel, javax.swing.BoxLayout.Y_AXIS));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel3.add(plotPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        jPanel3.add(jPanel1, gridBagConstraints);
 
-        jButton1.setText("Plot Image");
-        jButton1.setToolTipText("Plot model image");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    jButton1ActionPerformed(evt);
-                }
-            });
-        jPanel5.add(jButton1);
+        jScrollPane3.setViewportView(jPanel3);
 
-        jButton2.setText("Plot UV map");
-        jButton2.setToolTipText("Plot model UV map");
-        jButton2.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    jButton2ActionPerformed(evt);
-                }
-            });
-        jPanel5.add(jButton2);
-
-        add(jPanel5, java.awt.BorderLayout.SOUTH);
-    } // </editor-fold>//GEN-END:initComponents
-
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jScrollPane3, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
     /**
      * DOCUMENT ME!
      *
@@ -508,18 +515,16 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
 
-            // force another name with unique position
-            int    position = rootSettingsModel.getNewModelId();
+            // force another name with unique position            
             String type     = selected.getType();
-            m.setName(type + "_" + position);
+            m.setName(rootSettingsModel.getNewModelName(type));
 
             // and change parameters name also
             Parameter[] params = m.getParameter();
-
             for (int i = 0; i < params.length; i++)
             {
                 Parameter p = params[i];
-                p.setName(p.getName() + position);
+                p.setName(rootSettingsModel.getNewParamName(p.getName()));
             }
 
             // add the new element to current target
@@ -533,67 +538,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             logger.warning("No model selected");
         }
     }//GEN-LAST:event_addModelButtonActionPerformed
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param targetToPlot DOCUMENT ME!
-     */
-    private void plotModelUVMap(Target targetToPlot)
-    {
-        plot("getModelUVMap", targetToPlot, "UV map");
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param targetToPlot DOCUMENT ME!
-     */
-    private void plotModelImage(Target targetToPlot)
-    {
-        plot("getModelImage", targetToPlot, "Model Image");
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param methodName DOCUMENT ME!
-     * @param targetToPlot DOCUMENT ME!
-     * @param title DOCUMENT ME!
-     */
-    private void plot(String methodName, Target targetToPlot, String title)
-    {
-        logger.fine("Requesting yoga '" + methodName + "' call");
-
-        String result     = "";
-
-        int    groupValue = settingsViewer.getSettingsModel().targetListModel.indexOf(targetToPlot) +
-            1;
-
-        try
-        {
-            result = ModelFitting.instance_.execMethod(methodName,
-                    rootSettingsModel.getTempFile(false), "" + groupValue);
-            StatusBar.show(methodName + " process finished");
-        }
-        catch (Exception ex)
-        {
-            logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-            ex.printStackTrace();
-            result = "Error:" + ex.getMessage();
-            StatusBar.show("Error during process of " + methodName);
-
-            return;
-        }
-
-        logger.entering("" + this.getClass(), "data received");
-
-        fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
-        v.setTitle(title);
-        v.setSize(400, 400);
-        v.setVisible(true);
-    }
-
+    
     /**
      * DOCUMENT ME!
      *
@@ -603,26 +548,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
         current.setNormalize(normalizeCheckBox.isSelected());
     }//GEN-LAST:event_normalizeCheckBoxActionPerformed
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_jButton1ActionPerformed
-        plotModelImage(current);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_jButton2ActionPerformed
-        plotModelUVMap(current);
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     class FileListCellRenderer extends JCheckBox implements ListCellRenderer
     {
