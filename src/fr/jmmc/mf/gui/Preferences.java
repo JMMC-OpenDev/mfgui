@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.15 2008-10-17 10:11:27 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.16 2008-11-20 14:10:17 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.15  2008/10/17 10:11:27  mella
+ * Jalopization of major refactoring mimicking searchcal template
+ *
  * Revision 1.14  2008/10/10 09:27:42  mella
  * Add default true help.tooltips.show pref
  *
@@ -117,7 +120,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");       
         if (_version.contains("beta"))
         {
-            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproDev/run.php");
+            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproWebService/run.php");
         }
         else
         {
