@@ -66,9 +66,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /** flag used to respond for the ModifyAndSaveObject interface */
     public boolean isModified = false;
     /** Store a reference over the associated local file */
-    public java.io.File associatedFile = null;
-    /** Counter used to generate uniq model ids */
-    private int modelIdCounter_ = 0;
+    public java.io.File associatedFile = null;    
 
     /**
      * Creates a new SettingsModel object.
