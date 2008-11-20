@@ -592,7 +592,7 @@ public class FilePanel extends javax.swing.JPanel
     /*TO PUT ON ANOTHER PLACE*/
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[] x, double[] y,
-        double[] errorBar)
+        double[] errorBar, boolean[] flags)
     {
         StringBuffer sb = new StringBuffer();
         if(errorBar!=null){
@@ -604,22 +604,26 @@ public class FilePanel extends javax.swing.JPanel
         sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
         for (int i = 0; i < x.length; i++)
         {
-            sb.append("<m x=\"" + x[i] + "\" y=\"" + y[i] + "\"");
-            if (errorBar != null)
+            // Output only if flags are given and are false
+            if (flags==null || !flags[i])
             {
-                double lowEB=y[i]-errorBar[i]/2;
-                double highEB=y[i]+errorBar[i]/2;                
-                sb.append(" lowErrorBar=\"" + lowEB + "\"");
-                sb.append(" highErrorBar=\"" + highEB + "\"");
+                sb.append("<m x=\"" + x[i] + "\" y=\"" + y[i] + "\"");
+                if (errorBar != null)
+                {
+                    double lowEB = y[i] - errorBar[i] / 2;
+                    double highEB = y[i] + errorBar[i] / 2;
+                    sb.append(" lowErrorBar=\"" + lowEB + "\"");
+                    sb.append(" highErrorBar=\"" + highEB + "\"");
+                }
+                sb.append("/>\n");
             }
-            sb.append("/>\n");
         }
         sb.append("</dataset>");        
         return sb.toString();
     }
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[][] x, double[][] y,
-            double[][] errorBar)
+            double[][] errorBar, boolean[][] flags)
     {
         StringBuffer sb = new StringBuffer();
         logger.fine("Dims=" + x.length + "," + y.length + "," + errorBar.length + "," + errorBar.length + ",");
@@ -628,17 +632,21 @@ public class FilePanel extends javax.swing.JPanel
         {
             for (int j = 0; j < x[0].length; j++)
             {
-                sb.append("<m x=\"" + x[i][j] + "\" y=\"" + y[i][j] + "\"");
-                if (errorBar != null)
+                // Output only if flags are given and are false
+                if (flags==null || !flags[i][j])
                 {
-                    double lowEB = y[i][j] - errorBar[i][j] / 2;
-                    double highEB = y[i][j] + errorBar[i][j] / 2;
-                    sb.append(" lowErrorBar=\"" + lowEB + "\"");
-                    sb.append(" highErrorBar=\"" + highEB + "\"");
+                    sb.append("<m x=\"" + x[i][j] + "\" y=\"" + y[i][j] + "\"");
+                    if (errorBar != null)
+                    {
+                        double lowEB = y[i][j] - errorBar[i][j] / 2;
+                        double highEB = y[i][j] + errorBar[i][j] / 2;
+                        sb.append(" lowErrorBar=\"" + lowEB + "\"");
+                        sb.append(" highErrorBar=\"" + highEB + "\"");
+                    }
+                    sb.append("/>\n");
                 }
-                sb.append("/>\n");
             }
-        }        
+        }
         sb.append("</dataset>");
         return sb.toString();
     }
@@ -705,21 +713,24 @@ public class FilePanel extends javax.swing.JPanel
                     double data[][] = null;
                     double err[][] = null;
                     double dist[][] = null;
+                    boolean flags[][] = null;
                     if (table instanceof OiT3)
                     {
                         OiT3 t = (OiT3) table;
                         if (requestedColumn.equals("T3AMP"))
                         {
                             data = t.getT3Amp();
-                            err = t.getT3AmpErr();
+                            err = t.getT3AmpErr();                            
                         }
                         if (requestedColumn.equals("T3PHI"))
                         {
                             RealMatrixImpl m = new RealMatrixImpl(t.getT3Phi());
-                            data = m.scalarMultiply(Math.PI/180).getData();                            
-                            err = t.getT3PhiErr();
+                            data = m.scalarMultiply(Math.PI/180).getData();
+                            m = new RealMatrixImpl(t.getT3PhiErr());
+                            err = m.scalarMultiply(Math.PI/180).getData();
                         }
                         dist = t.getSpacial();
+                        flags = t.getFlags();
                     } else if (table instanceof OiVis)
                     {
                         OiVis t = (OiVis) table;
@@ -735,14 +746,16 @@ public class FilePanel extends javax.swing.JPanel
                             err = t.getVisPhiErr();
                         }
                         dist = t.getSpacial();
+                        flags = t.getFlags();
                     } else
                     {
                         OiVis2 t = (OiVis2) table;
                         data = t.getVis2Data();
                         err = t.getVis2Err();
                         dist = t.getSpacial();
+                        flags = t.getFlags();
                     }
-                    sb.append(buildXmlPtPlotDataSet(label, dist, data, err));
+                    sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
                 }
             }
 
@@ -872,7 +885,7 @@ public class FilePanel extends javax.swing.JPanel
                 // add symetrical part and request plot file building
                 sb.append(buildXmlPtPlotDataSet(label,
                         ucoord.append(ucoord.mapMultiply(-1)).getData(),
-                        vcoord.append(vcoord.mapMultiply(-1)).getData(),  null));
+                        vcoord.append(vcoord.mapMultiply(-1)).getData(),  null, null));
             }
             sb.append("</plot>");
 
