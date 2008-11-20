@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.17 2008-10-17 10:11:26 mella Exp $"
+# "@(#) $Id: Makefile,v 1.18 2008-11-20 14:28:33 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.17  2008/10/17 10:11:26  mella
+# Jalopization of major refactoring mimicking searchcal template
+#
 # Revision 1.16  2008/10/06 15:06:29  mella
 # set all target as first one
 #
@@ -190,8 +193,7 @@ MAN8 =
 #
 # other files to be installed
 #----------------------------
-INSTALL_FILES = ../lib/castor.jar \
-				../lib/commons-codec-1.2.jar \
+INSTALL_FILES = ../lib/commons-codec-1.2.jar \
 				../lib/commons-httpclient-3.0.1.jar \
 				../lib/commons-httpclient-3.1-beta1.jar \
 				../lib/commons-lang-2.1.jar \
