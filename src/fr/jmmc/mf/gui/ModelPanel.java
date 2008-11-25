@@ -369,10 +369,10 @@ public class ModelPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt)
-    { //GEN-FIRST:event_nameTextFieldActionPerformed
+    {//GEN-FIRST:event_nameTextFieldActionPerformed
         logger.entering("" + this.getClass(), "nameTextFieldActionPerformed");
         current.setName(nameTextField.getText());
-    } //GEN-LAST:event_nameTextFieldActionPerformed
+    }//GEN-LAST:event_nameTextFieldActionPerformed
 
     /**
      * DOCUMENT ME!
@@ -380,10 +380,10 @@ public class ModelPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void parametersTableMouseClicked(java.awt.event.MouseEvent evt)
-    { //GEN-FIRST:event_parametersTableMouseClicked
+    {//GEN-FIRST:event_parametersTableMouseClicked
         logger.entering("" + this.getClass(), "parametersTableMouseClicked");
         checkPopupMenu(evt);
-    } //GEN-LAST:event_parametersTableMouseClicked
+    }//GEN-LAST:event_parametersTableMouseClicked
 
     /**
      * DOCUMENT ME!
@@ -391,10 +391,10 @@ public class ModelPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void parametersTableMousePressed(java.awt.event.MouseEvent evt)
-    { //GEN-FIRST:event_parametersTableMousePressed
+    {//GEN-FIRST:event_parametersTableMousePressed
         logger.entering("" + this.getClass(), "parametersTableMousePressed");
         checkPopupMenu(evt);
-    } //GEN-LAST:event_parametersTableMousePressed
+    }//GEN-LAST:event_parametersTableMousePressed
 
     /**
      * DOCUMENT ME!
@@ -402,10 +402,10 @@ public class ModelPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void parametersTableMouseReleased(java.awt.event.MouseEvent evt)
-    { //GEN-FIRST:event_parametersTableMouseReleased
+    {//GEN-FIRST:event_parametersTableMouseReleased
         logger.entering("" + this.getClass(), "parametersTableMouseReleased");
         checkPopupMenu(evt);
-    } //GEN-LAST:event_parametersTableMouseReleased
+    }//GEN-LAST:event_parametersTableMouseReleased
 
     /**
      * Implementation of a table model that is based on a given Model.
@@ -429,6 +429,12 @@ public class ModelPanel extends javax.swing.JPanel
                 String.class, String.class, String.class, Double.class, Double.class, Double.class,
                 Double.class, Boolean.class
             };
+        protected final Boolean[]  columnEditableFlags = new Boolean[]
+            {
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE,
+                Boolean.TRUE, Boolean.TRUE
+            };
+
 
         public ParametersTableModel()
         {
@@ -588,11 +594,8 @@ public class ModelPanel extends javax.swing.JPanel
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex)
-        {
-            Parameter p = parameters[rowIndex];
-
-            // return always true
-            return true;
+        {                        
+            return columnEditableFlags[columnIndex];
         }
 
         public void setValueAt(Object aValue, int rowIndex, int columnIndex)
