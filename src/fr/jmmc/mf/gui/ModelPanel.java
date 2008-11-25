@@ -48,85 +48,23 @@ public class ModelPanel extends javax.swing.JPanel
     SettingsModel settingsModel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JTextArea   descTextArea;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JLabel jLabel1;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JLabel jLabel2;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel1;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel2;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel3;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel4;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel5;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel6;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel7;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JScrollPane jScrollPane1;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JScrollPane jScrollPane2;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JTextField nameTextField;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPopupMenu parameterPopupMenu;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JTable parametersTable;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JComboBox typeComboBox;
+    // End of variables declaration//GEN-END:variables
 
     /** Creates new form ModelPanel */
     public ModelPanel()
@@ -711,5 +649,4 @@ public class ModelPanel extends javax.swing.JPanel
         }
     }
 
-    // End of variables declaration//GEN-END:variables
 }
