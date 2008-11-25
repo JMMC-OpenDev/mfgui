@@ -46,12 +46,12 @@
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>                
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Return message of error for plot failures</change>
-                <change type="REQUEST">Use checkboxes to file selection instead of the simple list widget</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer </change>
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
                 <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>
                 <change type="CHANGE">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>
                 <change type="CHANGE">Fix parameter name conflict when one new target is added to an old setting file.</change>
-                <change type="FEATURE">Add sniffer capability</change>
+                <change type="FEATURE">Add plot sniffer and chi2 capabilities</change>
             </prerelease>
         </release>        
         <release version="1.0.12">
