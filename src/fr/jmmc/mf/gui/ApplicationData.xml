@@ -41,12 +41,12 @@
                  -->
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Make amp or phi distinct in the OI_T3 result plot</change>
-                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                
-                <change type="REQUEST">Add a close setting feature in the 'file' menu.</change>
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                                
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>                
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Return message of error for plot failures</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
                 <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>
                 <change type="CHANGE">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>

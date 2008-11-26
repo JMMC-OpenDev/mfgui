@@ -64,6 +64,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
        
         new ShowPrefAction();
         new NewModelAction();
+        new CloseModelAction();
         new LoadModelAction();
         new LoadRemoteModelAction();
         saveModelAction=new SaveModelAction();
@@ -132,6 +133,16 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
     }
+
+   private void closeSettingsPane(){
+       SettingsModel currentSettingsModel = getSelectedSettingsPane().getSettingsModel();
+       System.out.println("currentSettingsModel.isModified()="+currentSettingsModel.isModified());
+       if( UtilsClass.askToSaveUserModification(currentSettingsModel) )
+       {
+          closeTab(tabbedPane_.getSelectedComponent());
+       }
+   }
+
 
     /* This method return selectedPane or null . It also updates titles */
    public SettingsPane getSelectedSettingsPane()
@@ -312,13 +323,11 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      */
     protected boolean finish()
     {
-        ModifyAndSaveObject[] objs = new ModifyAndSaveObject[] {  };
-
-        if (getSelectedSettingsPane() != null)
-        {
-            objs = new ModifyAndSaveObject[] { getSelectedSettingsPane().rootSettingsModel };
+        java.awt.Component[] components = tabbedPane_.getComponents();
+        ModifyAndSaveObject[] objs = new ModifyAndSaveObject[components.length];
+        for (int i = 0; i < objs.length; i++) {
+            objs[i]=((SettingsPane)components[i]).getSettingsModel();
         }
-
         return UtilsClass.checkUserModificationToQuit(objs);
     }
 
@@ -423,6 +432,21 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             logger.entering("" + this.getClass(), "actionPerformed");
             addSettingsPane(new SettingsPane());
             setStatus("New model ready for modifications");
+        }
+    }
+
+    protected class CloseModelAction extends RegisteredAction
+    {
+        public CloseModelAction()
+        {
+            super(className_,"closeModel");
+        }
+
+        public void actionPerformed(java.awt.event.ActionEvent e)
+        {
+            logger.entering("" + this.getClass(), "actionPerformed");
+            closeSettingsPane();
+            setStatus("Old model closed");
         }
     }
 
