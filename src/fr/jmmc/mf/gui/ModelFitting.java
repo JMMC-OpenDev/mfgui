@@ -30,7 +30,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     /**
      * DOCUMENT ME!
      */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.20 2008-10-17 10:11:27 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.21 2008-11-26 11:57:18 mella Exp $";
 
     /**
      * DOCUMENT ME!
@@ -129,7 +129,9 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         }
     }
 
-    /** This is the main wrappers method to execute yoga actions
+    /** This is the main wrappers method to execute yoga actions.
+     *  The job is delegated to a local program or distant web service
+     *  according yoga.remote.use preference.
      *  @param methodName name of method to wrap
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
@@ -148,6 +150,8 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     }
 
     /** This is the main wrappers method to execute yoga actions
+     *  The job is delegated to a local program or distant web service
+     *  according yoga.remote.use preference.
      *  @param methodName name of method to wrap
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
@@ -182,15 +186,15 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     }
 
     /**
-     * DOCUMENT ME!
+     * Execute given command on local machine.
      *
-     * @param methodName DOCUMENT ME!
-     * @param xmlFile DOCUMENT ME!
-     * @param methodArg DOCUMENT ME!
+     * @param methodName name of method to call
+     * @param xmlFile setting file
+     * @param methodArg optionnal arguments
      *
-     * @return DOCUMENT ME!
+     * @return the output of the process
      *
-     * @throws Exception DOCUMENT ME!
+     * @throws Exception exception tbd
      */
     private String doExec(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
@@ -229,7 +233,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         ph.start();
         ph.waitFor();
         result = pm.getContent();
-
+        logger.finest("exec result=\n"+result);
         return result;
     }
 
@@ -325,6 +329,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
             throw e;
         }
 
+        logger.finest("post result=\n"+result);
         return result;
     }
 
