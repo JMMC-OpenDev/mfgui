@@ -95,7 +95,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         fileList.addListSelectionListener(this);
         fileList.setSelectionModel(selectedFiles);
-        fileList.setCellRenderer(new FileListCellRenderer());
+        //fileList.setCellRenderer(new FileListCellRenderer());
 
         modelList.setModel(models);
 
@@ -218,7 +218,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         // fire tree event to refresh
-        settingsViewer.getSettingsModel().fireUpdate();
+        settingsViewer.getSettingsModel().fireUpdate();        
     }
 
     /** This method is called from within the constructor to
@@ -228,8 +228,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -238,7 +237,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        fileList = new javax.swing.JList();
+        fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         modelList = new javax.swing.JList();
@@ -277,10 +276,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jScrollPane1.setMinimumSize(new java.awt.Dimension(22, 82));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(259, 82));
 
-        fileList.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
+        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 fileListMouseClicked(evt);
             }
         });
@@ -300,17 +297,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 122));
 
-        modelList.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
+        modelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 modelListMouseClicked(evt);
             }
         });
-        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
-        {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt)
-            {
+        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 modelListValueChanged(evt);
             }
         });
@@ -324,10 +317,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
         addModelButton.setText("Add model");
-        addModelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        addModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelButtonActionPerformed(evt);
             }
         });
@@ -337,10 +328,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel4.add(addModelButton, gridBagConstraints);
 
         modelTypeComboBox.setModel(settingsViewer.getSettingsModel().supportedModelsModel);
-        modelTypeComboBox.addFocusListener(new java.awt.event.FocusAdapter()
-        {
-            public void focusGained(java.awt.event.FocusEvent evt)
-            {
+        modelTypeComboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
                 modelTypeComboBoxFocusGained(evt);
             }
         });
@@ -353,10 +342,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         removeModelButton.setText("Remove");
         removeModelButton.setEnabled(false);
-        removeModelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        removeModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeModelButtonActionPerformed(evt);
             }
         });
@@ -376,10 +363,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
         normalizeCheckBox.setText("Normalise residuals");
-        normalizeCheckBox.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        normalizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 normalizeCheckBoxActionPerformed(evt);
             }
         });
@@ -472,6 +457,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             int indice = indices[i] - i;
             current.removeModel(indice);
         }
+        // fire tree event to refresh
+        settingsViewer.getSettingsModel().fireUpdate();
 
         removeModelButton.setEnabled(false);
         refresh();
@@ -529,7 +516,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
             // add the new element to current target
             current.addModel(m);
-
+            // fire tree event to refresh
+            settingsViewer.getSettingsModel().fireUpdate();
             refresh();
         }
         catch (Exception e)
@@ -547,6 +535,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
         current.setNormalize(normalizeCheckBox.isSelected());
+        // fire tree event to refresh
+        settingsViewer.getSettingsModel().fireUpdate();
     }//GEN-LAST:event_normalizeCheckBoxActionPerformed
 
     class FileListCellRenderer extends JCheckBox implements ListCellRenderer
