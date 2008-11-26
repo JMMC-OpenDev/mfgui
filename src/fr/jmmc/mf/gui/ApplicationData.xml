@@ -49,7 +49,7 @@
                 <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
                 <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>
-                <change type="CHANGE">Add document modified flag into the whole code . That is really important because work can be lost after load or new menu request</change>
+                <change type="CHANGE">One flag is activated on setting modification to ensure that program ask to save work before closing</change>
                 <change type="CHANGE">Fix parameter name conflict when one new target is added to an old setting file.</change>
                 <change type="FEATURE">Add plot sniffer and chi2 capabilities</change>
             </prerelease>

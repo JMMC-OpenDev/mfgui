@@ -64,7 +64,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /** Store last xml buffer (it has been done to save time on marshal */
     private String lastXml;
     /** flag used to respond for the ModifyAndSaveObject interface */
-    public boolean isModified = false;
+    private boolean isModified = false;
     /** Store a reference over the associated local file */
     public java.io.File associatedFile = null;    
 
@@ -205,9 +205,23 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         logger.entering("" + this.getClass(), "setModified");
         logger.finest("setModified to " + flag);
         isModified = flag;
-        fireUpdate();
+        if(isModified)
+        {
+            fireUpdate();
+        }
     }
 
+    /**
+     * This method must be called by anyone that has modified the xml binded
+     * document.
+     */
+    public void fireUpdate() {
+        logger.entering("" + this.getClass(), "fireUpdate");
+        logger.fine("update signal triggered");
+        setRootSettings(rootSettings);
+        isModified=true;
+    }
+    
     /**
      * DOCUMENT ME!
      *
@@ -292,17 +306,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      */
     public java.awt.Component getComponent() {
         return MFGui.getInstance();
-    }
-
-    /**
-     * This method must be called by anyone that has modified the xml binded
-     * document.
-     */
-    public void fireUpdate() {
-        logger.entering("" + this.getClass(), "fireUpdate");
-        logger.fine("update signal triggered");
-        setRootSettings(rootSettings);
-    }
+    }    
 
     /**
      * DOCUMENT ME!
