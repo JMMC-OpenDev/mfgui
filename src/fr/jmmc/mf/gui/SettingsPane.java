@@ -7,6 +7,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.StatusBar;
 
+import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
@@ -24,8 +25,6 @@ import java.awt.Dimension;
 
 import java.lang.reflect.*;
 
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.*;
 
 import javax.swing.*;
@@ -50,7 +49,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      */
     public static Action runFitAction;
     public Action getModelListAction = new GetModelListAction();
-
+    public Action saveSettingsAction;
+    public Action closeSettingsAction;
     
     /** Model reference */
     public SettingsModel rootSettingsModel = null;
@@ -120,6 +120,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         parametersPanel     = new ParametersPanel(this);
         resultPanel         = new ResultPanel(this);
         plotPanel = new PlotPanel();
+        ActionRegistrar actionRegistrar=ActionRegistrar.getInstance();
+        saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui","saveModel");
+        closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui","closeModel");
+
 
         // to permit modifier panel changes,
         // register as treeSelectionListener
@@ -235,6 +239,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();
+        // check one more time that GUI view is up to date
+        checkValidSettings();
     }
 
     /**
@@ -291,6 +297,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         boolean validSettingsModel=rootSettingsModel.isValid();
         runFitAction.setEnabled(validSettingsModel);
         showPlotButton.setEnabled(validSettingsModel);
+        saveSettingsAction.setEnabled(validSettingsModel);
     }
 
     /**
