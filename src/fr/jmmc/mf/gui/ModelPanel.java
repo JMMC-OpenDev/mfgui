@@ -88,6 +88,7 @@ public class ModelPanel extends javax.swing.JPanel
         typeComboBox.setSelectedItem(m);
         parametersTableModel.setModel(m, false);
         descTextArea.setText(m.getDesc());
+        descTextArea.setCaretPosition(0);
     }
 
     /**

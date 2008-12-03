@@ -29,27 +29,13 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
      * DOCUMENT ME!
      */
     int nbColors = 240; // colorModels have 
-
-    // Variables declaration - do not modify                     
-    /**
-     * DOCUMENT ME!
-     */
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox  colorModelComboBox;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JTextField imageInfoTextField;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JLabel jLabel1;
-
-    /**
-     * DOCUMENT ME!
-     */
     private javax.swing.JPanel jPanel1;
+    // End of variables declaration//GEN-END:variables
 
     /** Creates new form ImageViewer */
     public ImageViewer()
@@ -95,7 +81,9 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
             imageCanvas.getImageDimension().width + "Image " +
             imageCanvas.getCanvasDimension().height + "x" + imageCanvas.getCanvasDimension().width +
             " px ( " + imageCanvas.mouseX_ + "," + imageCanvas.mouseY_ + " : " +
-            imageCanvas.mousePixel_ + " )";
+            imageCanvas.mousePixel_ + "(" 
+            + (imageCanvas.mousePixel_*imageCanvas.normalisePixelCoefficient_ )
+            + ") )";
         imageInfoTextField.setText(info);
         imageInfoTextField.validate();
     }
@@ -150,9 +138,9 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
      * @param evt DOCUMENT ME!
      */
     private void colorModelComboBoxActionPerformed(java.awt.event.ActionEvent evt)
-    { //GEN-FIRST:event_colorModelComboBoxActionPerformed
+    {//GEN-FIRST:event_colorModelComboBoxActionPerformed
         imageCanvas.setColorModel(ColorModels.colorModels[colorModelComboBox.getSelectedIndex()]);
-    } //GEN-LAST:event_colorModelComboBoxActionPerformed
+    }//GEN-LAST:event_colorModelComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -249,6 +237,4 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
                 }
             });
     }
-
-    // End of variables declaration                   
 }
