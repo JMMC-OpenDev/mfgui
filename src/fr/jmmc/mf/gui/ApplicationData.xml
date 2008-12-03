@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.13beta"/>
+    <program name="ModelFitting" version="1.0.13"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>        
     </text>
@@ -39,10 +39,12 @@
                  </li>
                  <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
                  -->
+                <change type="REQUEST">Add url data file loading capability</change>
+                <change type="REQUEST">Add privious parametre value column in the parameter table</change>
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Make amp or phi distinct in the OI_T3 result plot</change>
-                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                                
-                <change type="REQUEST">Add one 'remove file' button from main file list.</change>                
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
+                <change type="REQUEST">Add one 'remove file' button from main file list.</change>
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Return message of error for plot failures</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
@@ -53,7 +55,7 @@
                 <change type="CHANGE">Fix parameter name conflict when one new target is added to an old setting file.</change>
                 <change type="FEATURE">Add plot sniffer and chi2 capabilities</change>
             </prerelease>
-        </release>        
+        </release>
         <release version="1.0.12">
             <prerelease version="1.0.12beta"> 
                 <change type="FEATURE">File panel gets one new button to use oifits validator.</change>

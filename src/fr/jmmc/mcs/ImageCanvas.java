@@ -96,7 +96,9 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
     /**
      * DOCUMENT ME!
      */
-    int mousePixel_;
+    int mousePixel_;    
+    float normalisePixelCoefficient_;
+    
 
     /**
      * DOCUMENT ME!
@@ -296,6 +298,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
             dataBuffer.setElem(i, v);
         }
 
+        normalisePixelCoefficient_=c;
         buildImage();
 
         // set new canvas dimension 

@@ -191,19 +191,19 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
 
         Hashtable<String, String> demo = new Hashtable();
         demo.put("Binary disk (Obj1)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_disk_with_oidata/Obj1_binary_disk_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj1_binary_disk_with_oidata.xml");
         demo.put("Binary punct (Obj1)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_binary_punct_with_oidata/Obj1_binary_punct_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj1_binary_punct_with_oidata.xml");
         demo.put("Uniform disk (Obj1)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj1_uniform_disk_with_oidata/Obj1_uniform_disk_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj1_uniform_disk_with_oidata.xml");
         demo.put("Binary punct (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_binary_punct_with_oidata/Obj2_binary_punct_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj2_binary_punct_with_oidata.xml");
         demo.put("Disk and punct (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_disk_and_punct_with_oidata/Obj2_disk_and_punct_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj2_disk_and_punct_with_oidata.xml");
         demo.put("Triple punct (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_triple_punct_with_oidata/Obj2_triple_punct_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj2_triple_punct_with_oidata.xml");
         demo.put("Uniform disk (Obj2)",
-            "http://jmmc.fr/~mella/mfRes/ref5/Obj2_uniform_disk_with_oidata/Obj2_uniform_disk_with_oidata.xml");
+            "http://jmmc.fr/modelfitting/xml/Obj2_uniform_disk_with_oidata.xml");
         
         Enumeration keys = demo.keys();
         int i=1;
