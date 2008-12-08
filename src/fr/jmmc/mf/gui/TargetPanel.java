@@ -362,7 +362,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
-        normalizeCheckBox.setText("Normalise residuals");
+        normalizeCheckBox.setText("Normalize total flux");
         normalizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 normalizeCheckBoxActionPerformed(evt);

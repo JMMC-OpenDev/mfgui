@@ -216,7 +216,7 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="normalizeCheckBox">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Normalise residuals"/>
+                    <Property name="text" type="java.lang.String" value="Normalize total flux"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="normalizeCheckBoxActionPerformed"/>
