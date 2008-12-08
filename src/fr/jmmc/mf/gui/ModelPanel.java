@@ -48,18 +48,14 @@ public class ModelPanel extends javax.swing.JPanel
     SettingsModel settingsModel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea   descTextArea;
+    private javax.swing.JTextArea descTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JPopupMenu parameterPopupMenu;
     private javax.swing.JTable parametersTable;
@@ -244,78 +240,64 @@ public class ModelPanel extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        parameterPopupMenu     = new javax.swing.JPopupMenu();
-        jPanel1                = new javax.swing.JPanel();
-        jPanel2                = new javax.swing.JPanel();
-        jLabel2                = new javax.swing.JLabel();
-        nameTextField          = new javax.swing.JTextField();
-        jLabel1                = new javax.swing.JLabel();
-        typeComboBox           = new javax.swing.JComboBox();
-        jPanel3                = new javax.swing.JPanel();
-        jPanel5                = new javax.swing.JPanel();
-        jPanel6                = new javax.swing.JPanel();
-        jScrollPane2           = new javax.swing.JScrollPane();
-        descTextArea           = new javax.swing.JTextArea();
-        jPanel4                = new javax.swing.JPanel();
-        jScrollPane1           = new javax.swing.JScrollPane();
-        parametersTable        = new javax.swing.JTable();
-        jPanel7                = new javax.swing.JPanel();
+        parameterPopupMenu = new javax.swing.JPopupMenu();
+        jLabel2 = new javax.swing.JLabel();
+        nameTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        typeComboBox = new javax.swing.JComboBox();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        descTextArea = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        parametersTable = new javax.swing.JTable();
 
-        setLayout(new java.awt.BorderLayout());
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
-        jPanel1.setLayout(new java.awt.BorderLayout());
-        add(jPanel1, java.awt.BorderLayout.CENTER);
-
-        jPanel2.setLayout(new java.awt.GridBagLayout());
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
+        setLayout(new java.awt.GridBagLayout());
 
         jLabel2.setText("Type:");
-        gridBagConstraints           = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx     = 0;
-        gridBagConstraints.gridy     = 1;
-        jPanel2.add(jLabel2, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        add(jLabel2, gridBagConstraints);
 
-        nameTextField.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    nameTextFieldActionPerformed(evt);
-                }
-            });
-        gridBagConstraints             = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx       = 1;
-        gridBagConstraints.gridy       = 0;
-        gridBagConstraints.fill        = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx     = 1.0;
-        jPanel2.add(nameTextField, gridBagConstraints);
+        nameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameTextFieldActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(nameTextField, gridBagConstraints);
 
         jLabel1.setText("Name:");
-        gridBagConstraints           = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx     = 0;
-        gridBagConstraints.gridy     = 0;
-        jPanel2.add(jLabel1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        add(jLabel1, gridBagConstraints);
 
         typeComboBox.setModel(SettingsModel.supportedModelsModel);
         typeComboBox.setEnabled(false);
-        gridBagConstraints             = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx       = 1;
-        gridBagConstraints.gridy       = 1;
-        gridBagConstraints.fill        = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx     = 1.0;
-        jPanel2.add(typeComboBox, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(typeComboBox, gridBagConstraints);
 
-        add(jPanel2, java.awt.BorderLayout.NORTH);
-
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
-
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.Y_AXIS));
+        jSplitPane1.setBorder(null);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(0.5);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
-        jPanel6.setLayout(new java.awt.BorderLayout());
+        jPanel6.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane2.setEnabled(false);
 
@@ -324,45 +306,45 @@ public class ModelPanel extends javax.swing.JPanel
         descTextArea.setRows(5);
         jScrollPane2.setViewportView(descTextArea);
 
-        jPanel6.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel6.add(jScrollPane2, gridBagConstraints);
 
-        jPanel5.add(jPanel6);
-
-        jPanel3.add(jPanel5);
+        jSplitPane1.setTopComponent(jPanel6);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         parametersTable.setModel(parametersTableModel);
         parametersTable.setToolTipText("Use right click to manage parameters");
-        parametersTable.addMouseListener(new java.awt.event.MouseAdapter()
-            {
-                public void mouseClicked(java.awt.event.MouseEvent evt)
-                {
-                    parametersTableMouseClicked(evt);
-                }
-
-                public void mousePressed(java.awt.event.MouseEvent evt)
-                {
-                    parametersTableMousePressed(evt);
-                }
-
-                public void mouseReleased(java.awt.event.MouseEvent evt)
-                {
-                    parametersTableMouseReleased(evt);
-                }
-            });
+        parametersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                parametersTableMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                parametersTableMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                parametersTableMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(parametersTable);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jPanel3.add(jPanel4);
+        jSplitPane1.setRightComponent(jPanel4);
 
-        add(jPanel3, java.awt.BorderLayout.CENTER);
-
-        jPanel7.setLayout(new java.awt.GridBagLayout());
-        add(jPanel7, java.awt.BorderLayout.SOUTH);
-    } // </editor-fold>//GEN-END:initComponents
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jSplitPane1, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
 
     /**
      * DOCUMENT ME!
