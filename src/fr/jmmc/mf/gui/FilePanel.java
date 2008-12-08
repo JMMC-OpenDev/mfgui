@@ -165,8 +165,7 @@ public class FilePanel extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         fileListPopupMenu = new javax.swing.JPopupMenu();
@@ -271,14 +270,11 @@ public class FilePanel extends javax.swing.JPanel
         jScrollPane1.setPreferredSize(new java.awt.Dimension(259, 431));
 
         hduList.setModel(hduListModel);
-        hduList.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
+        hduList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 hduListMouseClicked(evt);
             }
-            public void mousePressed(java.awt.event.MouseEvent evt)
-            {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 hduListMousePressed(evt);
             }
         });
@@ -293,10 +289,8 @@ public class FilePanel extends javax.swing.JPanel
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
         showSketchButton.setText("Show interferometer sketch"); // NOI18N
-        showSketchButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        showSketchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showSketchButtonActionPerformed(evt);
             }
         });
@@ -309,10 +303,8 @@ public class FilePanel extends javax.swing.JPanel
 
         showUVCoverageButton.setText("Show UV Coverage of selected tables"); // NOI18N
         showUVCoverageButton.setEnabled(false);
-        showUVCoverageButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        showUVCoverageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showUVCoverageButtonActionPerformed(evt);
             }
         });
@@ -324,10 +316,8 @@ public class FilePanel extends javax.swing.JPanel
         jPanel1.add(showUVCoverageButton, gridBagConstraints);
 
         showVisButton.setText("showVisButton label inited in code"); // NOI18N
-        showVisButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        showVisButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showVisButtonActionPerformed(evt);
             }
         });
@@ -338,10 +328,8 @@ public class FilePanel extends javax.swing.JPanel
         jPanel1.add(showVisButton, gridBagConstraints);
 
         showVis2Button.setText("showVis2Button label inited in code"); // NOI18N
-        showVis2Button.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        showVis2Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showVis2ButtonActionPerformed(evt);
             }
         });
@@ -352,10 +340,8 @@ public class FilePanel extends javax.swing.JPanel
         jPanel1.add(showVis2Button, gridBagConstraints);
 
         showT3Button.setText("showT3Button label inited in code"); // NOI18N
-        showT3Button.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        showT3Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showT3ButtonActionPerformed(evt);
             }
         });
@@ -403,7 +389,7 @@ public class FilePanel extends javax.swing.JPanel
         add(jPanel1, gridBagConstraints);
 
         jButton1.setAction(FilesPanel.loadFilesAction);
-        jButton1.setText("Load one other file...");
+        jButton1.setText("Load another file...");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
