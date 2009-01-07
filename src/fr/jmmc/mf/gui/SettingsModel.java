@@ -87,7 +87,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.setParameters(new Parameters());
         rootSettings.setFitter("standard");
         rootSettings.setUserInfo("Created on " + new java.util.Date() +
-                " by ModelFitting GUI rev. " + fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+                " by ModelFitting GUI rev. " + ModelFitting.getSharedApplicationDataModel().getProgramVersion());
         setRootSettings(rootSettings);        
     }
 
