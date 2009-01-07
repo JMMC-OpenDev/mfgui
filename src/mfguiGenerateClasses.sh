@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.9 2008-11-20 12:48:01 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.10 2009-01-07 16:13:13 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2008/11/20 12:48:01  mella
+# use mkfGenerateJavaClassPath
+#
 # Revision 1.8  2008/02/20 18:30:23  mella
 # Jalopization on 1.0.7beta
 #
@@ -72,7 +75,7 @@ do
         toString="\"File[\"+getName()+\"]\";"
     elif [ "$className" == "FileLink" ]
     then
-        toString="\"FileLink[\"+((File)getFileRef()).getName()+\"]\";"
+        toString="\"File[\"+((File)getFileRef()).getName()+\"]\";"
     elif [ "$className" == "Parameter" ]
     then
         toString="\"Parameter[\"+getName()+\"]\";"
@@ -85,6 +88,7 @@ do
     elif [ "$className" == "Model" ]
     then
         toString="\"Model[\"+getType()+\":\"+getName()+\"]\";"
+        toString="getName();"
     else
         toString="\"$className\";"
     fi
