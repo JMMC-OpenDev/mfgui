@@ -150,59 +150,77 @@ public class UtilsClass
     }
 
     /**
-     * DOCUMENT ME!
+     * Decode the base64 encoded file and store it into the given file.
      *
-     * @param b64 DOCUMENT ME!
-     * @param outputFile DOCUMENT ME!
+     * @param b64 the base64 encoded file
+     * @param outputFile the file to store result
      *
-     * @return DOCUMENT ME!
+     * @return The absolute filename or null.
      *
      * @throws IOException DOCUMENT ME!
      */
-    public static String saveBASE64OifitsToFile(String b64, File outputFile)
-        throws IOException
-    {
-        // fill file with href content
-        StringBuffer              sb = new StringBuffer();
-        java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(23));
-
-        while (st.hasMoreTokens())
-        {
-            sb.append(st.nextToken());
+    public static String saveBASE64ToFile(String b64, File outputFile)
+            throws IOException {
+        String [] dataTypes  = new String [] {
+            "image/fits","image/png"
+        };
+        for (int i = 0; i < dataTypes.length; i++) {
+            String base64DataType = "data:"+dataTypes[i]+";base64,";
+            if (b64.startsWith(base64DataType)) {
+                logger.fine("decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
+                java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
+                StringBuffer sb = new StringBuffer();
+                while (st.hasMoreTokens()) {
+                    sb.append(st.nextToken());
+                }
+                byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                FileOutputStream out = new FileOutputStream(outputFile);
+                out.write(buf);
+                out.flush();
+                out.close();
+                return outputFile.getAbsolutePath();
+            }
         }
-
-        if (b64.startsWith("data:image/fits;base64,"))
-        {
-            logger.fine("decoding base64 file into " + outputFile.getAbsolutePath());
-
-            byte[]           buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
-            FileOutputStream out = new FileOutputStream(outputFile);
-            out.write(buf);
-            out.flush();
-            out.close();
-        }
-
-        return outputFile.getAbsolutePath();
+        return null;
     }
 
+        /**
+     * Extract base64 encoded file.
+     *
+     * @param file DOCUMENT ME!
+     * @param b64 DOCUMENT ME!
+     *
+     * @return the absolute filename
+     *
+     * @throws IOException DOCUMENT ME!
+     */
+    public static File saveBASE64ToFile(String b64)
+        throws IOException
+    {
+        java.io.File outputFile = java.io.File.createTempFile("tmpB64File",".extracted");
+        outputFile.deleteOnExit();
+        if(saveBASE64ToFile(b64, outputFile)==null){
+            return null;
+}
+        return outputFile;
+    }
     /**
      * DOCUMENT ME!
      *
-     * @param fileId DOCUMENT ME!
+     * @param file DOCUMENT ME!
      * @param b64 DOCUMENT ME!
      *
-     * @return DOCUMENT ME!
+     * @return the absolute filename
      *
      * @throws IOException DOCUMENT ME!
      */
-    public static String saveBASE64OifitsToFile(fr.jmmc.mf.models.File file, String b64)
+    public static String saveBASE64ToFile(fr.jmmc.mf.models.File file, String b64)
         throws IOException
     {
         Object key = file;
 
         // Search if this file has already been loaded
         java.io.File outputFile = (java.io.File) alreadyExpandedFiles.get(key);
-        ;
 
         if (outputFile == null)
         {
@@ -212,7 +230,7 @@ public class UtilsClass
             outputFile.deleteOnExit();
             alreadyExpandedFiles.put(key, outputFile);
 
-            return saveBASE64OifitsToFile(b64, outputFile);
+            return saveBASE64ToFile(b64, outputFile);
         }
 
         logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());

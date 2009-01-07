@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.13"/>
+    <program name="ModelFitting" version="1.0.14beta"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>        
     </text>
@@ -23,14 +23,15 @@
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel8"/>
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
         </menu>        
     </menubar>    
     <releasenotes>
-        <release version="1.0.13">
-            <prerelease version="1.0.13beta">
+        <release version="1.0.14">
+            <prerelease version="1.0.14beta">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -38,9 +39,18 @@
                  and propose converter tools)
                  </li>
                  <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
+                 <change type="FEATURE"></change>
+                 <change type="REQUEST"></change>
                  -->
+                <change type="FEATURE">Add split bar to enlarge model description</change>
+                <change type="FEATURE">Add arcturus demo file</change>
+                <change type="REQUEST">Fix result text display list if one parameter only as been fitted and remove 'Confidence level'</change>
+                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
+                <change type="REQUEST">Change toString() for models in order to remove model[type:name] form</change>
+                <change type="REQUEST">Add residual plots</change>
+                <change type="REQUEST">Init x, y and flux_weight parameter with better first default values</change>
                 <change type="REQUEST">Add url data file loading capability</change>
-                <change type="REQUEST">Add privious parametre value column in the parameter table</change>
+                <change type="REQUEST">Add previous parametre value column in the parameter table</change>
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Make amp or phi distinct in the OI_T3 result plot</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
@@ -48,6 +58,14 @@
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Return message of error for plot failures</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
+                <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
+                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>
+                <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
+            </prerelease>
+        </release>
+        <release version="1.0.13">
+            <prerelease version="1.0.13beta">
                 <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
                 <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>

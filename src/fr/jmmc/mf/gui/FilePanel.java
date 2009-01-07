@@ -40,9 +40,9 @@ public class FilePanel extends javax.swing.JPanel
     /**
      * DOCUMENT ME!
      */
-    static File current = null;
+    File current = null;
 
-    static OifitsFile oifitsFile_=null;
+    OifitsFile oifitsFile_=null;
     /**
      * DOCUMENT ME!
      */
@@ -61,12 +61,12 @@ public class FilePanel extends javax.swing.JPanel
     /**
      * DOCUMENT ME!
      */
-    static MyListSelectionListener myListSelectionListener;
+    MyListSelectionListener myListSelectionListener;
 
     /**
      * DOCUMENT ME!
      */
-    static ListModel hduListModel = new DefaultListModel();
+    ListModel hduListModel = new DefaultListModel();
 
     /**
      * DOCUMENT ME!
@@ -90,7 +90,6 @@ public class FilePanel extends javax.swing.JPanel
     private javax.swing.JTextField localNameTextField;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton saveFileButton;
-    private javax.swing.JButton showSketchButton;
     private javax.swing.JButton showT3Button;
     private javax.swing.JButton showUVCoverageButton;
     private javax.swing.JButton showVis2Button;
@@ -116,11 +115,6 @@ public class FilePanel extends javax.swing.JPanel
         myListSelectionListener.valueChanged(null);
     }
 
-    /**
-     * This must be doced and improvedbecause it build a new fitsfile instance for each show method call...
-     *
-     * @param file DOCUMENT ME!
-     */
     public void show(File file)
     {
         // Try to load data file
@@ -128,7 +122,7 @@ public class FilePanel extends javax.swing.JPanel
         try
         {
             current = file;            
-            String     filename   = UtilsClass.saveBASE64OifitsToFile(current,
+            String     filename   = UtilsClass.saveBASE64ToFile(current,
                     current.getHref());
             java.io.File f        = new java.io.File(filename);
             oifitsFile_  = new OifitsFile(filename);
@@ -141,7 +135,6 @@ public class FilePanel extends javax.swing.JPanel
             hduList.setListData(oifitsFile_.getOiTables());
             hduListModel=hduList.getModel();            
             showUVCoverageButton.setEnabled(false);
-            showSketchButton.setEnabled(oifitsFile_.hasOiArray());
             showVisButton.setEnabled(oifitsFile_.hasOiVis());
             visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
             visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
@@ -182,7 +175,6 @@ public class FilePanel extends javax.swing.JPanel
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         hduList = new javax.swing.JList();
-        showSketchButton = new javax.swing.JButton();
         showUVCoverageButton = new javax.swing.JButton();
         showVisButton = new javax.swing.JButton();
         showVis2Button = new javax.swing.JButton();
@@ -288,19 +280,6 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints.weighty = 1.0;
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
-        showSketchButton.setText("Show interferometer sketch"); // NOI18N
-        showSketchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showSketchButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel1.add(showSketchButton, gridBagConstraints);
-
         showUVCoverageButton.setText("Show UV Coverage of selected tables"); // NOI18N
         showUVCoverageButton.setEnabled(false);
         showUVCoverageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -396,73 +375,6 @@ public class FilePanel extends javax.swing.JPanel
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
-    private void showSketchButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_showSketchButtonActionPerformed
-
-        try
-        {
-           String filename= oifitsFile_.getName();
-            // scan given file and try to get reference of oi_target extension excepted primary hdu
-            FitsFile fits  = new FitsFile(filename);
-            int      index = fits.getNoHDUnits();
-
-            // start from 1 to skip primary hdu
-            for (int i = 1; i < index; i++)
-            {
-                String extName = fits.getHDUnit(i).getHeader().getKeyword("EXTNAME").getString();
-
-                if (extName.trim().equalsIgnoreCase("OI_ARRAY"))
-                {
-                    filename = filename + "#" + i;
-                }
-            }
-
-            // We could use the topcat.getTableListModel to open just once each tables
-            uk.ac.starlink.topcat.ControlWindow   topcat  = uk.ac.starlink.topcat.ControlWindow.getInstance();
-            uk.ac.starlink.table.StarTableFactory stFact  = new uk.ac.starlink.table.StarTableFactory();
-            uk.ac.starlink.table.StarTable        startab = stFact.makeStarTable(filename);
-            topcat.addTable(startab, filename, true);
-
-            // add x column            
-            uk.ac.starlink.table.DefaultValueInfo xValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
-                    "X");
-            uk.ac.starlink.table.DefaultValueInfo yValueInfo = new uk.ac.starlink.table.DefaultValueInfo(
-                    "Y");
-            uk.ac.starlink.topcat.SyntheticColumn c;
-
-            List                                  l          = new Vector();
-            l.add(uk.ac.starlink.topcat.RowSubset.ALL);
-            c = new uk.ac.starlink.topcat.SyntheticColumn(xValueInfo, startab, l, "STAXYZ[0]", null);
-            topcat.getCurrentModel().appendColumn(c, 0);
-            c = new uk.ac.starlink.topcat.SyntheticColumn(yValueInfo, startab, l, "STAXYZ[1]", null);
-            topcat.getCurrentModel().appendColumn(c, 1);
-
-            uk.ac.starlink.topcat.plot.PlotWindow plot = new uk.ac.starlink.topcat.plot.PlotWindow(jPanel1);
-            // setVisible must be called before model assignement
-            plot.setVisible(true);
-            plot.setMainTable(topcat.getCurrentModel());
-
-            // choose other axis linke next lines seem imossible 
-            // generated plotState uses n first column...
-            // just gui seems too have access on it
-            // next ps is generated one
-            /*uk.ac.starlink.topcat.plot.PlotState ps = plot.getPlotState();
-               ps.setAxes(new uk.ac.starlink.table.ValueInfo[]{xValueInfo, yValueInfo});
-             * maybe that one more line code could take prev modification
-             */
-        }
-        catch (Exception exc)
-        {
-            logger.warning("Can't do graph");
-            new FeedbackReport(null, true, exc);
-        }
-    }//GEN-LAST:event_showSketchButtonActionPerformed
 
     /**
      * DOCUMENT ME!
@@ -900,10 +812,10 @@ public class FilePanel extends javax.swing.JPanel
      * @param targetFile DOCUMENT ME!
      *
      */
-    public static void saveFile(java.io.File targetFile)
+    public void saveFile(java.io.File targetFile)
         throws java.io.IOException, java.io.FileNotFoundException
     {
-        UtilsClass.saveBASE64OifitsToFile(current.getHref(), targetFile);
+        UtilsClass.saveBASE64ToFile(current.getHref(), targetFile);
     }
 
     // THIS CLASS handles button states according to the table selection

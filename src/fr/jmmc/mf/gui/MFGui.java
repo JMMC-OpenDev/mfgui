@@ -73,8 +73,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         this.addWindowListener(this);
 
         tabbedPane_ = new javax.swing.JTabbedPane();
-        tabbedPane_.setMinimumSize(new java.awt.Dimension(800, 800));
-        tabbedPane_.setPreferredSize(new java.awt.Dimension(800, 800));
+        tabbedPane_.setMinimumSize(new java.awt.Dimension(800, 600));
+        tabbedPane_.setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
 
         /* Plastic transmitter. */
@@ -204,6 +204,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             "http://jmmc.fr/modelfitting/xml/Obj2_triple_punct_with_oidata.xml");
         demo.put("Uniform disk (Obj2)",
             "http://jmmc.fr/modelfitting/xml/Obj2_uniform_disk_with_oidata.xml");
+        demo.put("Arcturus",
+            "http://jmmc.fr/modelfitting/xml/Arcturus_uniform_disk_with_oidata.xml");
         
         Enumeration keys = demo.keys();
         int i=1;
@@ -228,7 +230,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             interopMenu.add(plasticServer_.getHubStartAction(true));
             interopMenu.add(plasticServer_.getHubStartAction(false));
             interopMenu.add(new HubWatchAction(plasticServer_));
-
             //          interopMenu.addSeparator();
             //          interopMenu.add( tableTransmitter_.getBroadcastAction() );
             //          interopMenu.add( tableTransmitter_.createSendMenu() );

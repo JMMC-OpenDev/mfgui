@@ -30,7 +30,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     /**
      * DOCUMENT ME!
      */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.21 2008-11-26 11:57:18 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.22 2009-01-07 14:26:27 mella Exp $";
 
     /**
      * DOCUMENT ME!
@@ -139,14 +139,24 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     public String execMethod(String methodName, java.io.File xmlFile)
         throws Exception
     {
+        String result;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use"))
         {
-            return doPost(methodName, xmlFile);
+            result=doPost(methodName, xmlFile);
         }
         else
         {
-            return doExec(methodName, xmlFile);
+            result=doExec(methodName, xmlFile);
         }
+        StringTokenizer st = new StringTokenizer("\n\r\f", result);
+        while (st.hasMoreTokens()){
+            String str = st.nextToken();
+            if(str.startsWith("ERROR")){
+                System.out.println(str);
+            }
+        }
+
+        return result;
     }
 
     /** This is the main wrappers method to execute yoga actions

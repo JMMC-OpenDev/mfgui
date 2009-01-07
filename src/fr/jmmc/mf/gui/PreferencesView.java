@@ -41,6 +41,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
@@ -48,6 +49,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
@@ -116,8 +118,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -133,6 +134,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jLabel4 = new javax.swing.JLabel();
         preferenceFilenaTextfield = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         saveRestorePanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         restoreButton = new javax.swing.JButton();
@@ -143,7 +146,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         yogaPanel.setLayout(new java.awt.GridBagLayout());
 
         jCheckBox1.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "yoga.remote.use"));
-        jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -194,12 +196,9 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jCheckBox2.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
-        jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox2ActionPerformed(evt);
             }
         });
@@ -218,10 +217,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jPanel2.add(jLabel4, gridBagConstraints);
 
         preferenceFilenaTextfield.setEditable(false);
-        preferenceFilenaTextfield.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        preferenceFilenaTextfield.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 preferenceFilenaTextfieldActionPerformed(evt);
             }
         });
@@ -239,7 +236,17 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel2.add(jLabel5, gridBagConstraints);
 
-        jTabbedPane1.addTab("help", jPanel2);
+        jTabbedPane1.addTab("Help", jPanel2);
+
+        jButton1.setText("Display logging utility");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
+
+        jTabbedPane1.addTab("advanced", jPanel1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -285,6 +292,10 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     {
  // TODO add your handling code here:
     }//GEN-LAST:event_preferenceFilenaTextfieldActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ModelFitting.showLogGui();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
