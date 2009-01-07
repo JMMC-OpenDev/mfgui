@@ -538,7 +538,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             if (bindedFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
                 // try to continue next test creating a file based on the base64 href                                
-                filename = UtilsClass.saveBASE64OifitsToFile(bindedFile, href);
+                filename = UtilsClass.saveBASE64ToFile(bindedFile, href);
             } else {
                 return true;
             }

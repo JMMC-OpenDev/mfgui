@@ -82,11 +82,11 @@ Generate Html view of given xml settings files .
                         <p>Number of degrees of freedom = <xsl:value-of select="n_free"/>
                         </p>
                     </xsl:if>
- 
+                    <!--
                     <xsl:if test="conf_level">
                         <h1> Confidence Level = <xsl:value-of select="conf_level"/> </h1>
                     </xsl:if>
-
+                    -->
                     <xsl:if test="degen/*">
                         <h1>    Degenerated parameters</h1>
                         <p>Degenerated parameters seen from the jacobian:<br/>
