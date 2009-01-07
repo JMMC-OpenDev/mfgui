@@ -158,7 +158,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         logger.entering("" + this.getClass(), "valueChanged");
 
         Object o = e.getPath().getLastPathComponent();
-        showSettingElement(o);
+        if(e.getNewLeadSelectionPath()!=null){
+            showSettingElement(o);
+        }
         checkValidSettings();
     }
 
@@ -231,6 +233,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         {
             plotPanel.show(rootSettingsModel);
             modifierPanel.add(plotPanel);
+            settingsTree.clearSelection();
         }
         else
         {
