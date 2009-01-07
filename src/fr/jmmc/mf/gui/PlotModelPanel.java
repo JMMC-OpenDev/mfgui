@@ -300,12 +300,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(jLabel11, gridBagConstraints);
 
         pixscaleFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        pixscaleFormattedTextField1.setText("1");
-        pixscaleFormattedTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pixscaleFormattedTextField1ActionPerformed(evt);
-            }
-        });
+        pixscaleFormattedTextField1.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 3;
@@ -326,10 +321,6 @@ public class PlotModelPanel extends javax.swing.JPanel
     private void plotSnifferMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotSnifferMapButtonActionPerformed
         plotModelSnifferMap((Target) targetComboBox.getSelectedItem());
 }//GEN-LAST:event_plotSnifferMapButtonActionPerformed
-
-    private void pixscaleFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pixscaleFormattedTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pixscaleFormattedTextField1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel10;
