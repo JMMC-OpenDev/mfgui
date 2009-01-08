@@ -6,7 +6,6 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.ResultFile;
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -14,10 +13,10 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -30,15 +29,18 @@ public class PlotPanel extends javax.swing.JPanel
     /** Class logger */
     private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.PlotPanel");
+
     /** settings model reference */
     private static SettingsModel settingsModel = null;
     
     private PlotModelPanel plotModelPanel = null;
     private PlotChi2Panel plotChi2Panel = null;
+    private static FrameList frameList;
 
     /** Creates new form PlotPanel */
-    public PlotPanel()
+    public PlotPanel(SettingsViewerInterface viewer)
     {
+        frameList = viewer.getSettingsPane().getFrameList();
         initComponents();
         plotModelPanel = new PlotModelPanel();
         plotChi2Panel = new PlotChi2Panel();
@@ -61,12 +63,12 @@ public class PlotPanel extends javax.swing.JPanel
      * @param methodArgs the method's arguments.
      * @param title the plot title.
      */
-    static public void plot(String methodName, String methodArgs, String title)
+    public static void plot(String methodName, String methodArgs, String title)
     {
         logger.fine("Requesting yoga '" + methodName + "' call");
 
         String result = "";
-
+        JFrame newFrame=null;
         try {
             result = ModelFitting.instance_.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
@@ -97,16 +99,21 @@ public class PlotPanel extends javax.swing.JPanel
             JLabel label = new JLabel(new ImageIcon(image));
             frame.getContentPane().add(label, BorderLayout.CENTER);
             frame.pack();
-            frame.setVisible(true);
-
-        } catch (Exception e) {
+            //frame.setVisible(true);
+            newFrame=frame;
+        }catch (Exception e){
             logger.log(Level.WARNING, "Cant read png, so try with imageViewer", e);
             fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
             v.setTitle(title);
             v.setSize(400, 400);
-            v.setVisible(true);
+            //v.setVisible(true);
+            newFrame=v;
         }
+
+        frameList.add(newFrame,title);
     }
+
+
 
     /** This method is called from within the constructor to
      * initialize the form.

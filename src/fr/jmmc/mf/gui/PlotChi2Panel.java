@@ -5,12 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Parameter;
-import java.util.logging.Level;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 
 /**
  *

@@ -5,6 +5,9 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -30,7 +33,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     /**
      * DOCUMENT ME!
      */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.22 2009-01-07 14:26:27 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.23 2009-01-08 17:07:08 mella Exp $";
 
     /**
      * DOCUMENT ME!
@@ -322,6 +325,9 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
 
             if (status == HttpStatus.SC_OK)
             {
+                StringBuffer sb = new StringBuffer();
+                Reader reader = new InputStreamReader(
+                myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
                 result = myPost.getResponseBodyAsString();
                 logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
             }
