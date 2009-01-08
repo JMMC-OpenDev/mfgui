@@ -21,6 +21,7 @@ import fr.jmmc.mf.models.Targets;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 
 import java.lang.reflect.*;
@@ -67,9 +68,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     ParametersPanel parametersPanel;
     ResultPanel resultPanel;
     PlotPanel plotPanel;
+    FramePanel framePanel;
 
     // adjusted to true after user modification
     protected boolean modified;
+
+    protected FrameList frameList;
 
     /** Creates new form SettingsPane */
     public SettingsPane(java.io.File file) throws Exception
@@ -96,6 +100,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      */
     private void init()
     {
+        frameList = new FrameList(this);
         // instanciate actions
         runFitAction          = new RunFitAction();
 
@@ -119,7 +124,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         modelPanel          = new ModelPanel();
         parametersPanel     = new ParametersPanel(this);
         resultPanel         = new ResultPanel(this);
-        plotPanel = new PlotPanel();
+        plotPanel           = new PlotPanel(this);
+        framePanel          = new FramePanel(this);
+
         ActionRegistrar actionRegistrar=ActionRegistrar.getInstance();
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui","saveModel");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui","closeModel");
@@ -137,10 +144,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         showSettingElement(rootSettingsModel.getRootSettings());
         
         runFitButton.setAction(runFitAction);
-        controlPanel.add(runFitButton);        
-               
+        controlPanel.add(runFitButton);
+
+        
+        JScrollPane scrollPane = new JScrollPane(frameList);
+        controlPanel.add(scrollPane);
     }
-    
+
+
+
     /**
      * DOCUMENT ME!
      */
@@ -164,6 +176,42 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         checkValidSettings();
     }
 
+    public void showElement(Object o) {
+        logger.entering("" + this.getClass(), "showElement");
+
+        if (o == null)
+        {
+            return;
+        }
+
+        logger.finest("object to show is :" + o);
+        modifierPanel.removeAll();
+
+        if (o instanceof JFrame)
+        {
+            framePanel.show(rootSettingsModel,(JFrame)o);
+            modifierPanel.add(framePanel);
+            settingsTree.clearSelection();
+            frameList.clearSelection();
+        }
+        else if (o instanceof PlotPanel)
+        {
+            plotPanel.show(rootSettingsModel);
+            modifierPanel.add(plotPanel);
+            settingsTree.clearSelection();
+            frameList.clearSelection();
+        }
+        else
+        {
+            modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
+                    "' objects"));
+        }
+        modifierPanel.revalidate();
+        modifierPanel.repaint();
+        // check one more time that GUI view is up to date
+        checkValidSettings();
+
+    }
     /**
      *Call this method if you want to show something particular in the right
      * side of the SettingsPane.
@@ -180,7 +228,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         }
 
         logger.finest("object to show is :" + o);
-
         modifierPanel.removeAll();
 
         if (o instanceof Settings)
@@ -228,12 +275,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         {
             resultPanel.show((Result) o, rootSettingsModel);
             modifierPanel.add(resultPanel);
-        }
-        else if (o instanceof PlotPanel)
-        {
-            plotPanel.show(rootSettingsModel);
-            modifierPanel.add(plotPanel);
-            settingsTree.clearSelection();
         }
         else
         {
@@ -344,7 +385,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(1.0);
+        jSplitPane2.setResizeWeight(0.5);
 
         settingsTree.setMinimumSize(new java.awt.Dimension(200, 0));
         jScrollPane1.setViewportView(settingsTree);
@@ -373,8 +414,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }// </editor-fold>//GEN-END:initComponents
 
     private void showPlotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlotButtonActionPerformed
-        showSettingElement(plotPanel);
+        showElement(plotPanel);
 }//GEN-LAST:event_showPlotButtonActionPerformed
+
+    /**
+     * @return the frameList
+     */
+    public FrameList getFrameList() {
+        return frameList;
+    }
 
     protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction
     {
@@ -528,6 +576,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     protected class MyCellRenderer extends DefaultTreeCellRenderer
     {
         //getTreeCellRendererComponent
+        @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
             boolean expanded, boolean leaf, int row, boolean hasFocus)
         {

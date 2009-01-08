@@ -71,63 +71,6 @@ public class ResultPanel extends javax.swing.JPanel
      * DOCUMENT ME!
      */
     SettingsModel settingsModel = null;
-
-    // Variables declaration - do not modify                     
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JPanel      jPanel1;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JPanel jPanel2;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JPanel jPanel3;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JScrollPane jScrollPane2;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JTabbedPane jTabbedPane1;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JButton plotBaselinesButton;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JButton plotRadialT3Button;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JButton plotRadialVisButton;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JTabbedPane plotTabbedPane;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JButton plotUVCoverageButton;
-
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JEditorPane resultEditorPane;
-
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer)
     {
@@ -172,30 +115,28 @@ public class ResultPanel extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
-        jTabbedPane1             = new javax.swing.JTabbedPane();
-        jPanel1                  = new javax.swing.JPanel();
-        jScrollPane2             = new javax.swing.JScrollPane();
-        resultEditorPane         = new javax.swing.JEditorPane();
-        jPanel3                  = new javax.swing.JPanel();
-        jPanel2                  = new javax.swing.JPanel();
-        plotBaselinesButton      = new javax.swing.JButton();
-        plotUVCoverageButton     = new javax.swing.JButton();
-        plotRadialVisButton      = new javax.swing.JButton();
-        plotRadialT3Button       = new javax.swing.JButton();
-        plotTabbedPane           = new javax.swing.JTabbedPane();
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        resultEditorPane = new javax.swing.JEditorPane();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        plotBaselinesButton = new javax.swing.JButton();
+        plotUVCoverageButton = new javax.swing.JButton();
+        plotRadialVisButton = new javax.swing.JButton();
+        plotRadialT3Button = new javax.swing.JButton();
+        plotTabbedPane = new javax.swing.JTabbedPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
         resultEditorPane.setEditable(false);
         jScrollPane2.setViewportView(resultEditorPane);
 
         jPanel1.add(jScrollPane2);
-
-        jTabbedPane1.addTab("Text report", jPanel1);
 
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
 
@@ -216,12 +157,13 @@ public class ResultPanel extends javax.swing.JPanel
         jPanel3.add(jPanel2);
         jPanel3.add(plotTabbedPane);
 
-        jTabbedPane1.addTab("Plots", jPanel3);
+        jPanel1.add(jPanel3);
 
-        add(jTabbedPane1);
-    } // </editor-fold>//GEN-END:initComponents
+        jScrollPane1.setViewportView(jPanel1);
 
-    // End of variables declaration                   
+        add(jScrollPane1);
+    }// </editor-fold>//GEN-END:initComponents
+
 
     /** Plots using ptplot widgets */
     protected void ptplot(String plotName)
@@ -332,4 +274,20 @@ public class ResultPanel extends javax.swing.JPanel
             }
         }
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton plotBaselinesButton;
+    private javax.swing.JButton plotRadialT3Button;
+    private javax.swing.JButton plotRadialVisButton;
+    private javax.swing.JTabbedPane plotTabbedPane;
+    private javax.swing.JButton plotUVCoverageButton;
+    private javax.swing.JEditorPane resultEditorPane;
+    // End of variables declaration//GEN-END:variables
+
+
 }

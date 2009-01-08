@@ -6,14 +6,17 @@
  */
 package fr.jmmc.mf.gui;
 
-
 /**
  *
  * @author mella
  */
 public interface SettingsViewerInterface
 {
-    /** Shows a given object */
+
+    /** Shows any object that is not part of setting*/
+    public void showElement(Object o);
+    
+    /** Shows a given object that is part of setting*/
     public void showSettingElement(Object o);
 
     /**
