@@ -564,15 +564,17 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 rootSettingsModel.setLastXml(xml);
                 logger.info("Settings created");
                 // add plot and display automatically the new result
+                resultPanel.genReport(rootSettingsModel);
+                resultPanel.genPlots(rootSettingsModel);
                 showSettingElement(rootSettingsModel.getRootSettings().getResult());
+
                 JFrame resultFrame = new JFrame();
                 JPanel p = new JPanel();
                 p.setLayout(new BorderLayout());
                 resultFrame.getContentPane().add(p);
                 JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
                 p.add(sp);
-                addPlot(resultFrame, " New fit occured :");
-                resultPanel.genPlots(rootSettingsModel);                
+                addPlot(resultFrame, " New fit occured :");                
             }
             catch (Exception ex)
             {                
