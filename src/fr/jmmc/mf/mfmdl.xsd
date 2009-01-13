@@ -17,25 +17,22 @@ The form try to collect every informtions needed by model fitting process
         </xsd:documentation>
     </xsd:annotation>
 
-    <xsd:element name="settings">
-        
+<xsd:element name="response">
+
         <xsd:annotation>
             <xsd:documentation>
-                Highest element of settings.
+                Highest element of that generally is a server response of LITpro wrapper.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
-            <xsd:sequence>
-                <xsd:element ref="files" minOccurs="1" maxOccurs="1"/>
-                <xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
-                <xsd:element ref="parameters" minOccurs="0" maxOccurs="1"/>
-                <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
-                <xsd:element ref="result" minOccurs="0" maxOccurs="1"/>
-                <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-            </xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="errorMsg" type="xsd:string"/>
+                <xsd:element ref="settings"/>
+                <xsd:element ref="resultFile"/>
+            </xsd:choice>
         </xsd:complexType>
-        
+
     </xsd:element>
     
     <!--
