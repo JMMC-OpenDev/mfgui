@@ -5,8 +5,11 @@
 
 package fr.jmmc.mf.gui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  *
@@ -26,9 +29,9 @@ public class FrameList extends JList{
 
     public void add(JFrame frame, String title){
         listModel.add(frame, title);
-        int index=listModel.getSize();
-        setSelectedIndex(index);
-        fireSelectionValueChanged(index,index,false);
     }
-
+    
+    public void remove(JFrame frame){
+        listModel.remove(frame);
+    }
 }

@@ -6,17 +6,10 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
-
 import fr.jmmc.mf.models.Result;
-
 import ptolemy.plot.*;
-
 import ptolemy.plot.plotml.*;
-
-import java.io.StringWriter;
-
 import javax.swing.*;
-
 
 /**
  *
@@ -29,51 +22,19 @@ public class ResultPanel extends javax.swing.JPanel
      */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ResultPanel");
-
-    /* actions  (definitions are at end of file) */
-    /**
-     * DOCUMENT ME!
-     */
     static Action plotBaselinesAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action plotUVCoverageAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action plotRadialVisAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action plotRadialT3Action;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action plotImageAction;
-
-    //ParametersTableModel parametersTableModel;
-    /**
-     * DOCUMENT ME!
-     */
-    Result                  current;
-
-    /**
-     * DOCUMENT ME!
-     */
-    SettingsViewerInterface settingsViewer = null;
-
-    /**
-     * DOCUMENT ME!
-     */
+    Result current;
+    SettingsViewerInterface viewer = null;
     SettingsModel settingsModel = null;
+    String htmlReport = null;
+
     /** Creates new form ResultPanel */
-    public ResultPanel(SettingsViewerInterface viewer)
-    {
+    public ResultPanel(SettingsViewerInterface viewer) {
+        this.viewer=viewer;
         /* actions must be inited before component init */
         plotBaselinesAction      = new PlotAction("plotBaselines");
         plotUVCoverageAction     = new PlotAction("plotUVCoverage");
@@ -82,30 +43,39 @@ public class ResultPanel extends javax.swing.JPanel
         initComponents();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param r DOCUMENT ME!
-     * @param s DOCUMENT ME!
-     */
     public void show(Result r, SettingsModel s)
     {
         current           = r;
-        settingsModel     = s;
-
-        try
-        {
-            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";            
-            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);                        
-            String htmlStr = UtilsClass.xsl(s.getLastXml(), url, null);
-            resultEditorPane.setContentType("text/html");
-            resultEditorPane.setText(htmlStr);
-            resultEditorPane.setCaretPosition(0);
+        settingsModel = s;
+        if(getReport()==null){
+            genReport(s);
         }
-        catch (Exception exc)
-        {
+        resultEditorPane.setContentType("text/html");
+        resultEditorPane.setText(htmlReport);
+        resultEditorPane.setCaretPosition(0);
+    }
+
+    public void genReport(SettingsModel s){
+        try {
+            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
+            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
+            htmlReport = UtilsClass.xsl(s.getLastXml(), url, null);
+        } catch (Exception exc) {
+            htmlReport="<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
         }
+    }
+    
+    public String getReport(){
+        return htmlReport;
+    }
+
+    public void genPlots(SettingsModel s){
+        settingsModel     = s;
+        plotBaselinesAction.actionPerformed(null);
+        plotUVCoverageAction.actionPerformed(null);
+        plotRadialVisAction.actionPerformed(null);
+        plotRadialT3Action.actionPerformed(null);
     }
 
     /** This method is called from within the constructor to
@@ -121,13 +91,6 @@ public class ResultPanel extends javax.swing.JPanel
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        plotBaselinesButton = new javax.swing.JButton();
-        plotUVCoverageButton = new javax.swing.JButton();
-        plotRadialVisButton = new javax.swing.JButton();
-        plotRadialT3Button = new javax.swing.JButton();
-        plotTabbedPane = new javax.swing.JTabbedPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
@@ -137,27 +100,6 @@ public class ResultPanel extends javax.swing.JPanel
         jScrollPane2.setViewportView(resultEditorPane);
 
         jPanel1.add(jScrollPane2);
-
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
-
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
-
-        plotBaselinesButton.setAction(plotBaselinesAction);
-        jPanel2.add(plotBaselinesButton);
-
-        plotUVCoverageButton.setAction(plotUVCoverageAction);
-        jPanel2.add(plotUVCoverageButton);
-
-        plotRadialVisButton.setAction(plotRadialVisAction);
-        jPanel2.add(plotRadialVisButton);
-
-        plotRadialT3Button.setAction(plotRadialT3Action);
-        jPanel2.add(plotRadialT3Button);
-
-        jPanel3.add(jPanel2);
-        jPanel3.add(plotTabbedPane);
-
-        jPanel1.add(jPanel3);
 
         jScrollPane1.setViewportView(jPanel1);
 
@@ -176,36 +118,20 @@ public class ResultPanel extends javax.swing.JPanel
         {
             // Contruct xml document to plot
             java.net.URL url = this.getClass().getClassLoader()
-                                   .getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
+           .getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
             xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
-                    new String[] { "plotName", plotName });
+                    new String[]{"plotName", plotName});
 
             PlotMLParser plotMLParser;
+            // Construct plot and parse xml
+            Plot plot = new Plot();
+            plotMLParser = new PlotMLParser(plot);
+            plotMLParser.parse(null, xmlStr);
 
-            // Do not display the plot in another window
-            // @TODO give access to save export print menus
-            if (false)
-            {
-                // Construct plot and parse xml
-                Plot plot = new Plot();
-                plotMLParser = new PlotMLParser(plot);
-                plotMLParser.parse(null, xmlStr);
+            // Show plot into frame
+            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
 
-                // Show plot into frame
-                PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
-                plotMLFrame.setVisible(true);
-                //plotMLFrame.setSize(new java.awt.Dimension(400, 400));
-                plotMLFrame.validate();
-            }
-            else
-            {
-                // a second plot must be done else it stole display into previous frame
-                Plot plot2 = new Plot();
-                plotMLParser = new PlotMLParser(plot2);
-                plotMLParser.parse(null, xmlStr);
-                //plot2.read(xmlStr);
-                addPlotPanel(plotName, plot2);
-            }
+            viewer.addPlot(plotMLFrame, plotName);
 
             logger.finest("plot ready to be shown");
         }
@@ -215,24 +141,7 @@ public class ResultPanel extends javax.swing.JPanel
         }
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param title DOCUMENT ME!
-     * @param pp DOCUMENT ME!
-     */
-    protected void addPlotPanel(String title, JPanel pp)
-    {
-        plotTabbedPane.add(title, pp);
-        plotTabbedPane.setSelectedComponent(pp);
-        this.validate();
-    }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param plotName DOCUMENT ME!
-     */
     protected void plotImage(String plotName)
     {
         logger.entering("" + this.getClass(), "plotImage");
@@ -277,15 +186,8 @@ public class ResultPanel extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton plotBaselinesButton;
-    private javax.swing.JButton plotRadialT3Button;
-    private javax.swing.JButton plotRadialVisButton;
-    private javax.swing.JTabbedPane plotTabbedPane;
-    private javax.swing.JButton plotUVCoverageButton;
     private javax.swing.JEditorPane resultEditorPane;
     // End of variables declaration//GEN-END:variables
 

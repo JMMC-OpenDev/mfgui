@@ -47,9 +47,7 @@ Generate Html view of given xml settings files .
                     <xsl:variable name="fitter" select="."/>
                     <h1>Iterations</h1>
                     <!-- disp iteration info -->
-                    <p>
                         Number of iterations:  <xsl:value-of select="iter"/> (Max Number of iterations  <xsl:value-of select="itmax"/> )
-                    </p>
 
                     <!-- disp parameters info -->
                     <h1> Parameters </h1>
@@ -75,7 +73,7 @@ Generate Html view of given xml settings files .
                     </table> 
 
                     <h1>Chi2</h1>
-                    <xsl:call-template name="Chi2" mode="html"/>
+                    <xsl:call-template name="Chi2"/>
 
                     <xsl:if test="n_free">
                         <h1>Degrees of freedom</h1>
@@ -89,9 +87,9 @@ Generate Html view of given xml settings files .
                     -->
                     <xsl:if test="degen/*">
                         <h1>    Degenerated parameters</h1>
-                        <p>Degenerated parameters seen from the jacobian:<br/>
+                       Degenerated parameters seen from the jacobian:<br/>
                             <xsl:copy-of select="degen"/>
-                        </p>
+                 
                     </xsl:if>
 
                     <h1>Covariance matrix</h1>
@@ -132,14 +130,13 @@ Generate Html view of given xml settings files .
                 </xsl:for-each>
     </xsl:template>
 
-    <xsl:template name="Chi2" mode="html">
-        <p>
+    <xsl:template name="Chi2">
+  
             Initial Chi2 = <xsl:value-of select=".//chi2_tracks//td[1]"/>    -  Final Chi2 = <xsl:value-of select=".//chi2"/>
-        </p>
+   
         <xsl:if test=".//n_free">
-            <p>
+            <br/>
                 Initial reduced Chi2 = <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>    -  Final reduced Chi2 = <xsl:value-of select=".//chi2 div .//n_free"/>
-            </p>
         </xsl:if>
     </xsl:template>
 

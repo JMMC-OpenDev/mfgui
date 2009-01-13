@@ -6,6 +6,8 @@
  */
 package fr.jmmc.mf.gui;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author mella
@@ -19,17 +21,15 @@ public interface SettingsViewerInterface
     /** Shows a given object that is part of setting*/
     public void showSettingElement(Object o);
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+    /** Gives access to the settings model */
     public SettingsModel getSettingsModel();
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+    /** Returns settingsPane reference */
     public SettingsPane getSettingsPane();
+
+    /** Register a new Plot */
+    public void addPlot(JFrame frame, String title);
+
+    /** Unregister a new Plot */
+    public void removePlot(JFrame frame);
 }

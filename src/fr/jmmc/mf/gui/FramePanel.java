@@ -35,13 +35,14 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
 
     /** settings model reference */
     private static SettingsModel settingsModel = null;
-
+    SettingsViewerInterface viewer=null;
     JFrame frame;
     Container contentPane;
 
     /** Creates new form PlotPanel */
     public FramePanel(SettingsViewerInterface viewer)
     {
+        this.viewer=viewer;
         initComponents();
     }
 
@@ -80,7 +81,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
             frame.setVisible(false);
             blankPanel.removeAll();
             blankPanel.add(frame.getContentPane());
-            blankPanel.repaint();
+            validate();
+            //this.repaint();
         } else {
             frame.setContentPane(contentPane);
             frame.setVisible(true);
@@ -95,29 +97,55 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         blankPanel = new javax.swing.JPanel();
+        fillerPanel = new javax.swing.JPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        jButton1.setText("Detach  plot in new window");
-        jButton1.setAlignmentX(1.0F);
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+
+        jButton1.setText("Detach/Attach  window");
+        jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        add(jButton1);
+        jPanel1.add(jButton1);
+
+        jButton2.setText("Remove window");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2);
+
+        add(jPanel1);
+
+        blankPanel.setLayout(new javax.swing.BoxLayout(blankPanel, javax.swing.BoxLayout.LINE_AXIS));
         add(blankPanel);
+        add(fillerPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         toggleFrame();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        viewer.removePlot(frame);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel blankPanel;
+    private javax.swing.JPanel fillerPanel;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
     public void windowOpened(WindowEvent e) {

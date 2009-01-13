@@ -48,7 +48,7 @@
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Change toString() for models in order to remove model[type:name] form</change>
                 <change type="REQUEST">Add residual plots</change>
-                <change type="REQUEST">Init x, y and flux_weight parameter with better first default values</change>
+                <change type="CHANGE">x, y and flux_weight parameter of first model have now better initial values</change>
                 <change type="REQUEST">Add url data file loading capability</change>
                 <change type="REQUEST">Add previous parametre value column in the parameter table</change>
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
