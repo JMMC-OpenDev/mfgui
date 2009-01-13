@@ -20,10 +20,12 @@ public class PlotModelPanel extends javax.swing.JPanel
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.PlotModelPanel");
     public SettingsModel settingsModel = null;
+    private PlotPanel plotPanel;
 
     /** Creates new form PlotPanel */
-    public PlotModelPanel()
+    public PlotModelPanel(PlotPanel plotPanel)
     {
+        this.plotPanel=plotPanel;
         initComponents();
     }
 
@@ -53,7 +55,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = "" + groupValue;
-        PlotPanel.plot("getPngModelUVMap", args, "UV map");
+        plotPanel.plot("getPngModelUVMap", args, "UV map of "+targetToPlot.getIdent());
     }
 
     private void plotModelImage(Target targetToPlot)
@@ -61,7 +63,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = "" + groupValue + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + yminFormattedTextField.getText()  + " " + ymaxFormattedTextField.getText() + " " + pixscaleFormattedTextField.getText();
-        PlotPanel.plot("getPngModelImage", args, "Model Image");
+        plotPanel.plot("getPngModelImage", args, "Model Image of "+targetToPlot.getIdent());
     }
 
     private void plotModelSnifferMap(Target targetToPlot)
@@ -69,10 +71,8 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = "" + groupValue + " " + xminFormattedTextField1.getText() + " " + xmaxFormattedTextField1.getText() + " " + yminFormattedTextField1.getText()  + " " + ymaxFormattedTextField1.getText() + " " + pixscaleFormattedTextField1.getText();
-        PlotPanel.plot("getModelSnifferMap", args, "Model Image");
+        plotPanel.plot("getModelSnifferMap", args, "Sniffer Map of "+targetToPlot.getIdent());
     }
-
-    
 
     /** This method is called from within the constructor to
      * initialize the form.

@@ -33,7 +33,6 @@ import javax.swing.tree.*;
 
 import fr.jmmc.oifits.*;
 import fr.jmmc.oifits.validator.GUIValidator;
-import java.util.Observable;
 
 /**
  * This class manages the castor generated classes to bring 
@@ -86,8 +85,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.setTargets(new Targets());
         rootSettings.setParameters(new Parameters());
         rootSettings.setFitter("standard");
-        rootSettings.setUserInfo("Created on " + new java.util.Date() +
-                " by ModelFitting GUI rev. " + ModelFitting.getSharedApplicationDataModel().getProgramVersion());
         setRootSettings(rootSettings);        
     }
 
@@ -613,7 +610,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             logger.fine("no userInfo section, -> new one created");
             s.setUserInfo("UserInfo added on " + new java.util.Date() +
                     " by ModelFitting GUI rev. " +
-                    fr.jmmc.mcs.util.Resources.getResource("mf.version"));
+                    ModelFitting.getSharedApplicationDataModel().getProgramVersion());
             setModified(true);
         }
     }
@@ -669,7 +666,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         checkSettingsFormat(newModel);
         setRootSettings(newModel);
         setModified(false);
-        associatedFile = null;
+        associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
     /**

@@ -82,12 +82,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
-    private javax.swing.JPanel plotPanel;
     private javax.swing.JButton removeModelButton;
+    private javax.swing.JPanel subplotPanel;
     // End of variables declaration//GEN-END:variables
+  
 
     /** Creates new form TargetPanel */
-    public TargetPanel(SettingsViewerInterface viewer)
+    public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel)
     {
         settingsViewer = viewer;
         initComponents();
@@ -99,9 +100,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         modelList.setModel(models);
 
-        plotModelImagePanel = new PlotModelPanel();
-        plotPanel.add(plotModelImagePanel);
+        plotModelImagePanel = new PlotModelPanel(plotPanel);
+        subplotPanel.add(plotModelImagePanel);
     }
+
 
     /** Call it after any internal modification  */
     public void refresh()
@@ -246,7 +248,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         removeModelButton = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         normalizeCheckBox = new javax.swing.JCheckBox();
-        plotPanel = new javax.swing.JPanel();
+        subplotPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Target panel"));
@@ -377,7 +379,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel3.add(jPanel6, gridBagConstraints);
 
-        plotPanel.setLayout(new javax.swing.BoxLayout(plotPanel, javax.swing.BoxLayout.Y_AXIS));
+        subplotPanel.setLayout(new javax.swing.BoxLayout(subplotPanel, javax.swing.BoxLayout.Y_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -385,7 +387,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel3.add(plotPanel, gridBagConstraints);
+        jPanel3.add(subplotPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -496,9 +498,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             // Construct a new copy
             Model        selected = (Model) modelTypeComboBox.getSelectedItem();
             Model        m;
+
             StringWriter writer   = new StringWriter();
             selected.marshal(writer);
-
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
 
@@ -506,11 +508,22 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             String type     = selected.getType();
             m.setName(rootSettingsModel.getNewModelName(type));
 
+            boolean firstModel = current.getModelCount()==0;
+
             // and change parameters name also
             Parameter[] params = m.getParameter();
             for (int i = 0; i < params.length; i++)
             {
                 Parameter p = params[i];
+                // init some parameters of first elements
+                if( firstModel){
+                    if( p.getName().equals("x") || p.getName().equals("y") ){
+                        p.setHasFixedValue(true);
+                    }
+                    if (p.getName().equals("flux_weight")){
+                        p.setValue(1);
+                    }
+                }
                 p.setName(rootSettingsModel.getNewParamName(p.getName()));
             }
 

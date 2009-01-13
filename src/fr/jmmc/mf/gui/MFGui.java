@@ -17,6 +17,7 @@ import java.net.URL;
 
 import java.util.*;
 
+import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 
@@ -509,7 +510,14 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             try
             {
                 addSettingsPane(new SettingsPane(new URL(demoURL_)));
-            }
+            } catch (java.net.UnknownHostException ex) {
+            String msg="Network seems down. Can't contact host "+ex.getMessage();
+            javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            logger.log(Level.WARNING, ex.getMessage(), ex);
+            StatusBar.show("Error recovering demo setting");
+            return;
+        }
             catch (Exception exc)
             {
                 new FeedbackReport(null, true, exc);

@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,18 +34,19 @@ public class PlotPanel extends javax.swing.JPanel
     
     private PlotModelPanel plotModelPanel = null;
     private PlotChi2Panel plotChi2Panel = null;
-    private static FrameList frameList;
+    private SettingsViewerInterface viewer=null;
 
     /** Creates new form PlotPanel */
     public PlotPanel(SettingsViewerInterface viewer)
     {
-        frameList = viewer.getSettingsPane().getFrameList();
+        this.viewer=viewer;
+        settingsModel=viewer.getSettingsModel();
         initComponents();
-        plotModelPanel = new PlotModelPanel();
-        plotChi2Panel = new PlotChi2Panel();
+        plotModelPanel = new PlotModelPanel(this);
+        plotChi2Panel = new PlotChi2Panel(this);
         add(plotModelPanel);
         add(plotChi2Panel);
-        add(blankPanel);
+        //add(blankPanel);
     }
 
     public void show(SettingsModel s)
@@ -63,7 +63,7 @@ public class PlotPanel extends javax.swing.JPanel
      * @param methodArgs the method's arguments.
      * @param title the plot title.
      */
-    public static void plot(String methodName, String methodArgs, String title)
+    public void plot(String methodName, String methodArgs, String title)
     {
         logger.fine("Requesting yoga '" + methodName + "' call");
 
@@ -73,6 +73,13 @@ public class PlotPanel extends javax.swing.JPanel
             result = ModelFitting.instance_.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
             StatusBar.show(methodName + " process finished");
+        } catch (java.net.UnknownHostException ex) {
+            String msg="Network seems down. Can't contact host "+ex.getMessage();
+            javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            logger.log(Level.WARNING, ex.getMessage(), ex);
+            StatusBar.show("Error during process of " + methodName);
+            return;
         } catch (Exception ex) {
             JTextArea textArea = new JTextArea(20, 80);
             textArea.setText(result);
@@ -110,7 +117,7 @@ public class PlotPanel extends javax.swing.JPanel
             newFrame=v;
         }
 
-        frameList.add(newFrame,title);
+        viewer.addPlot(newFrame,title);
     }
 
 
@@ -125,6 +132,7 @@ public class PlotPanel extends javax.swing.JPanel
 
         blankPanel = new javax.swing.JPanel();
 
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Plot panel"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
         add(blankPanel);
     }// </editor-fold>//GEN-END:initComponents

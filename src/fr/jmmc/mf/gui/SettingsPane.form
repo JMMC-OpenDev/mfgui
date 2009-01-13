@@ -65,16 +65,22 @@
                 <Property name="axis" type="int" value="3"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="runFitButton">
-                </Component>
-                <Component class="javax.swing.JButton" name="showPlotButton">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Show Plot Panel"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPlotButtonActionPerformed"/>
-                  </Events>
-                </Component>
+                <Container class="javax.swing.JPanel" name="jPanel1">
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="runFitButton">
+                    </Component>
+                    <Component class="javax.swing.JButton" name="showPlotButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Show Plot Panel"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPlotButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>

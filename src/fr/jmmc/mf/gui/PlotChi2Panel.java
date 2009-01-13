@@ -18,10 +18,12 @@ public class PlotChi2Panel extends javax.swing.JPanel
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.PlotChi2Panel");
     public SettingsModel settingsModel = null;
+    private PlotPanel plotPanel;
 
     /** Creates new form PlotPanel */
-    public PlotChi2Panel()
+    public PlotChi2Panel(PlotPanel plotPanel)
     {
+        this.plotPanel=plotPanel;
         initComponents();
     }
 
@@ -201,7 +203,7 @@ public class PlotChi2Panel extends javax.swing.JPanel
                 +" " + xminFormattedTextField.getText()
                 + " " + xmaxFormattedTextField.getText()
                 + " " + xSamplingFormattedTextField.getText();        
-        PlotPanel.plot("getChi2Map", args, "1D Chi2 Slice");
+        plotPanel.plot("getChi2Map", args, "1D Chi2 Slice");
 }//GEN-LAST:event_plot1DChi2ButtonActionPerformed
 
     private void plot2DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot2DChi2ButtonActionPerformed
@@ -214,7 +216,7 @@ public class PlotChi2Panel extends javax.swing.JPanel
                 +"' " + yminFormattedTextField.getText()
                 + " " + ymaxFormattedTextField.getText()
                 + " " + ySamplingFormattedTextField.getText();
-        PlotPanel.plot("getChi2Map", args, "2D Chi2 Slice");
+        plotPanel.plot("getChi2Map", args, "2D Chi2 Slice");
 }//GEN-LAST:event_plot2DChi2ButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

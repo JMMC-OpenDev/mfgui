@@ -30,7 +30,7 @@ public class UserInfoPanel extends javax.swing.JPanel
      */
     SettingsViewerInterface settingsViewer = null;
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     /**
      * DOCUMENT ME!
      */
@@ -100,10 +100,10 @@ public class UserInfoPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void userInfoTextAreaCaretUpdate(javax.swing.event.CaretEvent evt)
-    { //GEN-FIRST:event_userInfoTextAreaCaretUpdate
+    {//GEN-FIRST:event_userInfoTextAreaCaretUpdate
       //logger.entering(""+this.getClass(), "userInfoTextAreaCaretUpdate");
         current.setUserInfo(userInfoTextArea.getText());
-    } //GEN-LAST:event_userInfoTextAreaCaretUpdate
+    }//GEN-LAST:event_userInfoTextAreaCaretUpdate
 
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
