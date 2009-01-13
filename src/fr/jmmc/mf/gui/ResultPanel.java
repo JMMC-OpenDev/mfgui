@@ -47,9 +47,6 @@ public class ResultPanel extends javax.swing.JPanel
     {
         current           = r;
         settingsModel = s;
-        //if(getReport()==null){
-            genReport(s);
-        //}
         resultEditorPane.setContentType("text/html");
         resultEditorPane.setText(htmlReport);
         resultEditorPane.setCaretPosition(0);
