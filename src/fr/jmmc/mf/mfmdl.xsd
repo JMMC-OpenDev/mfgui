@@ -27,6 +27,7 @@ The form try to collect every informtions needed by model fitting process
 
         <xsd:complexType >
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="outputMsg" type="xsd:string"/>
                 <xsd:element name="errorMsg" type="xsd:string"/>
                 <xsd:element ref="settings"/>
                 <xsd:element ref="resultFile"/>
