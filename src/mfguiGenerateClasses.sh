@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.11 2009-01-13 15:47:16 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.12 2009-01-14 09:36:26 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2009/01/13 15:47:16  mella
+# move xsd file under java source area
+#
 # Revision 1.10  2009/01/07 16:13:13  mella
 # change Model string representation
 #
@@ -64,7 +67,7 @@ java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerato
 
 
 #MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
-MODEL_SCHEMA=../config/mfmdl.xsd
+MODEL_SCHEMA=fr/jmmc/mf/mfmdl.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  $*
