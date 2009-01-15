@@ -1,8 +1,3 @@
-/*
- * PlotPanel.java
- *
- * Created on 29 oct. 2008, 08:16:23
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.StatusBar;
@@ -23,10 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-/**
- *
- * @author mella
- */
 public class FramePanel extends javax.swing.JPanel implements WindowListener
 {
     /** Class logger */
@@ -117,7 +108,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
         });
         jPanel1.add(jButton1);
 
-        jButton2.setText("Remove window");
+        jButton2.setText("Remove from the list");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

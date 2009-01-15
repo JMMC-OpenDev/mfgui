@@ -1,20 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fr.jmmc.mf.gui;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
 
-/**
- *
- * @author mella
- */
 public class FrameList extends JList{
 
     FrameListModel listModel;
@@ -29,6 +17,8 @@ public class FrameList extends JList{
 
     public void add(JFrame frame, String title){
         listModel.add(frame, title);
+        frame.setTitle(title);
+        viewer.showElement(frame);
     }
     
     public void remove(JFrame frame){
