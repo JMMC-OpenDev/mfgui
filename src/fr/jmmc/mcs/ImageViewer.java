@@ -5,13 +5,10 @@
  */
 package fr.jmmc.mcs;
 
-import java.awt.image.IndexColorModel;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 
 
 /**
@@ -48,7 +45,7 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
      *
      * @param xmlStr DOCUMENT ME!
      */
-    public ImageViewer(String xmlStr)
+    public ImageViewer(String xmlStr)throws Exception
     {
         init();
         imageCanvas.xmlInit(xmlStr);
@@ -182,7 +179,7 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
                                 javax.imageio.ImageIO.write((java.awt.image.BufferedImage) imageCanvas.image_,
                                     "png", file);
                             }
-                            catch (java.io.IOException e)
+                            catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
@@ -212,7 +209,7 @@ public class ImageViewer extends javax.swing.JFrame implements Observer
                                 viewer.setTitle(fargs[i]);
                                 viewer.pack();
                             }
-                            catch (java.io.IOException e)
+                            catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
