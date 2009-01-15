@@ -419,7 +419,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 Response r = ModelFitting.instance_.execMethod(methodName, tmpFile);
                 StatusBar.show("Fitting process finished");
                 
-                Settings newModel=UtilsClass.getSettings(r);                
+                Settings newModel=UtilsClass.getSettings(r);
+                if(newModel==null){
+                    logger.warning("no settings present in result message");
+                    setCursor(null);
+                    return;
+                }
                 Settings prevModel = rootSettingsModel.getRootSettings();
                 // add href from previous files
                 File[] newFiles = newModel.getFiles().getFile();
@@ -461,6 +466,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 addPlot(resultFrame, "--New fit result--");
                 resultPanel.genPlots(rootSettingsModel);
                 resultPanel.genPlots(UtilsClass.getResultFiles(r));
+                showElement(resultFrame);
 
             } catch (java.net.UnknownHostException ex) {
                 String msg = "Network seems down. Can't contact host " + ex.getMessage();
