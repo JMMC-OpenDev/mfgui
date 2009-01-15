@@ -8,10 +8,9 @@
  */
 package fr.jmmc.mcs;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
-
 import fr.jmmc.mf.gui.UtilsClass;
 
+import java.io.FileNotFoundException;
 import org.eso.fits.*;
 
 import org.w3c.dom.*;
@@ -340,12 +339,10 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
     }
 
     /** Init image shown set width and height to fits naxis values */
-    public void fitsInit(String fitsFilename)
-    {
+    public void fitsInit(String fitsFilename) throws
+     FileNotFoundException, FitsException{
         logger.entering("" + this.getClass(), "fitsInit");
 
-        try
-        {
             /* Try using nom.tam.fits library
              * but fits file generate error reading image hdu
              *
@@ -364,11 +361,6 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
 
             float[] array        = fitsImage.getFloatValues(0, w_ * h_, null);
             initImage(w_, h_, array);
-        }
-        catch (Exception exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
     }
 
     /**
@@ -401,43 +393,34 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
      * Only first table is used to init pixel values.
      * Table is supporsed to be rectangular because dimension is obtained
      * getting number of rows and number of columns in the first row. */
-    public void xmlInit(String xmlStr)
+    public void xmlInit(String xmlStr)throws Exception
     {
         logger.entering("" + this.getClass(), "xmlInit");
 
-        try
-        {
-            Document doc          = UtilsClass.parseXmlString(xmlStr, false);
-            NodeList list         = doc.getElementsByTagName("table");
-            Element  tableElement = (Element) list.item(0);
-            NodeList trList       = tableElement.getElementsByTagName("tr");
-            Element  tr           = (Element) trList.item(0);
-            NodeList tdList       = tr.getElementsByTagName("td");
-            int      h            = trList.getLength();
-            int      w            = tdList.getLength();
-            logger.fine("xmlInit: found " + w + "x" + h + " array");
+        Document doc = UtilsClass.parseXmlString(xmlStr, false);
+        NodeList list = doc.getElementsByTagName("table");
+        Element tableElement = (Element) list.item(0);
+        NodeList trList = tableElement.getElementsByTagName("tr");
+        Element tr = (Element) trList.item(0);
+        NodeList tdList = tr.getElementsByTagName("td");
+        int h = trList.getLength();
+        int w = tdList.getLength();
+        logger.fine("xmlInit: found " + w + "x" + h + " array");
 
-            float[] array = new float[h * w];
+        float[] array = new float[h * w];
 
-            // init array content
-            for (int i = 0; i < h; i++)
-            {
-                tr         = (Element) trList.item(i);
-                tdList     = tr.getElementsByTagName("td");
+        // init array content
+        for (int i = 0; i < h; i++) {
+            tr = (Element) trList.item(i);
+            tdList = tr.getElementsByTagName("td");
 
-                for (int j = 0; j < w; j++)
-                {
-                    Element td = (Element) tdList.item(j);
-                    array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
-                }
+            for (int j = 0; j < w; j++) {
+                Element td = (Element) tdList.item(j);
+                array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
             }
+        }
 
-            initImage(w, h, array);
-        }
-        catch (Exception exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
+        initImage(w, h, array);
     }
 
     /**
