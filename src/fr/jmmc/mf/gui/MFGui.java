@@ -33,22 +33,14 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className_);
-
    
     protected  static Preferences myPreferences = Preferences.getInstance();
     protected static StatusBar statusBar;
 
     // Application actions
-
-    /**
-     * DOCUMENT ME!
-     */
     public static Action getYogaVersionAction;
     public static Action saveModelAction;
-
-    // Model actions
-   
-   
+ 
     private static PlasticListener plasticServer_;
 
     /** instance link */
@@ -346,12 +338,12 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
-            String result = "";
-
+            
             try
             {
-                result = ModelFitting.instance_.execMethod(methodName, null);
-                setStatus("Yoga version is '" + result.trim() + "'");
+                String v;
+                v=UtilsClass.getOutputMsg(ModelFitting.instance_.execMethod(methodName, null));
+                setStatus("Yoga version is '" + v.trim() + "'");
             }
             catch (Exception ex)
             {
@@ -559,7 +551,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
 
     protected class SaveModelAction extends RegisteredAction
     {
-        public String lastDir = System.getProperty("user.home");
+        private String lastDir = System.getProperty("user.home");
 
         public SaveModelAction()
         {
@@ -637,5 +629,5 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
                 new FeedbackReport(null, true, exc);
             }
         }
-    }    
+    }
 }

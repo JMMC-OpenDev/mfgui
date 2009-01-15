@@ -10,6 +10,11 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Response;
+import fr.jmmc.mf.models.ResponseItem;
+import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.models.Settings;
 import org.w3c.dom.Document;
 
 import org.xml.sax.InputSource;
@@ -23,6 +28,7 @@ import java.net.URL;
 
 import java.util.Enumeration;
 
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
@@ -116,6 +122,8 @@ public class UtilsClass
         expandAll(tree, new TreePath(root), expand);
     }
 
+
+
     /**
      * DOCUMENT ME!
      *
@@ -164,8 +172,14 @@ public class UtilsClass
         String [] dataTypes  = new String [] {
             "image/fits","image/png"
         };
-        for (int i = 0; i < dataTypes.length; i++) {
-            String base64DataType = "data:"+dataTypes[i]+";base64,";
+        for (int i = 0; i <= dataTypes.length; i++) {
+            String base64DataType;
+            if(i<dataTypes.length){
+                base64DataType = "data:"+dataTypes[i]+";base64,";
+            }else{
+                base64DataType = "data:"+b64.substring(0,100).substring(5,b64.indexOf(";base64,"))+";base64,";
+            }
+
             if (b64.startsWith(base64DataType)) {
                 logger.fine("decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
                 java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
@@ -181,27 +195,28 @@ public class UtilsClass
                 return outputFile.getAbsolutePath();
             }
         }
+
+        logger.severe("Nothing has been decoded for given base64 encoded file\n"
+                +b64.substring(0, b64.indexOf(";base64,")));
         return null;
     }
 
-        /**
-     * Extract base64 encoded file.
+    /**
+     * Extract file from given base64 encoded string.
      *
-     * @param file DOCUMENT ME!
      * @param b64 DOCUMENT ME!
      *
-     * @return the absolute filename
+     * @return the extracted file or null
      *
-     * @throws IOException DOCUMENT ME!
+     * @throws IOException 
      */
     public static File saveBASE64ToFile(String b64)
-        throws IOException
-    {
-        java.io.File outputFile = java.io.File.createTempFile("tmpB64File",".extracted");
+            throws IOException {
+        java.io.File outputFile = java.io.File.createTempFile("tmpB64File", ".extracted");
         outputFile.deleteOnExit();
-        if(saveBASE64ToFile(b64, outputFile)==null){
+        if (saveBASE64ToFile(b64, outputFile) == null) {
             return null;
-}
+        }
         return outputFile;
     }
     /**
@@ -421,34 +436,15 @@ public class UtilsClass
      * specified in the file.
      */
     public static Document parseXmlFile(String filename, boolean validating)
-    {
+            throws ParserConfigurationException, ParserConfigurationException,
+            SAXException, IOException {
         logger.entering(className, "parseXmlString");
-        try
-        {
-            // Create a builder factory
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(validating);
-
-            // Create the builder and parse the file
-            Document doc = factory.newDocumentBuilder().parse(new File(filename));
-
-            return doc;
-        }
-        catch (SAXException exc)
-        {
-            // A parsing error occurred; the xml input is not valid
-            new FeedbackReport(null, true, exc);
-        }
-        catch (ParserConfigurationException exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
-        catch (IOException exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
-
-        return null;
+        // Create a builder factory
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(validating);
+        // Create the builder and parse the file
+        Document doc = factory.newDocumentBuilder().parse(new File(filename));
+        return doc;
     }
 
     /** Parses an XML string and returns a DOM document.
@@ -456,34 +452,94 @@ public class UtilsClass
      * specified in the file.
      */
     public static Document parseXmlString(String xmlBuffer, boolean validating)
-    {
+            throws ParserConfigurationException, IOException, SAXException {
         logger.entering(className, "parseXmlString");
-        try
-        {
-            // Create a builder factory
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(validating);
+        // Create a builder factory
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(validating);
+        // Create the builder and parse the buffer
+        StringReader r = new StringReader(xmlBuffer);
+        Document doc = factory.newDocumentBuilder().parse(new InputSource(r));
+        return doc;
+    }
 
-            // Create the builder and parse the buffer            
-            StringReader r   = new StringReader(xmlBuffer);
-            Document     doc = factory.newDocumentBuilder().parse(new InputSource(r));
+    /*
+     *  Following section give accesses to response content.
+     *
+     */
 
-            return doc;
+    /** Returns first setting element of given response.
+     *
+     * @param r response used to find settings into
+     * @return the first found settings or null
+     */
+    public static Settings getSettings(Response r) {
+        logger.entering(className, "getSettings");
+        ResponseItem[] responseItems = r.getResponseItem();
+        for (int i = 0; i < responseItems.length; i++) {
+            ResponseItem responseItem = responseItems[i];
+            if (responseItem.getSettings() != null) {
+                return responseItem.getSettings();
+            }
         }
-        catch (SAXException exc)
-        {
-            // A parsing error occurred; the xml input is not valid
-            new FeedbackReport(null, true, exc);
-        }
-        catch (ParserConfigurationException exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
-        catch (IOException exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
-
         return null;
     }
+
+    /** Returns first setting element of given response.
+     *
+     * @param r response used to find settings into
+     * @return the first found settings or null
+     */
+    public static Model getModel(Response r) {
+        logger.entering(className, "getSettings");
+        ResponseItem[] responseItems = r.getResponseItem();
+        for (int i = 0; i < responseItems.length; i++) {
+            ResponseItem responseItem = responseItems[i];
+            if (responseItem.getModel() != null) {
+                return responseItem.getModel();
+            }
+        }
+        return null;
+    }
+    
+    public static ResultFile[] getResultFiles(Response r) {
+        logger.entering(className, "getSettings");
+        ResponseItem[] responseItems = r.getResponseItem();
+        Vector<ResultFile> v = new Vector();
+        for (int i = 0; i < responseItems.length; i++) {
+            ResponseItem responseItem = responseItems[i];
+            if (responseItem.getResultFile() != null) {
+                v.add(responseItem.getResultFile());
+            }
+        }
+        return v.toArray(new ResultFile[]{});
+    }
+
+
+    public static String getOutputMsg(Response r) {
+        logger.entering(className, "getOutputMsg");
+        String str = "";
+        ResponseItem[] responseItems = r.getResponseItem();
+        for (int i = 0; i < responseItems.length; i++) {
+            ResponseItem responseItem = responseItems[i];
+            if (responseItem.getOutputMsg() != null) {
+                str = str + "\n" + responseItem.getOutputMsg();
+            }
+        }
+        return str;
+    }
+
+    public static String getErrorMsg(Response r) {
+        logger.entering(className, "getErrorMsg");
+        String str = "";
+        ResponseItem[] responseItems = r.getResponseItem();
+        for (int i = 0; i < responseItems.length; i++) {
+            ResponseItem responseItem = responseItems[i];
+            if (responseItem.getErrorMsg() != null) {
+                str = str + "\n" + responseItem.getErrorMsg();
+            }
+        }
+        return str;
+    }
+
 }
