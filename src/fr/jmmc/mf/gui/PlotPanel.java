@@ -1,28 +1,23 @@
-/*
- * PlotPanel.java
- *
- * Created on 29 oct. 2008, 08:16:23
- */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
+import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.io.File;
-import java.io.StringReader;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JPanel;
 
-/**
- *
- * @author mella
- */
+
 public class PlotPanel extends javax.swing.JPanel
 {
     /** Class logger */
@@ -67,12 +62,25 @@ public class PlotPanel extends javax.swing.JPanel
     {
         logger.fine("Requesting yoga '" + methodName + "' call");
 
-        String result = "";
-        JFrame newFrame=null;
+        Response response=null;
         try {
-            result = ModelFitting.instance_.execMethod(methodName,
+            response = ModelFitting.instance_.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
             StatusBar.show(methodName + " process finished");
+            ResultFile[] resultFiles = UtilsClass.getResultFiles(response);
+            
+            ResultFile pngResultFile=null;
+            ResultFile pdfResultFile=null;
+            for (int i = 0; i < resultFiles.length; i++) {
+                ResultFile r = resultFiles[i];
+                if (r.getName().endsWith("png")) {
+                    pngResultFile=r;
+                }else if (r.getName().endsWith("pdf")) {
+                    pdfResultFile=r;
+                }
+            }
+            viewer.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
+
         } catch (java.net.UnknownHostException ex) {
             String msg="Network seems down. Can't contact host "+ex.getMessage();
             javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
@@ -81,46 +89,59 @@ public class PlotPanel extends javax.swing.JPanel
             StatusBar.show("Error during process of " + methodName);
             return;
         } catch (Exception ex) {
-            JTextArea textArea = new JTextArea(20, 80);
-            textArea.setText(result);
-
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            textArea.setEditable(false);
-            javax.swing.JOptionPane.showMessageDialog(null, scrollPane, "Error ",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            logger.severe("No xml returned by server side");
-            logger.log(Level.WARNING, ex.getMessage(), ex);
-            StatusBar.show("Error during process of " + methodName);
-            return;
+            new FeedbackReport(ex);
         }
 
-        // try to marshal into resultFile or pass to imageviewer
-        try {
-            StringReader reader = new StringReader(result);
-            ResultFile r = ResultFile.unmarshal(reader);
-            String b64file = r.getHref();
-            File f = UtilsClass.saveBASE64ToFile(b64file);
-            Image image = ImageIO.read(f);
-            // Use a label to display the image
-            JFrame frame = new JFrame();
-            JLabel label = new JLabel(new ImageIcon(image));
-            frame.getContentPane().add(label, BorderLayout.CENTER);
-            frame.pack();
-            //frame.setVisible(true);
-            newFrame=frame;
-        }catch (Exception e){
-            logger.log(Level.WARNING, "Cant read png, so try with imageViewer", e);
-            fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer(result);
-            v.setTitle(title);
-            v.setSize(400, 400);
-            //v.setVisible(true);
-            newFrame=v;
+        if(false){
+                try {
+                    fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer("replace by result/blah");
+                    v=null;
+                    v.setTitle(title);
+                    v.setSize(400, 400);
+                    viewer.addPlot(v, title);
+                } catch (Exception ex) {
+                    logger.log(Level.WARNING, "Cant read with imageViewer", ex);
+                    String msg = "Error processing result";
+                    javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                    StatusBar.show("Error during process of " + methodName);
+                    return;
+                }
         }
-
-        viewer.addPlot(newFrame,title);
     }
 
-
+    private JFrame buildFrameOf(ResultFile pngResultFile, ResultFile pdfResultFile) throws IOException {
+        String b64file;
+        File f;
+        JLabel label;
+        JButton b;
+        JFrame frame = new JFrame();
+        JPanel p = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
+        if (pngResultFile != null) {
+            b64file = pngResultFile.getHref();
+            f = UtilsClass.saveBASE64ToFile(b64file);
+            Image image = ImageIO.read(f);
+            // Use a label to display the image
+            label = new JLabel(new ImageIcon(image));
+            p.add(label, BorderLayout.CENTER);
+            b = new JButton();
+            b.setAction(new SaveFileAction(f,pngResultFile.getName()));
+            buttonPanel.add(b);
+        }
+        if (pdfResultFile != null) {
+            b64file = pdfResultFile.getHref();
+            f = UtilsClass.saveBASE64ToFile(b64file);
+            b = new JButton();
+            b.setAction(new SaveFileAction(f,pdfResultFile.getName()));
+            buttonPanel.add(b);
+        }
+        p.add(buttonPanel, BorderLayout.NORTH);
+        frame.getContentPane().add(p);
+        frame.pack();
+        return frame;
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.

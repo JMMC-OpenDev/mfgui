@@ -7,6 +7,12 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.models.Result;
+import fr.jmmc.mf.models.ResultFile;
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import ptolemy.plot.*;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
@@ -15,8 +21,8 @@ import javax.swing.*;
  *
  * @author  mella
  */
-public class ResultPanel extends javax.swing.JPanel
-{
+public class ResultPanel extends javax.swing.JPanel {
+
     /**
      * DOCUMENT ME!
      */
@@ -34,45 +40,72 @@ public class ResultPanel extends javax.swing.JPanel
 
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer) {
-        this.viewer=viewer;
+        this.viewer = viewer;
         /* actions must be inited before component init */
-        plotBaselinesAction      = new PlotAction("plotBaselines");
-        plotUVCoverageAction     = new PlotAction("plotUVCoverage");
-        plotRadialVisAction      = new PlotAction("plotRadialVIS");
-        plotRadialT3Action       = new PlotAction("plotRadialT3");
+        plotBaselinesAction = new PlotAction("plotBaselines");
+        plotUVCoverageAction = new PlotAction("plotUVCoverage");
+        plotRadialVisAction = new PlotAction("plotRadialVIS");
+        plotRadialT3Action = new PlotAction("plotRadialT3");
         initComponents();
     }
 
-    public void show(Result r, SettingsModel s)
-    {
-        current           = r;
+    public void show(Result r, SettingsModel s) {
+        logger.entering("" + this.getClass(), "show");
+        current = r;
         settingsModel = s;
         resultEditorPane.setContentType("text/html");
         resultEditorPane.setText(htmlReport);
         resultEditorPane.setCaretPosition(0);
     }
 
-    public void genReport(SettingsModel s){
+    public void genReport(SettingsModel s) {
+        logger.entering("" + this.getClass(), "genReport");
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
             java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
             htmlReport = UtilsClass.xsl(s.getLastXml(), url, null);
         } catch (Exception exc) {
-            htmlReport="<html>Error during report generation.</html>";
+            htmlReport = "<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
         }
     }
-    
-    public String getReport(){
+
+    public String getReport() {
+        logger.entering("" + this.getClass(), "getReport");
+
         return htmlReport;
     }
 
-    public void genPlots(SettingsModel s){
-        settingsModel     = s;
+    public void genPlots(SettingsModel s) {
+        logger.entering("" + this.getClass(), "genPlots");
+
+        settingsModel = s;
         plotBaselinesAction.actionPerformed(null);
         plotUVCoverageAction.actionPerformed(null);
         plotRadialVisAction.actionPerformed(null);
         plotRadialT3Action.actionPerformed(null);
+    }
+
+    void genPlots(ResultFile[] resultFiles) {
+        for (int i = 0; i < resultFiles.length; i++) {
+            ResultFile r = resultFiles[i];
+            if(r.getHref().substring(1, 30).contains("png")){
+                try {
+                    String b64file = r.getHref();
+                    java.io.File f = UtilsClass.saveBASE64ToFile(b64file);
+                    java.awt.Image image = ImageIO.read(f);
+                    // Use a label to display the image
+                    JFrame frame = new JFrame();
+                    JLabel label = new JLabel(new ImageIcon(image));
+                    frame.getContentPane().add(label, BorderLayout.CENTER);
+                    frame.pack();
+                    //frame.setVisible(true);
+                    viewer.addPlot(frame, r.getDescription());
+                } catch (IOException ex) {
+                    Logger.getLogger(ResultPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     /** This method is called from within the constructor to
@@ -103,19 +136,15 @@ public class ResultPanel extends javax.swing.JPanel
         add(jScrollPane1);
     }// </editor-fold>//GEN-END:initComponents
 
-
     /** Plots using ptplot widgets */
-    protected void ptplot(String plotName)
-    {
+    protected void ptplot(String plotName) {
         logger.entering("" + this.getClass(), "ptplot");
 
         String xmlStr = null;
 
-        try
-        {
+        try {
             // Contruct xml document to plot
-            java.net.URL url = this.getClass().getClassLoader()
-           .getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
+            java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
             xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
                     new String[]{"plotName", plotName});
 
@@ -131,52 +160,29 @@ public class ResultPanel extends javax.swing.JPanel
             viewer.addPlot(plotMLFrame, plotName);
 
             logger.finest("plot ready to be shown");
-        }
-        catch (Exception exc)
-        {
+        } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
         }
     }
 
+    protected class PlotAction extends fr.jmmc.mcs.util.MCSAction {
 
-    protected void plotImage(String plotName)
-    {
-        logger.entering("" + this.getClass(), "plotImage");
-
-        fr.jmmc.mcs.ImageCanvas c = new fr.jmmc.mcs.ImageCanvas();
-        //c.fitsInit("/home/users/mella/img.fits");        
-        c.xmlInit("<table></table>");
-
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.getContentPane().add(c);
-        frame.setTitle(plotName);
-        frame.setSize(400, 400);
-        frame.setVisible(true);
-    }
-
-    protected class PlotAction extends fr.jmmc.mcs.util.MCSAction
-    {
         String plotName;
 
         /* plotName must correcspond to a resource action and one xslt template */
-        public PlotAction(String plotName)
-        {
+        public PlotAction(String plotName) {
             super(plotName);
             this.plotName = plotName;
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.entering("" + this.getClass(), "actionPerformed");
 
             if (plotName.equals("plotBaselines") || plotName.equals("plotUVCoverage") ||
-                    plotName.startsWith("plotRadial"))
-            {
+                    plotName.startsWith("plotRadial")) {
                 ptplot(plotName);
-            }
-            else
-            {
-                plotImage(plotName);
+            } else {
+                logger.severe("Code does not handle the following plot name : " + plotName);
             }
         }
     }
@@ -187,6 +193,4 @@ public class ResultPanel extends javax.swing.JPanel
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JEditorPane resultEditorPane;
     // End of variables declaration//GEN-END:variables
-
-
 }

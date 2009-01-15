@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mf.models.Response;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -22,6 +23,8 @@ import java.util.logging.*;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 /**
@@ -33,7 +36,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     /**
      * DOCUMENT ME!
      */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.23 2009-01-08 17:07:08 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.24 2009-01-15 13:39:53 mella Exp $";
 
     /**
      * DOCUMENT ME!
@@ -54,6 +57,8 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      * DOCUMENT ME!
      */
     static MFGui gui = null;
+
+    static String xmlResult=null;
 
     /**
      * Creates a new ModelFitting object.
@@ -139,27 +144,10 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public String execMethod(String methodName, java.io.File xmlFile)
+    public Response execMethod(String methodName, java.io.File xmlFile)
         throws Exception
     {
-        String result;
-        if (myPreferences.getPreferenceAsBoolean("yoga.remote.use"))
-        {
-            result=doPost(methodName, xmlFile);
-        }
-        else
-        {
-            result=doExec(methodName, xmlFile);
-        }
-        StringTokenizer st = new StringTokenizer("\n\r\f", result);
-        while (st.hasMoreTokens()){
-            String str = st.nextToken();
-            if(str.startsWith("ERROR")){
-                System.out.println(str);
-            }
-        }
-
-        return result;
+        return execMethod(methodName, xmlFile, "");
     }
 
     /** This is the main wrappers method to execute yoga actions
@@ -169,33 +157,31 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public String execMethod(String methodName, java.io.File xmlFile, String methodArg)
+    public Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
     {
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use"))
         {
-            return doPost(methodName, xmlFile, methodArg);
+            xmlResult=doPost(methodName, xmlFile, methodArg);
         }
         else
         {
-            return doExec(methodName, xmlFile, methodArg);
+            xmlResult=doExec(methodName, xmlFile, methodArg);
         }
+        java.io.StringReader reader = new java.io.StringReader(xmlResult);
+        Response r = Response.unmarshal(reader);
+        String errors = UtilsClass.getErrorMsg(r);
+        if (errors.length()>1){
+            JTextArea t = new JTextArea(errors, 20,80);
+            JScrollPane sp = new JScrollPane(t);
+            javax.swing.JOptionPane.showMessageDialog(null, sp, "Error ",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        return r;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param methodName DOCUMENT ME!
-     * @param xmlFile DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws Exception DOCUMENT ME!
-     */
-    private String doExec(String methodName, java.io.File xmlFile)
-        throws Exception
-    {
-        return doExec(methodName, xmlFile, "");
+    public static String getLastXmlResult(){
+        return xmlResult;
     }
 
     /**
@@ -250,33 +236,11 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         return result;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param methodName DOCUMENT ME!
-     * @param xmlFile DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws Exception DOCUMENT ME!
-     */
-    public static String doPost(String methodName, java.io.File xmlFile)
-        throws Exception
-    {
-        return doPost(methodName, xmlFile, null);
+    private String doExec(String methodName, java.io.File xmlFile)
+            throws Exception {
+        return doExec(methodName, xmlFile, "");
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param methodName DOCUMENT ME!
-     * @param xmlFile DOCUMENT ME!
-     * @param methodArg DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws Exception DOCUMENT ME!
-     */
+  
     public static String doPost(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
     {
@@ -284,6 +248,9 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         String     targetURL = myPreferences.getPreference("yoga.remote.url");
         PostMethod myPost    = new PostMethod(targetURL);
         Part[]     parts;
+        if(methodArg!=null && methodArg.length()==0){
+            methodArg=null;
+        }
 
         if ((xmlFile == null) && (methodArg == null))
         {
@@ -347,6 +314,12 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
 
         logger.finest("post result=\n"+result);
         return result;
+    }
+    
+    public static String doPost(String methodName, java.io.File xmlFile)
+        throws Exception
+    {
+        return doPost(methodName, xmlFile, null);
     }
 
     /**

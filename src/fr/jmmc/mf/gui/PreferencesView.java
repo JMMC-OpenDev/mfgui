@@ -42,6 +42,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
@@ -136,6 +137,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         saveRestorePanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         restoreButton = new javax.swing.JButton();
@@ -245,6 +247,9 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
             }
         });
         jPanel1.add(jButton1);
+
+        jButton2.setAction(MFGui.getYogaVersionAction);
+        jPanel1.add(jButton2);
 
         jTabbedPane1.addTab("advanced", jPanel1);
 

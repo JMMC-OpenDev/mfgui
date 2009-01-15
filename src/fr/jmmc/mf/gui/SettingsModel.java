@@ -236,7 +236,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      *
      * @throws Exception DOCUMENT ME!
      */
-    public String getLastXml() throws Exception {
+   public String getLastXml() throws Exception {
         logger.entering("" + this.getClass(), "getLastXml");
 
         if (lastXml == null) {
@@ -251,7 +251,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             this.lastXml = writer.toString();
         }
 
-        return this.lastXml;
+    return this.lastXml;
     }
 
     /**
@@ -646,7 +646,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         }
 
         in.close();
-        setLastXml(sb.toString());
     }
 
     // @todo place this method into fr.jmmc.mf.util
