@@ -50,4 +50,5 @@ public class FrameListModel extends AbstractListModel{
             this.fireIntervalRemoved(this, i, i);
         }
     }
+    
 }

@@ -1,17 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fr.jmmc.mf.gui;
 
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFrame;
 
-/**
- *
- * @author mella
- */
 public class FrameListSelectionModel extends DefaultListSelectionModel {
 
     FrameListModel frameListModel_;
