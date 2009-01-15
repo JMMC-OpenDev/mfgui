@@ -412,7 +412,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
-            StatusBar.waitFor("Running fit process");
+            StatusBar.show("Running fit process");
+            setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
             try {
                 java.io.File tmpFile = rootSettingsModel.getTempFile(false);
                 Response r = ModelFitting.instance_.execMethod(methodName, tmpFile);
@@ -467,6 +468,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                         javax.swing.JOptionPane.ERROR_MESSAGE);
                 logger.log(Level.WARNING, ex.getMessage(), ex);
                 StatusBar.show("Error during process of " + methodName);
+                setCursor(null);
                 return;
             } catch (Exception ex) {
                 logger.warning(ex.getClass().getName() + " " + ex.getMessage());
@@ -474,8 +476,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 javax.swing.JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage(), "Error ",
                         javax.swing.JOptionPane.ERROR_MESSAGE);
                 logger.log(Level.WARNING, ex.getMessage(), ex);
+                setCursor(null);
                 return;
             }
+            setCursor(null);
         }
     }
 
