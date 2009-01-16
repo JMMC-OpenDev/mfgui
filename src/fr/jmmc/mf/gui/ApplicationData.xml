@@ -46,7 +46,7 @@
                 <change type="FEATURE">Add arcturus demo file</change>
                 <change type="REQUEST">Fix result text display list if one parameter only as been fitted and remove 'Confidence level'</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
-                <change type="REQUEST">Change toString() for models in order to remove model[type:name] form</change>
+                <change type="CHANGE">Models are displayed using only the name. previous form was model[type:name] too long</change>
                 <change type="REQUEST">Add residual plots</change>
                 <change type="CHANGE">x, y and flux_weight parameter of first model have now better initial values</change>
                 <change type="REQUEST">Add url data file loading capability</change>
@@ -56,7 +56,7 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
                 <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
-                <change type="REQUEST">Return message of error for plot failures</change>
+                <change type="CHANGE">Return message of error for plot failures</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
