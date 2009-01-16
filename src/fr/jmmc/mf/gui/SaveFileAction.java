@@ -21,7 +21,7 @@ class SaveFileAction extends RegisteredAction {
     private String originalActionName;
 
     public SaveFileAction(File fileToSave, String proposedFilename) {
-        super(MFGui.className_, "saveFile");
+        super(MFGui.className_, "saveSpecificFile");
         originalActionName=(String)this.getValue(this.NAME);
         this.putValue(this.NAME
                 , originalActionName+"("+proposedFilename+")");
