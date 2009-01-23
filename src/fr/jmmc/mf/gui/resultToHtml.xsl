@@ -34,7 +34,7 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template match="result">
-    <xsl:for-each select=".//error">
+        <xsl:for-each select=".//error">
             <h1> Error</h1>
             <div class="box">
                 <pre>
@@ -42,23 +42,26 @@ Generate Html view of given xml settings files .
                         select="."/>
                 </pre>
             </div>
-        </xsl:for-each>        
+        </xsl:for-each>
         <xsl:for-each select=".//_fitter">
-                    <xsl:variable name="fitter" select="."/>
-                    <h1>Iterations</h1>
+            <xsl:variable name="fitter" select="."/>
+            <h1>Iterations</h1>
                     <!-- disp iteration info -->
-                        Number of iterations:  <xsl:value-of select="iter"/> (Max Number of iterations  <xsl:value-of select="itmax"/> )
+                        Number of iterations:  
+            <xsl:value-of select="iter"/> (Max Number of iterations
+            <xsl:value-of select="itmax"/> )
 
                     <!-- disp parameters info -->
-                    <h1> Parameters </h1>
+            <h1> Parameters </h1>
 
-                    <table border="1"> 
-                        <tr>
-                            <th>name</th>
-                            <th>final value</th>
-                            <th>standard deviation(+/-)</th>
-                            <th>units</th>
-                        </tr>
+            <table border="1">
+                <tr>
+                    <th>name</th>
+                    <th>final value</th>
+                    <th>standard deviation(+/-)</th>
+                    <th>units</th>
+                </tr>
+                        <!--
                         <xsl:for-each select="$fitter//names/table/tr/*">
                             <xsl:variable name="i" select="position()"/>
                             <xsl:variable name="paramName" select="."/>
@@ -70,74 +73,120 @@ Generate Html view of given xml settings files .
                                 <td><xsl:value-of select="$param/units"/></td>
                             </tr>
                         </xsl:for-each>
-                    </table> 
+                        -->
+                <xsl:for-each select="$fitter//param/*">
+                    <xsl:variable name="i" select="position()"/>
+                    <xsl:variable name="paramName" select="name()"/>
+                    <tr>
+                        <td>
+                            <xsl:value-of select="$paramName"/>
+                        </td>
+                        <td>
+                            <xsl:value-of select="./value"/>
+                        </td>
+                        <td>
+                            <xsl:value-of select="$fitter//stdev/text()"/>
+                            <xsl:value-of select="$fitter//stdev//td[$i]"/>
+                        </td>
+                        <td>
+                            <xsl:value-of select="./units"/>
+                        </td>
+                    </tr>
+                </xsl:for-each>
+            </table>
 
-                    <h1>Chi2</h1>
-                    <xsl:call-template name="Chi2"/>
+            <h1>Chi2</h1>
+            <xsl:call-template name="Chi2"/>
 
-                    <xsl:if test="n_free">
-                        <h1>Degrees of freedom</h1>
-                        <p>Number of degrees of freedom = <xsl:value-of select="n_free"/>
-                        </p>
-                    </xsl:if>
+            <xsl:if test="n_free">
+                <h1>Degrees of freedom</h1>
+                <p>Number of degrees of freedom =
+                    <xsl:value-of select="n_free"/>
+                </p>
+            </xsl:if>
                     <!--
                     <xsl:if test="conf_level">
                         <h1> Confidence Level = <xsl:value-of select="conf_level"/> </h1>
                     </xsl:if>
                     -->
-                    <xsl:if test="degen/*">
-                        <h1>    Degenerated parameters</h1>
-                       Degenerated parameters seen from the jacobian:<br/>
-                            <xsl:copy-of select="degen"/>
+            <xsl:if test="degen/*">
+                <h1>    Degenerated parameters</h1>
+                       Degenerated parameters seen from the jacobian:
+                <br/>
+                <xsl:copy-of select="degen"/>
                  
-                    </xsl:if>
+            </xsl:if>
 
-                    <h1>Covariance matrix</h1>
-                    <table border="1">
+            <h1>Covariance matrix</h1>
+            <table border="1">
                         <!-- append table headers first is empty-->
-                        <tr>
-                            <th></th>
-                            <xsl:for-each select=".//param/*">
-                                <th><xsl:value-of select="name()"/></th>
-                            </xsl:for-each>
-                        </tr>
+                <tr>
+                    <th></th>
+                    <xsl:for-each select=".//param/*">
+                        <th>
+                            <xsl:value-of select="name()"/>
+                        </th>
+                    </xsl:for-each>
+                </tr>
                         <!-- append param name on first column then the table content-->
-                        <xsl:for-each select=".//param/*">
-                            <xsl:variable name="lineNb" select="position()"/>
-                            <tr><td><xsl:value-of select="name()"/></td>
-                                <xsl:copy-of select="$fitter//covar/table/tr[position()=$lineNb]/td"/>
-                            </tr>
-                        </xsl:for-each>                
-                    </table>
-
-                    <h1>Correlation matrix</h1>
-                    <table border="1">
-                        <!-- append table headers first is empty-->
-                        <tr>
-                            <th></th>
-                            <xsl:for-each select=".//param/*">
-                                <th><xsl:value-of select="name()"/></th>
-                            </xsl:for-each>
-                        </tr>
-                        <!-- append param name on first column then the table content-->
-                        <xsl:for-each select=".//param/*">
-                            <xsl:variable name="lineNb" select="position()"/>
-                            <tr><td><xsl:value-of select="name()"/></td>
-                                <xsl:copy-of select="$fitter//correl/table/tr[position()=$lineNb]/td"/>
-                            </tr>
-                        </xsl:for-each>                
-                    </table>
+                <xsl:for-each select=".//param/*">
+                    <xsl:variable name="lineNb" select="position()"/>
+                    <tr>
+                        <td>
+                            <xsl:value-of select="name()"/>
+                        </td>
+                        <xsl:copy-of select="$fitter//covar/table/tr[position()=$lineNb]/td"/>
+                        <xsl:if test="$fitter//covar[not(table)]">
+                            <td>
+                                <xsl:value-of select="$fitter//covar/text()"/>
+                            </td>
+                        </xsl:if>
+                    </tr>
                 </xsl:for-each>
+            </table>
+
+            <h1>Correlation matrix</h1>
+            <table border="1">
+                        <!-- append table headers first is empty-->
+                <tr>
+                    <th></th>
+                    <xsl:for-each select=".//param/*">
+                        <th>
+                            <xsl:value-of select="name()"/>
+                        </th>
+                    </xsl:for-each>
+                </tr>
+                        <!-- append param name on first column then the table content-->
+                <xsl:for-each select=".//param/*">
+                    <xsl:variable name="lineNb" select="position()"/>
+                    <tr>
+                        <td>
+                            <xsl:value-of select="name()"/>
+                        </td>
+                        <xsl:if test="$fitter//correl[not(table)]">
+                            <td>
+                                <xsl:value-of select="$fitter//correl/text()"/>
+                            </td>
+                        </xsl:if>
+                        <xsl:copy-of select="$fitter//correl/table/tr[position()=$lineNb]/td"/>
+                    </tr>
+                </xsl:for-each>
+            </table>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="Chi2">
-  
-            Initial Chi2 = <xsl:value-of select=".//chi2_tracks//td[1]"/>    -  Final Chi2 = <xsl:value-of select=".//chi2"/>
+            Initial Chi2 = 
+        <xsl:value-of select=".//chi2_tracks//td[1]"/>    -  Final Chi2 =
+        <xsl:value-of select=".//chi2"/>
    
         <xsl:if test=".//n_free">
             <br/>
-                Initial reduced Chi2 = <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>    -  Final reduced Chi2 = <xsl:value-of select=".//chi2 div .//n_free"/>
+                Initial reduced Chi2 = 
+            <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>    -  Final reduced Chi2 =
+            <xsl:value-of select=".//chi2 div .//n_free"/>
         </xsl:if>
     </xsl:template>
 
+    <xsl:template match="resultFile"></xsl:template>
 </xsl:stylesheet>
