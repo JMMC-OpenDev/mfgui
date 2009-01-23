@@ -132,8 +132,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         runFitButton.setAction(runFitAction);
 
-        JScrollPane scrollPane = new JScrollPane(frameList);
-        controlPanel.add(scrollPane);
+        //JScrollPane scrollPane = new JScrollPane(frameList);
+        //jPanel3.add(scrollPane);
+        listScrollPane.setViewportView(frameList);
     }
 
     /**
@@ -320,23 +321,35 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         settingsTree = new javax.swing.JTree();
         controlPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         runFitButton = new javax.swing.JButton();
         showPlotButton = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        listScrollPane = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
         modifierPanel = new javax.swing.JPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
+        jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(0.5);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPane1.setBorder(null);
 
         settingsTree.setMinimumSize(new java.awt.Dimension(200, 0));
         jScrollPane1.setViewportView(settingsTree);
 
-        jSplitPane2.setTopComponent(jScrollPane1);
+        jPanel2.add(jScrollPane1);
+
+        jSplitPane2.setTopComponent(jPanel2);
 
         controlPanel.setLayout(new javax.swing.BoxLayout(controlPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -352,6 +365,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel1.add(showPlotButton);
 
         controlPanel.add(jPanel1);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot list"));
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
+
+        listScrollPane.setViewportView(jList1);
+
+        jPanel3.add(listScrollPane);
+
+        controlPanel.add(jPanel3);
 
         jSplitPane2.setBottomComponent(controlPanel);
 
@@ -526,10 +548,14 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel controlPanel;
+    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JScrollPane listScrollPane;
     private javax.swing.JPanel modifierPanel;
     private javax.swing.JButton runFitButton;
     private javax.swing.JTree settingsTree;
