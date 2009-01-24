@@ -76,24 +76,26 @@ public class SettingsPanel extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
-        jSplitPane1     = new javax.swing.JSplitPane();
-        jSplitPane2     = new javax.swing.JSplitPane();
-        jSplitPane3     = new javax.swing.JSplitPane();
+    private void initComponents() {
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jSplitPane3 = new javax.swing.JSplitPane();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Settings panel"));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setResizeWeight(0.2);
+
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(0.5);
+        jSplitPane2.setResizeWeight(0.2);
         jSplitPane1.setLeftComponent(jSplitPane2);
 
         jSplitPane3.setBorder(null);
         jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane3.setResizeWeight(0.1);
         jSplitPane1.setRightComponent(jSplitPane3);
 
         add(jSplitPane1);
