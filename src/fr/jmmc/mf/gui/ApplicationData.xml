@@ -42,6 +42,8 @@
                  <change type="FEATURE"></change>
                  <change type="REQUEST"></change>
                  -->
+                <change type="REQUEST">Add buttons to perform all plots</change>
+                <change type="REQUEST">Enable/disable dock/undock and remove button accorig plot list selection</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Add residual plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
@@ -53,6 +55,7 @@
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Allow export to all kinds of plots(ok for model Image and model UVMap</change>
                 <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
+                <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
             </prerelease><prerelease version="1.0.14beta1">
                 <!--
                 <li>
@@ -74,8 +77,7 @@
                 <change type="CHANGE">Return message of error for plot failures</change>
                 <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
-                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>
-                <change type="CHANGE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>                
              </prerelease>
         </release>
         <release version="1.0.13">
