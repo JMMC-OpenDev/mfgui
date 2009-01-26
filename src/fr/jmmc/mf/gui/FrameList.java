@@ -24,4 +24,8 @@ public class FrameList extends JList{
     public void remove(JFrame frame){
         listModel.remove(frame);
     }
+    
+    public JFrame getSelectedFrame(){
+        return listModel.getFrame(getSelectedIndex());
+    }
 }
