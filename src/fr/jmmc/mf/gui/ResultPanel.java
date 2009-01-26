@@ -54,6 +54,10 @@ public class ResultPanel extends javax.swing.JPanel {
         current = r;
         settingsModel = s;
         resultEditorPane.setContentType("text/html");
+        if (htmlReport==null){
+            s.setLastXml(null);
+            genReport(s);
+        }
         resultEditorPane.setText(htmlReport);
         resultEditorPane.setCaretPosition(0);
     }
@@ -88,22 +92,22 @@ public class ResultPanel extends javax.swing.JPanel {
 
     void genPlots(ResultFile[] resultFiles) {
         for (int i = 0; i < resultFiles.length; i++) {
-            ResultFile r = resultFiles[i];
-            if(r.getHref().substring(1, 30).contains("png")){
-                try {
-                    String b64file = r.getHref();
-                    java.io.File f = UtilsClass.saveBASE64ToFile(b64file);
-                    java.awt.Image image = ImageIO.read(f);
-                    // Use a label to display the image
-                    JFrame frame = new JFrame();
-                    JLabel label = new JLabel(new ImageIcon(image));
-                    frame.getContentPane().add(label, BorderLayout.CENTER);
-                    frame.pack();
+            try {
+                ResultFile r = resultFiles[i];
+                ResultFile pdf = null;
+                if (r.getHref().substring(1, 30).contains("png")) {
+                    for (int j = 0; j < resultFiles.length; j++) {
+                        ResultFile r2 = resultFiles[j];
+                        String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
+                        if (r.getName().startsWith(filenameWOExt) && r2.getName().endsWith("pdf")) {
+                            pdf = r2;
+                        }
+                    }
                     //frame.setVisible(true);
-                    viewer.addPlot(frame, r.getDescription());
-                } catch (IOException ex) {
-                    Logger.getLogger(ResultPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    viewer.addPlot(PlotPanel.buildFrameOf(r, pdf), r.getDescription());
                 }
+            } catch (IOException ex) {
+                Logger.getLogger(ResultPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
