@@ -331,6 +331,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel3 = new javax.swing.JPanel();
         listScrollPane = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
+        jPanel4 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         modifierPanel = new javax.swing.JPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
@@ -356,7 +359,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
         jPanel1.add(runFitButton);
 
-        showPlotButton.setText("Show Plot Panel");
+        showPlotButton.setText("New plot...");
         showPlotButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showPlotButtonActionPerformed(evt);
@@ -367,11 +370,31 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         controlPanel.add(jPanel1);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot list"));
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.PAGE_AXIS));
 
         listScrollPane.setViewportView(jList1);
 
         jPanel3.add(listScrollPane);
+
+        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+
+        jButton1.setText("Dock/Undock");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1);
+
+        jButton2.setText("Remove");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton2);
+
+        jPanel3.add(jPanel4);
 
         controlPanel.add(jPanel3);
 
@@ -388,6 +411,14 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void showPlotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlotButtonActionPerformed
         showElement(plotPanel);
 }//GEN-LAST:event_showPlotButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        framePanel.toggleFrame();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        removePlot(frameList.getSelectedFrame());
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void addPlot(JFrame frame, String title) {
         frameList.add(frame, title);
@@ -434,7 +465,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
-            StatusBar.show("Running fit process");
+            StatusBar.show("Running fitting process");
             setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
             try {
                 java.io.File tmpFile = rootSettingsModel.getTempFile(false);
@@ -548,10 +579,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel controlPanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
