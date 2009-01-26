@@ -113,7 +113,7 @@ public class PlotPanel extends javax.swing.JPanel
         }
     }
 
-    private JFrame buildFrameOf(ResultFile pngResultFile, ResultFile pdfResultFile) throws IOException {
+    public static JFrame buildFrameOf(ResultFile pngResultFile, ResultFile pdfResultFile) throws IOException {
         String b64file;
         File f;
         JLabel label;
