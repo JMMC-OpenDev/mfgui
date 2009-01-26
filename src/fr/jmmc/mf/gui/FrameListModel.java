@@ -44,7 +44,7 @@ public class FrameListModel extends AbstractListModel{
 
     void remove(JFrame frame){
         int i = frames.indexOf(frame);
-        if (i>0){
+        if (i>=0){
             frames.remove(i);
             titles.remove(i);
             this.fireIntervalRemoved(this, i, i);
