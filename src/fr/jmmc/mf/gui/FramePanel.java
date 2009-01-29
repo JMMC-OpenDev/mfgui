@@ -1,22 +1,10 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mf.models.ResultFile;
-import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.StringReader;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
+import java.util.Arrays;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener
 {
@@ -41,14 +29,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
     {
         settingsModel=s;
         frame  = f;
-        WindowListener wl[] = f.getWindowListeners();
-        boolean alreadyRegistered = false;
-        for (int i = 0; i < wl.length; i++) {
-            if( this == wl[i] ){
-                alreadyRegistered=true;
-            };
-        }
-        if(!alreadyRegistered){
+        // Take care to add this framePanel to the list one and only one time
+        if (Arrays.asList(f.getWindowListeners()).contains(this)){
             f.addWindowListener(this);
         }
 
