@@ -13,6 +13,7 @@
 	</security>
 	<resources>
         <j2se version="1.5+"/>
+        <property name="apple.laf.useScreenMenuBar" value="true"/>
         <jar href="jar/mfgui.jar" />
         <jar href="jar/Jmcs.jar" />
         <jar href="jar/oival.jar" />
