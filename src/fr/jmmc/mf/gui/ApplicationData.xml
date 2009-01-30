@@ -42,8 +42,7 @@
                  <change type="FEATURE"></change>
                  <change type="REQUEST"></change>
                  -->
-                <change type="REQUEST">Add buttons to perform all plots</change>
-                <change type="REQUEST">Enable/disable dock/undock and remove button accorig plot list selection</change>
+                <change type="REQUEST">Enable/disable dock/undock and remove button according plot list selection</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Add residual plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
@@ -56,6 +55,7 @@
                 <change type="REQUEST">Allow export to all kinds of plots(ok for model Image and model UVMap</change>
                 <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
                 <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+                <change type="CHANGE">Added vis2 residual plot</change>
             </prerelease><prerelease version="1.0.14beta1">
                 <!--
                 <li>

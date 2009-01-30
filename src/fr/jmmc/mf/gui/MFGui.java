@@ -630,4 +630,4 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             }
         }
     }
-}
+    }
