@@ -73,6 +73,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener
         blankPanel = new javax.swing.JPanel();
         fillerPanel = new javax.swing.JPanel();
 
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
         blankPanel.setLayout(new javax.swing.BoxLayout(blankPanel, javax.swing.BoxLayout.LINE_AXIS));

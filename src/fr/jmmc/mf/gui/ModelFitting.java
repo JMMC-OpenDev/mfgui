@@ -6,7 +6,6 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.Response;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import org.apache.commons.httpclient.HttpClient;
@@ -16,13 +15,10 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import java.util.*;
 import java.util.logging.*;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -36,7 +32,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     /**
      * DOCUMENT ME!
      */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.24 2009-01-15 13:39:53 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.25 2009-01-30 10:45:02 mella Exp $";
 
     /**
      * DOCUMENT ME!
