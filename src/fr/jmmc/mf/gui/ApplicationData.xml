@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.14beta2"/>
+    <program name="ModelFitting" version="1.0.14beta3"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
-    <text>        
+    <text>
     </text>
     <!--	<copyright>Copyrights JMMC 2008</copyright> -->
     <dependences>
-        <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>		
-    </dependences>    
+        <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
+    </dependences>
     <menubar>
         <menu label="File">
             <menu label="New settings..." classpath="fr.jmmc.mf.gui.MFGui" action="newModel" accelerator="N"/>
@@ -27,11 +27,11 @@
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
-        </menu>        
-    </menubar>    
+        </menu>
+    </menubar>
     <releasenotes>
         <release version="1.0.14">
-            <prerelease version="1.0.14beta2">
+            <prerelease version="1.0.14beta3">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -43,6 +43,7 @@
                  <change type="REQUEST"></change>
                  -->
                 <change type="REQUEST">Enable/disable dock/undock and remove button according plot list selection</change>
+                <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Add residual plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
@@ -55,19 +56,13 @@
                 <change type="REQUEST">Allow export to all kinds of plots(ok for model Image and model UVMap</change>
                 <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
                 <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+            </prerelease>
+            <prerelease version="1.0.14beta2">
+                <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
                 <change type="CHANGE">Added vis2 residual plot</change>
-            </prerelease><prerelease version="1.0.14beta1">
-                <!--
-                <li>
-                Add one format version of all xml settings files
-                (Future revision will be able to check format validity
-                 and propose converter tools)
-                 </li>
-                 <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
-                 <change type="FEATURE"></change>
-                 <change type="REQUEST"></change>
-                 -->
-                 <change type="BUGFIX">Fix result report when the model contains only one parameter to fit</change>
+            </prerelease>
+            <prerelease version="1.0.14beta1">
+                <change type="BUGFIX">Fix result report when the model contains only one parameter to fit</change>
                 <change type="FEATURE">Add split bar to enlarge model description</change>
                 <change type="FEATURE">Add arcturus demo file</change>
                 <change type="FEATURE">Fix result text display list if one parameter only as been fitted and remove 'Confidence level'</change>
@@ -77,8 +72,8 @@
                 <change type="CHANGE">Return message of error for plot failures</change>
                 <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
                 <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
-                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>                
-             </prerelease>
+                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>
+            </prerelease>
         </release>
         <release version="1.0.13">
             <prerelease version="1.0.13beta">
@@ -91,12 +86,12 @@
             </prerelease>
         </release>
         <release version="1.0.12">
-            <prerelease version="1.0.12beta"> 
+            <prerelease version="1.0.12beta">
                 <change type="FEATURE">File panel gets one new button to use oifits validator.</change>
                 <change type="FEATURE">File panel gets new plotting capabilities.</change>
                 <change type="CHANGE">Yorick side errors are extracted for display, no more big xml document :-)</change>
             </prerelease>
-        </release>           
+        </release>
         <release version="1.0.11">
             <prerelease version="1.0.11beta2">
                 <change type="FEATURE">User can plot observed data from the file panels (even if abscissae is not yet in spectral freq but meters)</change>
@@ -151,7 +146,7 @@
                 <change>Do not return error
                     <em>not enough data point</em> anymore due to blank names into oitarget names
                 </change>
-                <change>A simple image viewer has been implemented with 3 selectable color models. Image should be in right sense and get correct values.</change> 
+                <change>A simple image viewer has been implemented with 3 selectable color models. Image should be in right sense and get correct values.</change>
                 <change>Velocity of result display has been improved</change>
                 <change>Parameter display has been fixed concerning exchanged values</change>
             </prerelease>
@@ -177,7 +172,7 @@
                 <change> Select by default oifiles associated to the added target </change>
                 <change> Display more info on observed data files </change>
 
-                <change> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</change>  
+                <change> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</change>
                 <change> Quit action checks that every document have been saved </change>
             </prerelease>
         </release>
@@ -200,6 +195,6 @@
                 <change> Report error loading bad format files (oifiles and settings ones) </change>
             </prerelease>
         </release>
-    </releasenotes>     
+    </releasenotes>
     <!--<acknowledgment><![CDATA[blah ]]></acknowledgment>-->
 </ApplicationData>
