@@ -10,6 +10,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResponseItem;
@@ -522,8 +523,11 @@ public class UtilsClass
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
-            if (responseItem.getOutputMsg() != null) {
-                str = str + "\n" + responseItem.getOutputMsg();
+            Message m = responseItem.getMessage();
+            if ( m != null) {
+                if ((!m.getType().equals("ERROR"))&&(!m.getType().equals("WARNING"))){
+                  str = str + "\n" + m.getContent();
+                }
             }
         }
         return str;
@@ -535,8 +539,12 @@ public class UtilsClass
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
-            if (responseItem.getErrorMsg() != null) {
-                str = str + "\n" + responseItem.getErrorMsg();
+            Message m = responseItem.getMessage();
+            if ( m != null) {
+               // if (m.getType().equals("ERROR")){
+                  str = str + "\n" + m.getContent();
+                  logger.fine("getErrorMsg find a message of type: "+m.getType());
+               // }
             }
         }
         return str;
