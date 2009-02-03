@@ -27,8 +27,7 @@ The form try to collect every informtions needed by model fitting process
 
         <xsd:complexType >
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="outputMsg" type="xsd:string"/>
-                <xsd:element name="errorMsg" type="xsd:string"/>
+                <xsd:element ref="message"/>
                 <xsd:element ref="settings"/>
                 <xsd:element ref="model"/>
                 <xsd:element ref="resultFile"/>
@@ -292,7 +291,26 @@ by their id.
         </xsd:complexType>
         
     </xsd:element>
-    
+
+
+     <!-- Result Section -->
+    <xsd:element name="message">
+        <xsd:annotation>
+            <xsd:documentation>
+                Result of a fit section.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+            <xsd:attribute name="type" type="xsd:string" use="optional"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+ 
+        </xsd:complexType>
+
+    </xsd:element>
+
     <!--
 File description with its possible content. 
     -->
