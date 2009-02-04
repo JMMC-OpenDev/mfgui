@@ -475,6 +475,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 Settings newModel=UtilsClass.getSettings(r);
                 if(newModel==null){
                     logger.warning("no settings present in result message");
+                    if (UtilsClass.getErrorMsg(r).length()==0)
+                    {
+                        new FeedbackReport(new Exception("Sorry a problem occured on server side without error message.\nNo result has been returned\n Please send this bug report and you will be contacted if the data are needed to repeat the problem\nBest regards,"));
+                    }
                     setCursor(null);
                     return;
                 }
