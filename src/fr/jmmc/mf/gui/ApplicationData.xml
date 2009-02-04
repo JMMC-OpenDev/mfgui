@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.14beta3"/>
+    <program name="ModelFitting" version="1.0.14beta4"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -31,7 +31,7 @@
     </menubar>
     <releasenotes>
         <release version="1.0.14">
-            <prerelease version="1.0.14beta3">
+            <prerelease version="1.0.14beta4">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -55,7 +55,10 @@
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Allow export to all kinds of plots(ok for model Image and model UVMap</change>
                 <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
-                <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+            </prerelease>
+            <prerelease version="1.0.14beta3">
+                <change type="FEATURE">Minor presentation improvements with titled widgets for settings tree and plot list</change>
+                <change type="FEATURE">Display a feedback report window if the fitting server does not return any new settings and error.</change>
             </prerelease>
             <prerelease version="1.0.14beta2">
                 <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
