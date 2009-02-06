@@ -55,7 +55,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = "" + groupValue;
-        plotPanel.plot("getPngModelUVMap", args, "UV map of "+targetToPlot.getIdent());
+        plotPanel.plot("getModelUVMap", args, "UV map of "+targetToPlot.getIdent());
     }
 
     private void plotModelImage(Target targetToPlot)
@@ -63,7 +63,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = "" + groupValue + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + yminFormattedTextField.getText()  + " " + ymaxFormattedTextField.getText() + " " + pixscaleFormattedTextField.getText();
-        plotPanel.plot("getPngModelImage", args, "Model Image of "+targetToPlot.getIdent());
+        plotPanel.plot("getModelImage", args, "Model Image of "+targetToPlot.getIdent());
     }
 
     private void plotModelSnifferMap(Target targetToPlot)
