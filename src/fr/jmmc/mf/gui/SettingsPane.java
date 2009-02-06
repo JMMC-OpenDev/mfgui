@@ -272,7 +272,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         if (e.getSource() instanceof SettingsModel) {
             if (rootSettingsModel.isModified()) {
                 //tabbedPane.setTitleAt(0, "Settings *");
-                System.out.println("Flag modification");
+                logger.fine("tree changed and setting model modified");
             } else {
                 // tabbedPane.setTitleAt(0, "Settings");
             }
