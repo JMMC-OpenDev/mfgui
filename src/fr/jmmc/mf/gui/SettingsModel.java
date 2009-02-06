@@ -613,6 +613,15 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                     ModelFitting.getSharedApplicationDataModel().getProgramVersion());
             setModified(true);
         }
+
+        // next line fix normalize flag with default value to true
+        // (castor does not handle this schema feature)
+        Target[] targets = s.getTargets().getTarget();
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            target.setNormalize(target.getNormalize()||(!target.hasNormalize()));
+        }
+
     }
 
     // @todo place this method into fr.jmmc.mf.util
@@ -629,14 +638,12 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel = (Settings) Settings.unmarshal(reader);
-
         checkSettingsFormat(newModel);
         setRootSettings(newModel);
         setModified(false);
         associatedFile = fileToLoad;
-
+/*
         reader = new java.io.FileReader(fileToLoad);
-
         java.io.BufferedReader in = new java.io.BufferedReader(reader);
         StringBuffer sb = new StringBuffer();
         String str;
@@ -644,8 +651,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         while ((str = in.readLine()) != null) {
             sb.append(str);
         }
-
         in.close();
+*/
     }
 
     // @todo place this method into fr.jmmc.mf.util
