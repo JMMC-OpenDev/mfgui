@@ -42,6 +42,7 @@
                  <change type="FEATURE"></change>
                  <change type="REQUEST"></change>
                  -->
+                <change type="REQUEST">Fix problem with Nan in oifits files</change>
                 <change type="REQUEST">Enable/disable dock/undock and remove button according plot list selection</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
