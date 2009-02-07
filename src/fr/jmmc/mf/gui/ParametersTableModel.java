@@ -84,6 +84,7 @@ class ParametersTableModel extends AbstractTableModel {
     }
 
     // Next parts makes respond to the full TableModel interface
+    @Override
     public Class getColumnClass(int columnIndex) {
         return columnTypes[columnIndex];
     }
@@ -92,6 +93,7 @@ class ParametersTableModel extends AbstractTableModel {
         return columnNames.length;
     }
 
+    @Override
     public String getColumnName(int columnIndex) {
         return columnNames[columnIndex];
     }
@@ -136,10 +138,12 @@ class ParametersTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnEditableFlags[columnIndex];
     }
 
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
         Model m = modelOfParameters[rowIndex];
