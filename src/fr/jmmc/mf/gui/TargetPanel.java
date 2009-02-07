@@ -1,6 +1,4 @@
 /*
- * TargetPanel.java
- *
  * Created on 3 novembre 2006, 15:48
  */
 package fr.jmmc.mf.gui;
@@ -24,68 +22,16 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.TargetPanel");
 
-    /**
-     * DOCUMENT ME!
-     */
+    /** Main model object of this GUI controller */
     Target current = null;
-
-    /**
-     * DOCUMENT ME!
-     */
     ListModel targetFiles;
-
-    /**
-     * DOCUMENT ME!
-     */
     boolean listenToFileSelection;
-
-    /**
-     * DOCUMENT ME!
-     */
     ListSelectionModel selectedFiles = new DefaultListSelectionModel();
-
-    /**
-     * DOCUMENT ME!
-     */
     DefaultListModel models = new DefaultListModel();
-
-    /**
-     * DOCUMENT ME!
-     */
     SettingsViewerInterface settingsViewer;
-
-    /**
-     * DOCUMENT ME!
-     */
     public Settings rootSettings = null;
-
-    /**
-     * DOCUMENT ME!
-     */
     public SettingsModel rootSettingsModel = null;
-
     private PlotModelPanel plotModelImagePanel;
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addModelButton;
-    private javax.swing.JList fileList;
-    private javax.swing.JComboBox identComboBox;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList modelList;
-    private javax.swing.JComboBox modelTypeComboBox;
-    private javax.swing.JCheckBox normalizeCheckBox;
-    private javax.swing.JButton removeModelButton;
-    private javax.swing.JPanel subplotPanel;
-    // End of variables declaration//GEN-END:variables
-  
 
     /** Creates new form TargetPanel */
     public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel)
@@ -194,11 +140,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         plotModelImagePanel.show(settingsModel,current);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param e DOCUMENT ME!
-     */
     public void valueChanged(ListSelectionEvent e)
     {
         logger.entering("" + this.getClass(), "valueChanged");
@@ -405,21 +346,12 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.weighty = 1.0;
         add(jScrollPane3, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
+ 
     private void modelTypeComboBoxFocusGained(java.awt.event.FocusEvent evt)
     {//GEN-FIRST:event_modelTypeComboBoxFocusGained
         logger.entering("" + this.getClass(), "modelTypeComboBoxFocusGained");
     }//GEN-LAST:event_modelTypeComboBoxFocusGained
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_modelListMouseClicked
 
@@ -429,25 +361,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
     }//GEN-LAST:event_modelListMouseClicked
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void fileListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_fileListMouseClicked
-
         if (evt.getClickCount() == 2)
         {
             settingsViewer.showSettingElement(fileList.getSelectedValue());
         }
     }//GEN-LAST:event_fileListMouseClicked
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_removeModelButtonActionPerformed
         logger.entering("" + this.getClass(), "removeModelButtonActionPerformed");
@@ -466,11 +387,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         refresh();
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     {//GEN-FIRST:event_modelListValueChanged
 
@@ -484,11 +400,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
     }//GEN-LAST:event_modelListValueChanged
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_addModelButtonActionPerformed
         logger.entering("" + this.getClass(), "addModelButtonActionPerformed");
@@ -540,11 +451,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
     }//GEN-LAST:event_addModelButtonActionPerformed
     
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
         current.setNormalize(normalizeCheckBox.isSelected());
@@ -569,4 +475,23 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
     }
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addModelButton;
+    private javax.swing.JList fileList;
+    private javax.swing.JComboBox identComboBox;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList modelList;
+    private javax.swing.JComboBox modelTypeComboBox;
+    private javax.swing.JCheckBox normalizeCheckBox;
+    private javax.swing.JButton removeModelButton;
+    private javax.swing.JPanel subplotPanel;
+    // End of variables declaration//GEN-END:variables
 }
