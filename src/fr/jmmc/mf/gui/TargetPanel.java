@@ -9,6 +9,7 @@ import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
+import java.awt.BorderLayout;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Vector;
@@ -32,12 +33,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public Settings rootSettings = null;
     public SettingsModel rootSettingsModel = null;
     private PlotModelPanel plotModelImagePanel;
+    private ParametersTableModel parametersTableModel;
 
     /** Creates new form TargetPanel */
     public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel)
     {
         settingsViewer = viewer;
+        parametersTableModel = new ParametersTableModel();
         initComponents();
+        
         listenToFileSelection = false;
 
         fileList.addListSelectionListener(this);
@@ -70,6 +74,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         this.rootSettings          = settingsModel.getRootSettings();
         this.rootSettingsModel     = settingsModel;
+
+        parametersTableModel.setModel(t,true);
+        jPanel5.add(jTable1.getTableHeader(),BorderLayout.NORTH);
 
         listenToFileSelection      = false;
         current                    = t;
@@ -176,6 +183,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
@@ -196,6 +205,20 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         setLayout(new java.awt.GridBagLayout());
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
+        jPanel5.setLayout(new java.awt.BorderLayout());
+
+        jTable1.setModel(parametersTableModel);
+        jPanel5.add(jTable1, java.awt.BorderLayout.CENTER);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        jPanel3.add(jPanel5, gridBagConstraints);
 
         jLabel1.setText("Ident:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -331,7 +354,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel3.add(subplotPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         jPanel3.add(jPanel1, gridBagConstraints);
@@ -484,10 +507,12 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
