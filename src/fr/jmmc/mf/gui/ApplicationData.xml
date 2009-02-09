@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.14beta5"/>
+    <program name="ModelFitting" version="1.0.14beta6"/>
     <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -16,6 +16,7 @@
             <menu label="Close settings file" classpath="fr.jmmc.mf.gui.MFGui" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.MFGui" action="loadRemoteModel"/>
             <menu label="Open demo settings">
+                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel8"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel1"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel2"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel3"/>
@@ -23,7 +24,6 @@
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
                 <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel8"/>
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
@@ -31,8 +31,7 @@
     </menubar>
     <releasenotes>
         <release version="1.0.14">
-            <prerelease version="1.0.14beta5">
-                <!--
+            <prerelease version="1.0.14beta7"><!--
                 <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -46,16 +45,20 @@
                 <change type="REQUEST">Enable/disable dock/undock and remove button according plot list selection</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
-                <change type="REQUEST">Add residual plots</change>
+                <change type="REQUEST">Add residual plots for OIT3</change>
                 <change type="REQUEST">Add url data file loading capability</change>
                 <change type="REQUEST">Add previous parametre value column in the parameter table</change>
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
-                <change type="REQUEST">Propose on parameters view that group every parameter of one composed model</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
-                <change type="REQUEST">Allow export to all kinds of plots(ok for model Image and model UVMap</change>
-                <change type="REQUEST" id="#1228748370">Permit user to revert to autoscaled parameter after one init </change>
+            </prerelease>
+            <prerelease version="1.0.14beta6">
+                <change type="FEATURE">Propose on parameters view that group every parameter of one composed model</change>
+                <change type="CHANGE">Most plots can be exported (some must be detached to get export menu)</change>
+            </prerelease>
+            <prerelease version="1.0.14beta5">
+                <change type="BUGFIX" id="#1228748370">Permit user to revert to autoscaled parameter after one first init </change>
             </prerelease>
 
             <prerelease version="1.0.14beta4">
