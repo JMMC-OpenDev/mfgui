@@ -66,8 +66,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         this.addWindowListener(this);
 
         tabbedPane_ = new javax.swing.JTabbedPane();
-        tabbedPane_.setMinimumSize(new java.awt.Dimension(800, 600));
-        tabbedPane_.setPreferredSize(new java.awt.Dimension(800, 600));
+        tabbedPane_.setMinimumSize(new java.awt.Dimension(980, 700));
+        tabbedPane_.setPreferredSize(new java.awt.Dimension(980, 700));
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
 
         /* Plastic transmitter. */
