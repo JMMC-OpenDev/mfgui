@@ -378,7 +378,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
-        jButton1.setText("Dock/Undock");
+        jButton1.setText("Detach/Attach");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
