@@ -4,18 +4,19 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
+import fr.jmmc.mf.models.Target;
 import java.lang.reflect.Method;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * Implementation of a table model that is based on a given Model.
+ * todo: check if model container should be vectors instead of arrays
  */
 class ParametersTableModel extends AbstractTableModel {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ParametersTableModel");
-    protected Model currentModel = null;
     protected boolean recursive;
     protected Parameter[] parameters;
     // Store model of corresponding parameter in parameters array
@@ -31,22 +32,23 @@ class ParametersTableModel extends AbstractTableModel {
         recursive = true;
     }
 
-    /**
-     * tell table model to represent the parameters of the given model.
-     */
-    public void setModel(Model modelToPresent, boolean recursive) {
-        currentModel = modelToPresent;
+    
+    public void setModel(Target target, boolean recursive) {
         this.recursive = recursive;
         parameters = new Parameter[]{};
-        if (currentModel != null) {
+        if (target != null) {
             // get list , create array and init array with content list
-            Vector params = new Vector();
-            Vector models = new Vector();
-            addParamsFor(currentModel, params, models, recursive);
+            Vector <Parameter>params = new Vector();
+            Vector <Model>models = new Vector();
+            Model [] array = target.getModel();
+            for (int i = 0; i < array.length; i++) {
+                Model model = array[i];
+                addParamsFor(model, params, models, recursive);
+            }
             parameters = new Parameter[params.size()];
             modelOfParameters = new Model[params.size()];
             for (int i = 0; i < parameters.length; i++) {
-                parameters[i] = (Parameter) params.elementAt(i);
+                parameters[i] = params.elementAt(i);
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
         }
@@ -54,7 +56,36 @@ class ParametersTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    protected void addParamsFor(Model model, Vector paramContainer, Vector modelContainer, boolean recursive) {
+    /**
+     * tell table model to represent the parameters of the given model.
+     */
+    public void setModel(Model modelToPresent, boolean recursive) {
+        this.recursive = recursive;
+        parameters = new Parameter[]{};
+        if (modelToPresent != null) {
+            // get list , create array and init array with content list
+            Vector <Parameter>params = new Vector();
+            Vector <Model>models = new Vector();
+            addParamsFor(modelToPresent, params, models, recursive);
+            parameters = new Parameter[params.size()];
+            modelOfParameters = new Model[params.size()];
+            for (int i = 0; i < parameters.length; i++) {
+                parameters[i] = params.elementAt(i);
+                modelOfParameters[i] = (Model) models.elementAt(i);
+            }
+        }
+        // notify observers
+        fireTableDataChanged();
+    }
+
+    public void setParameters(Parameter[] params){
+        recursive=false;
+        parameters=params;
+        // notify observers
+        fireTableDataChanged();
+    }
+
+    protected void addParamsFor(Model model, Vector<Parameter> paramContainer, Vector<Model> modelContainer, boolean recursive) {
         // Start to append model parameters
         Parameter[] params = model.getParameter();
         int nbOfParams = params.length;
@@ -107,6 +138,9 @@ class ParametersTableModel extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
+        if(p==null){
+            return null;
+        }
         // return name
         if (columnIndex == 0) {
             if (recursive) {
@@ -146,7 +180,6 @@ class ParametersTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
-        Model m = modelOfParameters[rowIndex];
         //logger.fine("parameter " + p.getName() + "@" + m.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
         // Check all methods that accept something else than a String as param
         if (columnNames[columnIndex].equals("Value")) {
