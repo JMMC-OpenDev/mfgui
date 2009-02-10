@@ -6,6 +6,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.models.Response;
 import javax.swing.JFrame;
 
 /**
@@ -14,6 +15,8 @@ import javax.swing.JFrame;
  */
 public interface SettingsViewerInterface
 {
+    /** display all informations for the new settings and the returned response */
+    public void genResultReport(SettingsModel settingsModel, Response r);
 
     /** Shows any object that is not part of setting*/
     public void showElement(Object o);

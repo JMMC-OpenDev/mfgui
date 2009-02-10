@@ -29,31 +29,10 @@ import javax.swing.JTextArea;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    /**
-     * DOCUMENT ME!
-     */
-    final static String rcsId = "$Id: ModelFitting.java,v 1.25 2009-01-30 10:45:02 mella Exp $";
-
-    /**
-     * DOCUMENT ME!
-     */
+    final static String rcsId = "$Id: ModelFitting.java,v 1.26 2009-02-10 10:13:22 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
-
-    /**
-     * DOCUMENT ME!
-     */
     static Preferences myPreferences;
-
-    /**
-     * DOCUMENT ME!
-     */
-    static ModelFitting instance_;
-
-    /**
-     * DOCUMENT ME!
-     */
     static MFGui gui = null;
-
     static String xmlResult=null;
 
     /**
@@ -64,14 +43,8 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     public ModelFitting(String[] args)
     {
         super(args);
-        instance_ = this;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param args DOCUMENT ME!
-     */
     protected void init(String[] args)
     {
         // Set default resource for application
@@ -90,34 +63,25 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         gui = new MFGui(new String[]{});
     }
 
-    /**
-     * DOCUMENT ME!
-     */
+    @Override
     protected void execute()
     {
         gui.setVisible(true);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     @Override
     protected boolean finish()
     {
         return gui.finish();
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     protected static void exit()
     {
         logger.info("Thank you for using this software!");
     }
 
     /**
+     * Main entry point.
      * @param args the command line arguments
      */
     public static void main(String[] args)
@@ -140,7 +104,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public Response execMethod(String methodName, java.io.File xmlFile)
+    public static Response execMethod(String methodName, java.io.File xmlFile)
         throws Exception
     {
         return execMethod(methodName, xmlFile, "");
@@ -153,7 +117,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
+    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
     {
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use"))
@@ -191,7 +155,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
      *
      * @throws Exception exception tbd
      */
-    private String doExec(String methodName, java.io.File xmlFile, String methodArg)
+    private static String doExec(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
     {
         String result      = "";
@@ -232,7 +196,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         return result;
     }
 
-    private String doExec(String methodName, java.io.File xmlFile)
+    private static String doExec(String methodName, java.io.File xmlFile)
             throws Exception {
         return doExec(methodName, xmlFile, "");
     }
@@ -339,7 +303,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         }
     }
 
-    protected class YogaExec implements fr.jmmc.mcs.util.ProcessManager
+    protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager
     {
         StringBuffer sb;
 

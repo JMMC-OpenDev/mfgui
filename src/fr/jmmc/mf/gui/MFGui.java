@@ -337,12 +337,11 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         public void actionPerformed(java.awt.event.ActionEvent e)
         {
             logger.fine("Requesting yoga '" + methodName + "' call");
-
             
             try
             {
                 String v;
-                v=UtilsClass.getOutputMsg(ModelFitting.instance_.execMethod(methodName, null));
+                v=UtilsClass.getOutputMsg(ModelFitting.execMethod(methodName, null));
                 setStatus("Yoga version is '" + v.trim() + "'");
             }
             catch (Exception ex)

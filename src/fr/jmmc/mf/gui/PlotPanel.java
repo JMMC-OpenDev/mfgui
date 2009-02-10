@@ -64,7 +64,7 @@ public class PlotPanel extends javax.swing.JPanel
 
         Response response=null;
         try {
-            response = ModelFitting.instance_.execMethod(methodName,
+            response = ModelFitting.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
             StatusBar.show(methodName + " process finished");
            ResultFile[] resultFiles = UtilsClass.getResultFiles(response);

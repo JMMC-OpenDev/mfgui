@@ -5,6 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.actions.RunFitAction;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
 
@@ -22,6 +23,7 @@ import java.util.logging.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.Document;
 import javax.swing.tree.*;
 
 /**
@@ -39,7 +41,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     /**
      * DOCUMENT ME!
      */
-    public static Action runFitAction;
+    public static RunFitAction runFitAction;
     public Action getModelListAction = new GetModelListAction();
     public Action saveSettingsAction;
     public Action closeSettingsAction;
@@ -89,13 +91,16 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void init() {
         frameList = new FrameList(this);
         // instanciate actions
-        runFitAction = new RunFitAction();
+        runFitAction = new RunFitAction(this);
 
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
         rootSettingsModel = new SettingsModel();
 
         initComponents();
+
+        runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument());
+
         settingsTree.setMinimumSize(new Dimension(200, 200));
         settingsTree.setPreferredSize(new Dimension(200, 200));
 
@@ -318,6 +323,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -327,6 +333,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         controlPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         runFitButton = new javax.swing.JButton();
+        ITMaxCheckBox = new javax.swing.JCheckBox();
+        ITMaxTextField = new javax.swing.JFormattedTextField();
         showPlotButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         listScrollPane = new javax.swing.JScrollPane();
@@ -340,24 +348,39 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(0.5);
+        jSplitPane2.setResizeWeight(0.9);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setBorder(null);
 
         settingsTree.setMinimumSize(new java.awt.Dimension(200, 0));
         jScrollPane1.setViewportView(settingsTree);
 
-        jPanel2.add(jScrollPane1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jScrollPane1, gridBagConstraints);
 
         jSplitPane2.setTopComponent(jPanel2);
 
-        controlPanel.setLayout(new javax.swing.BoxLayout(controlPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        controlPanel.setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
-        jPanel1.add(runFitButton);
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel1.add(runFitButton, gridBagConstraints);
+
+        ITMaxCheckBox.setToolTipText("Define a maximum number of iterations");
+        jPanel1.add(ITMaxCheckBox, new java.awt.GridBagConstraints());
+
+        ITMaxTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        jPanel1.add(ITMaxTextField, gridBagConstraints);
 
         showPlotButton.setText("New plot...");
         showPlotButton.addActionListener(new java.awt.event.ActionListener() {
@@ -365,9 +388,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 showPlotButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(showPlotButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel1.add(showPlotButton, gridBagConstraints);
 
-        controlPanel.add(jPanel1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        controlPanel.add(jPanel1, gridBagConstraints);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot list"));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.PAGE_AXIS));
@@ -396,7 +425,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jPanel3.add(jPanel4);
 
-        controlPanel.add(jPanel3);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        controlPanel.add(jPanel3, gridBagConstraints);
 
         jSplitPane2.setBottomComponent(controlPanel);
 
@@ -430,6 +464,19 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         showSettingElement(rootSettingsModel.getRootSettings());
     }
 
+    public void genResultReport(SettingsModel settingsModel, Response response) {
+       JFrame resultFrame = new JFrame();
+            JPanel p = new JPanel();
+            p.setLayout(new BorderLayout());
+            resultFrame.getContentPane().add(p);
+            JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
+            p.add(sp);
+            addPlot(resultFrame, "--New fit result--");
+            resultPanel.genPlots(settingsModel);
+            resultPanel.genPlots(UtilsClass.getResultFiles(response));
+            showElement(resultFrame);
+    }
+
     protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
 
         String methodName = "getModelList";
@@ -451,98 +498,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                     new FeedbackReport(exc);
 
                 }
-        }
-    }
-
-    protected class RunFitAction extends fr.jmmc.mcs.util.MCSAction {
-
-        String methodName = "runFit";
-
-        public RunFitAction() {
-            super("runFit");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting yoga '" + methodName + "' call");
-
-            StatusBar.show("Running fitting process");
-            setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
-            try {
-                java.io.File tmpFile = rootSettingsModel.getTempFile(false);
-                Response r = ModelFitting.instance_.execMethod(methodName, tmpFile);
-                StatusBar.show("Fitting process finished");
-                
-                Settings newModel=UtilsClass.getSettings(r);
-                if(newModel==null){
-                    logger.warning("no settings present in result message");
-                    if (UtilsClass.getErrorMsg(r).length()==0)
-                    {
-                        new FeedbackReport(new Exception("Sorry a problem occured on server side without error message.\nNo result has been returned\n Please send this bug report and you will be contacted if the data are needed to repeat the problem\nBest regards,"));
-                    }
-                    setCursor(null);
-                    return;
-                }
-                Settings prevModel = rootSettingsModel.getRootSettings();
-                // add href from previous files
-                File[] newFiles = newModel.getFiles().getFile();
-                File[] prevFiles = prevModel.getFiles().getFile();
-
-                // no check is done to assert that every newFile have been updated
-                for (int i = 0; i < newFiles.length; i++) {
-                    File newFile = newFiles[i];
-                    String newId = newFile.getId();
-
-                    for (int j = 0; j < prevFiles.length; j++) {
-                        File prevFile = prevFiles[j];
-                        String prevId = prevFile.getId();
-
-                        if (prevId.equals(newId)) {
-                            newFile.setHref(prevFile.getHref());
-
-                            Oitarget[] oitargets = prevFile.getOitarget();
-
-                            for (int k = 0; k < oitargets.length; k++) {
-                                newFile.addOitarget(oitargets[k]);
-                            }
-                        }
-                    }
-                }
-                rootSettingsModel.setRootSettings(newModel);
-                rootSettingsModel.setLastXml(ModelFitting.getLastXmlResult());
-                logger.info("Settings created");
-                // add plot and display automatically the new result
-                resultPanel.genReport(rootSettingsModel);
-                showSettingElement(rootSettingsModel.getRootSettings().getResult());
-
-                JFrame resultFrame = new JFrame();
-                JPanel p = new JPanel();
-                p.setLayout(new BorderLayout());
-                resultFrame.getContentPane().add(p);
-                JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
-                p.add(sp);
-                addPlot(resultFrame, "--New fit result--");
-                resultPanel.genPlots(rootSettingsModel);
-                resultPanel.genPlots(UtilsClass.getResultFiles(r));
-                showElement(resultFrame);
-
-            } catch (java.net.UnknownHostException ex) {
-                String msg = "Network seems down. Can't contact host " + ex.getMessage();
-                javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
-                logger.log(Level.WARNING, ex.getMessage(), ex);
-                StatusBar.show("Error during process of " + methodName);
-                setCursor(null);
-                return;
-            } catch (Exception ex) {
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-                StatusBar.show("Error during fitting process");
-                javax.swing.JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage(), "Error ",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
-                logger.log(Level.WARNING, ex.getMessage(), ex);
-                setCursor(null);
-                return;
-            }
-            setCursor(null);
         }
     }
 
@@ -582,6 +537,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox ITMaxCheckBox;
+    private javax.swing.JFormattedTextField ITMaxTextField;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -5,19 +5,14 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 
-import java.lang.reflect.*;
 
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
 
 
 public class ModelPanel extends javax.swing.JPanel
