@@ -180,8 +180,14 @@ class ParametersTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
-        //logger.fine("parameter " + p.getName() + "@" + m.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
+        if(aValue!=null){
+            logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
+        }else{
+            logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
+        }
         // Check all methods that accept something else than a String as param
+        // introspection can't be used because Objects are given as parmaeter
+        // and most of parameter ones accept double only :(
         if (columnNames[columnIndex].equals("Value")) {
             Double v = (Double) aValue;
             p.setValue(v);
@@ -194,7 +200,7 @@ class ParametersTableModel extends AbstractTableModel {
             }
         } else if (columnNames[columnIndex].equals("MaxValue")) {
             if (aValue == null) {
-                p.deleteMinValue();
+                p.deleteMaxValue();
             } else {
                 Double v = (Double) aValue;
                 p.setMaxValue(v);
@@ -211,12 +217,19 @@ class ParametersTableModel extends AbstractTableModel {
             p.setHasFixedValue(b);
         } else {
             try {
-                String setMethodName = "set" + columnNames[columnIndex];
-                Class[] c = new Class[]{aValue.getClass()};
-                Method set = Parameter.class.getMethod(setMethodName, c);
-                Object[] o = new Object[]{aValue};
-                set.invoke(p, o);
-                logger.fine("methode invoked using reflexion");
+                String methodName;
+                if (aValue != null) {
+                    methodName = "set" + columnNames[columnIndex];
+                    Class[] c = new Class[]{aValue.getClass()};
+                    Method set = Parameter.class.getMethod(methodName, c);
+                    Object[] o = new Object[]{aValue};
+                    set.invoke(p, o);
+                }else{
+                    methodName = "delete" + columnNames[columnIndex];
+                    Method m = Parameter.class.getMethod(methodName);
+                    m.invoke(p);
+                }
+                logger.fine("method "+methodName+" invoked using reflexion");
             } catch (Exception e) {
                 new FeedbackReport(null, true, e);
             }
