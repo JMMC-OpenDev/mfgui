@@ -1,8 +1,9 @@
 /*
 JMMC
  */
-package fr.jmmc.mf.gui;
+package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mf.models.File;
