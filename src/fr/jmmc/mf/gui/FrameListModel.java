@@ -50,5 +50,12 @@ public class FrameListModel extends AbstractListModel{
             this.fireIntervalRemoved(this, i, i);
         }
     }
+    void remove(int index){
+        if (index>=0){
+            frames.remove(index);
+            titles.remove(index);
+            this.fireIntervalRemoved(this, index, index);
+        }
+    }
     
 }
