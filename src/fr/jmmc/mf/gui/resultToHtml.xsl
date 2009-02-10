@@ -176,14 +176,14 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template name="Chi2">
-            Initial Chi2 = 
-        <xsl:value-of select=".//chi2_tracks//td[1]"/>    -  Final Chi2 =
+        <xsl:if test=".//chi2_tracks//td[1]">    Initial Chi2 =
+        <xsl:value-of select=".//chi2_tracks//td[1]"/></xsl:if>    -  Final Chi2 =
         <xsl:value-of select=".//chi2"/>
    
         <xsl:if test=".//n_free">
             <br/>
-                Initial reduced Chi2 = 
-            <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>    -  Final reduced Chi2 =
+            <xsl:if test=".//chi2_tracks//td[1]">     Initial reduced Chi2 =
+            <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/></xsl:if>    -  Final reduced Chi2 =
             <xsl:value-of select=".//chi2 div .//n_free"/>
         </xsl:if>
     </xsl:template>
