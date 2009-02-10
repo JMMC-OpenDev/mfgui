@@ -492,8 +492,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         {
             setText(value.toString());
             setSelected(isSelected);
-
-            //setEnabled(list.isEnabled());
             return this;
         }
     }

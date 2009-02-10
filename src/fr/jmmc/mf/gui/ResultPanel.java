@@ -76,7 +76,6 @@ public class ResultPanel extends javax.swing.JPanel {
 
     public String getReport() {
         logger.entering("" + this.getClass(), "getReport");
-
         return htmlReport;
     }
 

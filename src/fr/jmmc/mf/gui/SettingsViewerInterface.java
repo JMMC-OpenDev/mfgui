@@ -34,5 +34,5 @@ public interface SettingsViewerInterface
     public void addPlot(JFrame frame, String title);
 
     /** Unregister a new Plot */
-    public void removePlot(JFrame frame);
+    public void removeSelectedPlots();
 }

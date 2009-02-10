@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.15beta1"/>
-    <compilation date="16/06/2008" compiler="javac 1.5.0_13"/>
+    <program name="ModelFitting" version="1.0.15"/>
+        <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
     <!--	<copyright>Copyrights JMMC 2008</copyright> -->
@@ -52,6 +52,9 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
             </prerelease>
         </release>
         <release version="1.0.14">

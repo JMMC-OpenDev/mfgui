@@ -28,4 +28,12 @@ public class FrameList extends JList{
     public JFrame getSelectedFrame(){
         return listModel.getFrame(getSelectedIndex());
     }
+
+    void removeSelectedPlots() {
+        int[] indices = getSelectedIndices();
+        for (int i = 0; i < indices.length; i++) {
+            int idx = indices[i];
+            listModel.remove(idx);
+        }
+    }
 }

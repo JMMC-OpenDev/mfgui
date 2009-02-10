@@ -335,22 +335,24 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         runFitButton = new javax.swing.JButton();
         ITMaxCheckBox = new javax.swing.JCheckBox();
         ITMaxTextField = new javax.swing.JFormattedTextField();
-        showPlotButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        showPlotButton = new javax.swing.JButton();
         listScrollPane = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
         modifierPanel = new javax.swing.JPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(0.9);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
+        jPanel2.setMinimumSize(new java.awt.Dimension(31, 168));
+        jPanel2.setPreferredSize(new java.awt.Dimension(91, 168));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setBorder(null);
@@ -370,17 +372,40 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(runFitButton, gridBagConstraints);
 
         ITMaxCheckBox.setToolTipText("Define a maximum number of iterations");
-        jPanel1.add(ITMaxCheckBox, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel1.add(ITMaxCheckBox, gridBagConstraints);
 
         ITMaxTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
         jPanel1.add(ITMaxTextField, gridBagConstraints);
+
+        jLabel1.setText("Use max iterations number");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(jLabel1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        controlPanel.add(jPanel1, gridBagConstraints);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot list"));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
 
         showPlotButton.setText("New plot...");
         showPlotButton.addActionListener(new java.awt.event.ActionListener() {
@@ -390,22 +415,20 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel1.add(showPlotButton, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        controlPanel.add(jPanel1, gridBagConstraints);
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot list"));
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.PAGE_AXIS));
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(showPlotButton, gridBagConstraints);
 
         listScrollPane.setViewportView(jList1);
 
-        jPanel3.add(listScrollPane);
-
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel3.add(listScrollPane, gridBagConstraints);
 
         jButton1.setText("Detach/Attach");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -413,7 +436,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton1);
+        jPanel3.add(jButton1, new java.awt.GridBagConstraints());
 
         jButton2.setText("Remove");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -421,16 +444,23 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton2);
+        jPanel3.add(jButton2, new java.awt.GridBagConstraints());
 
-        jPanel3.add(jPanel4);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        controlPanel.add(jPanel3, gridBagConstraints);
 
+        jPanel5.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 1.0;
-        controlPanel.add(jPanel3, gridBagConstraints);
+        gridBagConstraints.weightx = 1.0;
+        controlPanel.add(jPanel5, gridBagConstraints);
 
         jSplitPane2.setBottomComponent(controlPanel);
 
@@ -451,7 +481,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        removePlot(frameList.getSelectedFrame());
+        removeSelectedPlots();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public void addPlot(JFrame frame, String title) {
@@ -459,8 +489,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     /** remove the frame from the list and show main setting element */
-    public void removePlot(JFrame frame) {
-        frameList.remove(frame);
+    public void removeSelectedPlots() {
+        frameList.removeSelectedPlots();
         showSettingElement(rootSettingsModel.getRootSettings());
     }
 
@@ -469,6 +499,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             JPanel p = new JPanel();
             p.setLayout(new BorderLayout());
             resultFrame.getContentPane().add(p);
+            resultPanel.genReport(settingsModel);
             JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
             p.add(sp);
             addPlot(resultFrame, "--New fit result--");
@@ -489,7 +520,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             logger.fine("Requesting yoga '" + methodName + "' call");
 
                 try{
-                Response r = ModelFitting.instance_.execMethod(methodName, null);
+                Response r = ModelFitting.execMethod(methodName, null);
                 // Search model into return result
                 Model newModel = UtilsClass.getModel(r);
                 // Indicates to the rootSettingsModel list of availables models
@@ -542,11 +573,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel controlPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
