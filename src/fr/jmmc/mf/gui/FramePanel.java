@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

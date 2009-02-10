@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 
+import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Settings;
 
 /**
