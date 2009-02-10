@@ -251,7 +251,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jButton2.setAction(MFGui.getYogaVersionAction);
         jPanel1.add(jButton2);
 
-        jTabbedPane1.addTab("advanced", jPanel1);
+        jTabbedPane1.addTab("Advanced", jPanel1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
