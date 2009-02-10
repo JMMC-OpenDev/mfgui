@@ -1,5 +1,6 @@
-package fr.jmmc.mf.gui;
+package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.util.RegisteredAction;
 import java.awt.event.ActionEvent;
@@ -13,15 +14,19 @@ import java.io.OutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-class SaveFileAction extends RegisteredAction {
+public class SaveFileAction extends RegisteredAction {
+    private final static String className="fr.jmmc.mf.gui.actions.SaveFileAction";
+    /** Class logger */
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            className);
 
     private String lastDir = System.getProperty("user.home");
     private File fileToSave;
     private String proposedFilename;
     private String originalActionName;
-
+    
     public SaveFileAction(File fileToSave, String proposedFilename) {
-        super(MFGui.className_, "saveSpecificFile");
+        super(className, "saveSpecificFile");
         // original name has certainly be inited from resources
         originalActionName=(String)this.getValue(this.NAME);
         this.putValue(this.NAME
@@ -45,7 +50,7 @@ class SaveFileAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        MFGui.logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering("" + this.getClass(), "actionPerformed");
         try {
             // Open a filechooser in previous save directory
             JFileChooser fileChooser = new JFileChooser();

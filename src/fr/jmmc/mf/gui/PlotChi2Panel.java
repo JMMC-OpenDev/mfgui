@@ -5,6 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
 
