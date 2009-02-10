@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.0.15"/>
+    <program name="ModelFitting" version="1.0.16beta1"/>
         <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -30,8 +30,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.0.15">
-            <prerelease version="1.0.15beta1"><!--
+       <release version="1.0.16">
+            <prerelease version="1.0.16beta1"><!--
                 <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -52,7 +52,14 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
-                
+
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+                <change type="CHANGE"></change>
+            </prerelease>
+        </release>
+        <release version="1.0.15">
+            <prerelease version="1.0.15beta1">
                 <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
                 <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
                 <change type="BUGFIX">Remove Nan value for oldChi2 value when the chi2_track is not found</change>

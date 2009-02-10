@@ -1,4 +1,4 @@
-package fr.jmmc.mf.gui;
+package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.models.Model;
@@ -13,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
  * Implementation of a table model that is based on a given Model.
  * todo: check if model container should be vectors instead of arrays
  */
-class ParametersTableModel extends AbstractTableModel {
+public class ParametersTableModel extends AbstractTableModel {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ParametersTableModel");

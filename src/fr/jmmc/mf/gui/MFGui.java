@@ -38,7 +38,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     protected static StatusBar statusBar;
 
     // Application actions
-    public static Action getYogaVersionAction;
+    static Action getYogaVersionAction;
     public static Action saveModelAction;
  
     private static PlasticListener plasticServer_;
@@ -337,7 +337,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         public void actionPerformed(java.awt.event.ActionEvent e)
         {
             logger.fine("Requesting yoga '" + methodName + "' call");
-            
+
             try
             {
                 String v;
