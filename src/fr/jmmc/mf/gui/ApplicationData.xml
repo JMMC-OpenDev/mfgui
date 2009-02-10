@@ -55,6 +55,7 @@
                 
                 <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
                 <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+                <change type="BUGFIX">Remove Nan value for oldChi2 value when the chi2_track is not found</change>
             </prerelease>
         </release>
         <release version="1.0.14">
