@@ -154,9 +154,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         if (tabbedPane_.getComponentAt(idx) instanceof SettingsPane)
         {
             sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
-            tabbedPane_.setTitleAt(idx, sp.rootSettingsModel.getAssociatedFilename());
+            tabbedPane_.setTitleAt(idx, sp.getSettingsModel().getAssociatedFilename());
             logger.fine("Selected settingsPane name:" +
-                sp.rootSettingsModel.getAssociatedFilename());
+                sp.getSettingsModel().getAssociatedFilename());
         }
 
         return sp.getSettingsModel();
