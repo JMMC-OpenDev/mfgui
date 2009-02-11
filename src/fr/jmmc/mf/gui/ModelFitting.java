@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.26 2009-02-10 10:13:22 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.27 2009-02-11 11:56:42 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -54,6 +54,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         // Set the default locale to custom locale
         Locale locale = Locale.US;
         Locale.setDefault(locale);
+        System.setProperty("user.language", "us");
         logger.info("Setting locale to:" + locale);
 
         // there is a conflict if one option is given

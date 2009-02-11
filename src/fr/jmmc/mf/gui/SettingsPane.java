@@ -1,14 +1,8 @@
-/*
- * SettingsPane.java
- *
- * Created on 12 février 2008, 14:19
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.actions.RunFitAction;
 import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.StatusBar;
 
 import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.models.*;
@@ -20,16 +14,13 @@ import java.awt.Dimension;
 
 import java.lang.reflect.*;
 
-import java.util.logging.*;
 
+import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.Document;
 import javax.swing.tree.*;
 
 /**
- *
- * @author  mella
  */
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
         TreeModelListener, SettingsViewerInterface {
@@ -39,9 +30,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             "fr.jmmc.mf.gui.SettingsPane");
 
     // Application actions
-    /**
-     * DOCUMENT ME!
-     */
     public static RunFitAction runFitAction;
     public Action getModelListAction = new GetModelListAction();
     public Action saveSettingsAction;
@@ -68,35 +56,24 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     protected FrameList frameList;
 
     /** Creates new form SettingsPane */
-    public SettingsPane(java.io.File file) throws Exception {
-        init();
-        rootSettingsModel.loadSettingsFile(file);
-        showSettingElement(rootSettingsModel.getRootSettings());
-    }
-
-    /** Creates new form SettingsPane */
-    public SettingsPane(java.net.URL url) throws Exception {
-        init();
-        rootSettingsModel.loadSettingsFile(url);
+    public SettingsPane(SettingsModel settingsModel) {
+        init(settingsModel);
         showSettingElement(rootSettingsModel.getRootSettings());
     }
 
     /** Creates new form SettingsPane */
     public SettingsPane() {
-        init();
+        init(new SettingsModel());
     }
 
-    /**
-     * DOCUMENT ME!
-     */
-    private void init() {
+    private void init(SettingsModel settingsModel) {
         frameList = new FrameList(this);
         // instanciate actions
         runFitAction = new RunFitAction(this);
 
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
-        rootSettingsModel = new SettingsModel();
+        rootSettingsModel = settingsModel;
 
         initComponents();
 
@@ -121,13 +98,14 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         framePanel = new FramePanel(this);
 
         ActionRegistrar actionRegistrar = ActionRegistrar.getInstance();
-        saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui", "saveModel");
-        closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.MFGui", "closeModel");
-
+        saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveModelAction", "saveModel");
+        closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
 
         // to permit modifier panel changes,
         // register as treeSelectionListener
         settingsTree.setModel(rootSettingsModel);
+        settingsTree.addTreeExpansionListener(rootSettingsModel);
+        settingsTree.addTreeWillExpandListener(rootSettingsModel);
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
@@ -138,17 +116,44 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         runFitButton.setAction(runFitAction);
 
-        //JScrollPane scrollPane = new JScrollPane(frameList);
-        //jPanel3.add(scrollPane);
         listScrollPane.setViewportView(frameList);
     }
 
     /**
      * DOCUMENT ME!
      */
-    public static void expandSettingsTree() {
+    public void expandSettingsTree() {
         // Next line does not work because node doesn't respond to treeNode interface
         //McsClass.expandAll(settingsTree,true);
+        expandAll(settingsTree, true);
+    }
+    // If expand is true, expands all nodes in the tree.
+    // Otherwise, collapses all nodes in the tree.
+
+    public void expandAll(JTree tree, boolean expand) {
+        TreeNode root = (TreeNode) tree.getModel().getRoot();
+
+        // Traverse tree from root
+        expandAll(tree, new TreePath(root), expand);
+    }
+
+    private void expandAll(JTree tree, TreePath parent, boolean expand) {
+        // Traverse children
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
+        if (node.getChildCount() >= 0) {
+            for (Enumeration e = node.children(); e.hasMoreElements();) {
+                TreeNode n = (TreeNode) e.nextElement();
+                TreePath path = parent.pathByAddingChild(n);
+                expandAll(tree, path, expand);
+            }
+        }
+
+        // Expansion or collapse must be done bottom-up
+        if (expand) {
+            tree.expandPath(parent);
+        } else {
+            tree.collapsePath(parent);
+        }
     }
 
     /**
@@ -284,6 +289,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             }
         }
         checkValidSettings();
+        expandSettingsTree();
     }
 
     /**
@@ -496,17 +502,17 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     public void genResultReport(SettingsModel settingsModel, Response response) {
-       JFrame resultFrame = new JFrame();
-            JPanel p = new JPanel();
-            p.setLayout(new BorderLayout());
-            resultFrame.getContentPane().add(p);
-            resultPanel.genReport(settingsModel);
-            JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
-            p.add(sp);
-            addPlot(resultFrame, "--New fit result--");
-            resultPanel.genPlots(settingsModel);
-            resultPanel.genPlots(UtilsClass.getResultFiles(response));
-            showElement(resultFrame);
+        JFrame resultFrame = new JFrame();
+        JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
+        resultFrame.getContentPane().add(p);
+        resultPanel.genReport(settingsModel);
+        JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
+        p.add(sp);
+        addPlot(resultFrame, "--New fit result--");
+        resultPanel.genPlots(settingsModel);
+        resultPanel.genPlots(UtilsClass.getResultFiles(response));
+        showElement(resultFrame);
     }
 
     protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
@@ -520,16 +526,16 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         public void actionPerformed(java.awt.event.ActionEvent e) {
             logger.fine("Requesting yoga '" + methodName + "' call");
 
-                try{
+            try {
                 Response r = ModelFitting.execMethod(methodName, null);
                 // Search model into return result
                 Model newModel = UtilsClass.getModel(r);
                 // Indicates to the rootSettingsModel list of availables models
                 rootSettingsModel.setSupportedModels(newModel.getModel());
-                }catch(Exception exc){
-                    new FeedbackReport(exc);
+            } catch (Exception exc) {
+                new FeedbackReport(exc);
 
-                }
+            }
         }
     }
 

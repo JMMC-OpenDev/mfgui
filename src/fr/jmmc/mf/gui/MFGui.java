@@ -5,6 +5,14 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.actions.SaveModelAction;
+import fr.jmmc.mf.gui.actions.ShowPrefAction;
+import fr.jmmc.mf.gui.actions.LoadDemoModelAction;
+import fr.jmmc.mf.gui.actions.LoadModelAction;
+import fr.jmmc.mf.gui.actions.GetYogaVersionAction;
+import fr.jmmc.mf.gui.actions.LoadRemoteModelAction;
+import fr.jmmc.mf.gui.actions.CloseModelAction;
+import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MainMenuBar;
@@ -14,13 +22,10 @@ import fr.jmmc.mcs.util.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import java.net.URL;
 
 import java.util.*;
 
-import java.util.logging.Level;
 import javax.swing.*;
-import javax.swing.JOptionPane;
 
 
 /**
@@ -54,14 +59,14 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     {
         instance                  = this;
         // instanciate actions       
-        getYogaVersionAction      = new GetYogaVersionAction();
+        getYogaVersionAction      = new GetYogaVersionAction(this);
        
-        new ShowPrefAction();
-        new NewModelAction();
-        new CloseModelAction();
-        new LoadModelAction();
-        new LoadRemoteModelAction();
-        saveModelAction=new SaveModelAction();
+        new ShowPrefAction(this);
+        new NewModelAction(this);
+        new CloseModelAction(this);
+        new LoadModelAction(this);
+        new LoadRemoteModelAction(this);
+        saveModelAction=new SaveModelAction(this);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
@@ -82,8 +87,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         // Handle status bar
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
-        setStatus("Application started");
-  
+        
         setTitle("ModelFitting V"+ModelFitting.getSharedApplicationDataModel().getProgramVersion());
 
         if (filenames.length >= 1)
@@ -91,7 +95,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             try
             {
                 java.io.File file = new java.io.File(filenames[0]);
-                addSettingsPane(new SettingsPane(file));
+                addSettings(new SettingsModel(file));
             }
             catch (Exception exc)
             {
@@ -100,6 +104,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         }
 
         pack();
+        fr.jmmc.mcs.gui.StatusBar.show("Application inited");
     }
 
     /**
@@ -117,29 +122,25 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         return plasticServer_;
     }
 
-   public void setStatus(String text)
-    {
-        statusBar.show(text);
-    }
-
-   private void addSettingsPane(SettingsPane p)
-    {
+   public void addSettings(SettingsModel settingsModel){
+        SettingsPane p = new SettingsPane(settingsModel);
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
+        fr.jmmc.mcs.gui.StatusBar.show("Settings loaded");
     }
 
-   private void closeSettingsPane(){
-       SettingsModel currentSettingsModel = getSelectedSettingsPane().getSettingsModel();
-       System.out.println("currentSettingsModel.isModified()="+currentSettingsModel.isModified());
+   
+   public void closeSettings(){
+       SettingsModel currentSettingsModel = getSelectedSettings();
        if( UtilsClass.askToSaveUserModification(currentSettingsModel) )
        {
           closeTab(tabbedPane_.getSelectedComponent());
+          StatusBar.show("Settings closed");
        }
    }
 
-
     /* This method return selectedPane or null . It also updates titles */
-   public SettingsPane getSelectedSettingsPane()
+   public SettingsModel getSelectedSettings()
     {
         int idx = tabbedPane_.getSelectedIndex();
 
@@ -158,7 +159,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
                 sp.rootSettingsModel.getAssociatedFilename());
         }
 
-        return sp;
+        return sp.getSettingsModel();
     }
 
    public static void closeTab(java.awt.Component c)
@@ -205,7 +206,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         int i=1;
         while (keys.hasMoreElements()){
             String title = (String)keys.nextElement();
-            action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title);
+            action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title,this);
             action.putValue(action.NAME, title);
             i++;                 
         }
@@ -326,63 +327,11 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         return UtilsClass.checkUserModificationToQuit(objs);
     }
 
-    protected class GetYogaVersionAction extends RegisteredAction
-    {
-        String methodName = "getYogaVersion";
-
-        public GetYogaVersionAction()
-        {
-            super(className_,"getYogaVersion");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.fine("Requesting yoga '" + methodName + "' call");
-
-            try
-            {
-                String v;
-                v=UtilsClass.getOutputMsg(ModelFitting.execMethod(methodName, null));
-                setStatus("Yoga version is '" + v.trim() + "'");
-            }
-            catch (Exception ex)
-            {
-                logger.warning(ex.getClass().getName() + " " + ex.getMessage());
-                setStatus("Can't get Yoga version");
-            }
-        }
-    }
-
-    protected class ShowPrefAction extends RegisteredAction
-    {
-        /** Preferences view */
-        PreferencesView preferencesView;
-
-        public ShowPrefAction()
-        {
-            super(className_,"showPreferences");
-            flagAsPreferenceAction();
-            preferencesView = new PreferencesView();
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            try
-            {
-                preferencesView.setVisible(true);
-                logger.fine("Showing preferences");
-            }
-            catch (Exception exc)
-            {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }   
-
     /**
      * Action which displays a window giving some information about
      * the state of the PLASTIC hub.
+     *
+     * this action must be refactored but it is leaved here without any idea
      */
     private class HubWatchAction extends MCSAction
     {
@@ -409,225 +358,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             }
 
             hubWindow_.setVisible(true);
-        }
-    }
-
-    protected class NewModelAction extends RegisteredAction
-    {
-        public String lastDir = System.getProperty("user.home");
-
-        public NewModelAction()
-        {
-            super(className_,"newModel");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-            addSettingsPane(new SettingsPane());
-            setStatus("New model ready for modifications");
-        }
-    }
-
-    protected class CloseModelAction extends RegisteredAction
-    {
-        public CloseModelAction()
-        {
-            super(className_,"closeModel");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-            closeSettingsPane();
-            setStatus("Old model closed");
-        }
-    }
-
-    protected class LoadModelAction extends RegisteredAction
-    {
-        public String lastDir = System.getProperty("user.home");
-
-        public LoadModelAction()
-        {
-            super(className_,"loadModel");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            try
-            {
-                JFileChooser fileChooser = new JFileChooser();
-
-                // Set in previous load directory
-                if (lastDir != null)
-                {
-                    fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-                }
-
-                // Open file chooser
-                int returnVal = fileChooser.showOpenDialog(null);
-
-                if (returnVal == JFileChooser.APPROVE_OPTION)
-                {
-                    java.io.File file = fileChooser.getSelectedFile();
-                    lastDir = file.getParent();
-                    addSettingsPane(new SettingsPane(file));
-                }
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
-        }
-    }
-
-    protected class LoadDemoModelAction extends RegisteredAction
-    {
-        String demoURL_ = "";
-
-        public LoadDemoModelAction(String id, String demoURL, String demoDesc)
-        {
-            super(className_, id, demoDesc);
-            this.putValue(Action.NAME, demoDesc);
-            demoURL_ = demoURL;
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            try
-            {
-                addSettingsPane(new SettingsPane(new URL(demoURL_)));
-            } catch (java.net.UnknownHostException ex) {
-            String msg="Network seems down. Can't contact host "+ex.getMessage();
-            javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            logger.log(Level.WARNING, ex.getMessage(), ex);
-            StatusBar.show("Error recovering demo setting");
-            return;
-        }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
-        }
-    }
-
-    protected class LoadRemoteModelAction extends RegisteredAction
-    {
-        public String lastURL = "";
-
-        public LoadRemoteModelAction()
-        {
-            super(className_,"loadRemoteModel");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            try
-            {
-                String s = (String) JOptionPane.showInputDialog("Enter URL of remote setting:", lastURL);
-
-                if ((s != null) && (s.length() > 5))
-                {
-                    lastURL = s;
-
-                    URL url = new URL(s);
-                    addSettingsPane(new SettingsPane(url));
-                }
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
-        }
-    }
-
-    protected class SaveModelAction extends RegisteredAction
-    {
-        private String lastDir = System.getProperty("user.home");
-
-        public SaveModelAction()
-        {
-            super(className_,"saveModel");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            try
-            {
-                // @todo replace next coede part by enable and disabled event asociated to actions...
-                if (getSelectedSettingsPane() == null)
-                {
-                    return;
-                }
-
-                SettingsModel settingsModel = getSelectedSettingsPane().rootSettingsModel;
-
-                java.io.File  file;
-                file                        = settingsModel.associatedFile;
-
-                // Open a filechooser in previous save directory
-                JFileChooser fileChooser = new JFileChooser();
-
-                if (lastDir != null)
-                {
-                    fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-                }
-
-                if (file != null)
-                {
-                    fileChooser.setSelectedFile(file);
-                }
-
-                fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + "?");
-
-                // Open filechooser
-                int returnVal = fileChooser.showSaveDialog(null);
-
-                if (returnVal == JFileChooser.APPROVE_OPTION)
-                {
-                    file = fileChooser.getSelectedFile();
-
-                    // Ask to overwrite
-                    if (file.exists())
-                    {
-                        String message = "File '" + file.getName() +
-                            "' already exists\nDo you want to overwrite this file?";
-
-                        // Modal dialog with yes/no button
-                        int answer = JOptionPane.showConfirmDialog(null, message);
-
-                        if (answer != JOptionPane.YES_OPTION)
-                        {
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    return;
-                }
-
-                lastDir = file.getParent();
-                // Fix user associated file and save it with result
-                settingsModel.setAssociatedFile(file);
-                settingsModel.saveSettingsFile(file, false);
-                /* ask to update title */
-                getSelectedSettingsPane();
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
         }
     }
     }
