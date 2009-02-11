@@ -10,23 +10,23 @@
     </dependences>
     <menubar>
         <menu label="File">
-            <menu label="New settings..." classpath="fr.jmmc.mf.gui.MFGui" action="newModel" accelerator="N"/>
+            <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"/>
             <menu/>
-            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.MFGui" action="loadModel" accelerator="O"/>
-            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.MFGui" action="closeModel" accelerator="W"/>
-            <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.MFGui" action="loadRemoteModel"/>
+            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"/>
+            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
+            <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel8"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel1"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel2"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel3"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel4"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel5"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel6"/>
-                <menu classpath="fr.jmmc.mf.gui.MFGui" action="demoModel7"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel8"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel4"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel5"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel6"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel7"/>
             </menu>
             <menu/>
-            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.MFGui" action="saveModel" accelerator="S"/>
+            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModel" accelerator="S"/>
         </menu>
     </menubar>
     <releasenotes>

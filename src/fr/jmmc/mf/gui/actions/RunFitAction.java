@@ -17,17 +17,18 @@ import javax.swing.JOptionPane;
 import javax.swing.text.Document;
 
 public class RunFitAction extends MCSAction {
+
     /** Main logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.actions.RunFitAction");
     String methodName = "runFit";
     ButtonModel iTMaxButtonModel = null;
     Document iTMaxDocument = null;
-    SettingsViewerInterface settingsViewer=null;
+    SettingsViewerInterface settingsViewer = null;
 
     public RunFitAction(SettingsViewerInterface settingsViewer) {
         super("runFit");
-        this.settingsViewer =settingsViewer;
+        this.settingsViewer = settingsViewer;
     }
 
     public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument) {
@@ -38,12 +39,12 @@ public class RunFitAction extends MCSAction {
     public void actionPerformed(ActionEvent e) {
         //@todo add support of ITMax optionnal parameter
 
-        String args="";
+        String args = "";
         if (iTMaxButtonModel.isSelected() && (iTMaxDocument.getLength() > 0)) {
             try {
                 args = "itmax=" + iTMaxDocument.getText(0, iTMaxDocument.getLength());
             } catch (Exception ex) {
-                logger.log(Level.SEVERE,"Can't read ITMax document",ex);
+                logger.log(Level.SEVERE, "Can't read ITMax document", ex);
             }
         }
 
@@ -87,7 +88,7 @@ public class RunFitAction extends MCSAction {
             settingsModel.setRootSettings(newModel);
             settingsModel.setLastXml(ModelFitting.getLastXmlResult());
             logger.info("Settings created");
-            settingsViewer.genResultReport(settingsModel,r);
+            settingsViewer.genResultReport(settingsModel, r);
         } catch (UnknownHostException ex) {
             String msg = "Network seems down. Can\'t contact host " + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
@@ -103,6 +104,6 @@ public class RunFitAction extends MCSAction {
             //setCursor(null);
             return;
         }
-        //setCursor(null);
+    //setCursor(null);
     }
 }
