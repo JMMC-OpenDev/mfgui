@@ -37,7 +37,7 @@ import fr.jmmc.oifits.validator.GUIValidator;
  *  - the treemodel to be used by the settingsPane tree
  *  - the modifyAndSaveObject to ensure that application save user modification on application exit
  */
-public class SettingsModel implements TreeModel, TreeExpansionListener, TreeWillExpandListener, ModifyAndSaveObject {
+public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
     /** list of supported models   */
     protected static Hashtable supportedModels = new Hashtable();
@@ -377,6 +377,7 @@ public class SettingsModel implements TreeModel, TreeExpansionListener, TreeWill
 
         // fire general change event
         fireTreeStructureChanged(rootSettings);
+
     }
 
     public Settings getRootSettings() {
@@ -862,24 +863,5 @@ public class SettingsModel implements TreeModel, TreeExpansionListener, TreeWill
          */
         new FeedbackReport();
         fireTreeNodesChanged(modifiedObject);
-    }
-
-    //////////////// TreeExpansionListener interface implementation ///////////////////////
-    public void treeExpanded(TreeExpansionEvent event) {
-        System.out.println("treeExpanded:"+event);
-    }
-
-    public void treeCollapsed(TreeExpansionEvent event) {
-        System.out.println("treeCollapsed:"+event);
-    }
-
-    //////////////// TreeWillExpandListener interface implementation ///////////////////////
-
-    public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-        System.out.println("treeWillExpand:"+event);
-    }
-
-    public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
-        System.out.println("treeWillCollapse:"+event);
     }
 }

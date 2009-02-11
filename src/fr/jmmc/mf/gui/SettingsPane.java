@@ -35,7 +35,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     public Action saveSettingsAction;
     public Action closeSettingsAction;
     /** Model reference */
-    public SettingsModel rootSettingsModel = null;
+    private SettingsModel rootSettingsModel = null;
 
     // List of viewer panel used to display sub components
     TargetsPanel targetsPanel;
@@ -50,6 +50,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     ResultPanel resultPanel;
     PlotPanel plotPanel;
     FramePanel framePanel;
+    JTree settingsTree;
 
     // adjusted to true after user modification
     protected boolean modified;
@@ -79,8 +80,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument());
 
+        settingsTree = new JTree();
         settingsTree.setMinimumSize(new Dimension(200, 200));
         settingsTree.setPreferredSize(new Dimension(200, 200));
+        settingsTreeScrollPane.getViewport().add(settingsTree);
 
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
 
@@ -104,8 +107,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         // to permit modifier panel changes,
         // register as treeSelectionListener
         settingsTree.setModel(rootSettingsModel);
-        settingsTree.addTreeExpansionListener(rootSettingsModel);
-        settingsTree.addTreeWillExpandListener(rootSettingsModel);
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
@@ -125,7 +126,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     public void expandSettingsTree() {
         // Next line does not work because node doesn't respond to treeNode interface
         //McsClass.expandAll(settingsTree,true);
-        expandAll(settingsTree, true);
+        //expandAll(settingsTree, true);
     }
     // If expand is true, expands all nodes in the tree.
     // Otherwise, collapses all nodes in the tree.
@@ -289,7 +290,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             }
         }
         checkValidSettings();
-        expandSettingsTree();
+        //expandSettingsTree();
     }
 
     /**
@@ -335,8 +336,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        settingsTree = new javax.swing.JTree();
+        settingsTreeScrollPane = new javax.swing.JScrollPane();
         controlPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         runFitButton = new javax.swing.JButton();
@@ -361,17 +361,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel2.setMinimumSize(new java.awt.Dimension(31, 168));
         jPanel2.setPreferredSize(new java.awt.Dimension(91, 168));
         jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        jScrollPane1.setBorder(null);
-
-        settingsTree.setMinimumSize(new java.awt.Dimension(200, 0));
-        jScrollPane1.setViewportView(settingsTree);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel2.add(jScrollPane1, gridBagConstraints);
+        jPanel2.add(settingsTreeScrollPane, gridBagConstraints);
 
         jSplitPane2.setTopComponent(jPanel2);
 
@@ -586,13 +582,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JScrollPane listScrollPane;
     private javax.swing.JPanel modifierPanel;
     private javax.swing.JButton runFitButton;
-    private javax.swing.JTree settingsTree;
+    private javax.swing.JScrollPane settingsTreeScrollPane;
     private javax.swing.JButton showPlotButton;
     // End of variables declaration//GEN-END:variables
 }
