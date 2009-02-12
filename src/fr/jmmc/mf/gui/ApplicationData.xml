@@ -27,6 +27,7 @@
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModel" accelerator="S"/>
+            <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
         </menu>
     </menubar>
     <releasenotes>

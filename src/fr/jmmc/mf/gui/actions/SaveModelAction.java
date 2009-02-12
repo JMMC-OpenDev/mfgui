@@ -17,10 +17,12 @@ public class SaveModelAction extends RegisteredAction {
 
     private String lastDir = System.getProperty("user.home");
     MFGui mfgui;
+    private boolean saveResult;
 
-    public SaveModelAction(MFGui mfgui) {
-        super(className, "saveModel");
+    public SaveModelAction(MFGui mfgui,String actionName, boolean saveResult) {
+        super(className, actionName);
         this.mfgui = mfgui;
+        this.saveResult=saveResult;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -59,7 +61,7 @@ public class SaveModelAction extends RegisteredAction {
             lastDir = file.getParent();
             // Fix user associated file and save it with result
             settingsModel.setAssociatedFile(file);
-            settingsModel.saveSettingsFile(file, false);
+            settingsModel.saveSettingsFile(file, saveResult);
             /* ask to update title */
             mfgui.getSelectedSettings();
         } catch (Exception exc) {

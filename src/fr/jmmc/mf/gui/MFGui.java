@@ -66,7 +66,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         new CloseModelAction(this);
         new LoadModelAction(this);
         new LoadRemoteModelAction(this);
-        saveModelAction=new SaveModelAction(this);
+        // @todo use a preference to choose from one of the two following for default saveaction
+        saveModelAction=new SaveModelAction(this, "saveModel", false);
+        new SaveModelAction(this, "saveModelWithResults", true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
@@ -128,7 +130,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         tabbedPane_.setSelectedComponent(p);
         fr.jmmc.mcs.gui.StatusBar.show("Settings loaded");
     }
-
    
    public void closeSettings(){
        SettingsModel currentSettingsModel = getSelectedSettings();

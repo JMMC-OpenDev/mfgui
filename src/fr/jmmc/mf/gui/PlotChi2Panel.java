@@ -52,12 +52,12 @@ public class PlotChi2Panel extends javax.swing.JPanel
             Parameter p = (Parameter) params[i];
             if (!p.getHasFixedValue()){
                 xComboBox.addItem(p);
-                if(oldXParam==p){
-                    xComboBox.setSelectedIndex(i);
+                if(oldXParam.getName().equals(p.getName())){
+                    xComboBox.setSelectedItem(p);
                 }
                 yComboBox.addItem(p);
-                if(oldYParam==p){
-                    yComboBox.setSelectedIndex(i);
+                if(oldYParam.getName().equals(p.getName())){
+                    yComboBox.setSelectedItem(p);
                 }
             }
         }
