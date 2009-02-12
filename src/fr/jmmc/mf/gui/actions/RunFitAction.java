@@ -65,29 +65,7 @@ public class RunFitAction extends MCSAction {
                 //setCursor(null);
                 return;
             }
-            Settings prevModel = settingsModel.getRootSettings();
-            // add href from previous files
-            fr.jmmc.mf.models.File[] newFiles = newModel.getFiles().getFile();
-            fr.jmmc.mf.models.File[] prevFiles = prevModel.getFiles().getFile();
-            // no check is done to assert that every newFile have been updated
-            for (int i = 0; i < newFiles.length; i++) {
-                fr.jmmc.mf.models.File newFile = newFiles[i];
-                String newId = newFile.getId();
-                for (int j = 0; j < prevFiles.length; j++) {
-                    fr.jmmc.mf.models.File prevFile = prevFiles[j];
-                    String prevId = prevFile.getId();
-                    if (prevId.equals(newId)) {
-                        newFile.setHref(prevFile.getHref());
-                        Oitarget[] oitargets = prevFile.getOitarget();
-                        for (int k = 0; k < oitargets.length; k++) {
-                            newFile.addOitarget(oitargets[k]);
-                        }
-                    }
-                }
-            }
-            settingsModel.setRootSettings(newModel);
-            settingsModel.setLastXml(ModelFitting.getLastXmlResult());
-            logger.info("Settings created");
+            settingsModel.updateWithNewSettings(newModel);
             settingsViewer.genResultReport(settingsModel, r);
         } catch (UnknownHostException ex) {
             String msg = "Network seems down. Can\'t contact host " + ex.getMessage();

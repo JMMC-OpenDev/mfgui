@@ -1,8 +1,8 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.actions.GetModelListAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.actions.RunFitAction;
-import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.models.*;
@@ -31,7 +31,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     // Application actions
     public static RunFitAction runFitAction;
-    public Action getModelListAction = new GetModelListAction();
+    public Action getModelListAction;
     public Action saveSettingsAction;
     public Action closeSettingsAction;
     /** Model reference */
@@ -71,6 +71,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         frameList = new FrameList(this);
         // instanciate actions
         runFitAction = new RunFitAction(this);
+        getModelListAction = new GetModelListAction(settingsModel);
 
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
@@ -161,7 +162,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * Responds to tree selection events.
      */
     public void valueChanged(TreeSelectionEvent e) {
-        logger.entering("" + this.getClass(), "valueChanged");
+        logger.entering("" + this.getClass(), "valueChanged",e);
 
         Object o = e.getPath().getLastPathComponent();
         if (e.getNewLeadSelectionPath() != null) {
@@ -171,7 +172,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     public void showElement(Object o) {
-        logger.entering("" + this.getClass(), "showElement");
+        logger.entering("" + this.getClass(), "showElement",o);
 
         if (o == null) {
             return;
@@ -208,7 +209,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * @param o the object you want to be displayed.
      */
     public void showSettingElement(Object o) {
-        logger.entering("" + this.getClass(), "showSettingElement");
+        logger.entering("" + this.getClass(), "showSettingElement",o);
 
         if (o == null) {
             return;
@@ -509,30 +510,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         resultPanel.genPlots(settingsModel);
         resultPanel.genPlots(UtilsClass.getResultFiles(response));
         showElement(resultFrame);
-    }
-
-    protected class GetModelListAction extends fr.jmmc.mcs.util.MCSAction {
-
-        String methodName = "getModelList";
-
-        public GetModelListAction() {
-            super("getModelList");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.fine("Requesting yoga '" + methodName + "' call");
-
-            try {
-                Response r = ModelFitting.execMethod(methodName, null);
-                // Search model into return result
-                Model newModel = UtilsClass.getModel(r);
-                // Indicates to the rootSettingsModel list of availables models
-                rootSettingsModel.setSupportedModels(newModel.getModel());
-            } catch (Exception exc) {
-                new FeedbackReport(exc);
-
-            }
-        }
     }
 
     // Cell renderer used by the settings tree

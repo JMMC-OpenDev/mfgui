@@ -403,11 +403,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         for (int i = 0; i < indices.length; i++)
         {
             int indice = indices[i] - i;
-            current.removeModel(indice);
+            rootSettingsModel.removeModel(current, (Model)modelList.getSelectedValue());
         }
-        // fire tree event to refresh
-        settingsViewer.getSettingsModel().fireUpdate();
-
         removeModelButton.setEnabled(false);
         refresh();
     }//GEN-LAST:event_removeModelButtonActionPerformed
@@ -432,41 +429,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         try
         {
             // Construct a new copy
-            Model        selected = (Model) modelTypeComboBox.getSelectedItem();
+            Model        selectedModel = (Model) modelTypeComboBox.getSelectedItem();
             Model        m;
-
+            // Clone selected Model (this code could have been moved into model???
             StringWriter writer   = new StringWriter();
-            selected.marshal(writer);
+            selectedModel.marshal(writer);
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
 
-            // force another name with unique position            
-            String type     = selected.getType();
-            m.setName(rootSettingsModel.getNewModelName(type));
-
-            boolean firstModel = current.getModelCount()==0;
-
-            // and change parameters name also
-            Parameter[] params = m.getParameter();
-            for (int i = 0; i < params.length; i++)
-            {
-                Parameter p = params[i];
-                // init some parameters of first elements
-                if( firstModel){
-                    if( p.getName().equals("x") || p.getName().equals("y") ){
-                        p.setHasFixedValue(true);
-                    }
-                    if (p.getName().equals("flux_weight")){
-                        p.setValue(1);
-                    }
-                }
-                p.setName(rootSettingsModel.getNewParamName(p.getName()));
-            }
-
-            // add the new element to current target
-            current.addModel(m);
-            // fire tree event to refresh
-            settingsViewer.getSettingsModel().fireUpdate();
+            rootSettingsModel.addModel(current, m);
             refresh();
         }
         catch (Exception e)
