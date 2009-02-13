@@ -131,11 +131,6 @@ public class FilesPanel extends javax.swing.JPanel
     } // </editor-fold>//GEN-END:initComponents
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void fileListMouseClicked(java.awt.event.MouseEvent evt)
     {
         if (evt.getClickCount() == 2)

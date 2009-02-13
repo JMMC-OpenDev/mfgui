@@ -44,7 +44,12 @@ public class PlotModelPanel extends javax.swing.JPanel
     public void show(SettingsModel s)
     {
         settingsModel = s;
-        targetComboBox.setModel(s.getTargetComboBoxModel());
+        Object[] targets = s.getTargetListModel().toArray();
+        targetComboBox.removeAllItems();
+        for (int i = 0; i < targets.length; i++) {
+            Object object = targets[i];
+            targetComboBox.addItem(object);
+        }
         boolean hasOneTarget = targetComboBox.getItemCount()!=0;
         plotImageButton.setEnabled(hasOneTarget);
         plotSnifferMapButton.setEnabled(hasOneTarget);
