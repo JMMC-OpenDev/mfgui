@@ -131,9 +131,9 @@ public class TargetsPanel extends javax.swing.JPanel {
 //GEN-FIRST:event_addTargetButtonActionPerformed
     private void addTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String targetIdent = "" + targetNameComboBox.getSelectedItem();
-        rootSettingsModel.addTarget(targetIdent);
+        
         // display view of added target automatically 
-        settingsViewer.showSettingElement(targetIdent);
+        settingsViewer.showSettingElement(rootSettingsModel.addTarget(targetIdent));
     }//GEN-LAST:event_addTargetButtonActionPerformed
 //GEN-FIRST:event_targetListValueChanged
     private void targetListValueChanged(javax.swing.event.ListSelectionEvent evt) {

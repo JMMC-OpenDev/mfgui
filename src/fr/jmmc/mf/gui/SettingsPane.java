@@ -194,6 +194,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
                     "' objects"));
+            new Throwable("missing modifier panel for '" + o.getClass()).printStackTrace();
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();
@@ -249,6 +250,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
                     "' objects"));
+            new Throwable("missing modifier panel for '" + o.getClass()).printStackTrace();
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();

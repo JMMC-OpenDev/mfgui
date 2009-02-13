@@ -116,6 +116,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      */
     public void addModel(Target parentTarget, Model newModel) {
         logger.entering(className, "addModel", new Object[]{parentTarget, newModel});
+        setModified(true);
+
         // force another name with unique position
         String type = newModel.getType();
         newModel.setName(getNewModelName(type));
@@ -140,7 +142,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         // add the new element to current target
         parentTarget.addModel(newModel);
-
         fireTreeNodesInserted(parentTarget,
                 new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
                 new int[]{parentTarget.getModelCount()},
@@ -150,6 +151,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
     public void removeModel(Target parentTarget, Model oldModel) {
         logger.entering(className, "removeModel", new Object[]{parentTarget, oldModel});
+        setModified(true);
         Model[] models = parentTarget.getModel();
         for (int i = 0; i < models.length; i++) {
             Model model = models[i];
@@ -166,6 +168,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
     public void removeTarget(Target oldTarget) {
         logger.entering(className, "removeTarget", new Object[]{oldTarget});
+        setModified(true);
+
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
         fireTreeNodesRemoved(rootSettings.getTargets(),
                 new Object[]{rootSettings, rootSettings.getTargets()},
@@ -175,8 +179,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.getTargets().removeTarget(indice);
     }
 
-    public void addTarget(String targetIdent) {
+    public Target addTarget(String targetIdent) {
         logger.entering(className, "addTarget", new Object[]{targetIdent});
+        setModified(true);
 
         Target newTarget = new Target();
         newTarget.setIdent(targetIdent);
@@ -197,6 +202,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
                 new Object[]{newTarget});
+        
+        return newTarget;
     }
 
     public void init() {
@@ -314,7 +321,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public boolean isModified() {
         logger.entering(className, "isModified");
         logger.finest("isModified=" + isModified);
-
         return isModified;
     }
 
