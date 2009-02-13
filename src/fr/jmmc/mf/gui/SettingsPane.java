@@ -359,6 +359,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setResizeWeight(1.0);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
         jPanel2.setMinimumSize(new java.awt.Dimension(31, 168));

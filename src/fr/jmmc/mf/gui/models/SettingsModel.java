@@ -105,7 +105,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         setRootSettings(newModel);
         setModified(false);
         associatedFile = new java.io.File(urlToLoad.getFile());
-
     }
 
     /**
@@ -198,6 +197,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         int indice = rootSettings.getTargets().getTargetCount();
         rootSettings.getTargets().addTarget(newTarget);
         targetListModel.addElement(newTarget);
+
         fireTreeNodesInserted(rootSettings.getTargets(),
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
@@ -469,6 +469,21 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         return MFGui.getInstance();
     }
 
+    public void updateOiTargetList(){
+        oiTargets.removeAllElements();
+        File [] files = rootSettings.getFiles().getFile();
+        for (int i = 0; i < files.length; i++) {
+            File f = files[i];
+            for (int j = 0; j < f.getOitargetCount(); j++) {
+                String t = f.getOitarget(j).getTarget();
+                if (oiTargets.getIndexOf(t) < 0) {
+                    oiTargets.addElement(t);
+                    addFileListModelForOiTarget(f.getOitarget(j), f);
+                }                
+            }
+        }
+    }
+
     public void setRootSettings(Settings newRootModel) {
         logger.entering(className, "setRootSettings");
         rootSettings = newRootModel;
@@ -476,24 +491,13 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         // clear list of files, oitargets, target and fileListModels
         // then add settings ones
         allFilesListModel.clear();
-        oiTargets.removeAllElements();
         fileListModels.clear();
-
-        for (int i = 0; i < rootSettings.getFiles().getFileCount(); i++) {
-            File f = rootSettings.getFiles().getFile(i);
-            allFilesListModel.addElement(f);
-
-            for (int j = 0; j < f.getOitargetCount(); j++) {
-                String t = f.getOitarget(j).getTarget();
-
-                if (oiTargets.getIndexOf(t) < 0) {
-                    oiTargets.addElement(t);
-                }
-
-                addFileListModelForOiTarget(f.getOitarget(j), f);
-            }
+        File[] files = rootSettings.getFiles().getFile();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            allFilesListModel.addElement(file);
         }
-
+        updateOiTargetList();
         targetListModel.clear();
         parameterListModel.clear();
         targetComboBoxModel.removeAllElements();
@@ -578,44 +582,38 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public void addFile(java.io.File fileToAdd) throws Exception {
         logger.entering(className, "addFile");
 
-        // Try to add list to comboModel if it is not already inside the listModel
-        if (!allFilesListModel.contains(fileToAdd)) {
-            // The file must be one oidata file            
-            String fitsFileName = fileToAdd.getAbsolutePath();
-            File newFile = new File();
-            newFile.setName(fitsFileName);
-            newFile.setId(getNewFileId());
-            if (checkFile(newFile)) {
-                // make shorter filename (this line must be kept after checkFile,
-                // because is must be retrieved using full qualified name)
-                newFile.setName(fileToAdd.getName());
-
-                // test succedded let's continue
-                rootSettings.getFiles().addFile(newFile);
-                logger.info("'" + fitsFileName + "' oifile added to file list");
-
-                // fire modifications!
-                fireUpdate();
-                /*
-                 *@todo return a invalidFormat exception instead of Simple exception
-                }catch(Exception exc){
-                logger.warning("Rejecting non valid file '"+fileToAdd.getAbsolutePath()+"'");
-                throw new ...
-                }
-                 */
-                setModified(true);
-            }
-        } else {
-            logger.warning("File '" + fileToAdd.getAbsolutePath() + "' already present");
+        Files files = rootSettings.getFiles();
+        // The file must be one oidata file
+        String fitsFileName = fileToAdd.getAbsolutePath();
+        File newFile = new File();
+        newFile.setName(fitsFileName);
+        newFile.setId(getNewFileId());
+        if (checkFile(newFile)) {
+            // make shorter filename (this line must be kept after checkFile,
+            // because is must be retrieved using full qualified name)
+            newFile.setName(fileToAdd.getName());
+            allFilesListModel.addElement(newFile);
+            int idx = files.getFileCount();
+            rootSettings.getFiles().addFile(newFile);
+            updateOiTargetList();
+            logger.info("'" + fitsFileName + "' oifile added to file list");
+            setModified(true);
+            fireTreeNodesInserted(files,
+                    new Object[]{rootSettings, files},
+                    new int[]{idx},
+                    new Object[]{newFile});
+        /*@todo return a invalidFormat exception instead of Simple exception
+        }catch(Exception exc){
+        logger.warning("Rejecting non valid file '"+fileToAdd.getAbsolutePath()+"'");
+        throw new ...
+        }*/
         }
     }
 
     // @todo place this method into fr.jmmc.mf.util
     public void addFileHref(File bindedFile) throws Exception {
         logger.entering(className, "addFileHref");
-
         java.io.File realFile = new java.io.File(bindedFile.getName());
-
         // Create a read-only memory-mapped file
         java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(realFile, "r").getChannel();
         java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
@@ -625,9 +623,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         bindedFile.setHref(b64);
     }
 
-    public void addFileOiTargets(File bindedFile) throws Exception {
+   /* public void addFileOiTargets(File bindedFile) throws Exception {
         logger.entering(className, "addFileOiTarget");
-    }
+    }*/
 
     // @todo place this method into fr.jmmc.mf.util
     public boolean checkFile(File bindedFile) throws Exception {
@@ -789,7 +787,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         for (int i = 0; i < models.length; i++) {
             Model newModel = models[i];
             supportedModelsModel.addElement(newModel);
-            logger.info("Adding supported model:" + newModel.getType());
+            logger.fine("Adding supported model:" + newModel.getType());
             supportedModels.put(newModel.getType(), newModel);
         }
     }
