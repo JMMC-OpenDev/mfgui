@@ -7,6 +7,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mf.gui.models.ResultModel;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
 import java.awt.BorderLayout;
@@ -29,87 +30,23 @@ public class ResultPanel extends javax.swing.JPanel {
      */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ResultPanel");
-    static Action plotBaselinesAction;
-    static Action plotUVCoverageAction;
-    static Action plotRadialVisAction;
-    static Action plotRadialT3Action;
-    static Action plotImageAction;
-    Result current;
+    ResultModel current;
     SettingsViewerInterface viewer = null;
     SettingsModel settingsModel = null;
-    String htmlReport = null;
-
+ 
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer) {
         this.viewer = viewer;
-        /* actions must be inited before component init */
-        plotBaselinesAction = new PlotAction("plotBaselines");
-        plotUVCoverageAction = new PlotAction("plotUVCoverage");
-        plotRadialVisAction = new PlotAction("plotRadialVIS");
-        plotRadialT3Action = new PlotAction("plotRadialT3");
         initComponents();
     }
 
-    public void show(Result r, SettingsModel s) {
+    public void show(ResultModel r, SettingsModel s) {
         logger.entering("" + this.getClass(), "show");
         current = r;
         settingsModel = s;
         resultEditorPane.setContentType("text/html");
-        if (htmlReport==null){
-            s.setLastXml(null);
-            genReport(s);
-        }
-        resultEditorPane.setText(htmlReport);
+        resultEditorPane.setText(r.getHtmlReport());
         resultEditorPane.setCaretPosition(0);
-    }
-
-    public void genReport(SettingsModel s) {
-        logger.entering("" + this.getClass(), "genReport");
-        try {
-            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
-            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
-            htmlReport = UtilsClass.xsl(s.getLastXml(), url, null);
-        } catch (Exception exc) {
-            htmlReport = "<html>Error during report generation.</html>";
-            new FeedbackReport(null, true, exc);
-        }
-    }
-
-    public String getReport() {
-        logger.entering("" + this.getClass(), "getReport");
-        return htmlReport;
-    }
-
-    public void genPlots(SettingsModel s) {
-        logger.entering("" + this.getClass(), "genPlots");
-
-        settingsModel = s;
-        plotBaselinesAction.actionPerformed(null);
-        plotUVCoverageAction.actionPerformed(null);
-        plotRadialVisAction.actionPerformed(null);
-        plotRadialT3Action.actionPerformed(null);
-    }
-
-    void genPlots(ResultFile[] resultFiles) {
-        for (int i = 0; i < resultFiles.length; i++) {
-            try {
-                ResultFile r = resultFiles[i];
-                ResultFile pdf = null;
-                if (r.getHref().substring(1, 30).contains("png")) {
-                    for (int j = 0; j < resultFiles.length; j++) {
-                        ResultFile r2 = resultFiles[j];
-                        String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
-                        if (r.getName().startsWith(filenameWOExt) && r2.getName().endsWith("pdf")) {
-                            pdf = r2;
-                        }
-                    }
-                    //frame.setVisible(true);
-                    viewer.addPlot(PlotPanel.buildFrameOf(r, pdf), r.getDescription());
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ResultPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     /** This method is called from within the constructor to
@@ -139,57 +76,6 @@ public class ResultPanel extends javax.swing.JPanel {
 
         add(jScrollPane1);
     }// </editor-fold>//GEN-END:initComponents
-
-    /** Plots using ptplot widgets */
-    protected void ptplot(String plotName) {
-        logger.entering("" + this.getClass(), "ptplot");
-
-        String xmlStr = null;
-
-        try {
-            // Contruct xml document to plot
-            java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
-            xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
-                    new String[]{"plotName", plotName});
-
-            PlotMLParser plotMLParser;
-            // Construct plot and parse xml
-            Plot plot = new Plot();
-            plotMLParser = new PlotMLParser(plot);
-            plotMLParser.parse(null, xmlStr);
-
-            // Show plot into frame
-            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
-
-            viewer.addPlot(plotMLFrame, plotName);
-
-            logger.finest("plot ready to be shown");
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
-        }
-    }
-
-    protected class PlotAction extends fr.jmmc.mcs.util.MCSAction {
-
-        String plotName;
-
-        /* plotName must correcspond to a resource action and one xslt template */
-        public PlotAction(String plotName) {
-            super(plotName);
-            this.plotName = plotName;
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            if (plotName.equals("plotBaselines") || plotName.equals("plotUVCoverage") ||
-                    plotName.startsWith("plotRadial")) {
-                ptplot(plotName);
-            } else {
-                logger.severe("Code does not handle the following plot name : " + plotName);
-            }
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;

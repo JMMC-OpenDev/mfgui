@@ -102,7 +102,7 @@ public class TargetsPanel extends javax.swing.JPanel {
 //GEN-FIRST:event_targetListMouseClicked
     private void targetListMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
-            settingsViewer.showSettingElement(targetList.getSelectedValue());
+            settingsViewer.showElement(targetList.getSelectedValue());
         }
     }//GEN-LAST:event_targetListMouseClicked
 
@@ -133,7 +133,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         String targetIdent = "" + targetNameComboBox.getSelectedItem();
         
         // display view of added target automatically 
-        settingsViewer.showSettingElement(rootSettingsModel.addTarget(targetIdent));
+        settingsViewer.showElement(rootSettingsModel.addTarget(targetIdent));
     }//GEN-LAST:event_addTargetButtonActionPerformed
 //GEN-FIRST:event_targetListValueChanged
     private void targetListValueChanged(javax.swing.event.ListSelectionEvent evt) {

@@ -61,7 +61,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public void refresh()
     {
         settingsViewer.getSettingsModel().fireUpdate();
-        settingsViewer.showSettingElement(current);
+        settingsViewer.showElement(current);
     }
 
     /**
@@ -382,7 +382,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         if (evt.getClickCount() == 2)
         {
-            settingsViewer.showSettingElement(modelList.getSelectedValue());
+            settingsViewer.showElement(modelList.getSelectedValue());
         }
     }//GEN-LAST:event_modelListMouseClicked
 
@@ -390,7 +390,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     {//GEN-FIRST:event_fileListMouseClicked
         if (evt.getClickCount() == 2)
         {
-            settingsViewer.showSettingElement(fileList.getSelectedValue());
+            settingsViewer.showElement(fileList.getSelectedValue());
         }
     }//GEN-LAST:event_fileListMouseClicked
 
