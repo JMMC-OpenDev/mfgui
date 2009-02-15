@@ -304,7 +304,7 @@ public class ModelPanel extends javax.swing.JPanel
     private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_nameTextFieldActionPerformed
         logger.entering("" + this.getClass(), "nameTextFieldActionPerformed");
-        current.setName(nameTextField.getText());
+        settingsModel.setModelName(current, nameTextField.getText());
     }//GEN-LAST:event_nameTextFieldActionPerformed
 
     private void parametersTableMouseClicked(java.awt.event.MouseEvent evt)

@@ -84,7 +84,8 @@ public class PlotPanel extends javax.swing.JPanel
                     pdfResultFile=r;
                 }
             }
-            viewer.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
+
+            //@todo recode next part viewer.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
 
         } catch (java.net.UnknownHostException ex) {
             String msg="Network seems down. Can't contact host "+ex.getMessage();
@@ -103,7 +104,8 @@ public class PlotPanel extends javax.swing.JPanel
                     v=null;
                     v.setTitle(title);
                     v.setSize(400, 400);
-                    viewer.addPlot(v, title);
+
+                    //@todo recode next part viewer.addPlot(v, title);
                 } catch (Exception ex) {
                     logger.log(Level.WARNING, "Cant read with imageViewer", ex);
                     String msg = "Error processing result";
@@ -120,7 +122,20 @@ public class PlotPanel extends javax.swing.JPanel
         File f;
         JLabel label;
         JButton b;
-        JFrame frame = new JFrame();
+        String desc=pngResultFile.getDescription();
+        if(desc.length()<1){
+            desc=pngResultFile.getName();
+            if(desc.length()<1){
+            desc="Plot";
+         }
+        }
+        final String d=desc;
+        JFrame frame = new JFrame(){
+            @Override
+            public String toString(){
+                return d;
+            }
+        };
         JPanel p = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));

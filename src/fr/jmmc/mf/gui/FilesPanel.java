@@ -141,7 +141,7 @@ public class FilesPanel extends javax.swing.JPanel
             }
             else
             {
-                settingsViewer.showSettingElement(fileList.getSelectedValue());
+                settingsViewer.showElement(fileList.getSelectedValue());
             }
         }
     } // </editor-fold>                              
@@ -186,7 +186,7 @@ public class FilesPanel extends javax.swing.JPanel
                     }
 
                     lastDir = files[0].getParent();
-                    settingsViewer.showSettingElement(settingsModel.getRootSettings());
+                    settingsViewer.showElement(settingsModel.getRootSettings());
                 }
             }
             catch (Exception exc)
