@@ -27,11 +27,11 @@ public class PlotModelPanel extends javax.swing.JPanel
     {
         targetComboBox.setVisible(false);
         targetLabel.setVisible(false);
+        show(s);
         if (t != null)
         {
             targetComboBox.setSelectedItem(t);
         }
-        show(s);                
     }
 
     public void show(SettingsModel s)
