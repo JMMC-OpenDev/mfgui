@@ -39,6 +39,8 @@ import fr.jmmc.oifits.validator.GUIValidator;
  * It implements:
  *  - the treemodel to be used by the settingsPane tree
  *  - the modifyAndSaveObject to ensure that application save user modification on application exit
+ *
+ *
  */
 public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
@@ -68,6 +70,11 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     /** Store a reference over the associated local file */
     public java.io.File associatedFile = null;
     private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
+    private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots"){
+        public String toString(){
+            return "Plots";
+        }
+    };
 
     /**
      * Creates a new empty SettingsModel object.
@@ -109,6 +116,27 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
+
+    public void addPlot(JFrame frame, final String title) {
+        final String descStr=title;
+        DefaultMutableTreeNode newPlotNode = new DefaultMutableTreeNode(frame){
+            @Override
+            public String toString(){
+                return descStr;
+            }
+        };
+        plotContainerNode.add(newPlotNode);
+        fireTreeNodesInserted(this,
+                new Object[]{rootSettings, plotContainerNode},
+                new int[]{plotContainerNode.getChildCount()-1},
+                new Object[]{newPlotNode});
+    }
+
+    public void setPlotPanel(PlotPanel plotPanel){
+        logger.entering(className, "setPlotPanel", new Object[]{plotPanel});
+        plotContainerNode.setUserObject(plotPanel);
+    }
+
     /**
      * Add the given model to the given target.
      * The model will change parameter name
@@ -143,11 +171,10 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         // add the new element to current target
         parentTarget.addModel(newModel);
-        fireTreeNodesInserted(parentTarget,
+        fireTreeNodesInserted(this,
                 new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
                 new int[]{parentTarget.getModelCount()},
                 new Object[]{newModel});
-
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
@@ -157,7 +184,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         for (int i = 0; i < models.length; i++) {
             Model model = models[i];
             if (model == oldModel) {
-                fireTreeNodesRemoved(parentTarget,
+                fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
                         new int[]{getIndexOfChild(parentTarget, oldModel)},
                         new Object[]{oldModel});
@@ -172,7 +199,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         setModified(true);
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
-        fireTreeNodesRemoved(rootSettings.getTargets(),
+        fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
                 new Object[]{oldTarget});
@@ -200,7 +227,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         rootSettings.getTargets().addTarget(newTarget);
         targetListModel.addElement(newTarget);
 
-        fireTreeNodesInserted(rootSettings.getTargets(),
+        fireTreeNodesInserted(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
                 new Object[]{newTarget});
@@ -284,7 +311,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     public void setModelName(Model model, String newName) {
         model.setName(newName);
         Target parentTarget = getParent(model);
-        fireTreeNodesChanged(model,
+        fireTreeNodesChanged(this,
                 new Object[]{rootSettings},
                 new int[]{getIndexOfChild(rootSettings.getTargets(), parentTarget)},
                 new Object[]{model});
@@ -343,6 +370,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         }
         return rm;
     }
+
     /**
      * Call setModified(true) to declare that something internally changed.
      * setModified(false) should be called only after a disk save.
@@ -443,12 +471,11 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
 
         // update results
         Result[] newResults = newSettings.getResults().getResult();
+
+        boolean firstResult=false;
         // if we are receiving the first result(s)
         if (newResults.length > 0 && rootSettings.getResults().getResultCount() == 0) {
-            fireTreeNodesInserted(rootSettings.getResults(),
-                    new Object[]{rootSettings},
-                    new int[]{getIndexOfChild(rootSettings, rootSettings.getResults())},
-                    new Object[]{rootSettings.getResults()});
+            firstResult=true;
         }
         int nbResults = rootSettings.getResults().getResultCount();
         for (int i = 0; i < newResults.length; i++) {
@@ -456,13 +483,20 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             if (result != null) {
                 rootSettings.getResults().addResult(result);
                 ResultModel r = getModel(result);
-                fireTreeNodesInserted(r,
+                fireTreeNodesInserted(this,
                         new Object[]{rootSettings, rootSettings.getResults()},
                         new int[]{i + nbResults},
                         new Object[]{r});
             } else {
                 logger.warning("found null result while updating with new settings");
             }
+        }
+        if(firstResult){
+                fireTreeNodesInserted(this,
+                    new Object[]{rootSettings},
+                    new int[]{getIndexOfChild(rootSettings, rootSettings.getResults())},
+                    new Object[]{rootSettings.getResults()});
+
         }
     }
 
@@ -631,7 +665,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             updateOiTargetList();
             logger.info("'" + fitsFileName + "' oifile added to file list");
             setModified(true);
-            fireTreeNodesInserted(files,
+            fireTreeNodesInserted(this,
                     new Object[]{rootSettings, files},
                     new int[]{idx},
                     new Object[]{newFile});
@@ -889,6 +923,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
     protected void fireTreeNodesInserted(Object source, Object[] path,
             int[] childIndices,
             Object[] children) {
+        logger.entering(className, "fireTreeNodesInserted", new Object[]{source, path, children});
         TreeModelEvent e = new TreeModelEvent(source, path,
                 childIndices, children);
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -944,14 +979,30 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             // select which settings child it is
             if (index == 0) {
                 return s.getFiles();
-            } else if (index == 1) {
+            }
+            if (index == 1) {
                 return s.getTargets();
-            } else if ((index == 2) && (s.getParameters().getParameterCount() >= 1)) {
-                return s.getParameters();
-            } else if ((index == 2) && (s.getParameters().getParameterCount() == 0)) {
-                return s.getResults();
-            } else if (index == 3) {
-                return s.getResults();
+            }
+            if (index == 2) {
+                if (s.getParameters() != null) {
+                    if (s.getParameters().getParameterCount() != 0) {
+                        return s.getParameters();
+                    }
+                }
+            }
+            // if given index was 2 and no parameter is shared then return results
+            // if given index was 3 and no parameter is shared then return plotContainer
+            if (s.getParameters() != null && s.getParameters().getParameterCount()==0){
+                 index++;
+            }
+            if (index == 3) {
+                if (s.getResults()!=null && s.getResults().getResultCount()!=0){
+                    return s.getResults();
+                }
+                index++;
+            }
+            if (index == 4) {
+                return plotContainerNode;
             } else {
                 logger.warning("This line must not occur");
                 return "??";
@@ -972,10 +1023,9 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         } else if (parent instanceof Results) {
             Result r = ((Results) parent).getResult(index);
             return getModel(r);
-        } else {
-            logger.warning("child n=" + index + " of " + parent + " is not handled");
-            return "unknown " + parent + ".child[" + index + "]";
         }
+        logger.warning("child n=" + index + " of " + parent + " is not handled");
+        return "unknown " + parent + ".child[" + index + "]";
     }
 
     /**
@@ -987,18 +1037,17 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             return ((TreeNode) parent).getChildCount();
         } else if (parent instanceof Settings) {
             Settings s = (Settings) parent;
-            // return files, targets, and parameters
-            int i = 1;
-            if (s.getFiles().getFileCount() >= 1) {
-                i++;
-            }
+            // return files, targets, [parameters][results]plots
+            int i = 3;
             if (s.getParameters() != null) {
                 if (s.getParameters().getParameterCount() >= 1) {
                     i++;
                 }
             }
             if (s.getResults() != null) {
+                if (s.getResults().getResultCount()!=0){
                 i++;
+                }
             }
             return i;
         } else if (parent instanceof Files) {
@@ -1018,6 +1067,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         } else {
             return 1;
         }
+
     }
 
     /**
@@ -1041,6 +1091,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                 return idx;
             }
             idx++;
+
             if (child == rootSettings.getParameters()) {
                 return idx;
             }
@@ -1049,14 +1100,27 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                     idx++;
                 }
             }
+
             if (child == rootSettings.getResults()) {
                 return idx;
             }
+
+            if (rootSettings.getResults() != null) {
+                if (rootSettings.getResults().getResultCount() >= 1) {
+                    idx++;
+                }
+            }
+            
+            if (child == plotContainerNode) {
+                return idx;
+            }
+
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getFiles()) {
             File[] elements = rootSettings.getFiles().getFile();
-            for (int i = 0; i < elements.length; i++) {
+            for (int i = 0; i <
+                    elements.length; i++) {
                 File element = elements[i];
                 if (element == child) {
                     return i;
@@ -1066,7 +1130,8 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             return -1;
         } else if (parent == rootSettings.getTargets()) {
             Object[] elements = rootSettings.getTargets().getTarget();
-            for (int i = 0; i < elements.length; i++) {
+            for (int i = 0; i <
+                    elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
@@ -1075,36 +1140,43 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
             return -1;
         } else if (parent == rootSettings.getParameters()) {
             Object[] elements = rootSettings.getParameters().getParameter();
-            for (int i = 0; i < elements.length; i++) {
+            for (int i = 0; i <
+                    elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
+
             }
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getResults()) {
             Object[] elements = rootSettings.getResults().getResult();
-            for (int i = 0; i < elements.length; i++) {
+            for (int i = 0; i <
+                    elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
+
             }
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else {
             // Search for fileLinks or models children into Target
             Target[] targets = rootSettings.getTargets().getTarget();
-            for (int i = 0; i < targets.length; i++) {
+            for (int i = 0; i <
+                    targets.length; i++) {
                 Target target = targets[i];
                 if (parent == target) {
 
                     Object[] all = new Object[target.getFileLinkCount() + target.getModelCount()];
                     Object[] elements = target.getFileLink();
                     System.arraycopy(elements, 0, all, 0, target.getFileLinkCount());
-                    elements = target.getModel();
+                    elements =
+                            target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
-                    for (int j = 0; j < all.length; j++) {
+                    for (int j = 0; j <
+                            all.length; j++) {
                         if (child == all[j]) {
                             return j;
                         }
@@ -1131,6 +1203,10 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * Returns true if node is a leaf.
      */
     public boolean isLeaf(Object node) {
+        //
+        if (node==plotContainerNode){
+            return false;
+        }
         if (node instanceof TreeNode) {
             return ((TreeNode) node).isLeaf();
         } else if ((node instanceof Settings) || (node instanceof Files) || (node instanceof Targets) ||
@@ -1139,6 +1215,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         } else {
             return true;
         }
+
     }
 
     /**

@@ -3,7 +3,6 @@ package fr.jmmc.mf.gui.models;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.PlotPanel;
 import fr.jmmc.mf.gui.UtilsClass;
-import fr.jmmc.mf.models.Response;
 import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
@@ -26,14 +25,28 @@ public class ResultModel extends DefaultMutableTreeNode {
     static Action plotRadialT3Action;
     static Action plotImageAction;
     */
-    String htmlReport = null;
+    private String htmlReport = null;
+    private String xmlResult = null;
     private Result result;
 
 
     public ResultModel(SettingsModel settingsModel, Result result) {
         this.settingsModel = settingsModel;
         this.result=result;
-        genReport(settingsModel);
+
+        try {
+            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
+            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
+            StringWriter xmlResultSw= new StringWriter();
+            result.marshal(xmlResultSw);
+            xmlResult=xmlResultSw.toString();
+            htmlReport = UtilsClass.xsl(xmlResult, url, null);
+            genPlots();
+        } catch (Exception exc) {
+            htmlReport = "<html>Error during report generation.</html>";
+            new FeedbackReport(null, true, exc);
+        }
+
         this.setUserObject(result);
         //genPlots(UtilsClass.getResultFiles(response));
     }
@@ -60,10 +73,13 @@ public class ResultModel extends DefaultMutableTreeNode {
         return htmlReport;
     }
 
-    public void genPlots(SettingsModel s) {
+    public void genPlots() {
         logger.entering("" + this.getClass(), "genPlots");
-
-        settingsModel = s;
+        String [] plotNames = new String[]{"plotBaselines","plotUVCoverage","plotRadial"};
+        for (int i = 0; i < plotNames.length; i++) {
+            String plotName = plotNames[i];
+            ptplot(plotName);
+        }
         /*
         plotBaselinesAction.actionPerformed(null);
         plotUVCoverageAction.actionPerformed(null);
@@ -87,7 +103,6 @@ public class ResultModel extends DefaultMutableTreeNode {
                     }
                     JFrame f = PlotPanel.buildFrameOf(r, pdf);
                     this.add(new DefaultMutableTreeNode(f,false));
-                    //@todo add plots to treemodel viewer.addPlot(, r.getDescription());
                 }
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -95,71 +110,33 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
     }
 
-
-    private void genReport(SettingsModel s) {
-        logger.entering("" + this.getClass(), "genReport");
-        try {
-            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
-            java.net.URL url = this.getClass().getClassLoader().getResource(xslPath);
-            StringWriter sw= new StringWriter();
-            result.marshal(sw);
-            htmlReport = UtilsClass.xsl(sw.toString(), url, null);
-        } catch (Exception exc) {
-            htmlReport = "<html>Error during report generation.</html>";
-            new FeedbackReport(null, true, exc);
-        }
-    }
-
-   
-
     /** Plots using ptplot widgets */
-    protected void ptplot(String plotName) {
+    protected void ptplot(final String plotName) {
         logger.entering("" + this.getClass(), "ptplot");
-
         String xmlStr = null;
-
         try {
             // Contruct xml document to plot
             java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToPlotML.xsl");
-            xmlStr = UtilsClass.xsl(settingsModel.getLastXml(), url,
+            xmlStr = UtilsClass.xsl(xmlResult, url,
                     new String[]{"plotName", plotName});
-
             PlotMLParser plotMLParser;
             // Construct plot and parse xml
             Plot plot = new Plot();
             plotMLParser = new PlotMLParser(plot);
             plotMLParser.parse(null, xmlStr);
-
             // Show plot into frame
-            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
+            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot){
+                public String toString(){
+                    return plotName;
+                }
+            };
+            this.add(new DefaultMutableTreeNode(plotMLFrame));
 
-            //@todo add new object to the tree viewer.addPlot(plotMLFrame, plotName);
+            url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
+            System.out.println(UtilsClass.xsl(xmlResult, url, null));
 
-            logger.finest("plot ready to be shown");
         } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
-        }
-    }
-
-    protected class PlotAction extends fr.jmmc.mcs.util.MCSAction {
-
-        String plotName;
-
-        /* plotName must correcspond to a resource action and one xslt template */
-        public PlotAction(String plotName) {
-            super(plotName);
-            this.plotName = plotName;
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            if (plotName.equals("plotBaselines") || plotName.equals("plotUVCoverage") ||
-                    plotName.startsWith("plotRadial")) {
-                ptplot(plotName);
-            } else {
-                logger.severe("Code does not handle the following plot name : " + plotName);
-            }
         }
     }
 }
