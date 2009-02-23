@@ -17,6 +17,7 @@ import fr.jmmc.mf.models.Results;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
+import java.beans.PropertyChangeListener;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 
@@ -42,7 +43,7 @@ import fr.jmmc.oifits.validator.GUIValidator;
  *
  *
  */
-public class SettingsModel implements TreeModel, ModifyAndSaveObject {
+public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
 
     /** list of supported models   */
     protected static Hashtable supportedModels = new Hashtable();
@@ -130,6 +131,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                 new Object[]{rootSettings, plotContainerNode},
                 new int[]{plotContainerNode.getChildCount()-1},
                 new Object[]{newPlotNode});
+        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
     }
 
     public void setPlotPanel(PlotPanel plotPanel){
@@ -231,6 +233,7 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
                 new Object[]{newTarget});
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets() , newTarget}));
 
         return newTarget;
     }
@@ -576,6 +579,12 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
                     parameterListModel.addElement(param);
                 }
             }
+        }
+        
+        // build model for every result
+        Result[] results = rootSettings.getResults().getResult();
+        for (int i = 0; i < results.length; i++) {
+            getModel(results[i]);
         }
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
@@ -1203,7 +1212,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
      * Returns true if node is a leaf.
      */
     public boolean isLeaf(Object node) {
-        //
         if (node==plotContainerNode){
             return false;
         }
@@ -1215,7 +1223,6 @@ public class SettingsModel implements TreeModel, ModifyAndSaveObject {
         } else {
             return true;
         }
-
     }
 
     /**

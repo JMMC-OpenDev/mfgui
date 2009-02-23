@@ -17,6 +17,7 @@ import java.io.StringWriter;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.tree.TreePath;
 
 /** Display GUI for Target elements */
 public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener
@@ -54,14 +55,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         plotModelImagePanel = new PlotModelPanel(plotPanel);
         subplotPanel.add(plotModelImagePanel);
-    }
-
-
-    /** Call it after any internal modification  */
-    public void refresh()
-    {
-        settingsViewer.getSettingsModel().fireUpdate();
-        settingsViewer.showElement(current);
     }
 
     /**
@@ -379,10 +372,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
     private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_modelListMouseClicked
-
         if (evt.getClickCount() == 2)
         {
-            settingsViewer.showElement(modelList.getSelectedValue());
+            rootSettingsModel.setSelectionPath(
+                    new TreePath(new Object[]{
+                rootSettingsModel,
+                rootSettingsModel.getRootSettings().getTargets(),
+                current,
+                modelList.getSelectedValue() } ));
         }
     }//GEN-LAST:event_modelListMouseClicked
 
@@ -390,23 +387,25 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     {//GEN-FIRST:event_fileListMouseClicked
         if (evt.getClickCount() == 2)
         {
-            settingsViewer.showElement(fileList.getSelectedValue());
+            rootSettingsModel.setSelectionPath(
+                    new TreePath(new Object[]{
+                rootSettingsModel,
+                rootSettingsModel.getRootSettings().getTargets(),
+                current,
+                fileList.getSelectedValue() } ));
         }
+        
     }//GEN-LAST:event_fileListMouseClicked
 
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_removeModelButtonActionPerformed
         logger.entering("" + this.getClass(), "removeModelButtonActionPerformed");
-
-        int[] indices = modelList.getSelectedIndices();
-
-        for (int i = 0; i < indices.length; i++)
-        {
-            int indice = indices[i] - i;
-            rootSettingsModel.removeModel(current, (Model)modelList.getSelectedValue());
+        Object[] values = modelList.getSelectedValues();
+        for (int i = 0; i < values.length; i++) {
+            Object object = values[i];
+            rootSettingsModel.removeModel(current, (Model)object);
         }
         removeModelButton.setEnabled(false);
-        refresh();
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
     private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
@@ -436,9 +435,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             selectedModel.marshal(writer);
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
-
             rootSettingsModel.addModel(current, m);
-            refresh();
         }
         catch (Exception e)
         {

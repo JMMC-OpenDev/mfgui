@@ -3,6 +3,7 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -102,7 +103,11 @@ public class TargetsPanel extends javax.swing.JPanel {
 //GEN-FIRST:event_targetListMouseClicked
     private void targetListMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
-            settingsViewer.showElement(targetList.getSelectedValue());
+            rootSettingsModel.setSelectionPath(
+                    new TreePath(new Object[]{
+                rootSettingsModel,
+                current,
+                targetList.getSelectedValue() } ));
         }
     }//GEN-LAST:event_targetListMouseClicked
 
@@ -131,9 +136,7 @@ public class TargetsPanel extends javax.swing.JPanel {
 //GEN-FIRST:event_addTargetButtonActionPerformed
     private void addTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String targetIdent = "" + targetNameComboBox.getSelectedItem();
-        
-        // display view of added target automatically 
-        settingsViewer.showElement(rootSettingsModel.addTarget(targetIdent));
+        rootSettingsModel.addTarget(targetIdent);
     }//GEN-LAST:event_addTargetButtonActionPerformed
 //GEN-FIRST:event_targetListValueChanged
     private void targetListValueChanged(javax.swing.event.ListSelectionEvent evt) {

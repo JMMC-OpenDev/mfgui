@@ -11,6 +11,7 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.models.Files;
 
 import javax.swing.*;
+import javax.swing.tree.TreePath;
 
 
 /**
@@ -24,26 +25,10 @@ public class FilesPanel extends javax.swing.JPanel
      */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.FilesPanel");
-
-    /**
-     * DOCUMENT ME!
-     */
     static Files current = null;
-
-    /**
-     * DOCUMENT ME!
-     */
     SettingsViewerInterface settingsViewer = null;
-
-    /**
-     * DOCUMENT ME!
-     */
     public static Action loadFilesAction;
-
-    /**
-     * DOCUMENT ME!
-     */
-    SettingsModel settingsModel = null;
+    SettingsModel rootSettingsModel = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     /**
@@ -80,7 +65,7 @@ public class FilesPanel extends javax.swing.JPanel
     public void show(Files f, SettingsModel s)
     {
         current           = f;
-        settingsModel     = s;
+        rootSettingsModel     = s;
         logger.fine("Showing list of " + current.getFileCount() + " files");
 
         // update model because it could have been modified
@@ -141,7 +126,11 @@ public class FilesPanel extends javax.swing.JPanel
             }
             else
             {
-                settingsViewer.showElement(fileList.getSelectedValue());
+                rootSettingsModel.setSelectionPath(
+                    new TreePath(new Object[]{
+                rootSettingsModel,
+                current,
+                fileList.getSelectedValue() } ));
             }
         }
     } // </editor-fold>                              
@@ -182,11 +171,10 @@ public class FilesPanel extends javax.swing.JPanel
 
                     for (int i = 0; i < files.length; i++)
                     {
-                        settingsModel.addFile(files[i]);
+                        rootSettingsModel.addFile(files[i]);
                     }
 
                     lastDir = files[0].getParent();
-                    settingsViewer.showElement(settingsModel.getRootSettings());
                 }
             }
             catch (Exception exc)
