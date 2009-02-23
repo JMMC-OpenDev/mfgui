@@ -8,7 +8,6 @@ import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.gui.models.ResultModel;
 import fr.jmmc.mf.models.*;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -16,7 +15,6 @@ import java.awt.Dimension;
 import java.lang.reflect.*;
 
 
-import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -107,6 +105,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         // to permit modifier panel changes,
         // register as treeSelectionListener
         settingsTree.setModel(rootSettingsModel);
+                settingsTree.setExpandsSelectedPaths(true);
+        settingsTree.setScrollsOnExpand(true);
+        settingsTree.setShowsRootHandles(false);
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
@@ -115,41 +116,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         // finaly ask to show top level element
         showElement(rootSettingsModel.getRootSettings());
 
+        // help to fix userobject that will be given to be shown by the Mutable TreeNode
+        settingsModel.setPlotPanel(plotPanel);
         runFitButton.setAction(runFitAction);
-    }
-
-    public void expandSettingsTree() {
-        // Next line does not work because node doesn't respond to treeNode interface
-        //McsClass.expandAll(settingsTree,true);
-        //expandAll(settingsTree, true);
-    }
-    // If expand is true, expands all nodes in the tree.
-    // Otherwise, collapses all nodes in the tree.
-
-    public void expandAll(JTree tree, boolean expand) {
-        TreeNode root = (TreeNode) tree.getModel().getRoot();
-
-        // Traverse tree from root
-        expandAll(tree, new TreePath(root), expand);
-    }
-
-    private void expandAll(JTree tree, TreePath parent, boolean expand) {
-        // Traverse children
-        TreeNode node = (TreeNode) parent.getLastPathComponent();
-        if (node.getChildCount() >= 0) {
-            for (Enumeration e = node.children(); e.hasMoreElements();) {
-                TreeNode n = (TreeNode) e.nextElement();
-                TreePath path = parent.pathByAddingChild(n);
-                expandAll(tree, path, expand);
-            }
-        }
-
-        // Expansion or collapse must be done bottom-up
-        if (expand) {
-            tree.expandPath(parent);
-        } else {
-            tree.collapsePath(parent);
-        }
     }
 
     /**
@@ -185,12 +154,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else if (o instanceof JFrame) {
             framePanel.show(rootSettingsModel, (JFrame) o);
             modifierPanel.add(framePanel);
-            settingsTree.clearSelection();
-        //frameList.clearSelection();
         } else if (o instanceof PlotPanel) {
             plotPanel.show(rootSettingsModel);
             modifierPanel.add(plotPanel);
-            settingsTree.clearSelection();
         } else if (o instanceof Settings) {
             settingsPanel.show(rootSettingsModel.getRootSettings(), rootSettingsModel);
             modifierPanel.add(settingsPanel);
@@ -273,7 +239,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     protected void checkValidSettings() {
         boolean validSettingsModel = rootSettingsModel.isValid();
         runFitAction.setEnabled(validSettingsModel);
-        showPlotButton.setEnabled(validSettingsModel);
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
@@ -315,7 +280,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         ITMaxCheckBox = new javax.swing.JCheckBox();
         ITMaxTextField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
-        showPlotButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         modifierPanel = new javax.swing.JPanel();
 
@@ -364,24 +328,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.weightx = 0.1;
         jPanel1.add(ITMaxTextField, gridBagConstraints);
 
-        jLabel1.setText("Use max iterations number");
+        jLabel1.setText("Use max iterations");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         jPanel1.add(jLabel1, gridBagConstraints);
-
-        showPlotButton.setText("New plot...");
-        showPlotButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPlotButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel1.add(showPlotButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -406,10 +357,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         add(jSplitPane1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void showPlotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlotButtonActionPerformed
-        showElement(plotPanel);
-}//GEN-LAST:event_showPlotButtonActionPerformed
-
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
     protected class MyCellRenderer extends DefaultTreeCellRenderer {
@@ -420,24 +367,26 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-            //setToolTipText("TBD");
+            
+            if (value.getClass().getName().startsWith("fr.jmmc.mf.models")) {
+                //setToolTipText("TBD");
+                // Next part try to get valide state of serialized xml objects
+                try {
+                    String methodName = "validate";
+                    Class[] c = new Class[0];
+                    Method m = value.getClass().getMethod(methodName, c);
+                    Object[] o = new Object[0];
+                    m.invoke(value, o);
 
-            // Next part try to get valide state of serialized xml objects
-            try {
-                String methodName = "validate";
-                Class[] c = new Class[0];
-                Method m = value.getClass().getMethod(methodName, c);
-                Object[] o = new Object[0];
-                m.invoke(value, o);
+                //logger.fine("method invoked using reflexion");
+                } catch (Exception e) {
+                    setForeground(Color.red);
 
-            //logger.fine("method invoked using reflexion");
-            } catch (Exception e) {
-                setForeground(Color.red);
-
-                if (e.getCause() != null) {
-                    setToolTipText(e.getCause().getMessage());
-                } else {
-                    setToolTipText(e.getMessage());
+                    if (e.getCause() != null) {
+                        setToolTipText(e.getCause().getMessage());
+                    } else {
+                        setToolTipText(e.getMessage());
+                    }
                 }
             }
 
@@ -458,6 +407,5 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel modifierPanel;
     private javax.swing.JButton runFitButton;
     private javax.swing.JScrollPane settingsTreeScrollPane;
-    private javax.swing.JButton showPlotButton;
     // End of variables declaration//GEN-END:variables
 }

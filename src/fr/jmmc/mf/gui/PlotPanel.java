@@ -85,7 +85,7 @@ public class PlotPanel extends javax.swing.JPanel
                 }
             }
 
-            //@todo recode next part viewer.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
+            settingsModel.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
 
         } catch (java.net.UnknownHostException ex) {
             String msg="Network seems down. Can't contact host "+ex.getMessage();
@@ -122,14 +122,17 @@ public class PlotPanel extends javax.swing.JPanel
         File f;
         JLabel label;
         JButton b;
-        String desc=pngResultFile.getDescription();
-        if(desc.length()<1){
-            desc=pngResultFile.getName();
-            if(desc.length()<1){
-            desc="Plot";
-         }
+        String desc = "PLOT";
+        if (pngResultFile.getDescription() != null) {
+            desc = pngResultFile.getDescription();
+            if (desc.length() < 1) {
+                desc = pngResultFile.getName();
+                if (desc.length() < 1) {
+                    desc = "PLOT";
+                }
+            }
         }
-        final String d=desc;
+        final String d = desc;
         JFrame frame = new JFrame(){
             @Override
             public String toString(){
