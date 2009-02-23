@@ -15,7 +15,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 public interface SettingsViewerInterface
 {
     /** Shows a given object to the left panel */
-    public void showElement(Object o);
+    //public void showElement(Object o);
 
     /** Gives access to the settings model */
     public SettingsModel getSettingsModel();

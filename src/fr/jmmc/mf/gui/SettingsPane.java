@@ -102,12 +102,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveModelAction", "saveModel");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
 
-        // to permit modifier panel changes,
-        // register as treeSelectionListener
+
         settingsTree.setModel(rootSettingsModel);
-                settingsTree.setExpandsSelectedPaths(true);
-        settingsTree.setScrollsOnExpand(true);
-        settingsTree.setShowsRootHandles(false);
+        settingsTree.setSelectionModel(rootSettingsModel);
+        // register as treeSelectionListener to permit modifier panel changes
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
@@ -134,7 +132,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         checkValidSettings();
     }
 
-    public void showElement(Object o) {
+    private void showElement(Object o) {
         logger.entering("" + this.getClass(), "showElement",o);
 
         if (o == null) {
