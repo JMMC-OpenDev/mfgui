@@ -582,9 +582,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         
         // build model for every result
-        Result[] results = rootSettings.getResults().getResult();
-        for (int i = 0; i < results.length; i++) {
-            getModel(results[i]);
+        if (rootSettings.getResults() != null) {
+            Result[] results = rootSettings.getResults().getResult();
+            for (int i = 0; i < results.length; i++) {
+                getModel(results[i]);
+            }
         }
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
@@ -1247,4 +1249,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         new FeedbackReport();
         fireTreeNodesChanged(modifiedObject);
     }
+
+    public String toString(){
+        return className + " " +getAssociatedFilename();
+
+    }
+
 }
