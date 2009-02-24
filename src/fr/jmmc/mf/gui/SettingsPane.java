@@ -178,7 +178,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             filePanel.show((File) link.getFileRef());
             modifierPanel.add(filePanel);
         } else if (o instanceof Parameters) {
-            parametersPanel.show((Parameters) o);
+            parametersPanel.show(rootSettingsModel,(Parameters) o);
             modifierPanel.add(parametersPanel);
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
