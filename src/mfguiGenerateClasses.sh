@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.13 2009-02-24 12:57:54 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.14 2009-02-24 13:00:11 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2009/02/24 12:57:54  mella
+# Change label for shared Params
+#
 # Revision 1.12  2009/01/14 09:36:26  mella
 # change xsd path
 #
@@ -87,7 +90,7 @@ do
         toString="\"File[\"+((File)getFileRef()).getName()+\"]\";"
     elif [ "$className" == "Parameters" ]
     then
-        toString="\"Sahred parameters[\"+getParameterCount()+\"]\";"
+        toString="\"Shared parameters[\"+getParameterCount()+\"]\";"
     elif [ "$className" == "Parameter" ]
     then
         toString="\"Parameter[\"+getName()+\"]\";"
