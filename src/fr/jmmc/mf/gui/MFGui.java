@@ -19,6 +19,7 @@ import fr.jmmc.mcs.gui.MainMenuBar;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.*;
 
+import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -46,6 +47,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     // Application actions
     static Action getYogaVersionAction;
     public static Action saveModelAction;
+    public static DeleteTreeSelectionAction deleteTreeSelectionAction;
  
     private static PlasticListener plasticServer_;
 
@@ -69,6 +71,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         // @todo use a preference to choose from one of the two following for default saveaction
         saveModelAction=new SaveModelAction(this, "saveModel", false);
         new SaveModelAction(this, "saveModelWithResults", true);
+        deleteTreeSelectionAction =  new DeleteTreeSelectionAction(this) ;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
@@ -76,6 +79,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         tabbedPane_ = new javax.swing.JTabbedPane();
         tabbedPane_.setMinimumSize(new java.awt.Dimension(980, 700));
         tabbedPane_.setPreferredSize(new java.awt.Dimension(980, 700));
+        tabbedPane_.addChangeListener(deleteTreeSelectionAction);
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
 
         /* Plastic transmitter. */
