@@ -40,8 +40,7 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
         settingsModel=mfgui.getSelectedSettings();
         if(!settingsModelListener.contains(settingsModel)){
             settingsModel.addTreeSelectionListener(this);
-        }
-        System.out.println("Tab pane has changed. Using settings model :"+settingsModel);
+        }        
     }
 
     /** Listen to the settings tree selection changes
@@ -50,7 +49,6 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
      */
     public void valueChanged(TreeSelectionEvent e) {
         if (e.getSource() instanceof SettingsModel){
-            System.out.println("Selection has changed on jtree for:"+e.getSource());
             settingsModel = (SettingsModel)e.getSource();
             // @todo test what is the selection and accept or not the remove action
             this.setEnabled(!settingsModel.isSelectionEmpty());
@@ -58,6 +56,4 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
             logger.warning("dropped treeSelectionEvent from "+e.getSource());
         }
     }
-
-
 }
