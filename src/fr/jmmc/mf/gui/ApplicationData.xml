@@ -29,6 +29,9 @@
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModel" accelerator="S"/>
             <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
         </menu>
+         <menu label="Edit">
+            <menu label="Delete" classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="delete"/>
+      </menu>
     </menubar>
     <releasenotes>
        <release version="1.0.16">
