@@ -92,11 +92,16 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         fireTableDataChanged();
     }
 
-    public void setParameters(Parameter[] params) {
-        recursive = false;
+    public void setModel(SettingsModel settingsModel, Parameter[] params, boolean recursive) {
+        this.settingsModel = settingsModel;
+        this.recursive = recursive;
         parameters = params;
         // notify observers
         fireTableDataChanged();
+    }
+
+    public void setModel(SettingsModel settingsModel, Parameter[] params) {
+        setModel(settingsModel, params, false);
     }
 
     protected void addParamsFor(Model model, Vector<Parameter> paramContainer, Vector<Model> modelContainer, boolean recursive) {

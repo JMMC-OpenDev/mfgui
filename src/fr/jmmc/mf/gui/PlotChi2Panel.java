@@ -15,8 +15,7 @@ import java.awt.BorderLayout;
  * @author mella
  * @todo fix bu that doesnt remember oldXparam enad oldYparam
  */
-public class PlotChi2Panel extends javax.swing.JPanel
-{
+public class PlotChi2Panel extends javax.swing.JPanel {
 
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
@@ -28,35 +27,32 @@ public class PlotChi2Panel extends javax.swing.JPanel
     private Parameter oldYParam = null;
 
     /** Creates new form PlotPanel */
-    public PlotChi2Panel(PlotPanel plotPanel)
-    {
-        this.plotPanel=plotPanel;
+    public PlotChi2Panel(PlotPanel plotPanel) {
+        this.plotPanel = plotPanel;
         param1TableModel = new ParametersTableModel();
         initComponents();
     }
 
-    public void show(SettingsModel s)
-    {
+    public void show(SettingsModel s) {
         settingsModel = s;
-        tablePanel.add(jTable1.getTableHeader(),BorderLayout.NORTH);
+        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
         Object[] params = s.getParameterListModel().toArray();
 
-        Parameter tmp=oldXParam;
+        Parameter tmp = oldXParam;
         xComboBox.removeAllItems();
-        oldXParam=tmp;
-        tmp=oldYParam;
+        oldXParam = tmp;
+        tmp = oldYParam;
         yComboBox.removeAllItems();
-        oldYParam=tmp;
-        for (int i = 0; i < params.length; i++)
-        {
+        oldYParam = tmp;
+        for (int i = 0; i < params.length; i++) {
             Parameter p = (Parameter) params[i];
-            if (!p.getHasFixedValue()){
+            if (!p.getHasFixedValue()) {
                 xComboBox.addItem(p);
-                if(oldXParam.getName().equals(p.getName())){
+                if (oldXParam.getName().equals(p.getName())) {
                     xComboBox.setSelectedItem(p);
                 }
                 yComboBox.addItem(p);
-                if(oldYParam.getName().equals(p.getName())){
+                if (oldYParam.getName().equals(p.getName())) {
                     yComboBox.setSelectedItem(p);
                 }
             }
@@ -241,38 +237,27 @@ public class PlotChi2Panel extends javax.swing.JPanel
 
     private void plot1DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot1DChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plot1DChi2ButtonActionPerformed
-    
-        String args = ((Parameter)xComboBox.getSelectedItem()).getName()
-                +" " + xminFormattedTextField.getText()
-                + " " + xmaxFormattedTextField.getText()
-                + " " + xSamplingFormattedTextField.getText();        
-        plotPanel.plot("getChi2Map", args, "1D Chi2 Slice on "+((Parameter)xComboBox.getSelectedItem()).getName());
+
+        String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
+        plotPanel.plot("getChi2Map", args, "1D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
 }//GEN-LAST:event_plot1DChi2ButtonActionPerformed
 
     private void plot2DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot2DChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plot2DChi2ButtonActionPerformed
-        String args = ((Parameter)xComboBox.getSelectedItem()).getName()
-                +" " + xminFormattedTextField.getText()
-                + " " + xmaxFormattedTextField.getText()
-                + " " + xSamplingFormattedTextField.getText()
-                +" '"+((Parameter)yComboBox.getSelectedItem()).getName()
-                +"' " + yminFormattedTextField.getText()
-                + " " + ymaxFormattedTextField.getText()
-                + " " + ySamplingFormattedTextField.getText();
-        plotPanel.plot("getChi2Map", args, "2D Chi2 Slice on "+((Parameter)xComboBox.getSelectedItem()).getName()
-                +" and "+((Parameter)yComboBox.getSelectedItem()).getName());
+        String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText() + " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
+        plotPanel.plot("getChi2Map", args, "2D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
 }//GEN-LAST:event_plot2DChi2ButtonActionPerformed
 
-    private void updateTable(){
-        boolean hasParam = xComboBox.getItemCount()!=0;
+    private void updateTable() {
+        boolean hasParam = xComboBox.getItemCount() != 0;
         plot1DChi2Button.setEnabled(hasParam);
         plot2DChi2Button.setEnabled(hasParam);
-        if(hasParam){
+        if (hasParam) {
             Parameter[] parameters = new Parameter[2];
-            parameters[0]=(Parameter) xComboBox.getSelectedItem();
-            parameters[1]=(Parameter) yComboBox.getSelectedItem();
-            param1TableModel.setParameters(parameters);
-        }else{
+            parameters[0] = (Parameter) xComboBox.getSelectedItem();
+            parameters[1] = (Parameter) yComboBox.getSelectedItem();
+            param1TableModel.setModel(settingsModel, parameters);
+        } else {
             logger.warning("No parameter to use for chi2map");
         }
     }
@@ -280,32 +265,32 @@ public class PlotChi2Panel extends javax.swing.JPanel
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
         updateTable();
         Parameter yParam = (Parameter) yComboBox.getSelectedItem();
-        if (yParam==null){
+        if (yParam == null) {
             logger.warning("yparam null for chi2map");
             return;
         }
-        oldYParam=yParam;
-        if(yParam.hasMinValue()){
-            yminFormattedTextField.setText(""+yParam.getMinValue());
+        oldYParam = yParam;
+        if (yParam.hasMinValue()) {
+            yminFormattedTextField.setText("" + yParam.getMinValue());
         }
-        if(yParam.hasMaxValue()){
-            ymaxFormattedTextField.setText(""+yParam.getMaxValue());
+        if (yParam.hasMaxValue()) {
+            ymaxFormattedTextField.setText("" + yParam.getMaxValue());
         }
 }//GEN-LAST:event_yComboBoxActionPerformed
 
     private void xComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xComboBoxActionPerformed
         updateTable();
         Parameter xParam = (Parameter) xComboBox.getSelectedItem();
-        if (xParam==null){
+        if (xParam == null) {
             logger.warning("xparam null for chi2map");
             return;
         }
-        oldXParam=xParam;
-        if(xParam.hasMinValue()){
-            xminFormattedTextField.setText(""+xParam.getMinValue());
+        oldXParam = xParam;
+        if (xParam.hasMinValue()) {
+            xminFormattedTextField.setText("" + xParam.getMinValue());
         }
-        if(xParam.hasMaxValue()){
-            xmaxFormattedTextField.setText(""+xParam.getMaxValue());
+        if (xParam.hasMaxValue()) {
+            xmaxFormattedTextField.setText("" + xParam.getMaxValue());
         }
     }//GEN-LAST:event_xComboBoxActionPerformed
 

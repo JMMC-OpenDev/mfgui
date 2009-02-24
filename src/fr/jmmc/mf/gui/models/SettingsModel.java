@@ -118,6 +118,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
+    public void addLITproSettings() {
+
+    }
+
     public void addPlot(JFrame frame, final String title) {
         final String descStr = title;
         DefaultMutableTreeNode newPlotNode = new DefaultMutableTreeNode(frame) {
@@ -417,16 +421,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (params[i] == parameterToShare) {
                 associatedModel.removeParameter(i);
             }
-        }
-
-        //menuRequested(app);
+        }        
         rootSettings.getParameters().addParameter(parameterToShare);
 
         // if it is the first time that a shared parameters has been added
         if (rootSettings.getParameters().getParameterCount() == 1) {
             fireTreeNodesInserted(this, new Object[]{rootSettings}, new int[]{getIndexOfChild(rootSettings, rootSettings.getParameters())}, new Object[]{rootSettings.getParameters()});
         }
-
+        fireTreeNodesChanged(rootSettings.getParameters());
     }
 
     private ResultModel getModel(Result r) {
