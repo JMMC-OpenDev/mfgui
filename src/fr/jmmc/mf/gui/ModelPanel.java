@@ -9,12 +9,9 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Parameter;
-import fr.jmmc.mf.models.ParameterLink;
 
-
-
-import javax.swing.*;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 
 
 public class ModelPanel extends javax.swing.JPanel
@@ -24,6 +21,7 @@ public class ModelPanel extends javax.swing.JPanel
     ParametersTableModel parametersTableModel;
     Model current;
     SettingsModel settingsModel;
+    Vector<MouseListener> mouseListeners = new Vector();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descTextArea;
@@ -35,7 +33,6 @@ public class ModelPanel extends javax.swing.JPanel
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JPopupMenu parameterPopupMenu;
     private javax.swing.JTable parametersTable;
     private javax.swing.JComboBox typeComboBox;
     // End of variables declaration//GEN-END:variables
@@ -54,138 +51,13 @@ public class ModelPanel extends javax.swing.JPanel
         settingsModel     = s;
         nameTextField.setText(m.getName());
         typeComboBox.setSelectedItem(m);
-        parametersTableModel.setModel(m, false);
+        parametersTableModel.setModel(s, m, false);
+        if(!mouseListeners.contains(parametersTableModel)){
+            parametersTable.addMouseListener(parametersTableModel);
+            mouseListeners.add(parametersTableModel);
+        }
         descTextArea.setText(m.getDesc());
         descTextArea.setCaretPosition(0);
-    }
-
-
-    public void refresh()
-    {
-        show(current, settingsModel);
-    }
-
-    public void shareParameter(Parameter myParam)
-    {
-        logger.entering("" + this.getClass(), "shareParameter");
-
-        // Shared parameters must have one id
-        if (myParam.getId() == null)
-        {
-            myParam.setId(myParam.getName() + Integer.toHexString(myParam.hashCode()));
-        }
-
-        ParameterLink newLink = new ParameterLink();
-        newLink.setParameterRef(myParam);
-        newLink.setType(myParam.getType());
-        current.addParameterLink(newLink);
-
-        Parameter[] params = current.getParameter();
-
-        for (int i = 0; i < params.length; i++)
-        {
-            if (params[i] == myParam)
-            {
-                current.removeParameter(i);
-            }
-        }
-
-        //menuRequested(app);
-        settingsModel.getRootSettings().getParameters().addParameter(myParam);
-        settingsModel.fireUpdate();
-        refresh();
-    }
-
-    public void linkParameter(Parameter myParam, Parameter sharedParameter)
-    {
-        logger.entering("" + this.getClass(), "linkParameter");
-
-        ParameterLink newLink = new ParameterLink();
-        newLink.setParameterRef(sharedParameter);
-        current.addParameterLink(newLink);
-
-        Parameter[] params = current.getParameter();
-
-        for (int i = 0; i < params.length; i++)
-        {
-            if (params[i] == myParam)
-            {
-                current.removeParameter(i);
-            }
-        }
-
-        settingsModel.fireUpdate();
-        refresh();
-    }
-
-    private void checkPopupMenu(java.awt.event.MouseEvent evt)
-    {
-        if (evt.isPopupTrigger())
-        {
-            logger.finest("Menu required");
-            parameterPopupMenu.removeAll();
-
-            // Check if pointed row is positive
-            int rowIdx = parametersTable.rowAtPoint(evt.getPoint());
-
-            if (rowIdx == -1)
-            {
-                return;
-            }
-
-            // Show info
-            // @todo I would prefere to get the under mouse parameter selected before that menu appears
-            // to handle under the mouse param instead of the
-            final Parameter p        = current.getParameter(rowIdx);
-            JMenuItem       menuItem = new JMenuItem("Manage parameter " + p.getName() +
-                    " of type " + p.getType());
-            menuItem.setEnabled(false);
-            parameterPopupMenu.add(menuItem);
-            parameterPopupMenu.add(new JSeparator());
-
-            // Show share parameter entry
-            menuItem = new JMenuItem("Share this parameter");
-            menuItem.addActionListener(new java.awt.event.ActionListener()
-                {
-                    public void actionPerformed(java.awt.event.ActionEvent evt)
-                    {
-                        shareParameter(p);
-                    }
-                });
-            parameterPopupMenu.add(menuItem);
-
-            // Associate with shared parameter
-            JMenu shareMenu = new JMenu("Link to ");
-            parameterPopupMenu.add(shareMenu);
-
-            Parameter[] sharedParams = settingsModel.getRootSettings().getParameters().getParameter();
-
-            for (int i = 0; i < sharedParams.length; i++)
-            {
-                final Parameter sp = sharedParams[i];
-                menuItem = new JMenuItem(sp.getName());
-                menuItem.addActionListener(new java.awt.event.ActionListener()
-                    {
-                        public void actionPerformed(java.awt.event.ActionEvent evt)
-                        {
-                            linkParameter(p, sp);
-                        }
-                    });
-                /* we previously shared parameters with same types
-                   if (!p.getType().equals(sp.getType())) {
-                       menuItem.setEnabled(false);
-                   }
-                 */
-                shareMenu.add(menuItem);
-            }
-
-            parameterPopupMenu.validate();
-            parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        }
-        else
-        {
-            logger.finest("No menu required");
-        }
     }
 
     /** This method is called from within the constructor to
@@ -198,7 +70,6 @@ public class ModelPanel extends javax.swing.JPanel
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        parameterPopupMenu = new javax.swing.JPopupMenu();
         jLabel2 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -274,17 +145,6 @@ public class ModelPanel extends javax.swing.JPanel
 
         parametersTable.setModel(parametersTableModel);
         parametersTable.setToolTipText("Use right click to manage parameters");
-        parametersTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                parametersTableMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                parametersTableMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                parametersTableMouseReleased(evt);
-            }
-        });
         jScrollPane1.setViewportView(parametersTable);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -306,23 +166,5 @@ public class ModelPanel extends javax.swing.JPanel
         logger.entering("" + this.getClass(), "nameTextFieldActionPerformed");
         settingsModel.setModelName(current, nameTextField.getText());
     }//GEN-LAST:event_nameTextFieldActionPerformed
-
-    private void parametersTableMouseClicked(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_parametersTableMouseClicked
-        logger.entering("" + this.getClass(), "parametersTableMouseClicked");
-        checkPopupMenu(evt);
-    }//GEN-LAST:event_parametersTableMouseClicked
-
-    private void parametersTableMousePressed(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_parametersTableMousePressed
-        logger.entering("" + this.getClass(), "parametersTableMousePressed");
-        checkPopupMenu(evt);
-    }//GEN-LAST:event_parametersTableMousePressed
-
-    private void parametersTableMouseReleased(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_parametersTableMouseReleased
-        logger.entering("" + this.getClass(), "parametersTableMouseReleased");
-        checkPopupMenu(evt);
-    }//GEN-LAST:event_parametersTableMouseReleased
 
 }

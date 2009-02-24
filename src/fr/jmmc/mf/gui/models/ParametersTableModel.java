@@ -5,15 +5,25 @@ import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Target;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Method;
 import java.util.Vector;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * Implementation of a table model that is based on a given Model.
- * todo: check if model container should be vectors instead of arrays
+ * This model also respond to mouseListener Interface so it can show popup menu
+ * to handle parameters sharing.
+ *
+ * @todo: check if model container should be vectors instead of arrays
+ *
  */
-public class ParametersTableModel extends AbstractTableModel {
+public class ParametersTableModel extends AbstractTableModel implements MouseListener {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.ParametersTableModel");
@@ -25,22 +35,25 @@ public class ParametersTableModel extends AbstractTableModel {
     protected final String[] columnNames = new String[]{"Name", "Type", "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
     protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
-    
+    private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
+    ;
+    private SettingsModel settingsModel;
+
     public ParametersTableModel() {
         super();
         // next static line should be replaced by a preference listener
         recursive = true;
     }
 
-    
-    public void setModel(Target target, boolean recursive) {
+    public void setModel(SettingsModel settingsModel, Target target, boolean recursive) {
+        this.settingsModel = settingsModel;
         this.recursive = recursive;
         parameters = new Parameter[]{};
         if (target != null) {
             // get list , create array and init array with content list
-            Vector <Parameter>params = new Vector();
-            Vector <Model>models = new Vector();
-            Model [] array = target.getModel();
+            Vector<Parameter> params = new Vector();
+            Vector<Model> models = new Vector();
+            Model[] array = target.getModel();
             for (int i = 0; i < array.length; i++) {
                 Model model = array[i];
                 addParamsFor(model, params, models, recursive);
@@ -59,13 +72,14 @@ public class ParametersTableModel extends AbstractTableModel {
     /**
      * tell table model to represent the parameters of the given model.
      */
-    public void setModel(Model modelToPresent, boolean recursive) {
+    public void setModel(SettingsModel settingsModel, Model modelToPresent, boolean recursive) {
+        this.settingsModel = settingsModel;
         this.recursive = recursive;
         parameters = new Parameter[]{};
         if (modelToPresent != null) {
             // get list , create array and init array with content list
-            Vector <Parameter>params = new Vector();
-            Vector <Model>models = new Vector();
+            Vector<Parameter> params = new Vector();
+            Vector<Model> models = new Vector();
             addParamsFor(modelToPresent, params, models, recursive);
             parameters = new Parameter[params.size()];
             modelOfParameters = new Model[params.size()];
@@ -78,9 +92,9 @@ public class ParametersTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void setParameters(Parameter[] params){
-        recursive=false;
-        parameters=params;
+    public void setParameters(Parameter[] params) {
+        recursive = false;
+        parameters = params;
         // notify observers
         fireTableDataChanged();
     }
@@ -138,7 +152,7 @@ public class ParametersTableModel extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
-        if(p==null){
+        if (p == null) {
             return null;
         }
         // return name
@@ -180,9 +194,9 @@ public class ParametersTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Parameter p = parameters[rowIndex];
-        if(aValue!=null){
+        if (aValue != null) {
             logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
-        }else{
+        } else {
             logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
         }
         // Check all methods that accept something else than a String as param
@@ -224,15 +238,103 @@ public class ParametersTableModel extends AbstractTableModel {
                     Method set = Parameter.class.getMethod(methodName, c);
                     Object[] o = new Object[]{aValue};
                     set.invoke(p, o);
-                }else{
+                } else {
                     methodName = "delete" + columnNames[columnIndex];
                     Method m = Parameter.class.getMethod(methodName);
                     m.invoke(p);
                 }
-                logger.fine("method "+methodName+" invoked using reflexion");
+                logger.fine("method " + methodName + " invoked using reflexion");
             } catch (Exception e) {
                 new FeedbackReport(null, true, e);
             }
         }
+    }
+
+    private void checkPopupMenu(java.awt.event.MouseEvent evt) {
+        if (!(evt.getSource() instanceof JTable)) {
+            logger.warning("Dropping Mouse event :" + evt);
+            return;
+        }
+
+        JTable parametersTable = (JTable) evt.getSource();
+        if (evt.isPopupTrigger()) {
+            logger.finest("Menu required");
+            parameterPopupMenu.removeAll();
+
+            // Check if pointed row is positive and select row
+            int rowIdx = parametersTable.rowAtPoint(evt.getPoint());
+            if (rowIdx == -1) {
+                return;
+            }
+            parametersTable.getSelectionModel().setSelectionInterval(rowIdx, rowIdx);
+
+            // Build menu
+            final Parameter p = parameters[rowIdx];
+            JMenuItem menuItem = new JMenuItem("Manage parameter " + p.getName() +
+                    " of type " + p.getType());
+            menuItem.setEnabled(false);
+            parameterPopupMenu.add(menuItem);
+            parameterPopupMenu.add(new JSeparator());
+
+            if (!settingsModel.isSharedParameter(p)) {
+                // Show share parameter entry
+                menuItem = new JMenuItem("Share this parameter");
+                menuItem.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        settingsModel.shareParameter(p);
+                    }
+                });
+                parameterPopupMenu.add(menuItem);
+            }
+
+            // Associate with shared parameter
+            JMenu shareMenu = new JMenu("Link to ");
+            parameterPopupMenu.add(shareMenu);
+
+            Parameter[] sharedParams = settingsModel.getSharedParameters();
+
+            for (int i = 0; i < sharedParams.length; i++) {
+                final Parameter sp = sharedParams[i];
+                menuItem = new JMenuItem(sp.getName());
+                menuItem.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        settingsModel.linkParameter(p, sp);
+                    }
+                });
+                /* we previously shared parameters with same types
+                if (!p.getType().equals(sp.getType())) {
+                menuItem.setEnabled(false);
+                }
+                 */
+                shareMenu.add(menuItem);
+            }
+
+            parameterPopupMenu.validate();
+            parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        } else {
+            logger.finest("No menu required");
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        checkPopupMenu(e);
+    }
+
+    public void mousePressed(MouseEvent e) {
+        checkPopupMenu(e);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        checkPopupMenu(e);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        checkPopupMenu(e);
+    }
+
+    public void mouseExited(MouseEvent e) {
+        checkPopupMenu(e);
     }
 }

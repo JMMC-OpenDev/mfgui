@@ -8,10 +8,10 @@ import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
+import java.awt.event.MouseListener;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Vector;
@@ -37,6 +37,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public SettingsModel rootSettingsModel = null;
     private PlotModelPanel plotModelImagePanel;
     private ParametersTableModel parametersTableModel;
+    private Vector<MouseListener> mouseListeners= new Vector();
 
     /** Creates new form TargetPanel */
     public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel)
@@ -70,8 +71,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         this.rootSettings          = settingsModel.getRootSettings();
         this.rootSettingsModel     = settingsModel;
 
-        parametersTableModel.setModel(t,true);
-        jPanel5.add(jTable1.getTableHeader(),BorderLayout.NORTH);
+        parametersTableModel.setModel(settingsModel, t,true);
+        if(!mouseListeners.contains(parametersTableModel)){
+            parametersTable.addMouseListener(parametersTableModel);
+            mouseListeners.add(parametersTableModel);
+        }
+
+
+        jPanel5.add(parametersTable.getTableHeader(),BorderLayout.NORTH);
 
         listenToFileSelection      = false;
         current                    = t;
@@ -179,7 +186,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jTable1 = new javax.swing.JTable();
+        parametersTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
@@ -204,8 +211,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(parametersTableModel);
-        jPanel5.add(jTable1, java.awt.BorderLayout.CENTER);
+        parametersTable.setModel(parametersTableModel);
+        jPanel5.add(parametersTable, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -480,10 +487,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
+    private javax.swing.JTable parametersTable;
     private javax.swing.JButton removeModelButton;
     private javax.swing.JPanel subplotPanel;
     // End of variables declaration//GEN-END:variables
