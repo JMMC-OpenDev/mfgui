@@ -17,7 +17,6 @@ import fr.jmmc.mf.models.Results;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
-import java.beans.PropertyChangeListener;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 
@@ -33,6 +32,8 @@ import javax.swing.tree.*;
 
 import fr.jmmc.oifits.*;
 import fr.jmmc.oifits.validator.GUIValidator;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This class manages the castor generated classes to bring 
@@ -43,7 +44,7 @@ import fr.jmmc.oifits.validator.GUIValidator;
  *
  *
  */
-public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
+public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject{
 
     /** list of supported models   */
     protected static Hashtable supportedModels = new Hashtable();
@@ -72,11 +73,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public java.io.File associatedFile = null;
     private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
-
         public String toString() {
             return "Plots";
         }
     };
+    private Observable delegateObservable = new Observable(){
+        public boolean hasChanged(){
+            return isModified;
+        }
+    };
+
 
     /**
      * Creates a new empty SettingsModel object.
@@ -118,6 +124,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
+    /**
+     *  Add observer to be simply nofified by model content changes.
+     */
+    public void addObserver(Observer observer){
+        delegateObservable.addObserver(observer);
+    }
+
     public void addLITproSettings() {
 
     }
@@ -137,6 +150,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 new int[]{plotContainerNode.getChildCount() - 1},
                 new Object[]{newPlotNode});
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
+    }
+
+    public void setNormalize(Target target, boolean flag) {
+        target.setNormalize(flag);
+        fireTreeNodesChanged(target);
     }
 
     public void setPlotPanel(PlotPanel plotPanel) {
@@ -457,7 +475,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * This method must be called by anyone that has modified the xml binded
      * document.
      */
-    public void fireUpdate() {
+    private void fireUpdate() {
         logger.entering(className, "fireUpdate");
         logger.fine("update signal triggered");
         //@fire the model listener
@@ -1005,6 +1023,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeStructureChanged(e);
         }
+        delegateObservable.notifyObservers();
     }
 
     protected void fireTreeNodesChanged(Object changedNode) {
@@ -1013,6 +1032,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
         }
+        delegateObservable.notifyObservers();
     }
 
     /**
@@ -1027,6 +1047,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesInserted(e);
         }
+        delegateObservable.notifyObservers();
     }
 
     /**
@@ -1040,6 +1061,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesRemoved(e);
         }
+        delegateObservable.notifyObservers();
     }
 
     /**
@@ -1053,8 +1075,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
         }
+        delegateObservable.notifyObservers();
     }
-
 
     //////////////// TreeModel interface implementation ///////////////////////
     /**
@@ -1165,7 +1187,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         } else {
             return 1;
         }
-
     }
 
     /**
@@ -1254,7 +1275,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 if (child == elements[i]) {
                     return i;
                 }
-
             }
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
@@ -1284,7 +1304,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-
         logger.warning("missing code for parent=" + parent + " and child=" + child);
         return 0;
     }

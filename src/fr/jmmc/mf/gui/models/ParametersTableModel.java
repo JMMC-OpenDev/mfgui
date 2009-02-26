@@ -70,6 +70,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         this.settingsModel = settingsModel;
         this.targetToPresent = target;
         this.modelToPresent = model;
+        this.parametersToPresent = parameters;
         this.recursive = recursive;
 
         // we want to listen model change events
@@ -125,6 +126,10 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     System.out.println("parameter = " + parameter);
                     modelOfParameters[i] = settingsModel.getParent(parameter);
                 }
+            }
+            for (int i = 0; i < parameters.length; i++) {
+                Parameter parameter = parameters[i];
+                System.out.println("parameter = " + parameter);
             }
             // notify observers
             fireTableDataChanged();
