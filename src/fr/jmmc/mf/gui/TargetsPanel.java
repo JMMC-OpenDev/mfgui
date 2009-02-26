@@ -5,10 +5,6 @@ import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import javax.swing.tree.TreePath;
 
-/**
- *
- * @author  mella
- */
 public class TargetsPanel extends javax.swing.JPanel {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
@@ -99,7 +95,6 @@ public class TargetsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         add(removeTargetButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
 //GEN-FIRST:event_targetListMouseClicked
     private void targetListMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
@@ -110,7 +105,6 @@ public class TargetsPanel extends javax.swing.JPanel {
                 targetList.getSelectedValue() } ));
         }
     }//GEN-LAST:event_targetListMouseClicked
-
 //GEN-FIRST:event_removeTargetButtonActionPerformed
     private void removeTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {
         Object[] selecteds = targetList.getSelectedValues();
@@ -118,9 +112,7 @@ public class TargetsPanel extends javax.swing.JPanel {
             Object object = selecteds[i];
             rootSettingsModel.removeTarget((Target) object);
         }
-        removeTargetButton.setEnabled(false);
-        // fire tree event to refresh
-        settingsViewer.getSettingsModel().fireUpdate();
+        removeTargetButton.setEnabled(false);        
     }//GEN-LAST:event_removeTargetButtonActionPerformed
 
 //GEN-FIRST:event_targetNameComboBoxActionPerformed
