@@ -68,10 +68,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     {
         logger.entering("" + this.getClass(), "show");
 
-        this.rootSettings          = settingsModel.getRootSettings();
+        current                    = t;
         this.rootSettingsModel     = settingsModel;
+        this.rootSettings          = settingsModel.getRootSettings();
 
-        parametersTableModel.setModel(settingsModel, t,true);
+        parametersTableModel.setModel(rootSettingsModel, current,true);
         if(!mouseListeners.contains(parametersTableModel)){
             parametersTable.addMouseListener(parametersTableModel);
             mouseListeners.add(parametersTableModel);
@@ -81,7 +82,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel5.add(parametersTable.getTableHeader(),BorderLayout.NORTH);
 
         listenToFileSelection      = false;
-        current                    = t;
+        
         //// Select current ident
         identComboBox.setSelectedItem(t.getIdent());
 
@@ -136,17 +137,21 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);
         }
 
-        // Set model list
-        models.clear();
-
-        for (int i = 0; i < current.getModelCount(); i++)
-        {
-            models.addElement(current.getModel(i));
-        }
+        updateModels();
 
         // Set normalizeCheckBox
         normalizeCheckBox.setSelected(current.getNormalize());        
         plotModelImagePanel.show(settingsModel,current);
+    }
+
+    private void updateModels(){
+        // Set model list
+        models.clear();
+        for (int i = 0; i < current.getModelCount(); i++)
+        {
+            models.addElement(current.getModel(i));
+        }
+        parametersTableModel.setModel(rootSettingsModel, current,true);
     }
 
     public void valueChanged(ListSelectionEvent e)
@@ -158,6 +163,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             return;
         }
 
+        //@todo do it into the settingModel
         Object[] files = fileList.getSelectedValues();
         current.removeAllFileLink();
 
@@ -167,10 +173,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             FileLink link = new FileLink();
             link.setFileRef(file);
             current.addFileLink(link);
-        }
-
-        // fire tree event to refresh
-        settingsViewer.getSettingsModel().fireUpdate();        
+        }       
     }
 
     /** This method is called from within the constructor to
@@ -411,6 +414,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         for (int i = 0; i < values.length; i++) {
             Object object = values[i];
             rootSettingsModel.removeModel(current, (Model)object);
+            updateModels();            
         }
         removeModelButton.setEnabled(false);
     }//GEN-LAST:event_removeModelButtonActionPerformed
@@ -443,6 +447,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             StringReader reader = new StringReader(writer.toString());
             m = Model.unmarshal(reader);
             rootSettingsModel.addModel(current, m);
+            updateModels();
         }
         catch (Exception e)
         {
@@ -453,25 +458,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     
     private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
-        current.setNormalize(normalizeCheckBox.isSelected());
-        // fire tree event to refresh
-        settingsViewer.getSettingsModel().fireUpdate();
+        rootSettingsModel.setNormalize(current, normalizeCheckBox.isSelected());
     }//GEN-LAST:event_normalizeCheckBoxActionPerformed
-
-    class FileListCellRenderer extends JCheckBox implements ListCellRenderer
-    {
-        // This is the only method defined by ListCellRenderer.
-        // We just reconfigure the JLabel each time we're called.
-        public java.awt.Component getListCellRendererComponent(JList list, Object value, // value to display
-            int index, // cell index
-            boolean isSelected, // is the cell selected
-            boolean cellHasFocus) // the list and the cell have the focus
-        {
-            setText(value.toString());
-            setSelected(isSelected);
-            return this;
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
