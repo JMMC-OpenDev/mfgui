@@ -256,7 +256,7 @@ public class PlotChi2Panel extends javax.swing.JPanel {
             Parameter[] parameters = new Parameter[2];
             parameters[0] = (Parameter) xComboBox.getSelectedItem();
             parameters[1] = (Parameter) yComboBox.getSelectedItem();
-            param1TableModel.setModel(settingsModel, parameters);
+            param1TableModel.setModel(settingsModel, parameters,true);
         } else {
             logger.warning("No parameter to use for chi2map");
         }
