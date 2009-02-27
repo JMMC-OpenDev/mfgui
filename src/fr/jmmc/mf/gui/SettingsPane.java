@@ -47,6 +47,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     ModelPanel modelPanel;
     ParametersPanel parametersPanel;
     ResultPanel resultPanel;
+    ResultsPanel resultsPanel;
     PlotPanel plotPanel;
     FramePanel framePanel;
     JTree settingsTree;
@@ -93,6 +94,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         filePanel = new FilePanel();
         modelPanel = new ModelPanel();
         parametersPanel = new ParametersPanel(this);
+        resultsPanel = new ResultsPanel(this);
         resultPanel = new ResultPanel(this);
         plotPanel = new PlotPanel(this);
         targetPanel = new TargetPanel(this, plotPanel);
@@ -180,6 +182,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else if (o instanceof Parameters) {
             parametersPanel.show(rootSettingsModel,(Parameters) o);
             modifierPanel.add(parametersPanel);
+        } else if (o instanceof Results) {
+            resultsPanel.show((Results)o, rootSettingsModel);
+            modifierPanel.add(resultsPanel);
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
                     "' objects "+o));
