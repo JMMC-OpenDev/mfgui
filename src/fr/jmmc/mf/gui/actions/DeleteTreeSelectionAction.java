@@ -29,7 +29,7 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println("We should remove the selection on :"+settingsModel);
+        settingsModel.removeTreeSelection();
     }
 
     /** Listen to the settings pane selection changes

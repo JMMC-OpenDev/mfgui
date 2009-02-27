@@ -214,9 +214,40 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         new int[]{getIndexOfChild(parentTarget, oldModel)},
                         new Object[]{oldModel});
                 parentTarget.removeModel(i);
-
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
             }
         }
+
+    }
+    public void removeModel(Model oldModel) {
+        logger.entering(className, "removeModel", new Object[]{oldModel});
+        removeModel(getParent(oldModel),oldModel);
+    }
+
+    public void removeTreeSelection() {
+        TreePath treepath = getSelectionPath();
+        Object lastPathComponent = treepath.getLastPathComponent();
+        if(lastPathComponent instanceof ResultModel){
+            ResultModel resultModel = (ResultModel)lastPathComponent;
+            Result selectedResult = resultModel.getResult();
+            Result[] results = rootSettings.getResults().getResult();
+            for (int i = 0; i < results.length; i++) {
+                Result result = results[i];
+                if(result==selectedResult){
+                    rootSettings.getResults().removeResult(i);
+                    fireTreeNodesRemoved(this,
+                        new Object[]{rootSettings, rootSettings.getResults()},
+                        new int[]{i},
+                        new Object[]{lastPathComponent});
+                    setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
+                }
+            }
+        }else if(lastPathComponent instanceof Target){
+            removeTarget((Target)lastPathComponent);
+        }else if(lastPathComponent instanceof Model){
+            removeModel((Model)lastPathComponent);
+        }
+
     }
 
     public void removeTarget(Target oldTarget) {
@@ -230,6 +261,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 new Object[]{oldTarget});
         targetListModel.removeElement(oldTarget);
         rootSettings.getTargets().removeTarget(indice);
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
     }
 
     public Target addTarget(String targetIdent) {
