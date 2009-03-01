@@ -9,10 +9,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
-public class DeleteTreeSelectionAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
+public class AttachDetachFrameAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
 
-    private final static String className = "fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction";
+    private final static String className = "fr.jmmc.mf.gui.actions.AttachDetachFrameAction";
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
@@ -21,15 +22,15 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
     SettingsModel settingsModel;
     Vector<SettingsModel> settingsModelListener = new Vector();
 
-    public DeleteTreeSelectionAction(MFGui mfgui) {
-        super(className, "deleteTreeSelection");
+    public AttachDetachFrameAction(MFGui mfgui) {
+        super(className, "toggleFrameTreeSelection");
         this.mfgui=mfgui;
         // action should be enabled in the future
         setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
-        settingsModel.removeTreeSelection();
+        settingsModel.toggleSelectedFrames();
     }
 
     /** Listen to the settings pane selection changes
@@ -48,10 +49,10 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
      * @param e TreeSelectionEvent
      */
     public void valueChanged(TreeSelectionEvent e) {
-        setEnabled(false);
+        this.setEnabled(false);
         if (e.getSource() instanceof SettingsModel){
             settingsModel = (SettingsModel)e.getSource();
-            this.setEnabled(settingsModel.isSelectionRemovable());
+            this.setEnabled(!settingsModel.isFrameSelectionEmpty());
         }else{
             logger.warning("dropped treeSelectionEvent from "+e.getSource());
         }

@@ -44,7 +44,7 @@ import java.util.Observer;
  *
  *
  */
-public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject{
+public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
 
     /** list of supported models   */
     protected static Hashtable supportedModels = new Hashtable();
@@ -73,16 +73,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public java.io.File associatedFile = null;
     private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
+
         public String toString() {
             return "Plots";
         }
     };
-    private Observable delegateObservable = new Observable(){
-        public boolean hasChanged(){
+    private Observable delegateObservable = new Observable() {
+
+        public boolean hasChanged() {
             return isModified;
         }
     };
-
 
     /**
      * Creates a new empty SettingsModel object.
@@ -127,29 +128,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      *  Add observer to be simply nofified by model content changes.
      */
-    public void addObserver(Observer observer){
+    public void addObserver(Observer observer) {
         delegateObservable.addObserver(observer);
-    }
-
-    public void addLITproSettings() {
-
-    }
-
-    public void addPlot(JFrame frame, final String title) {
-        final String descStr = title;
-        DefaultMutableTreeNode newPlotNode = new DefaultMutableTreeNode(frame) {
-
-            @Override
-            public String toString() {
-                return descStr;
-            }
-        };
-        plotContainerNode.add(newPlotNode);
-        fireTreeNodesInserted(this,
-                new Object[]{rootSettings, plotContainerNode},
-                new int[]{plotContainerNode.getChildCount() - 1},
-                new Object[]{newPlotNode});
-        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
     }
 
     public void setNormalize(Target target, boolean flag) {
@@ -160,6 +140,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void setPlotPanel(PlotPanel plotPanel) {
         logger.entering(className, "setPlotPanel", new Object[]{plotPanel});
         plotContainerNode.setUserObject(plotPanel);
+    }
+
+    public void addLITproSettings() {
+    }
+
+    public void addPlot(JFrame frame, final String title) {
+        FrameTreeNode newPlotNode = new FrameTreeNode(frame, title);
+        plotContainerNode.add(newPlotNode);
+        fireTreeNodesInserted(this,
+                new Object[]{rootSettings, plotContainerNode},
+                new int[]{plotContainerNode.getChildCount() - 1},
+                new Object[]{newPlotNode});
+        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
     }
 
     /**
@@ -219,49 +212,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
     }
+
     public void removeModel(Model oldModel) {
         logger.entering(className, "removeModel", new Object[]{oldModel});
-        removeModel(getParent(oldModel),oldModel);
-    }
-
-    public void removeTreeSelection() {
-        TreePath treepath = getSelectionPath();
-        Object lastPathComponent = treepath.getLastPathComponent();
-        if(lastPathComponent instanceof ResultModel){
-            ResultModel resultModel = (ResultModel)lastPathComponent;
-            Result selectedResult = resultModel.getResult();
-            Result[] results = rootSettings.getResults().getResult();
-            for (int i = 0; i < results.length; i++) {
-                Result result = results[i];
-                if(result==selectedResult){
-                    rootSettings.getResults().removeResult(i);
-                    fireTreeNodesRemoved(this,
-                        new Object[]{rootSettings, rootSettings.getResults()},
-                        new int[]{i},
-                        new Object[]{lastPathComponent});
-                    setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
-                }
-            }
-        }else if(lastPathComponent instanceof Target){
-            removeTarget((Target)lastPathComponent);
-        }else if(lastPathComponent instanceof Model){
-            removeModel((Model)lastPathComponent);
-        }
-
-    }
-
-    public void removeTarget(Target oldTarget) {
-        logger.entering(className, "removeTarget", new Object[]{oldTarget});
-        setModified(true);
-
-        int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
-        fireTreeNodesRemoved(this,
-                new Object[]{rootSettings, rootSettings.getTargets()},
-                new int[]{indice},
-                new Object[]{oldTarget});
-        targetListModel.removeElement(oldTarget);
-        rootSettings.getTargets().removeTarget(indice);
-        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
+        removeModel(getParent(oldModel), oldModel);
     }
 
     public Target addTarget(String targetIdent) {
@@ -291,6 +245,119 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), newTarget}));
 
         return newTarget;
+    }
+
+    public void removeTarget(Target oldTarget) {
+        logger.entering(className, "removeTarget", new Object[]{oldTarget});
+        setModified(true);
+
+        int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
+        fireTreeNodesRemoved(this,
+                new Object[]{rootSettings, rootSettings.getTargets()},
+                new int[]{indice},
+                new Object[]{oldTarget});
+        targetListModel.removeElement(oldTarget);
+        rootSettings.getTargets().removeTarget(indice);
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
+    }
+
+    public void removeFrame(FrameTreeNode frameNode) {
+        // actually only plotContainer can handle such elements
+        int idx = plotContainerNode.getIndex(frameNode);
+        plotContainerNode.remove(frameNode);
+        fireTreeNodesRemoved(this,
+                new Object[]{rootSettings, plotContainerNode},
+                new int[]{idx},
+                new Object[]{frameNode});
+        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
+    }
+
+
+    /** Just tell if the tree selection contains one (or more) Frame associated to a FrameTreeNode.
+     *
+     * @return true if the selection contains some frames or false
+     */
+    public boolean isFrameSelectionEmpty() {
+        TreePath[] treePaths = getSelectionPaths();
+        for (int i = 0; i < treePaths.length; i++) {
+            TreePath treePath = treePaths[i];
+            Object object = treePath.getLastPathComponent();
+            if (object instanceof FrameTreeNode) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+   public boolean isSelectionRemovable() {
+        TreePath[] treePaths = getSelectionPaths();
+        for (int i = 0; i < treePaths.length; i++) {
+            TreePath treePath = treePaths[i];
+            Object object = treePath.getLastPathComponent();
+            if (object instanceof ResultModel ||
+                    object instanceof Target ||
+                    object instanceof ResultModel ||
+                    object instanceof Model ||
+                    object instanceof FrameTreeNode) {
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+
+    public void removeTreeSelection() {
+
+        TreePath[] treepaths = getSelectionPaths();
+        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
+        for (int i = 0; i < treepaths.length; i++) {
+            TreePath treePath = treepaths[i];
+            Object lastPathComponent = treePath.getLastPathComponent();
+            if (lastPathComponent instanceof ResultModel) {
+                ResultModel resultModel = (ResultModel) lastPathComponent;
+                Result selectedResult = resultModel.getResult();
+                Result[] results = rootSettings.getResults().getResult();
+                for (int j = 0; j < results.length; j++) {
+                    Result result = results[j];
+                    if (result == selectedResult) {
+                        rootSettings.getResults().removeResult(j);
+                        fireTreeNodesRemoved(this,
+                                new Object[]{rootSettings, rootSettings.getResults()},
+                                new int[]{j},
+                                new Object[]{lastPathComponent});
+                        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
+                    }
+                }
+            } else if (lastPathComponent instanceof Target) {
+                removeTarget((Target) lastPathComponent);
+            } else if (lastPathComponent instanceof Model) {
+                removeModel((Model) lastPathComponent);
+            } else if (lastPathComponent instanceof FrameTreeNode) {
+                removeFrame((FrameTreeNode) lastPathComponent);
+            } else {
+                logger.warning("No code implemented to remove : " + lastPathComponent.getClass());
+            }
+        }
+
+    }
+
+    public void toggleSelectedFrames() {
+        TreePath[] treepaths = getSelectionPaths();
+        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
+        for (int i = 0; i < treepaths.length; i++) {
+            TreePath treePath = treepaths[i];
+            Object lastPathComponent = treePath.getLastPathComponent();
+            if (lastPathComponent instanceof DefaultMutableTreeNode) {
+                Object lastUserObject = ((DefaultMutableTreeNode) lastPathComponent).getUserObject();
+                if (lastUserObject instanceof JFrame) {
+                    JFrame frame = (JFrame) lastUserObject;
+                    frame.setContentPane(frame.getContentPane());
+                    frame.setVisible(!frame.isVisible());
+                    setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, lastPathComponent}));
+                }
+            }
+        }
     }
 
     public void init() {
@@ -423,11 +490,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public Parameter[] getSharedParameters() {
         return rootSettings.getParameters().getParameter();
     }
-    public boolean isSharedParameter(Parameter p){
+
+    public boolean isSharedParameter(Parameter p) {
         Parameter[] params = rootSettings.getParameters().getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
-            if(parameter==p){
+            if (parameter == p) {
                 return true;
             }
         }
@@ -471,7 +539,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (params[i] == parameterToShare) {
                 associatedModel.removeParameter(i);
             }
-        }        
+        }
         rootSettings.getParameters().addParameter(parameterToShare);
 
         // if it is the first time that a shared parameters has been added
