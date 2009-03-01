@@ -286,16 +286,21 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel5 = new javax.swing.JPanel();
         modifierPanel = new javax.swing.JPanel();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+        setLayout(new java.awt.GridBagLayout());
 
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(1.0);
+        jSplitPane2.setMinimumSize(new java.awt.Dimension(275, 234));
+        jSplitPane2.setPreferredSize(new java.awt.Dimension(260, 234));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
         jPanel2.setMinimumSize(new java.awt.Dimension(31, 168));
         jPanel2.setPreferredSize(new java.awt.Dimension(91, 168));
         jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        settingsTreeScrollPane.setMinimumSize(new java.awt.Dimension(150, 23));
+        settingsTreeScrollPane.setPreferredSize(new java.awt.Dimension(150, 4));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
@@ -309,6 +314,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         controlPanel.setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        runFitButton.setMinimumSize(new java.awt.Dimension(175, 29));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -357,7 +364,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         modifierPanel.setLayout(new javax.swing.BoxLayout(modifierPanel, javax.swing.BoxLayout.LINE_AXIS));
         jSplitPane1.setRightComponent(modifierPanel);
 
-        add(jSplitPane1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jSplitPane1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     // Cell renderer used by the settings tree

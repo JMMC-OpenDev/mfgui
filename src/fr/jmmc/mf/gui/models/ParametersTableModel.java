@@ -123,13 +123,8 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             if (recursive) {
                 for (int i = 0; i < parametersToPresent.length; i++) {
                     Parameter parameter = parametersToPresent[i];
-                    System.out.println("parameter = " + parameter);
                     modelOfParameters[i] = settingsModel.getParent(parameter);
                 }
-            }
-            for (int i = 0; i < parameters.length; i++) {
-                Parameter parameter = parameters[i];
-                System.out.println("parameter = " + parameter);
             }
             // notify observers
             fireTableDataChanged();
@@ -388,7 +383,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     public void treeNodesChanged(TreeModelEvent e) {
         refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
-        System.out.println("toto"+e);
     }
 
     public void treeNodesInserted(TreeModelEvent e) {

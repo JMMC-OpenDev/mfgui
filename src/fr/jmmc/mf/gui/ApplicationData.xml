@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.0beta2"/>
+    <program name="ModelFitting" version="1.1.0beta3"/>
         <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -33,12 +33,14 @@
             <!--
             <menu label="Show LITpro setting file" classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="show"/>
             -->
-            <menu label="Delete" classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="delete" accelerator="DELETE"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"/>
       </menu>
     </menubar>
     <releasenotes>
        <release version="1.1.0">
-            <prerelease version="1.1.0beta3"><!--
+            <prerelease version="1.1.0beta4">
+                <!--
                 <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -49,7 +51,6 @@
                  <change type="REQUEST"></change>
                  -->
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
-                <change type="REQUEST">Add attach, detach and remove button according plot list selection</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Add residual plots for OIT3</change>
@@ -58,7 +59,10 @@
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>               
+            </prerelease>
+            <prerelease version="1.1.0beta3">
+                <change type="CHANGE">Add attach, detach and remove button according plot list selection</change>
             </prerelease>
             <prerelease version="1.1.0beta2">
                 <change type="BUGFIX">fix shared parameter handling</change>
