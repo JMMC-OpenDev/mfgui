@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.0beta3"/>
+    <program name="ModelFitting" version="1.1.0beta4"/>
         <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -39,7 +39,7 @@
     </menubar>
     <releasenotes>
        <release version="1.1.0">
-            <prerelease version="1.1.0beta4">
+            <prerelease version="1.1.0beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -59,10 +59,13 @@
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add one 'remove file' button from main file list.</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>               
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+            </prerelease>
+            <prerelease version="1.1.0beta4">
+                <change type="CHANGE">Improve result report for parameters</change>
             </prerelease>
             <prerelease version="1.1.0beta3">
-                <change type="CHANGE">Add attach, detach and remove button according plot list selection</change>
+                <change type="CHANGE">Add attach, detach and remove button for plot list selection </change>
             </prerelease>
             <prerelease version="1.1.0beta2">
                 <change type="BUGFIX">fix shared parameter handling</change>
