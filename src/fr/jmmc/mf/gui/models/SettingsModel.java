@@ -32,6 +32,7 @@ import javax.swing.tree.*;
 
 import fr.jmmc.oifits.*;
 import fr.jmmc.oifits.validator.GUIValidator;
+import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -202,15 +203,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < models.length; i++) {
             Model model = models[i];
             if (model == oldModel) {
+                int idx=getIndexOfChild(parentTarget, model);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
-                        new int[]{getIndexOfChild(parentTarget, oldModel)},
+                        new int[]{idx},
                         new Object[]{oldModel});
                 parentTarget.removeModel(i);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
             }
         }
-
     }
 
     public void removeModel(Model oldModel) {
@@ -252,24 +253,41 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setModified(true);
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
+        targetListModel.removeElement(oldTarget);
+        rootSettings.getTargets().removeTarget(indice);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 new int[]{indice},
                 new Object[]{oldTarget});
-        targetListModel.removeElement(oldTarget);
-        rootSettings.getTargets().removeTarget(indice);
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
     }
 
     public void removeFrame(FrameTreeNode frameNode) {
-        // actually only plotContainer can handle such elements
+        // actually only plotContainer or Result can have such elements as child
         int idx = plotContainerNode.getIndex(frameNode);
-        plotContainerNode.remove(frameNode);
-        fireTreeNodesRemoved(this,
-                new Object[]{rootSettings, plotContainerNode},
-                new int[]{idx},
-                new Object[]{frameNode});
-        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
+        if (idx >= 0) {
+            plotContainerNode.remove(frameNode);
+            fireTreeNodesRemoved(this,
+                    new Object[]{rootSettings, plotContainerNode},
+                    new int[]{idx},
+                    new Object[]{frameNode});
+            setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
+            return;
+        }
+        Enumeration<ResultModel> resModels = resultToModel.elements();
+        while (resModels.hasMoreElements()) {
+            ResultModel resModel = resModels.nextElement();
+            idx=resModel.getIndex(frameNode);
+            if (idx >= 0) {
+                resModel.remove(frameNode);
+                fireTreeNodesRemoved(this,
+                        new Object[]{rootSettings, rootSettings.getResults(), resModel},
+                        new int[]{idx},
+                        new Object[]{frameNode});                
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), resModel}));
+                return;
+            }
+        }
     }
 
 
@@ -279,6 +297,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public boolean isFrameSelectionEmpty() {
         TreePath[] treePaths = getSelectionPaths();
+        if(treePaths==null){
+           return true;
+        }
         for (int i = 0; i < treePaths.length; i++) {
             TreePath treePath = treePaths[i];
             Object object = treePath.getLastPathComponent();
@@ -290,8 +311,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
    public boolean isSelectionRemovable() {
-        TreePath[] treePaths = getSelectionPaths();
-        for (int i = 0; i < treePaths.length; i++) {
+       TreePath[] treePaths = getSelectionPaths();
+       if(treePaths==null){
+           return false;
+       }
+       for (int i = 0; i < treePaths.length; i++) {
             TreePath treePath = treePaths[i];
             Object object = treePath.getLastPathComponent();
             if (object instanceof ResultModel ||
@@ -308,9 +332,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
 
     public void removeTreeSelection() {
-
         TreePath[] treepaths = getSelectionPaths();
-        setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
         for (int i = 0; i < treepaths.length; i++) {
             TreePath treePath = treepaths[i];
             Object lastPathComponent = treePath.getLastPathComponent();
@@ -683,7 +705,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     new Object[]{rootSettings},
                     new int[]{getIndexOfChild(rootSettings, rootSettings.getResults())},
                     new Object[]{rootSettings.getResults()});
-
         }
     }
 
@@ -807,6 +828,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         logger.warning("Can't find parent of :" + child);
+        new Throwable("Can't find parent of :" + child).printStackTrace();
         return null;
     }
 
@@ -827,6 +849,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         logger.warning("Can't find parent of :" + child);
+        new Throwable("Can't find parent of :" + child).printStackTrace();
         return null;
     }
 
