@@ -1,6 +1,7 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.PlotPanel;
 import fr.jmmc.mf.gui.UtilsClass;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -125,16 +126,11 @@ public class ResultModel extends DefaultMutableTreeNode {
             plotMLParser = new PlotMLParser(plot);
             plotMLParser.parse(null, xmlStr);
             // Show plot into frame
-            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot){
-                public String toString(){
-                    return plotName;
-                }
-            };
-            this.add(new DefaultMutableTreeNode(plotMLFrame));
+            PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
+            this.add(new FrameTreeNode(plotMLFrame, plotName));
 
             url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
-            System.out.println(UtilsClass.xsl(xmlResult, url, null));
-
+            new Throwable(UtilsClass.xsl(xmlResult, url, null)).printStackTrace();
         } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
         }
