@@ -249,7 +249,8 @@ public class PlotChi2Panel extends javax.swing.JPanel {
 }//GEN-LAST:event_plot2DChi2ButtonActionPerformed
 
     private void updateTable() {
-        boolean hasParam = xComboBox.getItemCount() != 0;
+        boolean hasParam = ( xComboBox.getSelectedItem() != null )
+                && ( yComboBox.getSelectedItem() != null );
         plot1DChi2Button.setEnabled(hasParam);
         plot2DChi2Button.setEnabled(hasParam);
         if (hasParam) {
