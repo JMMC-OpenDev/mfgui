@@ -1,76 +1,32 @@
-/*
- * FilePanel.java
- *
- * Created on 8 novembre 2006, 11:27
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
-
 import fr.jmmc.mf.models.File;
-
 import fr.jmmc.oifits.*;
 
 import fr.jmmc.oifits.validator.GUIValidator;
 import org.apache.commons.math.linear.RealVectorImpl;
-
-//import nom.tam.fits.*;
-import org.eso.fits.FitsFile;
-
 import ptolemy.plot.*;
-
 import ptolemy.plot.plotml.*;
-
-
 import java.net.URI;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import org.apache.commons.math.linear.RealMatrixImpl;
 
-
 /**
  *
- * @author  mella
+ * Display one data file content.
  */
-public class FilePanel extends javax.swing.JPanel
-{
-    /**
-     * DOCUMENT ME!
-     */
+public class FilePanel extends javax.swing.JPanel {
+
     File current = null;
-
-    OifitsFile oifitsFile_=null;
-    /**
-     * DOCUMENT ME!
-     */
+    OifitsFile oifitsFile_ = null;
     static Action saveEmbeddedFileAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action checkEmbeddedFileAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     static Action showEmbeddedFileAction;
-
-    /**
-     * DOCUMENT ME!
-     */
     MyListSelectionListener myListSelectionListener;
-
-    /**
-     * DOCUMENT ME!
-     */
     ListModel hduListModel = new DefaultListModel();
-
-    /**
-     * DOCUMENT ME!
-     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.FilePanel");
 
@@ -101,12 +57,11 @@ public class FilePanel extends javax.swing.JPanel
     // End of variables declaration//GEN-END:variables
 
     /** Creates new form FilePanel */
-    public FilePanel()
-    {
+    public FilePanel() {
         // Prepare action before gui construction
-        saveEmbeddedFileAction     = new SaveEmbeddedFileAction();
-        showEmbeddedFileAction     = new ShowEmbeddedFileAction();
-        checkEmbeddedFileAction     = new CheckEmbeddedFileAction();
+        saveEmbeddedFileAction = new SaveEmbeddedFileAction();
+        showEmbeddedFileAction = new ShowEmbeddedFileAction();
+        checkEmbeddedFileAction = new CheckEmbeddedFileAction();
         initComponents();
 
         MyListSelectionListener myListSelectionListener = new MyListSelectionListener();
@@ -115,25 +70,23 @@ public class FilePanel extends javax.swing.JPanel
         myListSelectionListener.valueChanged(null);
     }
 
-    public void show(File file)
-    {
+    public void show(File file) {
         // Try to load data file
-        oifitsFile_=null;
-        try
-        {
-            current = file;            
-            String     filename   = UtilsClass.saveBASE64ToFile(current,
+        oifitsFile_ = null;
+        try {
+            current = file;
+            String filename = UtilsClass.saveBASE64ToFile(current,
                     current.getHref());
-            java.io.File f        = new java.io.File(filename);
-            oifitsFile_  = new OifitsFile(filename);
+            java.io.File f = new java.io.File(filename);
+            oifitsFile_ = new OifitsFile(filename);
 
             // update file info fields
             nameTextField.setText(file.getName());
-            localNameTextField.setText(f.getAbsolutePath() +"  ("+(f.length() / 1000) + " kBytes)");         
-           
+            localNameTextField.setText(f.getAbsolutePath() + "  (" + (f.length() / 1000) + " kBytes)");
+
             // update lists
             hduList.setListData(oifitsFile_.getOiTables());
-            hduListModel=hduList.getModel();            
+            hduListModel = hduList.getModel();
             showUVCoverageButton.setEnabled(false);
             showVisButton.setEnabled(oifitsFile_.hasOiVis());
             visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
@@ -143,10 +96,8 @@ public class FilePanel extends javax.swing.JPanel
             t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
             t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
             // update button state
-            hduList.setSelectedIndices(new int[]{});                            
-        }
-        catch (Exception exc)
-        {
+            hduList.setSelectedIndices(new int[]{});
+        } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
         }
     }
@@ -368,7 +319,6 @@ public class FilePanel extends javax.swing.JPanel
         add(jPanel1, gridBagConstraints);
 
         jButton1.setAction(FilesPanel.loadFilesAction);
-        jButton1.setText("Load another file...");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -376,11 +326,6 @@ public class FilePanel extends javax.swing.JPanel
         add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param app DOCUMENT ME!
-     */
     public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app)
     {
         try
@@ -416,11 +361,6 @@ public class FilePanel extends javax.swing.JPanel
          **/
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void hduListMousePressed(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMousePressed
         logger.entering("" + this.getClass(), "hduListMousePressed");
@@ -472,11 +412,6 @@ public class FilePanel extends javax.swing.JPanel
         }
     }//GEN-LAST:event_hduListMousePressed
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void hduListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMouseClicked
         logger.entering("" + this.getClass(), "hduListMouseClicked");
@@ -549,9 +484,6 @@ public class FilePanel extends javax.swing.JPanel
         return sb.toString();
     }
     
-    /**
-     * DOCUMENT ME!     
-     */
     public void showData(String requestedTables, String [] requestedColumns)
     {
         logger.fine("Searching to plot "+requestedTables);
@@ -675,11 +607,6 @@ public class FilePanel extends javax.swing.JPanel
     }
     
     /*TO PUT ON ANOTHER PLACE*/
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVisButtonActionPerformed
         final String [] ampAndPhi=new String[]{"VISAMP", "VISPHI"};
@@ -702,21 +629,11 @@ public class FilePanel extends javax.swing.JPanel
         
     }//GEN-LAST:event_showVisButtonActionPerformed
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void showVis2ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVis2ButtonActionPerformed
         showData("OI_VIS2", new String[]{"VIS2DATA"});
     }//GEN-LAST:event_showVis2ButtonActionPerformed
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showT3ButtonActionPerformed
         final String [] ampAndPhi=new String[]{"T3AMP", "T3PHI"};
@@ -806,12 +723,6 @@ public class FilePanel extends javax.swing.JPanel
     }//GEN-LAST:event_showUVCoverageButtonActionPerformed
 
     // End of variables declaration                   
-    /**
-     * DOCUMENT ME!
-     *
-     * @param targetFile DOCUMENT ME!
-     *
-     */
     public void saveFile(java.io.File targetFile)
         throws java.io.IOException, java.io.FileNotFoundException
     {
