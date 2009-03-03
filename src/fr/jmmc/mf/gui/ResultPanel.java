@@ -33,6 +33,7 @@ public class ResultPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
 
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Result panel:"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
