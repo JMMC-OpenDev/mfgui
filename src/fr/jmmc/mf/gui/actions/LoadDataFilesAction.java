@@ -79,7 +79,6 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
      * @param e TreeSelectionEvent
      */
     public void valueChanged(TreeSelectionEvent e) {
-        this.setEnabled(false);
         if (e.getSource() instanceof SettingsModel){
             settingsModel = (SettingsModel)e.getSource();            
         }else{
