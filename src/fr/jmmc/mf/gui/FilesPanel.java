@@ -8,6 +8,8 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mcs.util.ActionRegistrar;
+import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
 import fr.jmmc.mf.models.Files;
 
 import javax.swing.*;
@@ -52,8 +54,9 @@ public class FilesPanel extends javax.swing.JPanel
     public FilesPanel(SettingsViewerInterface viewer)
     {
         settingsViewer      = viewer;
-        loadFilesAction     = new LoadFilesAction();
+        loadFilesAction     = ActionRegistrar.getInstance().get(LoadDataFilesAction.className, LoadDataFilesAction.actionName);
         initComponents();
+        addFileButton.setAction(loadFilesAction);
     }
 
     /**
@@ -134,53 +137,4 @@ public class FilesPanel extends javax.swing.JPanel
             }
         }
     } // </editor-fold>                              
-
-    //
-    // Inner classes used to manage actions
-    //
-    protected class LoadFilesAction extends fr.jmmc.mcs.util.MCSAction
-    {
-        public String lastDir = System.getProperty("user.home");
-
-        public LoadFilesAction()
-        {
-            super("loadFiles");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            logger.entering("" + this.getClass(), "actionPerformed");
-
-            try
-            {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setMultiSelectionEnabled(true);
-
-                // Set in previous load directory
-                if (lastDir != null)
-                {
-                    fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-                }
-
-                // Open file chooser
-                int returnVal = fileChooser.showOpenDialog(null);
-
-                if (returnVal == JFileChooser.APPROVE_OPTION)
-                {
-                    java.io.File[] files = fileChooser.getSelectedFiles();
-
-                    for (int i = 0; i < files.length; i++)
-                    {
-                        rootSettingsModel.addFile(files[i]);
-                    }
-
-                    lastDir = files[0].getParent();
-                }
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
-        }
-    }
 }
