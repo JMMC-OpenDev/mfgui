@@ -1,10 +1,16 @@
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -12,7 +18,8 @@ import javax.swing.event.TreeSelectionListener;
 
 public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
 
-    private final static String className = "fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction";
+    public final static String className = "fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction";
+    public final static String actionName = "showLitproSettingsFile";
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
@@ -22,15 +29,18 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
     Vector<SettingsModel> settingsModelListener = new Vector();
 
     public ShowLitproSettingsFileAction(MFGui mfgui) {
-        super(className, "show");
+        super(className, actionName);
         this.mfgui=mfgui;
-        // action should be enabled in the future
-        setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
-        settingsModel.addLITproSettings();
-        System.out.println("We should remove the selection on :"+settingsModel);
+        try{
+            JTextArea msg = new JTextArea(settingsModel.toLITproDesc(),20,80);
+            JScrollPane pane = new JScrollPane(msg);
+            JOptionPane.showMessageDialog(null, pane, "Here comes the fresh associated LITpro desc file", JOptionPane.INFORMATION_MESSAGE);
+        }catch(Exception ex){
+            new FeedbackReport(ex);
+        }
     }
 
     /** Listen to the settings pane selection changes
@@ -49,15 +59,12 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
      * @param e TreeSelectionEvent
      */
     public void valueChanged(TreeSelectionEvent e) {
+        setEnabled(false);
         if (e.getSource() instanceof SettingsModel){
-            System.out.println("Selection has changed on jtree for:"+e.getSource());
             settingsModel = (SettingsModel)e.getSource();
-            // @todo test what is the selection and accept or not the remove action
             this.setEnabled(settingsModel.isValid());
         }else{
             logger.warning("dropped treeSelectionEvent from "+e.getSource());
         }
     }
-
-
 }
