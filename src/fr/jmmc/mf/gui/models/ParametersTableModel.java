@@ -29,7 +29,7 @@ import javax.swing.table.AbstractTableModel;
 public class ParametersTableModel extends AbstractTableModel implements MouseListener, Observer{
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.ParametersTableModel");
+            "fr.jmmc.mf.gui.models.ParametersTableModel");
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
@@ -75,6 +75,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
         // we want to listen model change events
         if (!knownSettingsModels.contains(settingsModel)) {
+            System.out.println("listening for settingsModel = " + settingsModel);
             settingsModel.addObserver(this);
             knownSettingsModels.add(settingsModel);
         }
@@ -320,7 +321,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 // Show share parameter entry
                 menuItem = new JMenuItem("Share this parameter");
                 menuItem.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         settingsModel.shareParameter(p);
                         // notify observers
@@ -386,15 +386,22 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     public void treeNodesInserted(TreeModelEvent e) {
+        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+
     }
 
     public void treeNodesRemoved(TreeModelEvent e) {
+        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+
     }
 
     public void treeStructureChanged(TreeModelEvent e) {
+        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
     }
 
     public void update(Observable o, Object arg) {
+        System.out.println("arg = " + arg);
+        System.out.println("o = " + o);
         refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
     }
 }
