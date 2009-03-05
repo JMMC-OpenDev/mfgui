@@ -24,6 +24,7 @@ Generate Html view of given xml settings files .
     exclude-result-prefixes="math str" >
  
     <xsl:output method="html"/>
+    <xsl:variable name="root" select="/" />
 
     <xsl:template match="/">
         <xsl:apply-templates/>
@@ -33,26 +34,52 @@ Generate Html view of given xml settings files .
         <xsl:apply-templates select=".//result[position()=last()]"/>
     </xsl:template>
 
-
-
     <xsl:template name="get_standard_deviation">
         <xsl:param name="world"/>
         <xsl:param name="paramName"/>
         <xsl:variable name="worldCopy">
             <xsl:copy-of select="exslt:node-set($world)/*"/>
         </xsl:variable>
-
         <xsl:if test="exslt:node-set($worldCopy)//_fitter/names[text()=$paramName]">
             <xsl:value-of select="exslt:node-set($worldCopy)//_fitter//stdev/text()"/>
         </xsl:if>
-         <xsl:for-each select="exslt:node-set($worldCopy)//_fitter/names//td">
-         <xsl:variable name="pos" select="position()"/>
+        <xsl:for-each select="exslt:node-set($worldCopy)//_fitter/names//td">
+            <xsl:variable name="pos" select="position()"/>
             <xsl:if test="text()=$paramName">
                 <xsl:value-of select="exslt:node-set($worldCopy)//_fitter//stdev//td[position()=$pos]"/>
             </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
 
-         </xsl:for-each>
+    <xsl:template name="get_parameter_scale">
+        <xsl:param name="paramName"/>
+        <xsl:variable name="settings" select="p_settings"/>
+        <xsl:for-each select="exslt:node-set($root)//settings/parameters/parameter|exslt:node-set($root)//settings/targets//parameter">
+            <xsl:if test="@name=$paramName">
+                <xsl:choose>
+                    <xsl:when test="scale">
+                        <xsl:value-of select="scale"/>
+                    </xsl:when>
+                    <xsl:otherwise>AUTO</xsl:otherwise>
+                </xsl:choose>
+                <xsl:value-of select="scale"/>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
 
+    <xsl:template name="is_parameter_fixed">
+        <xsl:param name="paramName"/>
+        <xsl:variable name="settings" select="p_settings"/>
+        <xsl:for-each select="exslt:node-set($root)//settings/parameters/parameter|exslt:node-set($root)//settings/targets//parameter">
+            <xsl:if test="@name=$paramName">
+                <xsl:choose>
+                    <xsl:when test="hasFixedValue">
+                        <xsl:value-of select="hasFixedValue"/>
+                    </xsl:when>
+                    <xsl:otherwise>0</xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="show_parameters">
@@ -90,7 +117,7 @@ Generate Html view of given xml settings files .
                             <xsl:otherwise>
                                 <xsl:value-of select="'---'"/>
                             </xsl:otherwise>
-                        </xsl:choose>                        
+                        </xsl:choose>
                     </td>
                     <td>
                         <xsl:value-of select="vmin"/>
@@ -99,19 +126,25 @@ Generate Html view of given xml settings files .
                         <xsl:value-of select="vmax"/>
                     </td>
                     <td>
-                        <xsl:value-of select="scale"/>
+                        <!-- yorick world contains flags but no  scale element-->
+                        <xsl:call-template name="get_parameter_scale">
+                            <xsl:with-param name="paramName" select="name()"/>
+                        </xsl:call-template>
                     </td>
                     <td>
-                        <xsl:value-of select="fixed"/>
+                        <!-- yorick world contains flags but no  fixed element-->
+                        <xsl:call-template name="is_parameter_fixed">
+                            <xsl:with-param name="paramName" select="name()"/>
+                        </xsl:call-template>
                     </td>
                     <td>
                         <xsl:value-of select="units"/>
                     </td>
                     <td>
-                             <xsl:call-template name="get_standard_deviation">
-                                 <xsl:with-param name="world" select="$worldCopy"/>
-                                 <xsl:with-param name="paramName" select="name()"/>
-                             </xsl:call-template>
+                        <xsl:call-template name="get_standard_deviation">
+                            <xsl:with-param name="world" select="$worldCopy"/>
+                            <xsl:with-param name="paramName" select="name()"/>
+                        </xsl:call-template>
                     </td>
                 </tr>
             </xsl:for-each>
