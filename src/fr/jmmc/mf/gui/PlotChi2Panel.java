@@ -57,6 +57,7 @@ public class PlotChi2Panel extends javax.swing.JPanel {
                 }
             }
         }
+        updateTable();
     }
 
     /** This method is called from within the constructor to
