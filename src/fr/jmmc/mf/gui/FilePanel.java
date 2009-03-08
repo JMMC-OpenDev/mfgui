@@ -697,10 +697,12 @@ public class FilePanel extends javax.swing.JPanel {
                     ucoord.append(new RealVectorImpl(t.getU2Coord()));
                     vcoord.append(new RealVectorImpl(t.getV2Coord()));           
                 }
+                if(ucoord!=null  && vcoord !=null){
                 // add symetrical part and request plot file building
                 sb.append(buildXmlPtPlotDataSet(label,
                         ucoord.append(ucoord.mapMultiply(-1)).getData(),
                         vcoord.append(vcoord.mapMultiply(-1)).getData(),  null, null));
+                }
             }
             sb.append("</plot>");
 
