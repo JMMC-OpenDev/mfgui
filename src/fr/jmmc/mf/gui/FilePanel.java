@@ -494,7 +494,7 @@ public class FilePanel extends javax.swing.JPanel {
     public void showData(String requestedTables, String [] requestedColumns)
     {
         logger.fine("Searching to plot "+requestedTables);
-        String plotName="";
+        String plotName="data versus radial distance";
         try
         {        
             int retainedHdu = 0;
