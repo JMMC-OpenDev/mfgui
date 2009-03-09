@@ -22,6 +22,7 @@ import fr.jmmc.mcs.util.*;
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
 import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
+import fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -65,7 +66,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         instance                  = this;
         // instanciate actions       
         getYogaVersionAction      = new GetYogaVersionAction(this);
-       
+
         new ShowPrefAction(this);
         new NewModelAction(this);
         new CloseModelAction(this);
@@ -87,6 +88,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         tabbedPane_.addChangeListener(deleteTreeSelectionAction);
         tabbedPane_.addChangeListener(attachDetachFrameAction);
         tabbedPane_.addChangeListener(new LoadDataFilesAction(this));
+        tabbedPane_.addChangeListener(new ShowLitproSettingsFileAction(this));
+
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
 
         /* Plastic transmitter. */
