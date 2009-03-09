@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.0beta4"/>
+    <program name="ModelFitting" version="1.1.0beta5"/>
         <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
-    <!--	<copyright>Copyrights JMMC 2008</copyright> -->
+    <!--<copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
     </dependences>
@@ -30,11 +30,10 @@
             <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
         </menu>
          <menu label="Edit">
-            <!--
-            <menu label="Show LITpro setting file" classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="show"/>
-            -->
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"/>
             <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"/>
+            <menu/>
+            <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
       </menu>
     </menubar>
     <releasenotes>
@@ -49,7 +48,7 @@
                  <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
                  <change type="FEATURE"></change>
                  <change type="REQUEST"></change>
-                 -->
+                -->
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
@@ -58,10 +57,20 @@
                 <change type="REQUEST">Add previous parametre value column in the parameter table</change>
                 <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
-                <change type="REQUEST">Add one 'remove file' button from main file list.</change>
+                <change type="REQUEST">Add function to remove orphan data files.</change>
+                <change type="REQUEST">Add function to remove orphan sharedParameters</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after a fit process </change>
+                <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after parameters sharing </change>
+                <change type="REQUEST">Embbed new topcat</change>
+            </prerelease>
+            <prerelease version="1.1.0beta5">
+                <change type="FEATURE">Add litpro settings file generation (in edit menu)</change>
+                <change type="BUGFIX">Settings with shared parameters use right names</change>
             </prerelease>
             <prerelease version="1.1.0beta4">
+                <change type="BUGFIX">Target get the full list of oifile which includes the associated target name</change>
+                <change type="CHANGE">Result panel get one titled border</change>
                 <change type="CHANGE">Improve result report for parameters</change>
             </prerelease>
             <prerelease version="1.1.0beta3">
