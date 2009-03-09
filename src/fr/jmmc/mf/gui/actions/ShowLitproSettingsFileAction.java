@@ -31,6 +31,7 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
     public ShowLitproSettingsFileAction(MFGui mfgui) {
         super(className, actionName);
         this.mfgui=mfgui;
+        setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -49,6 +50,7 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
      */
     public void stateChanged(ChangeEvent e) {
         settingsModel=mfgui.getSelectedSettings();
+        this.setEnabled(settingsModel.isValid());
         if(!settingsModelListener.contains(settingsModel)){
             settingsModel.addTreeSelectionListener(this);
         }
