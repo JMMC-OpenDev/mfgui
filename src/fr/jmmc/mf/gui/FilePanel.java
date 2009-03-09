@@ -1,11 +1,11 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oifits.*;
 
 import fr.jmmc.oifits.validator.GUIValidator;
-import org.apache.commons.math.linear.RealVectorImpl;
 import ptolemy.plot.*;
 import ptolemy.plot.plotml.*;
 import java.net.URI;
@@ -56,6 +56,8 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
 
+    protected SettingsModel settingsModel;
+
     /** Creates new form FilePanel */
     public FilePanel() {
         // Prepare action before gui construction
@@ -64,13 +66,14 @@ public class FilePanel extends javax.swing.JPanel {
         checkEmbeddedFileAction = new CheckEmbeddedFileAction();
         initComponents();
 
-        MyListSelectionListener myListSelectionListener = new MyListSelectionListener();
+        myListSelectionListener = new MyListSelectionListener();
         hduList.addListSelectionListener(myListSelectionListener);
         //fix default state
         myListSelectionListener.valueChanged(null);
     }
 
-    public void show(File file) {
+    public void show(File file,SettingsModel settingsModel) {
+        this.settingsModel=settingsModel;
         // Try to load data file
         oifitsFile_ = null;
         try {
@@ -459,7 +462,11 @@ public class FilePanel extends javax.swing.JPanel {
             double[][] errorBar, boolean[][] flags)
     {
         StringBuffer sb = new StringBuffer();
-        logger.fine("Dims=" + x.length + "," + y.length + "," + errorBar.length + "," + errorBar.length + ",");
+        if(errorBar!=null){
+            logger.fine("x,y,err dimensions :"+x.length+","+y.length+","+errorBar.length);
+        }   else{
+            logger.fine("x,y dimensions :"+x.length+","+y.length);
+        }
         sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
         for (int i = 0; i < x.length; i++)
         {
@@ -487,6 +494,7 @@ public class FilePanel extends javax.swing.JPanel {
     public void showData(String requestedTables, String [] requestedColumns)
     {
         logger.fine("Searching to plot "+requestedTables);
+        String plotName="";
         try
         {        
             int retainedHdu = 0;
@@ -582,7 +590,7 @@ public class FilePanel extends javax.swing.JPanel {
                         OiVis2 t = (OiVis2) table;
                         data = t.getVis2Data();
                         err = t.getVis2Err();
-                        dist = t.getSpacial();
+                        dist = t.getSpacialFreq();
                         flags = t.getFlags();
                     }
                     sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
@@ -594,11 +602,8 @@ public class FilePanel extends javax.swing.JPanel {
             Plot         plot         = new Plot();
             PlotMLParser plotMLParser = new PlotMLParser(plot);
             plotMLParser.parse(null, sb.toString());
-
-            JFrame f = new JFrame();
-            f.getContentPane().add(plot);
-            f.pack();
-            f.setVisible(true);
+            PlotMLFrame plotMLFrame = new PlotMLFrame(plotName, plot);
+            settingsModel.addPlot(plotMLFrame, plotName);
         }
         catch (Exception exc)
         {
@@ -659,6 +664,7 @@ public class FilePanel extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
+        String plotName="UVCoverage";
         try
         {           
             StringBuffer sb   = new StringBuffer();
@@ -666,42 +672,70 @@ public class FilePanel extends javax.swing.JPanel {
                 "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
                 " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">" + "<plot>" +
                 "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
-                "<title>UV coverage</title>" + "<xLabel>UCOORD</xLabel>" +
-                "<yLabel>VCOORD</yLabel>");
+                "<title>UV coverage</title>" + "<xLabel>UCOORD [1/rad] </xLabel>" +
+                "<yLabel>VCOORD [1/rad]</yLabel>");
             
             Object selected[] = hduList.getSelectedValues();
             for (int i = 0; i < selected.length; i++)
             {
                 OiTable table  = (OiTable)selected[i];
                 String label = table.getExtName();
-                RealVectorImpl ucoord=null;                        
-                RealVectorImpl vcoord=null;
+                RealMatrixImpl ucoord=null;
+                RealMatrixImpl vcoord=null;
 
                 if (table instanceof OiVis )
                 {
                     OiVis t=(OiVis)table;
-                    ucoord = new RealVectorImpl(t.getUCoord()); 
-                    vcoord = new RealVectorImpl(t.getVCoord());                    
+                    ucoord = new RealMatrixImpl(t.getSpacialUCoord());
+                    vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
                 if (table instanceof OiVis2 )
                 {
                     OiVis2 t=(OiVis2)table;
-                    ucoord = new RealVectorImpl(t.getUCoord()); 
-                    vcoord = new RealVectorImpl(t.getVCoord());
+                    ucoord = new RealMatrixImpl(t.getSpacialUCoord());
+                    vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
                 if (table instanceof OiT3 )
                 {
                     OiT3 t=(OiT3)table;
-                    ucoord = new RealVectorImpl(t.getU1Coord()); 
-                    vcoord = new RealVectorImpl(t.getV1Coord());
-                    ucoord.append(new RealVectorImpl(t.getU2Coord()));
-                    vcoord.append(new RealVectorImpl(t.getV2Coord()));           
+                    double [][] u1s = t.getSpacialU1Coord();
+                    double [][] u2s = t.getSpacialU2Coord();
+                    double [][] us = new double[(u1s.length)*2][u1s[0].length] ;
+                    double [][] v1s = t.getSpacialV1Coord();
+                    double [][] v2s = t.getSpacialV2Coord();
+                    double [][] vs = new double[(v1s.length)*2][v1s[0].length] ;
+                    for (int j = 0; j < u1s.length; j++) {
+                        double[] u1 = u1s[j];
+                        double[] u2 = u2s[j];
+                        double[] v1 = v1s[j];
+                        double[] v2 = v2s[j];
+                        for (int k = 0; k < u1.length; k++) {
+                            us[j][k]=u1[k];
+                            us[j+u1s.length][k]=u2[k];
+                            vs[j][k]=v1[k];
+                            vs[j+v1s.length][k]=v2[k];
+                        }
+                    }
+                    ucoord = new RealMatrixImpl(us);
+                    vcoord = new RealMatrixImpl(us);
                 }
-                if(ucoord!=null  && vcoord !=null){
-                // add symetrical part and request plot file building
-                sb.append(buildXmlPtPlotDataSet(label,
-                        ucoord.append(ucoord.mapMultiply(-1)).getData(),
-                        vcoord.append(vcoord.mapMultiply(-1)).getData(),  null, null));
+                if (ucoord != null && vcoord != null) {
+                    // add symetrical part and request plot file building
+                    double[][] us = ucoord.getData();
+                    double[][] mus = new double[(us.length) * 2][us[0].length];
+                    double[][] vs = vcoord.getData();
+                    double[][] mvs = new double[(us.length) * 2][us[0].length];
+                    for (int j = 0; j < us.length; j++) {
+                        double[] u = us[j];
+                        double[] v = vs[j];
+                        for (int k = 0; k < u.length; k++) {
+                            mus[j][k] = u[k];
+                            mvs[j][k] = v[k];
+                            mus[j+us.length][k]=-u[k];
+                            mvs[j+vs.length][k]=-v[k];
+                        }
+                    }
+                    sb.append(buildXmlPtPlotDataSet(label, mus, mvs, null, null));
                 }
             }
             sb.append("</plot>");
@@ -709,11 +743,8 @@ public class FilePanel extends javax.swing.JPanel {
             Plot         plot         = new Plot();
             PlotMLParser plotMLParser = new PlotMLParser(plot);
             plotMLParser.parse(null, sb.toString());
-
-            JFrame f = new JFrame();
-            f.getContentPane().add(plot);
-            f.pack();
-            f.setVisible(true);
+            PlotMLFrame plotMLFrame = new PlotMLFrame(plotName, plot);
+            settingsModel.addPlot(plotMLFrame, plotName);
         }
         catch (Exception exc)
         {
