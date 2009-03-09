@@ -356,8 +356,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             }
             parameterPopupMenu.validate();
             parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        } else {
-            logger.finest("No menu required");
         }
     }
 
@@ -400,8 +398,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     public void update(Observable o, Object arg) {
-        System.out.println("arg = " + arg);
-        System.out.println("o = " + o);
         refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
     }
 }
