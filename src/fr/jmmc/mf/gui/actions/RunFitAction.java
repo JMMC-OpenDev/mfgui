@@ -5,7 +5,6 @@ import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.MCSAction;
-import fr.jmmc.mf.models.Oitarget;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Settings;
 import java.awt.event.ActionEvent;
