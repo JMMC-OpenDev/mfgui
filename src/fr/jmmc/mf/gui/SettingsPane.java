@@ -129,7 +129,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         
         Object o = e.getPath().getLastPathComponent();
         if (e.getNewLeadSelectionPath() != null) {
-            showElement(o);
+            showElement(o);            
         }
         checkValidSettings();
     }
@@ -173,11 +173,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             modelPanel.show((Model) o, rootSettingsModel);
             modifierPanel.add(modelPanel);
         } else if (o instanceof File) {
-            filePanel.show((File) o);
+            filePanel.show((File) o, rootSettingsModel);
             modifierPanel.add(filePanel);
         } else if (o instanceof FileLink) {
             FileLink link = (FileLink) o;
-            filePanel.show((File) link.getFileRef());
+            filePanel.show((File) link.getFileRef(), rootSettingsModel);
             modifierPanel.add(filePanel);
         } else if (o instanceof Parameters) {
             parametersPanel.show(rootSettingsModel,(Parameters) o);
