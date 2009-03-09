@@ -34,7 +34,7 @@
         <xsl:value-of select="');'"/>
 
 
-        <!-- create one .b64 file per hrefed data file or plot-->
+        <!-- create one .b64 file per hrefed data file or plot
         <xsl:for-each select="//files/file[@href]">
             <xsl:document href="{./@id}.b64" method="text"
                 xml:space="preserve"><xsl:value-of select="substring-after(./@href,'base64,')"/></xsl:document>
@@ -43,7 +43,8 @@
             <xsl:document href="{./@name}.b64" method="text"
                 xml:space="preserve"><xsl:value-of select="substring-after(./@href,'base64,')"/></xsl:document>
         </xsl:for-each>
-
+        -->
+        
     </xsl:template>
 
     <!-- targetSection                                                  -->
@@ -101,7 +102,7 @@
                     <xsl:for-each select=".//parameterLink">
                         <xsl:variable name="paramId" select="./@parameterRef"/>
                         <xsl:variable name="sharedParam" select="//parameters/parameter[@id=$paramId]"/>
-                        <xsl:value-of select="$sharedParam/@type"/>
+                        <xsl:value-of select="./@type"/>
                         <xsl:value-of select="' = &quot;'"/>
                         <xsl:value-of select="$sharedParam/@name"/>
                         <xsl:value-of select="'&quot;'"/>
