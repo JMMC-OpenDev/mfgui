@@ -94,32 +94,19 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         if (targetFiles != null)
         {
             fileList.setModel(targetFiles);
-
             // define selected files reading fileLinks
-            Vector filesId = new Vector();
             File[] files   = rootSettings.getFiles().getFile();
 
             for (int i = 0; i < files.length; i++)
             {
                 File file = files[i];
-                filesId.addElement(file.getId());
-            }
-
-            FileLink[] links = current.getFileLink();
-
-            for (int i = 0; i < links.length; i++)
-            {
-                FileLink link  = links[i];
-                Object   idRef = link.getFileRef();
-                selectedFiles.addSelectionInterval(i, i);
-
-                if (idRef != null)
-                {
-                    logger.fine("Selecting file for ref=" + idRef);
-                }
-                else
-                {
-                    logger.warning("No idRef for link");
+               
+                FileLink[] links = current.getFileLink();
+                for (int j = 0; j < links.length; j++) {
+                    FileLink fileLink = links[j];
+                    if(fileLink.getFileRef()==file){
+                      selectedFiles.addSelectionInterval(i, i);
+                    }
                 }
             }
         }
@@ -166,7 +153,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         //@todo do it into the settingModel
         Object[] files = fileList.getSelectedValues();
         current.removeAllFileLink();
-
         for (int i = 0; i < files.length; i++)
         {
             File     file = (File) files[i];
@@ -299,11 +285,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel4.add(addModelButton, gridBagConstraints);
 
         modelTypeComboBox.setModel(settingsViewer.getSettingsModel().supportedModelsModel);
-        modelTypeComboBox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                modelTypeComboBoxFocusGained(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -375,11 +356,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         add(jScrollPane3, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
  
-    private void modelTypeComboBoxFocusGained(java.awt.event.FocusEvent evt)
-    {//GEN-FIRST:event_modelTypeComboBoxFocusGained
-        logger.entering("" + this.getClass(), "modelTypeComboBoxFocusGained");
-    }//GEN-LAST:event_modelTypeComboBoxFocusGained
-
     private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_modelListMouseClicked
         if (evt.getClickCount() == 2)
