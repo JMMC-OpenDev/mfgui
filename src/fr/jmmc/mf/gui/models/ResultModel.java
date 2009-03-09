@@ -14,6 +14,9 @@ import ptolemy.plot.plotml.PlotMLFrame;
 import ptolemy.plot.plotml.PlotMLParser;
 import ptolemy.plot.Plot;
 
+/**
+ * This treeNode brings one Result castor into the JTrees.
+ */
 public class ResultModel extends DefaultMutableTreeNode {
     public final static String className = "fr.jmmc.mf.gui.models.SettingsModel";
     /** Class logger */
@@ -41,15 +44,14 @@ public class ResultModel extends DefaultMutableTreeNode {
             StringWriter xmlResultSw= new StringWriter();
             result.marshal(xmlResultSw);
             xmlResult=xmlResultSw.toString();
-            htmlReport = UtilsClass.xsl(xmlResult, url, null);
-            genPlots();
+            htmlReport = UtilsClass.xsl(xmlResult, url, null);            
         } catch (Exception exc) {
             htmlReport = "<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
         }
-
-        this.setUserObject(result);
+        genPlots();
         //genPlots(UtilsClass.getResultFiles(response));
+        this.setUserObject(result);        
     }
     
     public Result getResult() {
@@ -103,7 +105,7 @@ public class ResultModel extends DefaultMutableTreeNode {
                         }
                     }
                     JFrame f = PlotPanel.buildFrameOf(r, pdf);
-                    this.add(new DefaultMutableTreeNode(f,false));
+                    this.add(new FrameTreeNode(f, r.getName()));
                 }
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -124,13 +126,13 @@ public class ResultModel extends DefaultMutableTreeNode {
             // Construct plot and parse xml
             Plot plot = new Plot();
             plotMLParser = new PlotMLParser(plot);
+            logger.finest("Trying to plot next document:\n"+xmlStr);
             plotMLParser.parse(null, xmlStr);
             // Show plot into frame
             PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
             this.add(new FrameTreeNode(plotMLFrame, plotName));
-
-            url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
-            new Throwable(UtilsClass.xsl(xmlResult, url, null)).printStackTrace();
+//            url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
+//            new Throwable(UtilsClass.xsl(xmlResult, url, null)).printStackTrace();
         } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
         }
