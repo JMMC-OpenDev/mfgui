@@ -20,12 +20,11 @@ import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 
 /** Display GUI for Target elements */
-public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener
-{
+public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener {
+
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.TargetPanel");
-
     /** Main model object of this GUI controller */
     Target current = null;
     ListModel targetFiles;
@@ -37,20 +36,18 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public SettingsModel rootSettingsModel = null;
     private PlotModelPanel plotModelImagePanel;
     private ParametersTableModel parametersTableModel;
-    private Vector<MouseListener> mouseListeners= new Vector();
+    private Vector<MouseListener> mouseListeners = new Vector();
 
     /** Creates new form TargetPanel */
-    public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel)
-    {
+    public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel) {
         settingsViewer = viewer;
         parametersTableModel = new ParametersTableModel();
         initComponents();
-        
+
         listenToFileSelection = false;
 
         fileList.addListSelectionListener(this);
         fileList.setSelectionModel(selectedFiles);
-        //fileList.setCellRenderer(new FileListCellRenderer());
 
         modelList.setModel(models);
 
@@ -64,25 +61,23 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
      * @param t the target to show
      * @param settingsModel its associated settingsModel
      */
-    public void show(Target t, SettingsModel settingsModel)
-    {
+    public void show(Target t, SettingsModel settingsModel) {
         logger.entering("" + this.getClass(), "show");
 
-        current                    = t;
-        this.rootSettingsModel     = settingsModel;
-        this.rootSettings          = settingsModel.getRootSettings();
+        current = t;
+        this.rootSettingsModel = settingsModel;
+        this.rootSettings = settingsModel.getRootSettings();
 
-        parametersTableModel.setModel(rootSettingsModel, current,true);
-        if(!mouseListeners.contains(parametersTableModel)){
+        parametersTableModel.setModel(rootSettingsModel, current, true);
+        if (!mouseListeners.contains(parametersTableModel)) {
             parametersTable.addMouseListener(parametersTableModel);
             mouseListeners.add(parametersTableModel);
         }
 
+        jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
 
-        jPanel5.add(parametersTable.getTableHeader(),BorderLayout.NORTH);
+        listenToFileSelection = false;
 
-        listenToFileSelection      = false;
-        
         //// Select current ident
         identComboBox.setSelectedItem(t.getIdent());
 
@@ -91,27 +86,24 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // select fileListModel corresponding to target ident
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
 
-        if (targetFiles != null)
-        {
+        if (targetFiles != null) {
             fileList.setModel(targetFiles);
             // define selected files reading fileLinks
-            File[] files   = rootSettings.getFiles().getFile();
-
-            for (int i = 0; i < files.length; i++)
-            {
-                File file = files[i];
-               
+            //      File[] files   = rootSettings.getFiles().getFile();
+            for (int i = 0; i < targetFiles.getSize(); i++) {
+                Object file = targetFiles.getElementAt(i);
                 FileLink[] links = current.getFileLink();
                 for (int j = 0; j < links.length; j++) {
                     FileLink fileLink = links[j];
-                    if(fileLink.getFileRef()==file){
-                      selectedFiles.addSelectionInterval(i, i);
+                    if (fileLink.getFileRef() == file) {
+                        // modify dirrectly the widget instead of its model 
+                        // because jmcs.gui.CheckBoxJList does not handle properly
+                        fileList.setSelectedIndex(i);
+                        //selectedFiles.addSelectionInterval(i, i);
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // should not append except if user delete some files??
             logger.warning("Can't find list of files");
         }
@@ -119,47 +111,66 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         listenToFileSelection = true;
 
         // Fill modelTypeComboBox model if empty
-        if (modelTypeComboBox.getItemCount() < 1)
-        {
+        if (modelTypeComboBox.getItemCount() < 1) {
             settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);
         }
 
         updateModels();
 
         // Set normalizeCheckBox
-        normalizeCheckBox.setSelected(current.getNormalize());        
-        plotModelImagePanel.show(settingsModel,current);
+        normalizeCheckBox.setSelected(current.getNormalize());
+        plotModelImagePanel.show(settingsModel, current);
     }
 
-    private void updateModels(){
+    private void updateModels() {
         // Set model list
         models.clear();
-        for (int i = 0; i < current.getModelCount(); i++)
-        {
+        for (int i = 0; i < current.getModelCount(); i++) {
             models.addElement(current.getModel(i));
         }
-        parametersTableModel.setModel(rootSettingsModel, current,true);
+        parametersTableModel.setModel(rootSettingsModel, current, true);
     }
 
-    public void valueChanged(ListSelectionEvent e)
-    {
+    public void valueChanged(ListSelectionEvent e) {
         logger.entering("" + this.getClass(), "valueChanged");
 
-        if (! listenToFileSelection || e.getValueIsAdjusting())
-        {
+        if (!listenToFileSelection || e.getValueIsAdjusting()) {
             return;
         }
 
-        //@todo do it into the settingModel
-        Object[] files = fileList.getSelectedValues();
-        current.removeAllFileLink();
-        for (int i = 0; i < files.length; i++)
-        {
-            File     file = (File) files[i];
-            FileLink link = new FileLink();
-            link.setFileRef(file);
-            current.addFileLink(link);
-        }       
+        // We will try to detect differences between selection and target filelinks
+        // for all possible file
+
+        for (int i = 0; i < targetFiles.getSize(); i++) {
+            Object file = targetFiles.getElementAt(i);
+            boolean isInTarget = false;
+            FileLink[] targetLinks = current.getFileLink();
+            for (int j = 0; j < targetLinks.length; j++) {
+                FileLink targetLink = targetLinks[j];
+                if (targetLink.getFileRef() == file) {
+                    isInTarget = true;
+                }
+            }
+
+            boolean isInSelection = false;
+            Object[] selectedOnes = fileList.getSelectedValues();
+            for (int j = 0; j < selectedOnes.length; j++) {
+                Object selectedOne = selectedOnes[j];
+                if (selectedOne == file) {
+                    isInSelection = true;
+                }
+            }
+
+            if (isInSelection && (!isInTarget)) {
+                rootSettingsModel.addFile(current, (File) file);
+            }
+            if ((!isInSelection) && isInTarget) {
+                rootSettingsModel.removeFile(current, (File) file);
+            }
+        }
+
+
+
     }
 
     /** This method is called from within the constructor to
