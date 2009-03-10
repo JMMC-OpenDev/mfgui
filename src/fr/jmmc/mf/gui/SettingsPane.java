@@ -399,7 +399,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-            
+            setToolTipText(null);
             if (value.getClass().getName().startsWith("fr.jmmc.mf.models")) {
                 //setToolTipText("TBD");
                 // Next part try to get valide state of serialized xml objects
