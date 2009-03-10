@@ -266,6 +266,9 @@ public class UtilsClass
     {
         logger.entering(className, "askToSaveUserModification");
 
+        if(object==null){
+            return true;
+        }
         if (object.isModified())
         {
             // Ask the user if he wants to save modifications
