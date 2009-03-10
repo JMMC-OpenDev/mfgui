@@ -15,6 +15,7 @@ import java.awt.Dimension;
 import java.lang.reflect.*;
 
 
+import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -79,9 +80,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument());
 
-        settingsTree = new JTree();
-        settingsTree.setMinimumSize(new Dimension(200, 200));
-        settingsTree.setPreferredSize(new Dimension(200, 200));
+        settingsTree = new JTree();        
         settingsTreeScrollPane.getViewport().add(settingsTree);
 
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
@@ -210,14 +209,31 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         treeChanged(e);
     }
 
+    private void expandAll(JTree tree, TreePath parent, boolean expand) {
+        // Expansion or collapse must be done bottom-up
+        if (expand) {
+            tree.expandPath(parent);
+        } else {
+            tree.collapsePath(parent);
+        }
+        // Traverse parent
+        TreePath path = parent.getParentPath();
+        if (path!=null){
+           expandAll(tree, path, expand);
+        }            
+        
+    }
+
     /** Use to listen tree model elements that can indicate changes*/
     public void treeNodesInserted(javax.swing.event.TreeModelEvent e) {
         treeChanged(e);
+        expandAll(settingsTree, e.getTreePath(), true);
     }
 
     /** Use to listen tree model elements that can indicate changes*/
     public void treeNodesChanged(javax.swing.event.TreeModelEvent e) {
         treeChanged(e);
+        expandAll(settingsTree, e.getTreePath(), true);
     }
 
     private void treeChanged(javax.swing.event.TreeModelEvent e) {
