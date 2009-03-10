@@ -100,38 +100,41 @@ http://t.bd
                             <xsl:for-each select="exslt:node-set($dataset)/*|../ucoord|../vcoord|../u1coord|../v1coord |../u2coord |../v2coord |../flags">
                                 <xsl:choose>
                                     <xsl:when test="contains(name(),'coord')">
-                                        <FIELD datatype="double" name="{name()}" unit="m"/>
+                                        <FIELD datatype="double" name="{name()}" unit="m" arraysize="{count(.//tr/td)}" />
                                     </xsl:when>
                                     <xsl:when test="name()='flags'">
-                                        <FIELD datatype="boolean" name="FLAG"/>
+                                        <FIELD datatype="boolean" name="FLAG" arraysize="{count(.//tr/td)}"/>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <FIELD datatype="double" name="{name()}"/>
+                                        <FIELD datatype="double" name="{name()}" arraysize="{count(.//tr/td)}"/>
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:for-each>
                             <DATA>
                                 <TABLEDATA>
+                                    <xsl:comment><xsl:copy-of select="../flags"/></xsl:comment>
                                     <xsl:for-each select="../flags//tr">
                                         <xsl:variable name="i" select="position()"/>
                                         <TR>
-                                            <xsl:for-each select="exslt:node-set($dataset)/*">                                             
-                                                <xsl:for-each select=".//tr[position()=$i]/td">
-                                                    <TD><xsl:value-of select="."/></TD>
+                                            <xsl:for-each select="td">
+                                                <xsl:variable name="j" select="position()"/>                                                
+                                                        <TD>
+                                                            <xsl:value-of select="exslt:node-set($dataset)//tr[position()=$i]/td[position()=$j]"/>
+                                                        </TD>                                                                         
+                                                <xsl:for-each select="exslt:node-set($db)/ucoord//tr[position()=$i]/td[position()=$j] |
+                                                          exslt:node-set($db)/vcoord//tr[position()=$i]/td[position()=$j] |
+                                                          exslt:node-set($db)/u1coord//tr[position()=$i]/td[position()=$j] |
+                                                          exslt:node-set($db)/v1coord//tr[position()=$i]/td[position()=$j] |
+                                                          exslt:node-set($db)/u2coord//tr[position()=$i]/td[position()=$j] |
+                                                          exslt:node-set($db)/v2coord//tr[position()=$i]/td[position()=$j]">
+                                                    <TD>
+                                                        <xsl:value-of select="."/>
+                                                    </TD>
                                                 </xsl:for-each>
-                                            </xsl:for-each>
-                                            <xsl:for-each select="exslt:node-set($db)/ucoord//td[position()=$i] |
-                                                          exslt:node-set($db)/vcoord//td[position()=$i] |
-                                                          exslt:node-set($db)/u1coord//td[position()=$i] |
-                                                          exslt:node-set($db)/v1coord//td[position()=$i] |
-                                                          exslt:node-set($db)/u2coord//td[position()=$i] |
-                                                          exslt:node-set($db)/v2coord//td[position()=$i] |
-                                            exslt:node-set($db)/flags//tr[position()=$i]/td">
-                                                <TD><xsl:value-of select="."/></TD>
                                             </xsl:for-each>
                                         </TR>
                                     </xsl:for-each>
-                                </TABLEDATA>                    
+                                </TABLEDATA>
                             </DATA>
                         </TABLE>
                     </xsl:for-each>

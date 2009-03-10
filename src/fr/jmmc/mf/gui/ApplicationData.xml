@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.0beta5"/>
+    <program name="ModelFitting" version="1.1.0beta6"/>
         <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -63,6 +63,12 @@
                 <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after a fit process </change>
                 <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after parameters sharing </change>
                 <change type="REQUEST">Embbed new topcat</change>
+            </prerelease>
+            <prerelease version="1.1.0beta6">
+                <change type="FEATURE">Expand tree on tree node insertion or modification </change>
+                <change type="BUGFIX">Show scrollpane when tree content is bigger than container</change>
+                <change type="BUGFIX">Fix handling of target's nested files (fix bugs in target panel)</change>
+                <change type="CHANGE">Fix default value of flux parameters to 1</change>
             </prerelease>
             <prerelease version="1.1.0beta5">
                 <change type="FEATURE">Add litpro settings file generation (in edit menu)</change>
