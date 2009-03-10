@@ -217,7 +217,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // add the new element to current target
         parentTarget.addModel(newModel);
-        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, parentTarget.getModelCount(), newModel);
+        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
