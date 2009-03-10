@@ -2,11 +2,14 @@ package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.FrameTreeNode;
+import fr.jmmc.mf.gui.ModelFitting;
 import fr.jmmc.mf.gui.PlotPanel;
 import fr.jmmc.mf.gui.UtilsClass;
 import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import javax.swing.JFrame;
@@ -49,6 +52,20 @@ public class ResultModel extends DefaultMutableTreeNode {
             htmlReport = "<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
         }
+        /*
+        java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
+        try {
+            java.io.File file = java.io.File.createTempFile("model", "vot");
+            file.deleteOnExit();
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            out.write(UtilsClass.xsl(xmlResult, url, null));
+            out.close();
+            ModelFitting.startFitsViewer(file.getAbsolutePath());
+        } catch (Exception exc) {
+            new FeedbackReport(null, true, exc);
+        }
+         */
+
         genPlots();
         //genPlots(UtilsClass.getResultFiles(response));
         this.setUserObject(result);        
@@ -131,8 +148,6 @@ public class ResultModel extends DefaultMutableTreeNode {
             // Show plot into frame
             PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
             this.add(new FrameTreeNode(plotMLFrame, plotName));
-//            url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
-//            new Throwable(UtilsClass.xsl(xmlResult, url, null)).printStackTrace();
         } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
         }
