@@ -62,6 +62,9 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
      */
     public void stateChanged(ChangeEvent e) {
         settingsModel = mfgui.getSelectedSettings();
+        if(settingsModel==null){
+            return;
+        }
         if (!settingsModelListener.contains(settingsModel)) {
             settingsModel.addTreeSelectionListener(this);
         }

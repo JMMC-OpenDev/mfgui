@@ -38,6 +38,9 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
      */
     public void stateChanged(ChangeEvent e) {
         settingsModel=mfgui.getSelectedSettings();
+        if(settingsModel==null){
+            return;
+        }
         if(!settingsModelListener.contains(settingsModel)){
             settingsModel.addTreeSelectionListener(this);
         }        
