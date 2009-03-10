@@ -15,6 +15,7 @@
         <j2se version="1.5+"/>
         <property name="apple.laf.useScreenMenuBar" value="true"/>
         <jar href="jar/mfgui.jar" />
+        <jar href="jar/mfgui-doc.jar" />
         <jar href="jar/Jmcs.jar" />
         <jar href="jar/oival.jar" />
         <jar href="jar/commons-math-1.2-RC2.jar" />
