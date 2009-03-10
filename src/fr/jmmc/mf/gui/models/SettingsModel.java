@@ -201,14 +201,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Parameter[] params = newModel.getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter p = params[i];
-            // init some parameters of first elements
+            // init some default parameters depending on first place
             if (firstModel) {
                 if (p.getName().equals("x") || p.getName().equals("y")) {
                     p.setHasFixedValue(true);
-                }
-                if (p.getName().equals("flux_weight")) {
+                }                
+            }
+            if (p.getName().equals("flux_weight")) {
                     p.setValue(1);
-                }
             }
             p.setName(getNewParamName(p.getName()));
         }
