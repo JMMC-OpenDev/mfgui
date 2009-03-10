@@ -34,7 +34,6 @@ import javax.swing.tree.*;
 import fr.jmmc.oifits.*;
 import fr.jmmc.oifits.validator.GUIValidator;
 import java.util.Enumeration;
-import java.util.Observable;
 import java.util.Observer;
 
 /**
@@ -123,6 +122,37 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
+    /** Add a new FileLink associated to the given File.
+     *
+     * @param target parent container for given file
+     * @param file file to use for fileLink addition into the target
+     */
+    public void addFile(Target target, File file) {
+        logger.entering(className, "addFile", new Object[]{target, file});
+        FileLink fileLink = new FileLink();
+        fileLink.setFileRef(file);
+        target.addFileLink(fileLink);
+        fireTreeNodesInserted(
+                new Object[]{rootSettings, rootSettings.getTargets(), target},
+                target.getFileLinkCount() - 1,
+                fileLink);
+    }
+
+    public void removeFile(Target target, File file) {
+        logger.entering(className, "removeFile", new Object[]{target, file});
+        FileLink[] links = target.getFileLink();
+        for (int i = 0; i < links.length; i++) {
+            FileLink fileLink = links[i];
+            if (fileLink.getFileRef() == file) {
+                target.removeFileLink(i);
+                fireTreeNodesRemoved(this,
+                        new Object[]{rootSettings, rootSettings.getTargets(), target},
+                        new int[]{i},
+                        new Object[]{fileLink});
+            }
+        }
+    }
+
     /**
      *  Add observer to be simply nofified by model content changes.
      */
@@ -146,10 +176,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "addPlot", new Object[]{frame, title});
         FrameTreeNode newPlotNode = new FrameTreeNode(frame, title);
         plotContainerNode.add(newPlotNode);
-        fireTreeNodesInserted(this,
-                new Object[]{rootSettings, plotContainerNode},
-                new int[]{plotContainerNode.getChildCount() - 1},
-                new Object[]{newPlotNode});
+        fireTreeNodesInserted(new Object[]{rootSettings, plotContainerNode},
+                plotContainerNode.getChildCount() - 1,
+                newPlotNode);
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
     }
 
@@ -161,7 +190,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void addModel(Target parentTarget, Model newModel) {
         logger.entering(className, "addModel", new Object[]{parentTarget, newModel});
-        setModified(true);
 
         // force another name with unique position
         String type = newModel.getType();
@@ -185,12 +213,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             p.setName(getNewParamName(p.getName()));
         }
 
+        setModified(true);
+
         // add the new element to current target
         parentTarget.addModel(newModel);
-        fireTreeNodesInserted(this,
-                new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
-                new int[]{parentTarget.getModelCount()},
-                new Object[]{newModel});
+        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, parentTarget.getModelCount(), newModel);
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
@@ -236,10 +263,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.getTargets().addTarget(newTarget);
         targetListModel.addElement(newTarget);
 
-        fireTreeNodesInserted(this,
-                new Object[]{rootSettings, rootSettings.getTargets()},
-                new int[]{indice},
-                new Object[]{newTarget});
+        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets()}, indice, newTarget);
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), newTarget}));
 
         return newTarget;
@@ -426,7 +450,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /** Returns a new uniq Model Name */
     public String getNewModelName(String prefix) {
-                logger.entering(className, "getNewModelName", prefix);
+        logger.entering(className, "getNewModelName", prefix);
 
         Vector<String> ids = new Vector();
         Target[] targets = rootSettings.getTargets().getTarget();
@@ -527,7 +551,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public boolean isSharedParameter(Parameter p) {
-        logger.entering(className, "isSharedParameter",p);
+        logger.entering(className, "isSharedParameter", p);
         Parameter[] params = rootSettings.getParameters().getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
@@ -577,12 +601,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         // add shared parameter
-        rootSettings.getParameters().addParameter(parameterToShare);        
+        rootSettings.getParameters().addParameter(parameterToShare);
         fireTreeNodesChanged(rootSettings.getParameters());
     }
 
     private ResultModel getModel(Result r) {
-        logger.entering(className, "getModel",r);
+        logger.entering(className, "getModel", r);
         ResultModel rm = resultToModel.get(r);
         if (rm == null) {
             rm = new ResultModel(this, r);
@@ -617,7 +641,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public java.io.File getTempFile(boolean keepResult)
             throws Exception {
-        logger.entering(className, "getTempFile",keepResult);
+        logger.entering(className, "getTempFile", keepResult);
 
         java.io.File tmpFile;
         tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
@@ -634,7 +658,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      *  @param s Settings to grab informations into.
      */
     public void updateWithNewSettings(Response newResponse) {
-        logger.entering(className, "updateWithNewSettings",newResponse);
+        logger.entering(className, "updateWithNewSettings", newResponse);
         Settings newSettings = UtilsClass.getSettings(newResponse);
         // we can ignore all but:
         //  parameters, result
@@ -662,22 +686,21 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
-        Result[] newResults = newSettings.getResults().getResult();        
+        Result[] newResults = newSettings.getResults().getResult();
         // update settings results  with newResults
         for (int i = 0; i < newResults.length; i++) {
             Result newResult = newResults[i];
             if (newResult != null) {
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult);
-                fireTreeNodesInserted(this,
-                        new Object[]{rootSettings, rootSettings.getResults()},
-                        new int[]{getIndexOfChild(rootSettings.getResults(), r)},
-                        new Object[]{r});
+                fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
+                        getIndexOfChild(rootSettings.getResults(), r),
+                        r);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
             } else {
                 logger.warning("found null result while updating with new settings");
             }
-        }     
+        }
     }
 
     // respond to ModifyAndSaveObject interface
@@ -761,7 +784,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         // assert that rootSettings get container for shared parameters
-        if (rootSettings.getParameters()==null){
+        if (rootSettings.getParameters() == null) {
             rootSettings.setParameters(new Parameters());
         }
 
@@ -795,7 +818,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public Target getParent(Model child) {
-        logger.entering(className, "getParent",child);
+        logger.entering(className, "getParent", child);
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
@@ -813,7 +836,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public Model getParent(Parameter child) {
-        logger.entering(className, "getParent",child);
+        logger.entering(className, "getParent", child);
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
@@ -883,10 +906,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             files.addFile(newFile);
             updateOiTargetList();
             setModified(true);
-            fireTreeNodesInserted(this,
-                    new Object[]{rootSettings, files},
-                    new int[]{idx},
-                    new Object[]{newFile});
+            fireTreeNodesInserted(new Object[]{rootSettings, files},
+                    idx,
+                    newFile);
             setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));
         /*@todo return a invalidFormat exception instead of Simple exception
         }catch(Exception exc){
@@ -941,7 +963,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
             JFileChooser fc = new JFileChooser(realFile.getParentFile());
             int returnVal = fc.showDialog(new JFrame(),
-                    "Please try to locate requested file:" + realFile.getAbsolutePath());
+                    "Please try to locate requested file:" + realFile.getName());
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 filename = fc.getSelectedFile().getCanonicalPath();
@@ -1145,11 +1167,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * @see DefaultTreeModel implementation
      */
-    protected void fireTreeNodesInserted(Object source, Object[] path,
+    protected void fireTreeNodesInserted(Object[] path,
+            int childIndice,
+            Object child) {
+        logger.entering(className, "fireTreeNodesInserted", new Object[]{path, childIndice, child});
+        fireTreeNodesInserted(path, new int[]{childIndice}, new Object[]{child});
+    }
+
+    protected void fireTreeNodesInserted(Object[] path,
             int[] childIndices,
             Object[] children) {
-        logger.entering(className, "fireTreeNodesInserted", new Object[]{source, path, children});
-        TreeModelEvent e = new TreeModelEvent(source, path,
+        logger.entering(className, "fireTreeNodesInserted", new Object[]{path, children});
+        TreeModelEvent e = new TreeModelEvent(this, path,
                 childIndices, children);
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesInserted(e);
@@ -1213,10 +1242,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 return s.getTargets();
             }
             if (index == 2) {
-                return s.getParameters();               
+                return s.getParameters();
             }
             if (index == 3) {
-                    return s.getResults();             
+                return s.getResults();
             }
             if (index == 4) {
                 return plotContainerNode;
@@ -1416,7 +1445,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Removes a listener previously added with addTreeModelListener().
      */
     public void removeTreeModelListener(TreeModelListener l) {
-        logger.entering(className, "removeTreeModelListener",l);
+        logger.entering(className, "removeTreeModelListener", l);
         treeModelListeners.removeElement(l);
     }
 
