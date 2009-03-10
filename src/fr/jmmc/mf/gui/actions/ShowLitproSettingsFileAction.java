@@ -4,19 +4,19 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
+public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeModelListener, TreeSelectionListener, ChangeListener{
 
     public final static String className = "fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction";
     public final static String actionName = "showLitproSettingsFile";
@@ -50,10 +50,18 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
      */
     public void stateChanged(ChangeEvent e) {
         settingsModel=mfgui.getSelectedSettings();
+        if(settingsModel==null){
+            return;
+        }
         this.setEnabled(settingsModel.isValid());
         if(!settingsModelListener.contains(settingsModel)){
             settingsModel.addTreeSelectionListener(this);
+            settingsModel.addTreeModelListener(this);
         }
+    }
+
+    private void checkSettings(){
+        this.setEnabled(settingsModel.isValid());
     }
 
     /** Listen to the settings tree selection changes
@@ -64,9 +72,25 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
         setEnabled(false);
         if (e.getSource() instanceof SettingsModel){
             settingsModel = (SettingsModel)e.getSource();
-            this.setEnabled(settingsModel.isValid());
+            checkSettings();
         }else{
             logger.warning("dropped treeSelectionEvent from "+e.getSource());
         }
+    }
+
+    public void treeNodesChanged(TreeModelEvent e) {
+        checkSettings();
+    }
+
+    public void treeNodesInserted(TreeModelEvent e) {
+        checkSettings();
+    }
+
+    public void treeNodesRemoved(TreeModelEvent e) {
+        checkSettings();
+    }
+
+    public void treeStructureChanged(TreeModelEvent e) {
+        checkSettings();
     }
 }
