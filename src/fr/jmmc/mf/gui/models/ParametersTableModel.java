@@ -74,7 +74,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         this.recursive = recursive;
 
         // we want to listen model change events
-        if (!knownSettingsModels.contains(settingsModel)) {            
+        if (!knownSettingsModels.contains(settingsModel)) {
             settingsModel.addObserver(this);
             knownSettingsModels.add(settingsModel);
         }
