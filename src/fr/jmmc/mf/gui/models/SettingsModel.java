@@ -694,7 +694,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
-                        getIndexOfChild(rootSettings.getResults(), r),
+                        rootSettings.getResults().getResultCount()-1,
                         r);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
             } else {
