@@ -59,16 +59,14 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add function to remove orphan data files.</change>
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
-                <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after a fit process </change>
-                <change type="REQUEST">Fix problem: Target Table or model table is not refreshed after parameters sharing </change>
-                <change type="REQUEST">Embbed new topcat</change>
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>                
             </prerelease>
             <prerelease version="1.1.0beta6">
                 <change type="FEATURE">Expand tree on tree node insertion or modification </change>
                 <change type="BUGFIX">Show scrollpane when tree content is bigger than container</change>
-                <change type="BUGFIX">Fix handling of target's nested files (fix bugs in target panel)</change>
+                <change type="BUGFIX">Fix left tree displauy with invisible elements</change>
                 <change type="CHANGE">Fix default value of flux parameters to 1</change>
+                <change type="CHANGE">Use new version 3.4 of TOPCAT</change>
             </prerelease>
             <prerelease version="1.1.0beta5">
                 <change type="FEATURE">Add litpro settings file generation (in edit menu)</change>
