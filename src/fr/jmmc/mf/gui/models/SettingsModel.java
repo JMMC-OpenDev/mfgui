@@ -1371,18 +1371,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return -1;
         } else if (parent == rootSettings.getResults()) {
             Object[] elements = rootSettings.getResults().getResult();
-            // search for Result children
+            // search for Result or ResultModel children
+            // we must search resultModel according ordered list of Result
+            // because tha hastable is not ordered!!
             for (int i = 0; i <
                     elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
-            }
-            // search for ResultModel children
-            Vector<ResultModel> resultModels = new Vector(resultToModel.values());
-            int i = resultModels.indexOf(child);
-            if (i >= 0) {
-                return i;
+                if (child == resultToModel.get(elements[i])) {
+                    return i;
+                }
             }
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
