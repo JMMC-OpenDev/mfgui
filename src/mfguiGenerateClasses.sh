@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.14 2009-02-24 13:00:11 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.15 2009-03-12 09:29:05 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2009/02/24 13:00:11  mella
+# typo
+#
 # Revision 1.13  2009/02/24 12:57:54  mella
 # Change label for shared Params
 #
@@ -70,6 +73,12 @@ MODEL_SCHEMA=fr/jmmc/mf/table.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
 java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package fr.jmmc.mcs.castor  $*
+
+#MODEL_SCHEMA=./VOTable-beta.xsd
+# generate model java source from xml schema
+#echo "Generating classes for $MODEL_SCHEMA"
+#java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package net.ivoa.castor  $*
+
 
 
 #MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)

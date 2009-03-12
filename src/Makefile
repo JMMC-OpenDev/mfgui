@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.18 2008-11-20 14:28:33 mella Exp $"
+# "@(#) $Id: Makefile,v 1.19 2009-03-12 09:29:05 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2008/11/20 14:28:33  mella
+# castor is now in jmcs module
+#
 # Revision 1.17  2008/10/17 10:11:26  mella
 # Jalopization of major refactoring mimicking searchcal template
 #
@@ -163,6 +166,7 @@ mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
                  fr/jmmc/mf/gui/*.html \
                  fr/jmmc/mf/gui/*.xml \
                  fr/jmmc/mf/gui/*.xsl \
+                 fr/jmmc/mf/*.xsl \
 
 #
 # Java programs
