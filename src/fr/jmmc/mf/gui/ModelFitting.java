@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.27 2009-02-11 11:56:42 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.28 2009-03-12 16:08:54 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -137,6 +137,13 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
             JScrollPane sp = new JScrollPane(t);
             javax.swing.JOptionPane.showMessageDialog(null, sp, "Error ",
                         javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        String info = UtilsClass.getOutputMsg(r);
+        if (info.length()>1){
+            JTextArea t = new JTextArea(info, 20,80);
+            JScrollPane sp = new JScrollPane(t);
+            javax.swing.JOptionPane.showMessageDialog(null, sp, "Info ",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
         return r;
     }
