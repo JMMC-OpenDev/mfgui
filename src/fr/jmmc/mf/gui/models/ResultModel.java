@@ -2,14 +2,11 @@ package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.FrameTreeNode;
-import fr.jmmc.mf.gui.ModelFitting;
 import fr.jmmc.mf.gui.PlotPanel;
 import fr.jmmc.mf.gui.UtilsClass;
 import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import javax.swing.JFrame;
@@ -26,12 +23,6 @@ public class ResultModel extends DefaultMutableTreeNode {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
     private SettingsModel settingsModel;
 
-    /*static Action plotBaselinesAction;
-    static Action plotUVCoverageAction;
-    static Action plotRadialVisAction;
-    static Action plotRadialT3Action;
-    static Action plotImageAction;
-    */
     private String htmlReport = null;
     private String xmlResult = null;
     private Result result;
@@ -95,17 +86,11 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     public void genPlots() {
         logger.entering("" + this.getClass(), "genPlots");
-        String [] plotNames = new String[]{"plotBaselines","plotUVCoverage","plotRadial"};
+        String [] plotNames = new String[]{"plotBaselines","plotUVCoverage","plotRadialVIS","plotRadialT3"};
         for (int i = 0; i < plotNames.length; i++) {
             String plotName = plotNames[i];
             ptplot(plotName);
         }
-        /*
-        plotBaselinesAction.actionPerformed(null);
-        plotUVCoverageAction.actionPerformed(null);
-        plotRadialVisAction.actionPerformed(null);
-        plotRadialT3Action.actionPerformed(null);
-        */
     }
 
     void genPlots(ResultFile[] resultFiles) {
@@ -132,7 +117,7 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     /** Plots using ptplot widgets */
     protected void ptplot(final String plotName) {
-        logger.entering("" + this.getClass(), "ptplot");
+        logger.entering("" + this.getClass(), "ptplot", plotName);
         String xmlStr = null;
         try {
             // Contruct xml document to plot
@@ -148,8 +133,8 @@ public class ResultModel extends DefaultMutableTreeNode {
             // Show plot into frame
             PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
             this.add(new FrameTreeNode(plotMLFrame, plotName));
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
+        } catch (Exception exc) {            
+            new FeedbackReport(new Exception("Plot generation failed for "+plotName, exc));
         }
     }
 }
