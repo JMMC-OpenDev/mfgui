@@ -549,7 +549,7 @@ public class UtilsClass
             Message m = responseItem.getMessage();
             if (m != null) {                
                 if (m.getType() != null ) {
-                    if ((m.getType().equalsIgnoreCase("ERROR"))&&(m.getType().equalsIgnoreCase("WARNING"))) {
+                    if ((m.getType().equalsIgnoreCase("ERROR"))||(m.getType().equalsIgnoreCase("WARNING"))) {
                         str = str + "\n" + m.getContent();
                         logger.fine("getErrorMsg find a message of type: " + m.getType());
                     }
