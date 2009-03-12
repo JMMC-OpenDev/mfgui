@@ -11,6 +11,12 @@ lp_plot_image, lp_plot_uvmap
 
 Output must be follow plotml format:
 http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
+
+
+NOTES pour futur documenter les GROS PROBLEMES CONSTATE entre xsltproc et xalan
+le param d'un template qui disparait a completer...
+exslt:node-set($var)//eleName ne marche pas, il faut utiliser exslt:node-set($var)/eleName
+
 -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -31,7 +37,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
     <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
                 doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
     
-    <!-- <xsl:output method="xml" standalone="yes" indent="yes"/>
+    <!-- <xsl:output method="xml" standalone="yes" indent="yes"/>    
 -->
     <xsl:param name="plotName">plotBaselines</xsl:param>
     
@@ -110,20 +116,19 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
         <plot>
             <title>UV coverage plot</title>
             <xLabel>Ucoord (1/rad)</xLabel>
-            <yLabel>Vcoord (1/rad)</yLabel>
-            
+            <yLabel>Vcoord (1/rad)</yLabel>         
             <!-- we should follow crlst list according yorick code -> 
             //_modeler/dataset//crlst            
             -->
             <xsl:for-each select="//_modeler/dataset//CR1">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">                
-                    <xsl:variable name="pair" select="vfreq"/>
+                    <xsl:variable name="pair"><xsl:copy-of select="vfreq//td"/></xsl:variable>
                     <xsl:for-each select="ufreq//td">
                         <xsl:variable name="i" select="position()"/>
                         <xsl:variable name="u" select="."/>
                         <!--  take care, vfreqand ufreq are not array(1,n) but one matrix (n,1) -->                                                  
-                        <xsl:variable name="v" select="$pair//tr[position()=$i]/td"/>                            
+                        <xsl:variable name="v" select="exslt:node-set($pair)/td[position()=$i]"/>
                         <xsl:element name="p">
                             <xsl:attribute name="x"><xsl:value-of select="$u"/></xsl:attribute>
                             <xsl:attribute name="y"><xsl:value-of select="$v"/></xsl:attribute>
@@ -137,20 +142,24 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             </xsl:for-each>                                        
         </plot>
     </xsl:template>
-    
+
     <xsl:template name="plotRadial">    
         <plot>
             <title>Plot versus radial distance</title>
             <xLabel>spatial frequency (1/rad)</xLabel>
             <yLabel>(VIS2 or T3)</yLabel>                        
-            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">                            
-                <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>                 
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
+                <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>
                 <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
-                <xsl:for-each select="visdata|visdata_model|vis2data|vis2data_model|t3amp|t3phi|t3amp_model|t3phi_model">                                                                                
+                <xsl:variable name="ruv"><xsl:copy-of select=".//ruv//td"/></xsl:variable>
+                <xsl:variable name="errorTds"><xsl:copy-of select="exslt:node-set($db)/viserr//td|exslt:node-set($db)/vis2err//td|exslt:node-set($db)/t3amperr//td|exslt:node-set($db)/t3phierr//td"/></xsl:variable>
+                <xsl:for-each select="visamp|visamp_model|vis2data|vis2data_model|t3amp|t3phi|t3amp_model|t3phi_model">
                     <xsl:variable name="source"><xsl:choose>
                             <xsl:when test="contains(name(),'_model')">model</xsl:when>
                             <xsl:otherwise>data</xsl:otherwise> 
                     </xsl:choose></xsl:variable>
+                    <!-- to debug only because dtd is strict with white spaces <xsl:value-of select="'&#10;&#10;&#10;'"/>
+                    -->
                     <xsl:element name="dataset">
                         <xsl:attribute name="name"> 
                             <xsl:value-of select="concat($source,' ',$classname)"/>
@@ -164,26 +173,27 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
                         </xsl:attribute>          
                         <xsl:for-each select=".//td">                                    
                             <xsl:variable name="i" select="position()"/>
-                            <xsl:variable name="x" select="exslt:node-set($db)/ruv/table/tr[position()=$i]/td"/>
-                            <xsl:variable name="y" select="."/>               
+                            <xsl:variable name="x" select="exslt:node-set($ruv)/td[position()=$i]"/>
+                            <xsl:variable name="y" select="."/>
                             <xsl:element name="p">
                                 <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
                                 <xsl:attribute name="y"><xsl:value-of select="$y"/></xsl:attribute>
                                 <xsl:choose>
                                 <xsl:when test="$source='data'">
-                                <xsl:for-each select="exslt:node-set($db)/viserr|exslt:node-set($db)/vis2err|exslt:node-set($db)/t3amperr|exslt:node-set($db)/t3phierr">
-                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
-                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
+                                <xsl:for-each select="exslt:node-set($errorTds)/td[position()=$i]">
+                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - . div 2"/></xsl:attribute>
+                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + . div 2"/></xsl:attribute>
                                 </xsl:for-each>    
                                 </xsl:when>
                                 </xsl:choose>                                
                             </xsl:element>                    
                         </xsl:for-each>                            
                     </xsl:element>                        
-                </xsl:for-each>
+                </xsl:for-each>                
             </xsl:for-each>                                       
         </plot>
     </xsl:template>
+
     <xsl:template name="plotRadialT3">    
         <plot>
             <title>Plot T3 versus radial distance</title>
@@ -192,40 +202,44 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">                            
                 <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>                 
                 <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
+                <xsl:variable name="ruv"><xsl:copy-of select=".//ruv//td"/></xsl:variable>
+                <xsl:variable name="errorTds"><xsl:copy-of select="exslt:node-set($db)/viserr//td|exslt:node-set($db)/vis2err//td|exslt:node-set($db)/t3amperr//td|exslt:node-set($db)/t3phierr//td"/></xsl:variable>
                 <xsl:for-each select="t3amp|t3phi|t3amp_model|t3phi_model">                                                                                
                     <xsl:variable name="source"><xsl:choose>
                             <xsl:when test="contains(name(),'_model')">model</xsl:when>
-                            <xsl:otherwise>data</xsl:otherwise> 
+                            <xsl:otherwise>data</xsl:otherwise>
                     </xsl:choose></xsl:variable>
+                    <!-- to debug only because dtd is strict with white spaces <xsl:value-of select="'&#10;&#10;&#10;'"/>
+                    -->
                     <xsl:element name="dataset">
-                        <xsl:attribute name="name"> 
+                        <xsl:attribute name="name">
                             <xsl:value-of select="concat($source,' ',$classname)"/>
-                        </xsl:attribute>                    
+                        </xsl:attribute>
                         <xsl:attribute name="connected">no</xsl:attribute>
                         <xsl:attribute name="marks">
                             <xsl:choose>
                                 <xsl:when test="$source='model'">points</xsl:when>
-                                <xsl:otherwise>dots</xsl:otherwise> 
+                                <xsl:otherwise>dots</xsl:otherwise>
                             </xsl:choose>
-                        </xsl:attribute>          
-                        <xsl:for-each select=".//td">                                    
+                        </xsl:attribute>
+                        <xsl:for-each select=".//td">
                             <xsl:variable name="i" select="position()"/>
-                            <xsl:variable name="x" select="exslt:node-set($db)/ruv/table/tr[position()=$i]/td"/>
-                            <xsl:variable name="y" select="."/>               
+                            <xsl:variable name="x" select="exslt:node-set($ruv)/td[position()=$i]"/>
+                            <xsl:variable name="y" select="."/>
                             <xsl:element name="p">
                                 <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
                                 <xsl:attribute name="y"><xsl:value-of select="$y"/></xsl:attribute>
                                 <xsl:choose>
                                 <xsl:when test="$source='data'">
-                                <xsl:for-each select="exslt:node-set($db)/t3amperr|exslt:node-set($db)/t3phierr">
-                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
-                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
-                                </xsl:for-each>    
+                                <xsl:for-each select="exslt:node-set($errorTds)/td[position()=$i]">
+                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - . div 2"/></xsl:attribute>
+                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + . div 2"/></xsl:attribute>
+                                </xsl:for-each>
                                 </xsl:when>
-                                </xsl:choose>                                
-                            </xsl:element>                    
-                        </xsl:for-each>                            
-                    </xsl:element>                        
+                                </xsl:choose>
+                            </xsl:element>
+                        </xsl:for-each>
+                    </xsl:element>
                 </xsl:for-each>
             </xsl:for-each>                                       
         </plot>
@@ -239,40 +253,42 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">                            
                 <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>                 
                 <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
-                <xsl:for-each select="visdata|visdata_model|vis2data|vis2data_model">                                                                                
+                <xsl:variable name="ruv"><xsl:copy-of select=".//ruv//td"/></xsl:variable>
+                <xsl:variable name="errorTds"><xsl:copy-of select="exslt:node-set($db)/viserr//td|exslt:node-set($db)/vis2err//td|exslt:node-set($db)/t3amperr//td|exslt:node-set($db)/t3phierr//td"/></xsl:variable>
+                <xsl:for-each select="visamp|visamp_model|vis2data|vis2data_model">
                     <xsl:variable name="source"><xsl:choose>
                             <xsl:when test="contains(name(),'_model')">model</xsl:when>
                             <xsl:otherwise>data</xsl:otherwise> 
                     </xsl:choose></xsl:variable>
                     <xsl:element name="dataset">
-                        <xsl:attribute name="name"> 
+                        <xsl:attribute name="name">
                             <xsl:value-of select="concat($source,' ',$classname)"/>
-                        </xsl:attribute>                    
+                        </xsl:attribute>
                         <xsl:attribute name="connected">no</xsl:attribute>
                         <xsl:attribute name="marks">
                             <xsl:choose>
                                 <xsl:when test="$source='model'">points</xsl:when>
-                                <xsl:otherwise>dots</xsl:otherwise> 
+                                <xsl:otherwise>dots</xsl:otherwise>
                             </xsl:choose>
-                        </xsl:attribute>          
-                        <xsl:for-each select=".//td">                                    
+                        </xsl:attribute>
+                        <xsl:for-each select=".//td">
                             <xsl:variable name="i" select="position()"/>
-                            <xsl:variable name="x" select="exslt:node-set($db)/ruv/table/tr[position()=$i]/td"/>
-                            <xsl:variable name="y" select="."/>               
+                            <xsl:variable name="x" select="exslt:node-set($ruv)/td[position()=$i]"/>
+                            <xsl:variable name="y" select="."/>
                             <xsl:element name="p">
                                 <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
                                 <xsl:attribute name="y"><xsl:value-of select="$y"/></xsl:attribute>
                                 <xsl:choose>
                                 <xsl:when test="$source='data'">
-                                <xsl:for-each select="exslt:node-set($db)/viserr|exslt:node-set($db)/vis2err">
-                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
-                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + ./table/tr[position()=$i]/td div 2"/></xsl:attribute>
-                                </xsl:for-each>    
+                                <xsl:for-each select="exslt:node-set($errorTds)/td[position()=$i]">
+                                    <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - . div 2"/></xsl:attribute>
+                                    <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + . div 2"/></xsl:attribute>
+                                </xsl:for-each>
                                 </xsl:when>
-                                </xsl:choose>                                
-                            </xsl:element>                    
-                        </xsl:for-each>                            
-                    </xsl:element>                        
+                                </xsl:choose>
+                            </xsl:element>
+                        </xsl:for-each>
+                    </xsl:element>       
                 </xsl:for-each>
             </xsl:for-each>                                       
         </plot>
