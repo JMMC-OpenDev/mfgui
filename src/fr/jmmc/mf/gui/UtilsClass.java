@@ -521,7 +521,9 @@ public class UtilsClass
 
 
 
-    //@todo add list of supported message types
+    //@todo add list of supported message types actually
+    // empty, INFO, MESSAGE, ERROR, WARNING
+
     public static String getOutputMsg(Response r) {
         logger.entering(className, "getOutputMsg");
         String str = "";
@@ -530,7 +532,7 @@ public class UtilsClass
             ResponseItem responseItem = responseItems[i];
             Message m = responseItem.getMessage();
             if (m != null) {
-                if (m.getType() == null || m.getType().equalsIgnoreCase("INFO")) {
+                if (m.getType() == null || m.getType().equalsIgnoreCase("INFO")|| m.getType().equalsIgnoreCase("MESSAGE")) {
                     str = str + "\n" + m.getContent();
                 }
             }
