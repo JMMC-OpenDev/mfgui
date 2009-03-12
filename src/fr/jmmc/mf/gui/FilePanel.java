@@ -284,7 +284,6 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showT3Button, gridBagConstraints);
 
-        t3ampCheckBox.setSelected(true);
         t3ampCheckBox.setText("T3AMP");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

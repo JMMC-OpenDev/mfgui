@@ -247,7 +247,6 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="t3ampCheckBox">
           <Properties>
-            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="T3AMP"/>
           </Properties>
           <Constraints>
