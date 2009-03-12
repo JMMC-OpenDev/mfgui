@@ -520,6 +520,8 @@ public class UtilsClass
     }
 
 
+
+    //@todo add list of supported message types
     public static String getOutputMsg(Response r) {
         logger.entering(className, "getOutputMsg");
         String str = "";
@@ -527,9 +529,9 @@ public class UtilsClass
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
             Message m = responseItem.getMessage();
-            if ( m != null) {
-                if ((!m.getType().equals("ERROR"))&&(!m.getType().equals("WARNING"))){
-                  str = str + "\n" + m.getContent();
+            if (m != null) {
+                if (m.getType() == null || m.getType().equalsIgnoreCase("INFO")) {
+                    str = str + "\n" + m.getContent();
                 }
             }
         }
@@ -543,14 +545,15 @@ public class UtilsClass
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
             Message m = responseItem.getMessage();
-            if ( m != null) {
-               // if (m.getType().equals("ERROR")){
-                  str = str + "\n" + m.getContent();
-                  logger.fine("getErrorMsg find a message of type: "+m.getType());
-               // }
+            if (m != null) {                
+                if (m.getType() != null ) {
+                    if ((m.getType().equalsIgnoreCase("ERROR"))&&(m.getType().equalsIgnoreCase("WARNING"))) {
+                        str = str + "\n" + m.getContent();
+                        logger.fine("getErrorMsg find a message of type: " + m.getType());
+                    }
+                }
             }
         }
         return str;
     }
-
 }
