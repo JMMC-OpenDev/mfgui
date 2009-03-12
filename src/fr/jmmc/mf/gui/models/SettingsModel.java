@@ -433,7 +433,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** Tell if the inner model is well filled */
     public boolean isValid() {
         logger.entering(className, "isValid");
-        return rootSettings.isValid();
+        boolean isValid = rootSettings.isValid();
+        logger.finest("isValid=" + isValid);
+        return isValid;
     }
 
     /** Returns a new uniq file Id */
