@@ -532,9 +532,10 @@ public class FilePanel extends javax.swing.JPanel {
             StringBuffer sb = new StringBuffer();
             String dataName;
             String errName;
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" +
-                    "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
-                    " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">" + "<plot>" +
+            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
+                    //+ "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
+                    //" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
+                    + "<plot>" +
                     "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
                     "<title>data versus radial distance</title>" +
                     "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + requestedTables + "</yLabel>");
@@ -598,11 +599,9 @@ public class FilePanel extends javax.swing.JPanel {
 
             sb.append("</plot>");
 
-            Plot         plot         = new Plot();
-            PlotMLParser plotMLParser = new PlotMLParser(plot);
-            plotMLParser.parse(null, sb.toString());
-            PlotMLFrame plotMLFrame = new PlotMLFrame(plotName, plot);
-            settingsModel.addPlot(plotMLFrame, plotName);
+            PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
+            java.io.File tsv = UtilsClass.getPlotTsv(sb.toString());     
+            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
         }
         catch (Exception exc)
         {
@@ -667,9 +666,10 @@ public class FilePanel extends javax.swing.JPanel {
         try
         {           
             StringBuffer sb   = new StringBuffer();
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" +
-                "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
-                " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">" + "<plot>" +
+            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
+                //+"<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\""
+                //+ " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
+                + "<plot>" +
                 "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
                 "<title>UV coverage</title>" + "<xLabel>UCOORD [1/rad] </xLabel>" +
                 "<yLabel>VCOORD [1/rad]</yLabel>");
@@ -739,11 +739,9 @@ public class FilePanel extends javax.swing.JPanel {
             }
             sb.append("</plot>");
 
-            Plot         plot         = new Plot();
-            PlotMLParser plotMLParser = new PlotMLParser(plot);
-            plotMLParser.parse(null, sb.toString());
-            PlotMLFrame plotMLFrame = new PlotMLFrame(plotName, plot);
-            settingsModel.addPlot(plotMLFrame, plotName);
+            PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
+            java.io.File tsv = UtilsClass.getPlotTsv(sb.toString());
+            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
         }
         catch (Exception exc)
         {
