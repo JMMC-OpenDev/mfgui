@@ -17,6 +17,8 @@ NOTES pour futur documenter les GROS PROBLEMES CONSTATE entre xsltproc et xalan
 le param d'un template qui disparait a completer...
 exslt:node-set($var)//eleName ne marche pas, il faut utiliser exslt:node-set($var)/eleName
 
+Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une trasfo xsl
+
 -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -33,12 +35,11 @@ exslt:node-set($var)//eleName ne marche pas, il faut utiliser exslt:node-set($va
                 xmlns:test="http://xmlsoft.org/XSLT/"
                 extension-element-prefixes="exslt math date func set str dyn saxon xt libxslt test"
                 exclude-result-prefixes="math str" >
-    
-    <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
+            
+    <!-- <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
                 doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
-    
-    <!-- <xsl:output method="xml" standalone="yes" indent="yes"/>    
--->
+                -->
+    <xsl:output method="xml" standalone="yes" />
     <xsl:param name="plotName">plotBaselines</xsl:param>
     
     <!-- copy of definition collected from yoga/OIlib/yorick/oidata.i -->
