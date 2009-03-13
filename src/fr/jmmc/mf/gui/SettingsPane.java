@@ -121,7 +121,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     /**
-     * Responds to tree selection events.
+     * Responds to tree selection events and try to show the element
+     * in the right panel; 
      */
     public void valueChanged(TreeSelectionEvent e) {
         logger.entering("" + this.getClass(), "valueChanged",e);
@@ -147,12 +148,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             // ResultModel must not be dereferenced as it is a DefaultMutableNode
             resultPanel.show((ResultModel)o, rootSettingsModel);
             modifierPanel.add(resultPanel);
+        } else if (o instanceof FrameTreeNode) {
+            // ResultModel must not be dereferenced as it is a DefaultMutableNode
+            framePanel.show((FrameTreeNode)o, rootSettingsModel);
+            modifierPanel.add(framePanel);
         } else if (o instanceof DefaultMutableTreeNode) {
             // dereference object if it isa contained by a mutableTreeNode
             showElement(((DefaultMutableTreeNode)o).getUserObject());
-        } else if (o instanceof JFrame) {
-            framePanel.show(rootSettingsModel, (JFrame) o);
-            modifierPanel.add(framePanel);
         } else if (o instanceof PlotPanel) {
             plotPanel.show(rootSettingsModel);
             modifierPanel.add(plotPanel);
