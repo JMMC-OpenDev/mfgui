@@ -600,7 +600,7 @@ public class FilePanel extends javax.swing.JPanel {
             sb.append("</plot>");
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-            java.io.File tsv = UtilsClass.getPlotTsv(sb.toString());     
+            java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
             settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
         }
         catch (Exception exc)
@@ -740,7 +740,7 @@ public class FilePanel extends javax.swing.JPanel {
             sb.append("</plot>");
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-            java.io.File tsv = UtilsClass.getPlotTsv(sb.toString());
+            java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
             settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
         }
         catch (Exception exc)
