@@ -1,11 +1,14 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.gui.actions.SaveFileAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Arrays;
 import javax.swing.JFrame;
+import javax.swing.JButton;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
@@ -22,15 +25,24 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     public FramePanel(SettingsViewerInterface viewer) {
         this.viewer = viewer;
         initComponents();
-        jButton1.setAction(MFGui.attachDetachFrameAction);
+        attachDetachButton.setAction(MFGui.attachDetachFrameAction);
     }
 
-    public void show(SettingsModel s, JFrame f) {
+    public void show(FrameTreeNode frameTreeNode,SettingsModel s) {
         settingsModel = s;
-        frame = f;
+        frame = frameTreeNode.getFrame();
         // Take care to add this framePanel to the list one and only one time
-        if (!Arrays.asList(f.getWindowListeners()).contains(this)) {
-            f.addWindowListener(this);
+        if (!Arrays.asList(frame.getWindowListeners()).contains(this)) {
+            frame.addWindowListener(this);
+        }
+
+        // Update buttonsPanel content
+        buttonsPanel.removeAll();
+        buttonsPanel.add(attachDetachButton);
+        File[] files = frameTreeNode.getFilesToExport();        
+        for (int i = 0; i < files.length; i++) {
+            JButton button = new JButton(new SaveFileAction(files[i]));
+            buttonsPanel.add(button);            
         }
 
         contentPane = frame.getContentPane();
@@ -63,6 +75,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         validate();
     }
 
+
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -71,15 +85,20 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        buttonsPanel = new javax.swing.JPanel();
+        attachDetachButton = new javax.swing.JButton();
         blankPanel = new javax.swing.JPanel();
         fillerPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        jButton1.setAlignmentX(0.5F);
-        add(jButton1);
+        buttonsPanel.setLayout(new javax.swing.BoxLayout(buttonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        attachDetachButton.setAlignmentX(0.5F);
+        buttonsPanel.add(attachDetachButton);
+
+        add(buttonsPanel);
 
         blankPanel.setLayout(new javax.swing.BoxLayout(blankPanel, javax.swing.BoxLayout.LINE_AXIS));
         add(blankPanel);
@@ -87,9 +106,10 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton attachDetachButton;
     private javax.swing.JPanel blankPanel;
+    private javax.swing.JPanel buttonsPanel;
     private javax.swing.JPanel fillerPanel;
-    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 
     public void windowOpened(WindowEvent e) {
