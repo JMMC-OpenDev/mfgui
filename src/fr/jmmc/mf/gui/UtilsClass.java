@@ -10,6 +10,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mcs.util.Urls;
 import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
@@ -41,6 +42,9 @@ import javax.swing.tree.TreePath;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import ptolemy.plot.plotml.PlotMLParser;
+import ptolemy.plot.Plot;
+import ptolemy.plot.plotml.PlotMLFrame;
 
 
 /**
@@ -66,6 +70,32 @@ public class UtilsClass
      * DOCUMENT ME!
      */
     static java.util.Hashtable alreadyExpandedFiles = new java.util.Hashtable();
+
+    public static PlotMLFrame getPlotMLFrame(String xmlStr, String plotName) throws Exception {
+        PlotMLParser plotMLParser;
+        // Construct plot and parse xml
+        Plot plot = new Plot();
+        plotMLParser = new PlotMLParser(plot);
+        logger.finest("Trying to plot next document:\n" + xmlStr);
+        plotMLParser.parse(null, xmlStr);
+        // Show plot into frame
+        return new PlotMLFrame("Plotting " + plotName, plot);
+    }
+
+    public static File getPlotTsv(String ptPlotStr) {      
+        File f = null;
+        try {
+            f=File.createTempFile("tsvPlot", "tsv");
+            // Contruct xml document to plot            
+            String xmlStr = xsl(ptPlotStr ,"fr/jmmc/mf/gui/ptplotToTsv.xsl" ,null);
+            BufferedWriter out = new BufferedWriter(new FileWriter(f));
+            out.write(xmlStr);
+            out.close();
+        } catch (IOException e) {
+            new FeedbackReport(e);
+        }
+        return f;
+    }
 
     /*
      * This method picks good column sizes with given maxWidth limit.
@@ -320,19 +350,12 @@ public class UtilsClass
         return true;
     }
 
-    //
-    /**
-     * DOCUMENT ME!
-     *
-     * @param source DOCUMENT ME!
-     * @param xslURL DOCUMENT ME!
-     * @param params DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    private static String xsl(Source source, URL xslURL, String[] params)
+
+    private static String xsl(Source source, String filepath, String[] params)
     {
         logger.entering(className, "xsl");
+        URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
+        xslURL = Urls.fixJarURL(xslURL);
         logger.fine("using next url for transformation" + xslURL);
         try
         {
@@ -396,13 +419,13 @@ public class UtilsClass
      *
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
+     *public static String xsl(String xmlBuffer, URL xslURL, String[] params)
      */
-    public static String xsl(String xmlBuffer, URL xslURL, String[] params)
+    public static String xsl(String xmlBuffer, String filepath, String[] params)
     {
         // Prepare the input
-        Source source = new StreamSource(new StringReader(xmlBuffer));
-
-        return xsl(source, xslURL, params);
+        Source source = new StreamSource(new StringReader(xmlBuffer));        
+        return xsl(source, filepath, params);
     }
 
     /**
@@ -412,14 +435,14 @@ public class UtilsClass
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
      */
-    public static String xsl(java.io.File inFile, URL xslURL, String[] params)
+    public static String xsl(java.io.File inFile, String filepath, String[] params)
     {
         try
         {
             // Prepare the input and output files
             Source source = new StreamSource(new FileInputStream(inFile));
 
-            return xsl(source, xslURL, params);
+            return xsl(source, filepath, params);
         }
         catch (Exception exc)
         {
