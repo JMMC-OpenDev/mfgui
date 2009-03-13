@@ -1,7 +1,6 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.gui.actions.SaveFileAction;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mf.models.Response;
@@ -10,11 +9,10 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,26 +65,32 @@ public class PlotPanel extends javax.swing.JPanel
         Response response=null;
         try {
             response = ModelFitting.execMethod(methodName,
-                    settingsModel.getTempFile(false), methodArgs);
-            StatusBar.show(methodName + " process finished");
-           ResultFile[] resultFiles = UtilsClass.getResultFiles(response);
-           if(resultFiles.length==0){
-               logger.log(Level.WARNING, "No result data interpreted");
-               return;
-           }
-            ResultFile pngResultFile=null;
-            ResultFile pdfResultFile=null;
-            for (int i = 0; i < resultFiles.length; i++) {
-                ResultFile r = resultFiles[i];
-                if (r.getName().endsWith("png")) {
-                    pngResultFile=r;
-                }else if (r.getName().endsWith("pdf")) {
-                    pdfResultFile=r;
-                }
+                    settingsModel.getTempFile(false), methodArgs);            
+            ResultFile[] resultFiles = UtilsClass.getResultFiles(response);
+            if (resultFiles.length == 0) {
+                logger.log(Level.WARNING, "No result data interpreted");
+                return;
             }
 
-            settingsModel.addPlot(buildFrameOf(pngResultFile,pdfResultFile),title);
+            String b64file;
+            File file = null;
+            JFrame f=null;
+            Vector<File> filesToExport = new Vector();
+            for (int i = 0; i < resultFiles.length; i++) {
+                ResultFile r = resultFiles[i];
+                b64file = r.getHref();
+                file = UtilsClass.saveBASE64ToFile(b64file, r.getName().substring(r.getName().indexOf(".")));
+                filesToExport.add(file);
+                if (r.getName().endsWith("png")) {
+                    f = UtilsClass.buildFrameFor(file);
+                }
+            }                        
+            if (f!=null){
+                FrameTreeNode ftn = new FrameTreeNode(f, title, filesToExport.toArray(new File[0]));
+                settingsModel.addPlot(ftn);
+            }
 
+            StatusBar.show(methodName + " process finished");
         } catch (java.net.UnknownHostException ex) {
             String msg="Network seems down. Can't contact host "+ex.getMessage();
             javax.swing.JOptionPane.showMessageDialog(null, msg, "Error ",
@@ -116,56 +120,7 @@ public class PlotPanel extends javax.swing.JPanel
                 }
         }
     }
-
-    public static JFrame buildFrameOf(ResultFile pngResultFile, ResultFile pdfResultFile) throws IOException {
-        String b64file;
-        File f;
-        JLabel label;
-        JButton b;
-        String desc = "PLOT";
-        if (pngResultFile.getDescription() != null) {
-            desc = pngResultFile.getDescription();
-            if (desc.length() < 1) {
-                desc = pngResultFile.getName();
-                if (desc.length() < 1) {
-                    desc = "PLOT";
-                }
-            }
-        }
-        final String d = desc;
-        JFrame frame = new JFrame(){
-            @Override
-            public String toString(){
-                return d;
-            }
-        };
-        JPanel p = new JPanel(new BorderLayout());
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
-        if (pngResultFile != null) {
-            b64file = pngResultFile.getHref();
-            f = UtilsClass.saveBASE64ToFile(b64file);
-            Image image = ImageIO.read(f);
-            // Use a label to display the image
-            label = new JLabel(new ImageIcon(image));
-            p.add(label, BorderLayout.CENTER);
-            b = new JButton();
-            b.setAction(new SaveFileAction(f,pngResultFile.getName()));
-            buttonPanel.add(b);
-        }
-        if (pdfResultFile != null) {
-            b64file = pdfResultFile.getHref();
-            f = UtilsClass.saveBASE64ToFile(b64file);
-            b = new JButton();
-            b.setAction(new SaveFileAction(f,pdfResultFile.getName()));
-            buttonPanel.add(b);
-        }
-        p.add(buttonPanel, BorderLayout.NORTH);
-        frame.getContentPane().add(p);
-        frame.pack();
-        return frame;
-    }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
