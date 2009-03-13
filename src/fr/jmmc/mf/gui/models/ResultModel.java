@@ -134,7 +134,7 @@ public class ResultModel extends DefaultMutableTreeNode {
 
             // generate frame and tsv file
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
-            File tsv = UtilsClass.getPlotTsv(xmlStr);
+            File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
 
             // add on frameTreeNode as child
             this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));

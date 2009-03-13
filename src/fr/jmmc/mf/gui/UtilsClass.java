@@ -62,7 +62,7 @@ public class UtilsClass {
         return new PlotMLFrame("Plotting " + plotName, plot);
     }
 
-    public static File getPlotTsv(String ptPlotStr) {
+    public static File getPlotMLTSVFile(String ptPlotStr) {
         File f = null;
         try {
             //  . is mandatory in suffix if used by SaveFileAction
