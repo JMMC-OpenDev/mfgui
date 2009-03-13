@@ -105,7 +105,7 @@ public class ResultModel extends DefaultMutableTreeNode {
                     for (int j = 0; j < resultFiles.length; j++) {
                         ResultFile r2 = resultFiles[j];
                         String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
-                        if (r.getName().startsWith(filenameWOExt) && r2.getName().endsWith("pdf")) {
+                        if (r.getName().startsWith(filenameWOExt+".") && r2.getName().endsWith("pdf")) {
                             b64file = r2.getHref();
                             File pdfFile = UtilsClass.saveBASE64ToFile(b64file, "pdf");
                             filesToExport.add(pdfFile);
