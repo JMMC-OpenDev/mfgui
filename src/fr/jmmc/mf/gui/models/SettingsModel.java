@@ -137,7 +137,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 target.getFileLinkCount() - 1,
                 fileLink);
     }
-
+    
     public void removeFile(Target target, File file) {
         logger.entering(className, "removeFile", new Object[]{target, file});
         FileLink[] links = target.getFileLink();
@@ -147,8 +147,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 target.removeFileLink(i);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), target},
-                        new int[]{i},
-                        new Object[]{fileLink});
+                        i,fileLink);
             }
         }
     }
@@ -164,7 +163,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void setNormalize(Target target, boolean flag) {
         logger.entering(className, "setNormalize", new Object[]{target, flag});
         target.setNormalize(flag);
-        fireTreeNodesChanged(target);
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets() ,target},
+                getIndexOfChild(rootSettings.getTargets(), target),
+                target);
     }
 
     public void setPlotPanel(PlotPanel plotPanel) {
@@ -172,9 +173,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         plotContainerNode.setUserObject(plotPanel);
     }
 
-    public void addPlot(JFrame frame, final String title) {
-        logger.entering(className, "addPlot", new Object[]{frame, title});
-        FrameTreeNode newPlotNode = new FrameTreeNode(frame, title);
+    public void addPlot(FrameTreeNode newPlotNode) {
+        logger.entering(className, "addPlot", newPlotNode);
         plotContainerNode.add(newPlotNode);
         fireTreeNodesInserted(new Object[]{rootSettings, plotContainerNode},
                 plotContainerNode.getChildCount() - 1,
@@ -230,8 +230,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 int idx = getIndexOfChild(parentTarget, model);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
-                        new int[]{idx},
-                        new Object[]{oldModel});
+                        idx,
+                        oldModel);
                 parentTarget.removeModel(i);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
             }
@@ -278,8 +278,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.getTargets().removeTarget(indice);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
-                new int[]{indice},
-                new Object[]{oldTarget});
+                indice, oldTarget);
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
     }
 
@@ -291,8 +290,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             plotContainerNode.remove(frameNode);
             fireTreeNodesRemoved(this,
                     new Object[]{rootSettings, plotContainerNode},
-                    new int[]{idx},
-                    new Object[]{frameNode});
+                    idx, frameNode);
             setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
             return;
         }
@@ -304,8 +302,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 resModel.remove(frameNode);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getResults(), resModel},
-                        new int[]{idx},
-                        new Object[]{frameNode});
+                        idx, frameNode);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), resModel}));
                 return;
             }
@@ -370,8 +367,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         rootSettings.getResults().removeResult(j);
                         fireTreeNodesRemoved(this,
                                 new Object[]{rootSettings, rootSettings.getResults()},
-                                new int[]{j},
-                                new Object[]{lastPathComponent});
+                                j,lastPathComponent);
                         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
                     }
                 }
@@ -495,10 +491,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "setModelName", new Object[]{model, newName});
         model.setName(newName);
         Target parentTarget = getParent(model);
-        fireTreeNodesChanged(this,
-                new Object[]{rootSettings},
-                new int[]{getIndexOfChild(rootSettings.getTargets(), parentTarget)},
-                new Object[]{model});
+        fireTreeNodesChanged(new Object[]{rootSettings},
+                getIndexOfChild(rootSettings.getTargets(), parentTarget),
+                model);
     }
 
     /**
@@ -579,7 +574,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 parentModel.removeParameter(i);
             }
         }
-        fireTreeNodesChanged(parentModel);
+        Target parentTarget=getParent(parentModel);
+        fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
+                getIndexOfChild(parentTarget,parentModel), parentModel);
     }
 
     void shareParameter(Parameter parameterToShare) {
@@ -604,7 +601,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         // add shared parameter
         rootSettings.getParameters().addParameter(parameterToShare);
-        fireTreeNodesChanged(rootSettings.getParameters());
+        fireTreeNodesChanged(new Object[]{rootSettings},
+                getIndexOfChild(rootSettings, rootSettings.getParameters()),
+                rootSettings.getParameters());
     }
 
     private ResultModel getModel(Result r) {
@@ -625,7 +624,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "setModified", flag);
         isModified = flag;
         if (isModified) {
-            fireUpdate();
+            //fireUpdate();
         }
     }
 
@@ -633,11 +632,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * This method must be called by anyone that has modified the xml binded
      * document.
      */
-    private void fireUpdate() {
+    private void afireUpdate() {
         logger.entering(className, "fireUpdate");
         logger.fine("update signal triggered");
-        //@fire the model listener
-        fireTreeNodesChanged(rootSettings);
         isModified = true;
     }
 
@@ -683,8 +680,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 Model newModel = newModels[j];
                 Parameter[] newParameters = newModel.getParameter();
                 Model model = models[j];
-                model.setParameter(newParameters);
-                fireTreeNodesChanged(model);
+                model.setParameter(newParameters);                
+                fireTreeNodesChanged(new Object[]{rootSettings, target},
+                getIndexOfChild(target,model), model);                
             }
         }
 
@@ -1157,14 +1155,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         observableDelegate.notifyObservers();
     }
 
-    protected void fireTreeNodesChanged(Object changedNode) {
-        logger.entering(className, "fireTreeNodesChanged", changedNode);
-        TreeModelEvent e = new TreeModelEvent(this, new Object[]{changedNode});
-        for (int i = 0; i < treeModelListeners.size(); i++) {
-            ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
-        }
-        observableDelegate.notifyObservers();
-    }
+    
 
     /**
      * @see DefaultTreeModel implementation
@@ -1173,15 +1164,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             int childIndice,
             Object child) {
         logger.entering(className, "fireTreeNodesInserted", new Object[]{path, childIndice, child});
-        fireTreeNodesInserted(path, new int[]{childIndice}, new Object[]{child});
-    }
-
-    protected void fireTreeNodesInserted(Object[] path,
-            int[] childIndices,
-            Object[] children) {
-        logger.entering(className, "fireTreeNodesInserted", new Object[]{path, children});
         TreeModelEvent e = new TreeModelEvent(this, path,
-                childIndices, children);
+                new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesInserted(e);
         }
@@ -1192,11 +1176,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-            int[] childIndices,
-            Object[] children) {
-        logger.entering(className, "fireTreeNodesRemoved", new Object[]{source, path, children});
+            int childIndice,
+            Object child) {
+        logger.entering(className, "fireTreeNodesRemoved", new Object[]{path, childIndice, child});
         TreeModelEvent e = new TreeModelEvent(source, path,
-                childIndices, children);
+                new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesRemoved(e);
         }
@@ -1206,12 +1190,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * @see DefaultTreeModel implementation
      */
-    protected void fireTreeNodesChanged(Object source, Object[] path,
-            int[] childIndices,
-            Object[] children) {
-        logger.entering(className, "fireTreeNodesChanged", new Object[]{source, path, children});
-        TreeModelEvent e = new TreeModelEvent(source, path,
-                childIndices, children);
+    protected void fireTreeNodesChanged(Object[] path,
+            int childIndice,
+            Object child) {
+        logger.entering(className, "fireTreeNodesChanged", new Object[]{path, childIndice, child});
+        TreeModelEvent e = new TreeModelEvent(this, path,
+               new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
         }
@@ -1295,7 +1279,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         } else if (parent instanceof Target) {
             Target t = (Target) parent;
             // return number of files and models
-            // ident node is represented on target tree node
             return t.getFileLinkCount() + t.getModelCount();
         } else if (parent instanceof Results) {
             Results r = (Results) parent;
@@ -1456,13 +1439,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void valueForPathChanged(TreePath path, Object newValue) {
         logger.entering(className, "valueForPathChanged", new Object[]{path, newValue});
-
         Object modifiedObject = path.getLastPathComponent();
-        /*Settings m = (Settings) path.getLastPathComponent();
-        m.setName("" + newValue);
-         */
         new FeedbackReport();
-        fireTreeNodesChanged(modifiedObject);
+        //fireTreeNodesChanged(path,modifiedObject);
     }
 
     public String toString() {
@@ -1485,9 +1464,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public String toLITproDesc() {
         logger.entering(className, "toLITproDesc");
-        try {
-            java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/settingsToLITproDesc.xsl");
-            return UtilsClass.xsl(toXml(), url,
+        try {            
+            return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
                     new String[]{});
         } catch (Exception e) {
             new FeedbackReport(e);
