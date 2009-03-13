@@ -695,10 +695,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (newResult != null) {
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult);
+                r.genPlots(UtilsClass.getResultFiles(newResponse));
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount()-1,
                         r);
-                r.genPlots(UtilsClass.getResultFiles(newResponse));
             } else {
                 logger.warning("found null result while updating with new settings");
             }
