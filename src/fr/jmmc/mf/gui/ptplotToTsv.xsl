@@ -17,7 +17,7 @@
 <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
 
 <xsl:template match="/">  
-  <xsl:for-each select="//p">
+  <xsl:for-each select="//p | //m">
     <xsl:value-of select="@x"/>
     <xsl:value-of select="'&#09;'"/>
     <xsl:value-of select="@y"/>
