@@ -21,18 +21,39 @@ public class SaveFileAction extends RegisteredAction {
             className);
     private String lastDir = System.getProperty("user.home");
     private File fileToSave;
-    private String proposedFilename;
+    private String fileName;
     private String originalActionName;
 
-    public SaveFileAction(File fileToSave, String proposedFilename) {
+    /**
+     * Convenience constructor that use extension as type.
+     * @param fileToSave
+     */
+    public SaveFileAction(File fileToSave) {        
         super(className, "saveSpecificFile");
-        // original name has certainly be inited from resources
-        originalActionName = (String) this.getValue(SaveFileAction.NAME);
-        this.putValue(SaveFileAction.NAME, originalActionName + "(" + proposedFilename + ")");
-        this.fileToSave = fileToSave;
-        this.proposedFilename = proposedFilename;
+        init(fileToSave, null);
+    }
+    
+    public SaveFileAction(File fileToSave, String fileType) {
+        super(className, "saveSpecificFile");
+        init(fileToSave, fileType);
     }
 
+    protected void init(File fileToSave, String fileType){        
+        // original name has certainly be inited from resources
+        originalActionName = (String) this.getValue(SaveFileAction.NAME);
+        if(fileType==null){
+            int dotIndex=fileToSave.getName().lastIndexOf(".");
+            if(dotIndex<0){
+                fileType="???";
+            }else{
+                fileType=fileToSave.getName().substring(dotIndex+1);
+            }
+        }
+        this.putValue(SaveFileAction.NAME, originalActionName + " " + fileType.toUpperCase());
+        this.fileToSave = fileToSave;
+        this.fileName = "Untitled."+fileType.toLowerCase();
+    }
+    
     void copy(File src, File dst) throws IOException, FileNotFoundException, IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
@@ -53,11 +74,11 @@ public class SaveFileAction extends RegisteredAction {
             // Open a filechooser in previous save directory
             JFileChooser fileChooser = new JFileChooser();
             if (lastDir != null) {
-                fileChooser.setSelectedFile(new File(lastDir, proposedFilename));
+                fileChooser.setSelectedFile(new File(lastDir, fileName));
             } else if (fileToSave != null) {
                 fileChooser.setSelectedFile(fileToSave);
             }
-            fileChooser.setDialogTitle("Save " + proposedFilename + "?");
+            fileChooser.setDialogTitle("Export as " + fileName + "?");
             // Open filechooser
             int returnVal = fileChooser.showSaveDialog(null);
             File newFile = fileChooser.getSelectedFile();
@@ -76,8 +97,8 @@ public class SaveFileAction extends RegisteredAction {
             }
             copy(fileToSave, newFile);
             lastDir = newFile.getParent();
-            proposedFilename = newFile.getName();
-            this.putValue(SaveFileAction.NAME, originalActionName + "(" + proposedFilename + ")");
+            fileName = newFile.getName();
+            this.putValue(SaveFileAction.NAME, originalActionName + " " + fileName);
             fr.jmmc.mcs.gui.StatusBar.show("File saved");
         } catch (Exception exc) {
             new FeedbackReport(null, true, exc);
