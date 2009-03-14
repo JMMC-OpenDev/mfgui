@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.2beta1"/>
+    <program name="ModelFitting" version="1.1.2"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -65,16 +65,14 @@
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
             </prerelease>
-            <prerelease version="1.1.2beta1">
-                <change type="BUGFIX">Fix litpro settings file export</change>
-                <change type="BUGFIX">Fix broken update of shared parameters node and table</change>
-                <change type="BUGFIX">Fix plot build to handle multiwavelength data</change>
+            <prerelease version="1.1.2beta1">                
+                <change type="BUGFIX">Fix broken update of shared parameters widgets</change>
                 <change type="FEATURE">Add export of XY plots in TSV file</change>
             </prerelease>
         </release>
         <release version="1.1.1">
             <prerelease version="1.1.1beta1">
-                <change type="BUGFIX">Fix ShowLitproSettings action</change>
+                <change type="BUGFIX">Fix litpro settings file export</change>
                 <change type="BUGFIX">Fix plot build to handle multiwavelength data</change>
             </prerelease>
         </release>
