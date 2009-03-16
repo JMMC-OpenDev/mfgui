@@ -972,25 +972,25 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }*/
 
     // @todo place this method into fr.jmmc.mf.util
-    public boolean checkFile(File bindedFile) throws Exception {
-        logger.entering(className, "checkFile", bindedFile);
+    public boolean checkFile(File boundFile) throws Exception {
+        logger.entering(className, "checkFile", boundFile);
 
-        String filename = bindedFile.getName();
+        String filename = boundFile.getName();
         logger.fine("Checking file from xml name '" + filename + "'");
 
         // Check href and return if no file exists
         java.io.File realFile = new java.io.File(filename);
-        String href = bindedFile.getHref();
+        String href = boundFile.getHref();
 
         if (href != null) {
             logger.fine("Href already present");
 
             //@todo decode b64 and test filesize or md5sum 
             // and then test on oitarget list could be done...
-            if (bindedFile.getOitargetCount() < 1) {
+            if (boundFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
                 // try to continue next test creating a file based on the base64 href                                
-                filename = UtilsClass.saveBASE64ToFile(bindedFile, href);
+                filename = UtilsClass.saveBASE64ToFile(boundFile, href);
             } else {
                 return true;
             }
@@ -1003,19 +1003,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 filename = fc.getSelectedFile().getCanonicalPath();
-                bindedFile.setName(filename);
+                boundFile.setName(filename);
                 logger.info("User asked to try again with new file ");
-                addFileHref(bindedFile);
-                return checkFile(bindedFile);
+                addFileHref(boundFile);
+                return checkFile(boundFile);
             } else {
                 logger.warning("Can't locate file");
                 throw new java.io.FileNotFoundException();
             }
         } else {
-            addFileHref(bindedFile);
+            addFileHref(boundFile);
         }
 
-        bindedFile.removeAllOitarget();
+        boundFile.removeAllOitarget();
         OifitsFile fits = new OifitsFile(filename);
         try {
             OiTarget oiTarget = fits.getOiTarget();
@@ -1024,7 +1024,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 String targetName = targetNames[i];
                 Oitarget t = new Oitarget();
                 t.setTarget(targetName);
-                bindedFile.addOitarget(t);
+                boundFile.addOitarget(t);
             }
         } catch (Exception e) {
             GUIValidator val = new GUIValidator(null);
