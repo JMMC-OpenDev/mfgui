@@ -155,12 +155,7 @@ Target list
         
     </xsd:element>
     
-    
-    <!--
-Target representation 
-    -->
-    <xsd:element name="target">
-        
+    <xsd:element name="target">        
         <xsd:annotation>
             <xsd:documentation>
                 Target representation.
@@ -168,17 +163,45 @@ Target representation
         </xsd:annotation>
         
         <xsd:complexType >
-            <xsd:sequence>
+            <xsd:sequence>                
                 <xsd:element name="ident" type="xsd:string" minOccurs="1" maxOccurs="1"/>
                 <xsd:element ref="fileLink" minOccurs="1" maxOccurs="unbounded"/>
                 <xsd:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
                 <xsd:element name="normalize" type="xsd:boolean"  minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="residuals"  minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
         
     </xsd:element>
-    
-    
+
+    <xsd:element name="residuals">        
+        <xsd:annotation>
+            <xsd:documentation>
+                Residuals configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:sequence>
+
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="residual">
+        <xsd:annotation>
+            <xsd:documentation>
+                Residual description.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <xsd:attribute name="type" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+
+
     <!--
 Basic model representation. This model also correspond to composite model 
     -->
