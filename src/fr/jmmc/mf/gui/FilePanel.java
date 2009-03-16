@@ -77,10 +77,11 @@ public class FilePanel extends javax.swing.JPanel {
         oifitsFile_ = null;
         try {
             current = file;
-            String filename = UtilsClass.saveBASE64ToFile(current,
+
+            java.io.File f = UtilsClass.saveBASE64ToFile(current,
                     current.getHref());
-            java.io.File f = new java.io.File(filename);
-            oifitsFile_ = new OifitsFile(filename);
+            System.out.println("f = " + f);
+            oifitsFile_ = new OifitsFile(f.getAbsolutePath());
 
             // update file info fields
             nameTextField.setText(file.getName());

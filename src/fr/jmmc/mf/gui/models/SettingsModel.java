@@ -37,6 +37,7 @@ import fr.jmmc.oifits.*;
 import fr.jmmc.oifits.validator.GUIValidator;
 import java.util.Enumeration;
 import java.util.Observer;
+import java.util.logging.Level;
 
 /**
  * This class manages the castor generated classes to bring 
@@ -923,21 +924,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     // @todo place this method into fr.jmmc.mf.util
+    // and make it much much simpler
     public void addFile(java.io.File fileToAdd) throws Exception {
         logger.entering(className, "addFile", fileToAdd);
-
         Files files = rootSettings.getFiles();
         // The file must be one oidata file
-        String fitsFileName = fileToAdd.getAbsolutePath();
         File newFile = new File();
-        newFile.setName(fitsFileName);
+        newFile.setName(fileToAdd.getAbsolutePath());
         newFile.setId(getNewFileId());
         if (checkFile(newFile)) {
-            // make shorter filename (this line must be kept after checkFile,
-            // because is must be retrieved using full qualified name)
-            newFile.setName(fileToAdd.getName());
             allFilesListModel.addElement(newFile);
-            logger.fine("'" + fitsFileName + "' oifile added to file list");
+            logger.fine("'" + newFile.getName() + "' oifile added to file list");
             int idx = files.getFileCount();
             files.addFile(newFile);
             updateOiTargetList();
@@ -955,78 +952,69 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     // @todo place this method into fr.jmmc.mf.util
-    public void addFileHref(File bindedFile) throws Exception {
-        logger.entering(className, "addFileHref", bindedFile);
-        java.io.File realFile = new java.io.File(bindedFile.getName());
-        // Create a read-only memory-mapped file
-        java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(realFile, "r").getChannel();
-        java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
-                0, (int) roChannel.size());
-        String b64 = "data:image/fits;base64," +
-                new sun.misc.BASE64Encoder().encode(roBuf);
-        bindedFile.setHref(b64);
-    }
-
-    /* public void addFileOiTargets(File bindedFile) throws Exception {
-    logger.entering(className, "addFileOiTarget");
-    }*/
-
-    // @todo place this method into fr.jmmc.mf.util
+    // and refactor this CODE
     public boolean checkFile(File boundFile) throws Exception {
         logger.entering(className, "checkFile", boundFile);
-
+        //Store filename
         String filename = boundFile.getName();
+
+        // shorten filename (WARNING newFile name MUST be used because it can be changed by checkFile
+        java.io.File tmpFile = new java.io.File(boundFile.getName());
+        boundFile.setName(tmpFile.getName());
+
         logger.fine("Checking file from xml name '" + filename + "'");
 
-        // Check href and return if no file exists
-        java.io.File realFile = new java.io.File(filename);
+        // Check href and return if oitarget are found
         String href = boundFile.getHref();
-
         if (href != null) {
             logger.fine("Href already present");
-
-            //@todo decode b64 and test filesize or md5sum 
-            // and then test on oitarget list could be done...
             if (boundFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
-                // try to continue next test creating a file based on the base64 href                                
-                filename = UtilsClass.saveBASE64ToFile(boundFile, href);
+                // restore file from base64 and try to continue
+                filename = UtilsClass.saveBASE64ToFile(boundFile, href).getAbsolutePath();
             } else {
                 return true;
             }
-        } else if (!realFile.exists()) {
-            logger.warning("User should try to locate not found file");
-
-            JFileChooser fc = new JFileChooser(realFile.getParentFile());
-            int returnVal = fc.showDialog(new JFrame(),
-                    "Please try to locate requested file:" + realFile.getName());
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                filename = fc.getSelectedFile().getCanonicalPath();
-                boundFile.setName(filename);
-                logger.info("User asked to try again with new file ");
-                addFileHref(boundFile);
-                return checkFile(boundFile);
-            } else {
-                logger.warning("Can't locate file");
-                throw new java.io.FileNotFoundException();
-            }
-        } else {
-            addFileHref(boundFile);
         }
+                
+        return populate(boundFile, filename);        
+    }
 
-        boundFile.removeAllOitarget();
-        OifitsFile fits = new OifitsFile(filename);
+
+    /** Set href attribute and search oitarget in io.File associated to filename.
+     *
+     * @param fileToPopulate
+     * @param filename
+     * @return
+     */
+    private boolean populate(File fileToPopulate, String filename) {
+        logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
+        OifitsFile fits=null;
         try {
+            // Populate the boundFile with oifits content
+            fileToPopulate.removeAllOitarget();
+            // file extension can be *fits or *fits.gz
+            fits = new OifitsFile(filename);
             OiTarget oiTarget = fits.getOiTarget();
             String[] targetNames = oiTarget.getTargetNames();
+            
+            // if filename ends with .gz then extension is removed by OifitsFile
+            // -> we must always use the oifitsfile name
+            java.io.File tmp = new java.io.File(fits.getName());
+            fileToPopulate.setName(tmp.getName());
+
+            //generate and store base64 href
+            fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
+
+            // search oitargets
             for (int i = 0; i < targetNames.length; i++) {
                 String targetName = targetNames[i];
                 Oitarget t = new Oitarget();
                 t.setTarget(targetName);
-                boundFile.addOitarget(t);
+                fileToPopulate.addOitarget(t);
             }
         } catch (Exception e) {
+            logger.log(Level.WARNING, "Can't search data into fits file "+fits,e);
             GUIValidator val = new GUIValidator(null);
             val.checkFile(fits);
             return false;

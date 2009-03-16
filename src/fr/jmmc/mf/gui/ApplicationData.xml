@@ -64,10 +64,12 @@
                 <change type="REQUEST">Add function to remove orphan data files.</change>
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="REQUEST">Remove local file name in the file panels</change>
             </prerelease>
             <prerelease version="1.1.3beta1">
-                <change type="BUGFIX">Fix data file loading that added non fits file into the tree</change>
+                <change type="BUGFIX">Fix data file loading that added one leaf into the tree even if file was not an oifits file</change>
                 <change type="FEATURE">Add selector of data to be fitted into target panels</change>
+                <change type="FEATURE">Accept gzipped oifits file (*.gz)</change>
             </prerelease>
         </release>
         <release version="1.1.2">
