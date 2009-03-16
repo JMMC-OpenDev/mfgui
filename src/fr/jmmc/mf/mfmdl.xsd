@@ -183,7 +183,7 @@ Target list
 
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element ref="residual"/>
+                <xsd:element ref="residual" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
