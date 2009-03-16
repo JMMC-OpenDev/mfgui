@@ -127,6 +127,16 @@
 
             <!-- residual definition -->
             <xsl:value-of select="'      residuals = h_new(&#10;'"/>
+            <xsl:for-each select=".//residual">
+                <xsl:value-of select="'          '"/>
+                <xsl:value-of select="@name"/>
+                <xsl:value-of select="' = &quot;'"/>
+                <xsl:value-of select="@type"/>
+                <xsl:value-of select="'&quot;,&#10;'"/>
+            </xsl:for-each>
+
+
+
             <xsl:choose>
                 <xsl:when test="contains(./normalize,'false') or
                     contains(./normalize,'0')">

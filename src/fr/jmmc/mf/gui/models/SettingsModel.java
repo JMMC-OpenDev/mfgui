@@ -12,6 +12,8 @@ import fr.jmmc.mf.models.Oitarget;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Parameters;
+import fr.jmmc.mf.models.Residual;
+import fr.jmmc.mf.models.Residuals;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.Results;
@@ -167,6 +169,40 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 getIndexOfChild(rootSettings.getTargets(), target),
                 target);
     }
+
+    /**
+     *
+     * @param target
+     * @param residualModuleName name of residual module : VIS2 VISamp VISphi T3phi T3Amp
+     * @param residualModuleValue default,
+     */
+    public void setResiduals(Target target, String visAmpValue,
+            String visPhiValue, String vis2Value, String t3AmpValue,
+            String t3PhiValue) {
+        logger.entering(className, "setResidual", new Object[]{target,
+        visAmpValue, visPhiValue, vis2Value, t3AmpValue, t3PhiValue});
+        
+        Residuals residuals = new Residuals();
+
+        String[]moduleNames=new String[]{"VISamp","VISphi","VIS2","T3amp","T3phi"};
+        String[]moduleValues=new String[]{visAmpValue, visPhiValue, vis2Value, t3AmpValue, t3PhiValue};
+
+        for (int i = 0; i < moduleValues.length; i++) {
+            String val = moduleValues[i];
+            if(val!=null){
+                Residual r = new Residual();
+                r.setName(moduleNames[i]);
+                r.setType(val);
+                residuals.addResidual(r);
+            }
+        }
+
+        target.setResiduals(residuals);
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets() ,target},
+                getIndexOfChild(rootSettings.getTargets(), target),
+                target);
+    }
+
 
     public void setPlotPanel(PlotPanel plotPanel) {
         logger.entering(className, "setPlotPanel", plotPanel);
@@ -383,7 +419,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
     }
-
+  
     public void toggleSelectedFrames() {
         logger.entering(className, "toggleSelectedFrames");
         TreePath[] treepaths = getSelectionPaths();
