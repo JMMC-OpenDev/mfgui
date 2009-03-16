@@ -183,7 +183,7 @@ Target list
 
         <xsd:complexType>
             <xsd:sequence>
-
+                <xsd:element name="residual"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
