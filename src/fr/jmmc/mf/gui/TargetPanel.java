@@ -8,12 +8,15 @@ import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Residuals;
+import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -37,6 +40,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private PlotModelPanel plotModelImagePanel;
     private ParametersTableModel parametersTableModel;
     private Vector<MouseListener> mouseListeners = new Vector();
+    private Hashtable<String, JCheckBox> moduleNameToCheckBox = new Hashtable();
 
     /** Creates new form TargetPanel */
     public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel) {
@@ -53,6 +57,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         plotModelImagePanel = new PlotModelPanel(plotPanel);
         subplotPanel.add(plotModelImagePanel);
+
+        // link residual module name with its widget
+        String[]moduleNames=new String[]{"VISamp","VISphi","VIS2","T3amp","T3phi"};
+        JCheckBox[]modulesCheckBoxes=new JCheckBox[]{visAmpCheckBox,
+            visPhiCheckBox,vis2CheckBox,t3ampCheckBox,t3phiCheckBox};
+        for (int i = 0; i < moduleNames.length; i++) {
+            moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i] );
+        }
+
     }
 
     /**
@@ -99,7 +112,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                         // modify dirrectly the widget instead of its model 
                         // because jmcs.gui.CheckBoxJList does not handle properly
                         fileList.setSelectedIndex(i);
-                        //selectedFiles.addSelectionInterval(i, i);
+                    //selectedFiles.addSelectionInterval(i, i);
                     }
                 }
             }
@@ -119,6 +132,29 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         // Set normalizeCheckBox
         normalizeCheckBox.setSelected(current.getNormalize());
+
+        // Fix residual checkbox states
+        Residuals residuals = current.getResiduals();
+        boolean initValue = residuals == null;
+        visAmpCheckBox.setSelected(false);
+        visPhiCheckBox.setSelected(initValue);
+        vis2CheckBox.setSelected(initValue);
+        t3ampCheckBox.setSelected(false); 
+        t3phiCheckBox.setSelected(initValue);
+
+        if (residuals != null) {
+            for (String key : moduleNameToCheckBox.keySet()) {
+                JCheckBox cb = moduleNameToCheckBox.get(key);
+                Residual[] res = residuals.getResidual();
+                for (int i = 0; i < res.length; i++) {
+                    Residual residual = res[i];
+                    if(residual.getName().equals(key)){
+                        cb.setSelected(true);
+                    }
+                }
+            }
+        }
+
         plotModelImagePanel.show(settingsModel, current);
     }
 
@@ -200,6 +236,12 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         removeModelButton = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         normalizeCheckBox = new javax.swing.JCheckBox();
+        t3phiCheckBox = new javax.swing.JCheckBox();
+        t3ampCheckBox = new javax.swing.JCheckBox();
+        visPhiCheckBox = new javax.swing.JCheckBox();
+        vis2CheckBox = new javax.swing.JCheckBox();
+        visAmpCheckBox = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
         subplotPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -323,15 +365,85 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel3.add(jPanel4, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
-        jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel6.setLayout(new java.awt.GridBagLayout());
 
         normalizeCheckBox.setText("Normalize total flux");
         normalizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                normalizeCheckBoxActionPerformed(evt);
+                targetFitterParamActionPerformed(evt);
             }
         });
-        jPanel6.add(normalizeCheckBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel6.add(normalizeCheckBox, gridBagConstraints);
+
+        t3phiCheckBox.setText("T3phi");
+        t3phiCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetFitterParamActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel6.add(t3phiCheckBox, gridBagConstraints);
+
+        t3ampCheckBox.setText("T3amp");
+        t3ampCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetFitterParamActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        jPanel6.add(t3ampCheckBox, gridBagConstraints);
+
+        visPhiCheckBox.setText("VISphi");
+        visPhiCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetFitterParamActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        jPanel6.add(visPhiCheckBox, gridBagConstraints);
+
+        vis2CheckBox.setText("VIS2");
+        vis2CheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetFitterParamActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        jPanel6.add(vis2CheckBox, gridBagConstraints);
+
+        visAmpCheckBox.setText("VISamp");
+        visAmpCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetFitterParamActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanel6.add(visAmpCheckBox, gridBagConstraints);
+
+        jLabel2.setText("Select data to fit:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        jPanel6.add(jLabel2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -442,17 +554,43 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             logger.warning("No model selected");
         }
     }//GEN-LAST:event_addModelButtonActionPerformed
-    
-    private void normalizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_normalizeCheckBoxActionPerformed
+
+            private void targetFitterParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetFitterParamActionPerformed
+        
         rootSettingsModel.setNormalize(current, normalizeCheckBox.isSelected());
-    }//GEN-LAST:event_normalizeCheckBoxActionPerformed
+
+        String visAmp=null;
+        String visPhi=null;
+        String vis2=null;
+                String t3Amp = null;
+                String t3Phi = null;
+
+                if (visAmpCheckBox.isSelected()) {
+                    visAmp = "default";
+                }
+                if (visPhiCheckBox.isSelected()) {
+                    visPhi = "default";
+                }
+                if (vis2CheckBox.isSelected()) {
+                    vis2 = "default";
+                }
+                if (t3phiCheckBox.isSelected()) {
+                    t3Amp = "default";
+                }
+                if (t3ampCheckBox.isSelected()) {
+                    t3Phi = "default";
+                }
+        rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
+
+
+}//GEN-LAST:event_targetFitterParamActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
     private javax.swing.JList fileList;
     private javax.swing.JComboBox identComboBox;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -468,5 +606,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JTable parametersTable;
     private javax.swing.JButton removeModelButton;
     private javax.swing.JPanel subplotPanel;
+    private javax.swing.JCheckBox t3ampCheckBox;
+    private javax.swing.JCheckBox t3phiCheckBox;
+    private javax.swing.JCheckBox vis2CheckBox;
+    private javax.swing.JCheckBox visAmpCheckBox;
+    private javax.swing.JCheckBox visPhiCheckBox;
     // End of variables declaration//GEN-END:variables
 }
