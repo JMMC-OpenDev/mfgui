@@ -46,6 +46,7 @@ import ptolemy.plot.plotml.PlotMLFrame;
  * one jmmc.mcs.* package
  */
 public class UtilsClass {
+
     static String className = "fr.jmmc.mf.gui.UtilsClass";
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
@@ -159,20 +160,46 @@ public class UtilsClass {
         }
     }
 
+    public static final String IMAGE_FITS_DATATYPE="image/fits";
+    public static final String IMAGE_PNG_DATATYPE="image/png";
+
+    /**
+     * Return base 64 href of given file with given datatype
+     * @param filenameToEncode
+     * @param dataType
+     * @return the base64 buffer
+     * @throws java.io.IOException
+     */
+    public static String getBase64Href(String filenameToEncode, String dataType) throws IOException
+    {
+        java.io.File fileToEncode = new java.io.File(filenameToEncode);
+        return getBase64Href(fileToEncode, dataType);
+    }
+
+    public static String getBase64Href(java.io.File fileToEncode, String dataType) throws IOException
+    {
+        String base64DataType = "data:"+dataType+";base64,";      
+        // Create a read-only memory-mapped file
+        java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(fileToEncode, "r").getChannel();
+        java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
+                0, (int) roChannel.size());
+        return base64DataType + new sun.misc.BASE64Encoder().encode(roBuf);
+    }
+
     /**
      * Decode the base64 encoded file and store it into the given file.
      *
      * @param b64 the base64 encoded file
      * @param outputFile the file to store result
      *
-     * @return The absolute filename or null.
+     * @return The given outputFile or null if nothing has been decoded.
      *
-     * @throws IOException DOCUMENT ME!
+     * @throws IOException
      */
-    public static String saveBASE64ToFile(String b64, File outputFile)
+    public static File saveBASE64ToFile(String b64, File outputFile)
             throws IOException {
         String[] dataTypes = new String[]{
-            "image/fits", "image/png"
+            IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
         };
         for (int i = 0; i <= dataTypes.length; i++) {
             String base64DataType;
@@ -194,7 +221,7 @@ public class UtilsClass {
                 out.write(buf);
                 out.flush();
                 out.close();
-                return outputFile.getAbsolutePath();
+                return outputFile;
             }
         }
 
@@ -221,25 +248,34 @@ public class UtilsClass {
         return outputFile;
     }
 
-    public static String saveBASE64ToFile(fr.jmmc.mf.models.File file, String b64)
+    public static File saveBASE64ToFile(fr.jmmc.mf.models.File dataFile, String b64)
             throws IOException {
-        Object key = file;
+        Object key = dataFile;
+
+        String filename="tmpOifile";
+        String fileExtension=".oifits";
+        File tmp = new File(dataFile.getName());
+        int dotPos = tmp.getName().lastIndexOf(".");
+        if(dotPos>1){
+            filename = tmp.getName().substring(0,dotPos);
+            fileExtension=tmp.getName().substring(dotPos);
+        }
 
         // Search if this file has already been loaded
         java.io.File outputFile = (java.io.File) alreadyExpandedFiles.get(key);
 
         if (outputFile == null) {
             // Create temp file.
-            outputFile = java.io.File.createTempFile("tmpOifile", ".oifits");
+            outputFile = java.io.File.createTempFile(filename, fileExtension);
             // Delete temp file when program exits.
             outputFile.deleteOnExit();
             alreadyExpandedFiles.put(key, outputFile);
-
+            logger.fine("expanding '" + key + "' into " + outputFile.getAbsolutePath());
             return saveBASE64ToFile(b64, outputFile);
+        }else{
+            logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());
         }
-
-        logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());
-        return outputFile.getAbsolutePath();
+        return outputFile;
     }
 
     //
