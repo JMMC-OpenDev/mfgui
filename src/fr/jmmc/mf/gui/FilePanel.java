@@ -6,7 +6,6 @@ import fr.jmmc.mf.models.File;
 import fr.jmmc.oifits.*;
 
 import fr.jmmc.oifits.validator.GUIValidator;
-import ptolemy.plot.*;
 import ptolemy.plot.plotml.*;
 import java.net.URI;
 import java.util.*;
@@ -297,7 +296,6 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 8;
         jPanel1.add(t3phiCheckBox, gridBagConstraints);
 
-        visampCheckBox.setSelected(true);
         visampCheckBox.setText("VISAMP");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

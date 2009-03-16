@@ -268,7 +268,6 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="visampCheckBox">
           <Properties>
-            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="VISAMP"/>
           </Properties>
           <Constraints>
