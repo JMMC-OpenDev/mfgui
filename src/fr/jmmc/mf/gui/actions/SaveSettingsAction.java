@@ -9,7 +9,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-public class SaveModelAction extends RegisteredAction {
+public class SaveSettingsAction extends RegisteredAction {
     private final static String className="fr.jmmc.mf.gui.actions.SaveModelAction";
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
@@ -19,7 +19,7 @@ public class SaveModelAction extends RegisteredAction {
     MFGui mfgui;
     private boolean saveResult;
 
-    public SaveModelAction(MFGui mfgui,String actionName, boolean saveResult) {
+    public SaveSettingsAction(MFGui mfgui,String actionName, boolean saveResult) {
         super(className, actionName);
         this.mfgui = mfgui;
         this.saveResult=saveResult;

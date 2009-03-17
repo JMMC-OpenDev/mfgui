@@ -5,7 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mf.gui.actions.SaveModelAction;
+import fr.jmmc.mf.gui.actions.SaveSettingsAction;
 import fr.jmmc.mf.gui.actions.ShowPrefAction;
 import fr.jmmc.mf.gui.actions.LoadDemoModelAction;
 import fr.jmmc.mf.gui.actions.LoadModelAction;
@@ -73,8 +73,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         new LoadModelAction(this);
         new LoadRemoteModelAction(this);
         // @todo use a preference to choose from one of the two following for default saveaction
-        saveModelAction=new SaveModelAction(this, "saveModel", false);
-        new SaveModelAction(this, "saveModelWithResults", true);
+        saveModelAction=new SaveSettingsAction(this, "saveModel", false);
+        new SaveSettingsAction(this, "saveModelWithResults", true);
         
         deleteTreeSelectionAction =  new DeleteTreeSelectionAction(this) ;
         attachDetachFrameAction = new AttachDetachFrameAction(this);
