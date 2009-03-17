@@ -21,6 +21,8 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import org.eso.fits.FitsException;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 
@@ -99,7 +101,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Creates a new empty SettingsModel object.
      */
     public SettingsModel(java.io.File fileToLoad)
-            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, ValidationException, IOException {
+            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, ValidationException, IOException, MalformedURLException, FitsException {
         logger.entering(className, "SettingsModel", fileToLoad);
         init();
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
@@ -967,7 +969,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and refactor this CODE
-    public boolean checkFile(File boundFile) throws IOException {
+    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, FitsException {
         logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
@@ -1000,43 +1002,39 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param filename
      * @return
      */
-    private boolean populate(File fileToPopulate, String filename) {
+    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, FitsException {
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OifitsFile fits = null;
-        try {
-            // Populate the boundFile with oifits content
-            fileToPopulate.removeAllOitarget();
-            // file extension can be *fits or *fits.gz
-            fits = new OifitsFile(filename);
-            OiTarget oiTarget = fits.getOiTarget();
-            String[] targetNames = oiTarget.getTargetNames();
+        // Populate the boundFile with oifits content
+        fileToPopulate.removeAllOitarget();
+        // file extension can be *fits or *fits.gz
+        fits = new OifitsFile(filename);
+        OiTarget oiTarget = fits.getOiTarget();
+        String[] targetNames = oiTarget.getTargetNames();
 
-            // if filename ends with .gz then extension is removed by OifitsFile
-            // -> we must always use the oifitsfile name
-            java.io.File tmp = new java.io.File(fits.getName());
-            fileToPopulate.setName(tmp.getName());
+        // if filename ends with .gz then extension is removed by OifitsFile
+        // -> we must always use the oifitsfile name
+        java.io.File tmp = new java.io.File(fits.getName());
+        fileToPopulate.setName(tmp.getName());
 
-            //generate and store base64 href
-            fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
+        //generate and store base64 href
+        fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
 
-            // search oitargets
-            for (int i = 0; i < targetNames.length; i++) {
-                String targetName = targetNames[i];
-                Oitarget t = new Oitarget();
-                t.setTarget(targetName);
-                fileToPopulate.addOitarget(t);
-            }
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Can't search data into fits file " + fits, e);
-            GUIValidator val = new GUIValidator(null);
-            val.checkFile(fits);
-            return false;
+        // search oitargets
+        for (int i = 0; i < targetNames.length; i++) {
+            String targetName = targetNames[i];
+            Oitarget t = new Oitarget();
+            t.setTarget(targetName);
+            fileToPopulate.addOitarget(t);
         }
+
+        GUIValidator val = new GUIValidator(null);
+        val.checkFile(fits);
         return true;
     }
 
     // @todo think to move this method into fr.jmmc.mf.util
-    public void checkSettingsFormat(Settings s) throws IOException {
+    public void checkSettingsFormat(Settings s) throws IOException, MalformedURLException, FitsException {
         logger.entering(className, "checkSettingsFormat", s);
 
         // try to locate files
