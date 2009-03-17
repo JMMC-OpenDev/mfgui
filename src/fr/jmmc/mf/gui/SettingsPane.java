@@ -308,6 +308,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         setLayout(new java.awt.GridBagLayout());
 
+        jSplitPane1.setBorder(null);
+
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(1.0);
