@@ -7,12 +7,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JFrame;
 import ptolemy.plot.plotml.PlotMLFrame;
-import ptolemy.plot.plotml.PlotMLParser;
 
 /**
  * This treeNode brings one Result castor into the JTrees.
@@ -34,9 +34,14 @@ public class ResultModel extends DefaultMutableTreeNode {
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
             StringWriter xmlResultSw = new StringWriter();
+            logger.fine("Start result marshaling");
             result.marshal(xmlResultSw);
+            logger.fine("End result marshaling");
             xmlResult = xmlResultSw.toString();
+            logger.fine("Start report generation");
             htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            logger.fine("End report generation");
+
         } catch (Exception exc) {
             htmlReport = "<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
@@ -128,13 +133,17 @@ public class ResultModel extends DefaultMutableTreeNode {
         logger.entering("" + this.getClass(), "ptplot", plotName);
         String xmlStr = null;
         try {
+            logger.fine("Start plot generation:"+plotName);
             // Contruct xml document to plot           
             xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",
                     new String[]{"plotName", plotName});
 
             // generate frame and tsv file
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
+            logger.fine("End plot generation:"+plotName);
+            logger.fine("Start tsv generation:"+plotName);
             File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
+            logger.fine("End tsv generation:"+plotName);
 
             // add on frameTreeNode as child
             this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));
