@@ -36,13 +36,11 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu listenersMenu;
     private javax.swing.JButton loadViewerButton;
-    private javax.swing.JTextField localNameTextField;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton saveFileButton;
     private javax.swing.JButton showT3Button;
@@ -80,12 +78,10 @@ public class FilePanel extends javax.swing.JPanel {
 
             java.io.File f = UtilsClass.saveBASE64ToFile(current,
                     current.getHref());
-            System.out.println("f = " + f);
             oifitsFile_ = new OifitsFile(f.getAbsolutePath());
 
             // update file info fields
             nameTextField.setText(file.getName());
-            localNameTextField.setText(f.getAbsolutePath() + "  (" + (f.length() / 1000) + " kBytes)");
 
             // update lists
             hduList.setListData(oifitsFile_.getOiTables());
@@ -120,8 +116,6 @@ public class FilePanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        localNameTextField = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
         saveFileButton = new javax.swing.JButton();
         checkFileButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -158,36 +152,17 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 1.0;
         jPanel2.add(nameTextField, gridBagConstraints);
 
-        localNameTextField.setEditable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel2.add(localNameTextField, gridBagConstraints);
-
-        jLabel6.setText("Local Name:"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel2.add(jLabel6, gridBagConstraints);
-
         saveFileButton.setAction(this.saveEmbeddedFileAction);
         saveFileButton.setForeground(new java.awt.Color(51, 51, 52));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(saveFileButton, gridBagConstraints);
 
         checkFileButton.setAction(this.checkEmbeddedFileAction);
         checkFileButton.setForeground(new java.awt.Color(51, 51, 52));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel2.add(checkFileButton, gridBagConstraints);
+        jPanel2.add(checkFileButton, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
