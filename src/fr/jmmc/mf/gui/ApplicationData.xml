@@ -70,6 +70,8 @@
                 <change type="BUGFIX">Fix data file loading that added one leaf into the tree even if file was not an oifits file</change>
                 <change type="FEATURE">Add selector of data to be fitted into target panels</change>
                 <change type="FEATURE">Accept gzipped oifits file (*.gz)</change>
+                <change type="FEATURE">Wrong settings file loading show an error message instead of feedback report</change>
+                <change type="CHANGE">Display error dialog box on file loading errors.</change>
             </prerelease>
         </release>
         <release version="1.1.2">
