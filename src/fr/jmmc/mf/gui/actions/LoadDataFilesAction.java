@@ -1,12 +1,13 @@
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
+import java.util.logging.Level;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -30,30 +31,34 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        try {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setMultiSelectionEnabled(true);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(true);
 
-            // Set in previous load directory
-            if (lastDir != null) {
-                fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-            }
-
-            // Open file chooser
-            int returnVal = fileChooser.showOpenDialog(null);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                java.io.File[] files = fileChooser.getSelectedFiles();
-
-                for (int i = 0; i < files.length; i++) {
-                    settingsModel.addFile(files[i]);
-                }
-
-                lastDir = files[0].getParent();
-            }
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
+        // Set in previous load directory
+        if (lastDir != null) {
+            fileChooser.setCurrentDirectory(new java.io.File(lastDir));
         }
+
+        // Open file chooser
+        int returnVal = fileChooser.showOpenDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            java.io.File[] files = fileChooser.getSelectedFiles();
+
+            for (int i = 0; i < files.length; i++) {
+                try {
+                    settingsModel.addFile(files[i]);
+                } catch (Exception ex) {
+                    String msg = "Can't read oifits file '" + files[i].getName() + "'.\n\n(" +
+                            ex.getMessage() + ")";
+                    JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
+                    logger.log(Level.WARNING, msg, ex);
+                }
+            }
+
+            lastDir = files[0].getParent();
+        }
+
     }
 
     /** Listen to the settings pane selection changes
@@ -62,7 +67,7 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
      */
     public void stateChanged(ChangeEvent e) {
         settingsModel = mfgui.getSelectedSettings();
-        if(settingsModel==null){
+        if (settingsModel == null) {
             return;
         }
         if (!settingsModelListener.contains(settingsModel)) {
