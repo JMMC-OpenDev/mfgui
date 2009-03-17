@@ -136,10 +136,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // Fix residual checkbox states
         Residuals residuals = current.getResiduals();
         boolean initValue = residuals == null;
-        visAmpCheckBox.setSelected(false);
+        visAmpCheckBox.setSelected(initValue);
         visPhiCheckBox.setSelected(initValue);
         vis2CheckBox.setSelected(initValue);
-        t3ampCheckBox.setSelected(false); 
+        t3ampCheckBox.setSelected(initValue);
         t3phiCheckBox.setSelected(initValue);
 
         if (residuals != null) {
@@ -219,8 +219,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         parametersTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -248,8 +246,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         setBorder(javax.swing.BorderFactory.createTitledBorder("Target panel"));
         setLayout(new java.awt.GridBagLayout());
 
-        jPanel3.setLayout(new java.awt.GridBagLayout());
-
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jPanel5.setLayout(new java.awt.BorderLayout());
 
@@ -262,13 +258,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
-        jPanel3.add(jPanel5, gridBagConstraints);
+        add(jPanel5, gridBagConstraints);
 
         jLabel1.setText("Ident:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel3.add(jLabel1, gridBagConstraints);
+        add(jLabel1, gridBagConstraints);
 
         identComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
         identComboBox.setEnabled(false);
@@ -278,7 +274,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        jPanel3.add(identComboBox, gridBagConstraints);
+        add(identComboBox, gridBagConstraints);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
@@ -300,12 +296,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel3.add(jPanel2, gridBagConstraints);
+        add(jPanel2, gridBagConstraints);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 122));
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 82));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(260, 82));
 
         modelList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -362,7 +359,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel3.add(jPanel4, gridBagConstraints);
+        add(jPanel4, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
         jPanel6.setLayout(new java.awt.GridBagLayout());
@@ -450,7 +447,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel3.add(jPanel6, gridBagConstraints);
+        add(jPanel6, gridBagConstraints);
 
         subplotPanel.setLayout(new javax.swing.BoxLayout(subplotPanel, javax.swing.BoxLayout.Y_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -460,23 +457,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel3.add(subplotPanel, gridBagConstraints);
+        add(subplotPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        jPanel3.add(jPanel1, gridBagConstraints);
-
-        jScrollPane3.setViewportView(jPanel3);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(jScrollPane3, gridBagConstraints);
+        add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
  
     private void modelListMouseClicked(java.awt.event.MouseEvent evt)
@@ -593,13 +580,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
