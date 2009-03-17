@@ -41,6 +41,7 @@ import fr.jmmc.oifits.validator.GUIValidator;
 import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
+import org.exolab.castor.xml.CastorException;
 import org.exolab.castor.xml.ValidationException;
 
 /**
@@ -101,14 +102,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Creates a new empty SettingsModel object.
      */
     public SettingsModel(java.io.File fileToLoad)
-            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, ValidationException, IOException, MalformedURLException, FitsException {
+            throws java.io.FileNotFoundException, IOException, MalformedURLException, FitsException, CastorException {
         logger.entering(className, "SettingsModel", fileToLoad);
         init();
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel;
         try {
             newModel = (Settings) Settings.unmarshal(reader);
-        } catch (org.exolab.castor.xml.MarshalException exc1) {
+        } catch (CastorException exc1 ) {
             try {
                 logger.log(Level.WARNING, "Can't unmarshal as Settings", exc1);
                 // try to extract settings from a response file as fallback
