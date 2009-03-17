@@ -86,6 +86,7 @@ public class SettingsPanel extends javax.swing.JPanel
         setBorder(javax.swing.BorderFactory.createTitledBorder("Settings panel"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
+        jSplitPane1.setBorder(null);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.2);
 
