@@ -941,7 +941,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and make it much much simpler
-    public void addFile(java.io.File fileToAdd) throws Exception {
+    public void addFile(java.io.File fileToAdd) throws IOException, MalformedURLException, FitsException{
         logger.entering(className, "addFile", fileToAdd);
         Files files = rootSettings.getFiles();
         // The file must be one oidata file
@@ -958,12 +958,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             fireTreeNodesInserted(new Object[]{rootSettings, files},
                     idx,
                     newFile);
-            setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));
-        /*@todo return a invalidFormat exception instead of Simple exception
-        }catch(Exception exc){
-        logger.warning("Rejecting non valid file '"+fileToAdd.getAbsolutePath()+"'");
-        throw new ...
-        }*/
+            setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));        
         }
     }
 
@@ -1009,7 +1004,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         fileToPopulate.removeAllOitarget();
         // file extension can be *fits or *fits.gz
         fits = new OifitsFile(filename);
+
         OiTarget oiTarget = fits.getOiTarget();
+
         String[] targetNames = oiTarget.getTargetNames();
 
         // if filename ends with .gz then extension is removed by OifitsFile
