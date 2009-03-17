@@ -302,6 +302,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         ITMaxTextField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
+        modifierPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         modifierPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
@@ -379,8 +381,16 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jSplitPane1.setLeftComponent(jSplitPane2);
 
+        modifierPanel2.setLayout(new javax.swing.BoxLayout(modifierPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPane1.setBorder(null);
+
         modifierPanel.setLayout(new javax.swing.BoxLayout(modifierPanel, javax.swing.BoxLayout.LINE_AXIS));
-        jSplitPane1.setRightComponent(modifierPanel);
+        jScrollPane1.setViewportView(modifierPanel);
+
+        modifierPanel2.add(jScrollPane1);
+
+        jSplitPane1.setRightComponent(modifierPanel2);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -436,9 +446,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JPanel modifierPanel;
+    private javax.swing.JPanel modifierPanel2;
     private javax.swing.JButton runFitButton;
     private javax.swing.JScrollPane settingsTreeScrollPane;
     // End of variables declaration//GEN-END:variables
