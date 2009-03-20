@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.28 2009-03-12 16:08:54 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.29 2009-03-20 06:29:20 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -130,7 +130,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
             xmlResult=doExec(methodName, xmlFile, methodArg);
         }
         java.io.StringReader reader = new java.io.StringReader(xmlResult);
-        Response r = Response.unmarshal(reader);
+        Response r = (Response)Response.unmarshal(reader);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length()>1){
             JTextArea t = new JTextArea(errors, 20,80);

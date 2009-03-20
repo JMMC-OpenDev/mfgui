@@ -35,7 +35,7 @@ public class ResultModel extends DefaultMutableTreeNode {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
             StringWriter xmlResultSw = new StringWriter();
             logger.fine("Start result marshaling");
-            result.marshal(xmlResultSw);
+            UtilsClass.marshal(result,xmlResultSw);
             logger.fine("End result marshaling");
             xmlResult = xmlResultSw.toString();
             logger.fine("Start report generation");

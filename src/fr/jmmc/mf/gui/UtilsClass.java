@@ -10,6 +10,9 @@ import fr.jmmc.mf.models.ResponseItem;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Settings;
 import java.awt.BorderLayout;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.w3c.dom.Document;
 
 import org.xml.sax.InputSource;
@@ -37,6 +40,8 @@ import javax.swing.tree.TreePath;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import org.exolab.castor.mapping.Mapping;
+import org.exolab.castor.xml.Marshaller;
 import ptolemy.plot.plotml.PlotMLParser;
 import ptolemy.plot.Plot;
 import ptolemy.plot.plotml.PlotMLFrame;
@@ -138,6 +143,20 @@ public class UtilsClass {
 
         // Traverse tree from root
         expandAll(tree, new TreePath(root), expand);
+    }
+
+    public static void marshal(Object objectToMarshal, Writer writer) throws IOException, MappingException, MarshalException, ValidationException {
+                // Do marshalling
+        URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
+        logger.fine("Using mapping file :" + mappingURL);
+        Marshaller marshaller = new Marshaller(writer);
+        // old simple code sometimes break xml elements order then use a mapping file
+        Mapping mapping = new Mapping();
+        mapping.loadMapping(mappingURL);
+        marshaller.setMapping(mapping);
+        marshaller.setValidation(false);
+        marshaller.marshal(objectToMarshal);
+        writer.flush();        
     }
 
     private static void expandAll(JTree tree, TreePath parent, boolean expand) {
