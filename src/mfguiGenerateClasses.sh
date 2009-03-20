@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.15 2009-03-12 09:29:05 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.16 2009-03-20 06:30:29 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2009/03/12 09:29:05  mella
+# add all xsl of fr.jmmc.mf dir
+#
 # Revision 1.14  2009/02/24 13:00:11  mella
 # typo
 #
@@ -72,12 +75,12 @@
 MODEL_SCHEMA=fr/jmmc/mf/table.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
-java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package fr.jmmc.mcs.castor  $*
+java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGeneratorMain -i ${MODEL_SCHEMA} -f -package fr.jmmc.mcs.castor  $*
 
 #MODEL_SCHEMA=./VOTable-beta.xsd
 # generate model java source from xml schema
 #echo "Generating classes for $MODEL_SCHEMA"
-#java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package net.ivoa.castor  $*
+#java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGeneratorMain -i ${MODEL_SCHEMA} -f -package net.ivoa.castor  $*
 
 
 
@@ -85,7 +88,7 @@ java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerato
 MODEL_SCHEMA=fr/jmmc/mf/mfmdl.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
-java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGenerator -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  $*
+java -classpath $(mkfMakeJavaClasspath) org.exolab.castor.builder.SourceGeneratorMain -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  $*
 
 for f in fr/jmmc/mf/models/*.java
 do
