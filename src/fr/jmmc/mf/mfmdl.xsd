@@ -166,9 +166,9 @@ Target list
             <xsd:sequence>                
                 <xsd:element name="ident" type="xsd:string" minOccurs="1" maxOccurs="1"/>
                 <xsd:element ref="fileLink" minOccurs="1" maxOccurs="unbounded"/>
-                <xsd:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
                 <xsd:element name="normalize" type="xsd:boolean"  minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="residuals"  minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
         

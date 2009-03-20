@@ -18,11 +18,10 @@ public class ReadAndWriteXml {
         File out = new File(filename+".out");
         System.out.println("" + new Date() + ": NEW PROCESS one file '"+filename+"'");
         try {
-
             //unserialize
             FileReader reader = new FileReader(f);
             System.out.println("" + new Date() + ": start file reading");
-            Settings s = (Settings)Settings.unmarshal(reader);
+            Settings s = Settings.unmarshal(reader);
             System.out.println("" + new Date() + ": end file reading");
 
             //modify object
