@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import org.eso.fits.FitsException;
 import org.exolab.castor.mapping.Mapping;
+import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
 
 import java.net.URL;
@@ -43,6 +44,7 @@ import java.util.Observer;
 import java.util.logging.Level;
 import org.exolab.castor.xml.CastorException;
 import org.exolab.castor.xml.ValidationException;
+import org.exolab.castor.xml.XMLException;
 
 /**
  * This class manages the castor generated classes to bring 
@@ -102,14 +104,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Creates a new empty SettingsModel object.
      */
     public SettingsModel(java.io.File fileToLoad)
-            throws java.io.FileNotFoundException, IOException, MalformedURLException, FitsException, CastorException {
+            throws java.io.FileNotFoundException, IOException, MalformedURLException, FitsException, ValidationException, XMLException {
         logger.entering(className, "SettingsModel", fileToLoad);
         init();
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel;
         try {
             newModel = (Settings) Settings.unmarshal(reader);
-        } catch (CastorException exc1 ) {
+        } catch (XMLException exc1 ) {
             try {
                 logger.log(Level.WARNING, "Can't unmarshal as Settings", exc1);
                 // try to extract settings from a response file as fallback
@@ -162,10 +164,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void removeFile(Target target, File file) {
         logger.entering(className, "removeFile", new Object[]{target, file});
         FileLink[] links = target.getFileLink();
+
         for (int i = 0; i < links.length; i++) {
             FileLink fileLink = links[i];
             if (fileLink.getFileRef() == file) {
-                target.removeFileLink(i);
+                target.removeFileLink(fileLink);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), target},
                         i, fileLink);
@@ -286,7 +289,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
                         idx,
                         oldModel);
-                parentTarget.removeModel(i);
+                parentTarget.removeModel(models[i]);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
             }
         }
@@ -329,7 +332,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
         targetListModel.removeElement(oldTarget);
-        rootSettings.getTargets().removeTarget(indice);
+        rootSettings.getTargets().removeTarget(oldTarget);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 indice, oldTarget);
@@ -414,17 +417,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (lastPathComponent instanceof ResultModel) {
                 ResultModel resultModel = (ResultModel) lastPathComponent;
                 Result selectedResult = resultModel.getResult();
-                Result[] results = rootSettings.getResults().getResult();
-                for (int j = 0; j < results.length; j++) {
-                    Result result = results[j];
-                    if (result == selectedResult) {
-                        rootSettings.getResults().removeResult(j);
-                        fireTreeNodesRemoved(this,
-                                new Object[]{rootSettings, rootSettings.getResults()},
-                                j, lastPathComponent);
-                        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
-                    }
-                }
+                int idx = getIndexOfChild(rootSettings.getResults(), selectedResult);
+                rootSettings.getResults().removeResult(selectedResult);
+                fireTreeNodesRemoved(this,
+                        new Object[]{rootSettings, rootSettings.getResults()},
+                        idx, lastPathComponent);
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
             } else if (lastPathComponent instanceof Target) {
                 removeTarget((Target) lastPathComponent);
             } else if (lastPathComponent instanceof Model) {
@@ -625,7 +623,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Parameter[] params = parentModel.getParameter();
         for (int i = 0; i < params.length; i++) {
             if (params[i] == parameterToLink) {
-                parentModel.removeParameter(i);
+                parentModel.removeParameter(params[i]);
             }
         }
         Target parentTarget = getParent(parentModel);
@@ -647,12 +645,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         newLink.setParameterRef(parameterToShare);
         newLink.setType(parameterToShare.getType());
         associatedModel.addParameterLink(newLink);
-        Parameter[] params = associatedModel.getParameter();
-        for (int i = 0; i < params.length; i++) {
-            if (params[i] == parameterToShare) {
-                associatedModel.removeParameter(i);
-            }
-        }
+        associatedModel.removeParameter(parameterToShare);
+        
         // add shared parameter
         rootSettings.getParameters().addParameter(parameterToShare);
         fireTreeNodesChanged(new Object[]{rootSettings},
@@ -676,20 +670,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     private void setModified(boolean flag) {
         logger.entering(className, "setModified", flag);
-        isModified = flag;
-        if (isModified) {
-            //fireUpdate();
-        }
-    }
-
-    /**
-     * This method must be called by anyone that has modified the xml binded
-     * document.
-     */
-    private void afireUpdate() {
-        logger.entering(className, "fireUpdate");
-        logger.fine("update signal triggered");
-        isModified = true;
+        isModified = flag;       
     }
 
     public java.io.File getTempFile(boolean keepResult)
@@ -1002,7 +983,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OifitsFile fits = null;
         // Populate the boundFile with oifits content
-        fileToPopulate.removeAllOitarget();
+        fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
         fits = new OifitsFile(filename);
 
@@ -1085,21 +1066,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             rootSettings.setResults(new Results());
         }
 
-        logger.fine("start setting file writting");
-        // Read a File to unmarshal from
+        // Write settings into a File
         java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
-
-        // Do marshalling
-        URL mappingURL = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
-        logger.fine("Using mapping file :" + mappingURL);
-        Marshaller marshaller = new Marshaller(writer);
-        // old simple code sometimes break xml elements order then use a mapping file
-        Mapping mapping = new Mapping();
-        mapping.loadMapping(mappingURL);
-        marshaller.setMapping(mapping);
-        rootSettings.validate();
-        marshaller.marshal(rootSettings);
-        writer.flush();
+        logger.fine("start setting file writting");
+        UtilsClass.marshal(rootSettings,writer);
         logger.fine("finish file writting into " + fileToSave);
 
         if (fileToSave.equals(associatedFile)) {

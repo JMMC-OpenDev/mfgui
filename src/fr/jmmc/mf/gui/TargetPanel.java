@@ -531,7 +531,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             StringWriter writer   = new StringWriter();
             selectedModel.marshal(writer);
             StringReader reader = new StringReader(writer.toString());
-            m = Model.unmarshal(reader);
+            m = (Model)Model.unmarshal(reader);
             rootSettingsModel.addModel(current, m);
             updateModels();
         }
