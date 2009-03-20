@@ -23,11 +23,6 @@ import fr.jmmc.mf.models.Targets;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.eso.fits.FitsException;
-import org.exolab.castor.mapping.Mapping;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-
-import java.net.URL;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -42,7 +37,6 @@ import fr.jmmc.oifits.validator.GUIValidator;
 import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
-import org.exolab.castor.xml.CastorException;
 import org.exolab.castor.xml.ValidationException;
 import org.exolab.castor.xml.XMLException;
 
@@ -110,8 +104,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel;
         try {
-            newModel = (Settings) Settings.unmarshal(reader);
-        } catch (XMLException exc1 ) {
+            newModel = Settings.unmarshal(reader);
+        } catch (XMLException exc1) {
             try {
                 logger.log(Level.WARNING, "Can't unmarshal as Settings", exc1);
                 // try to extract settings from a response file as fallback
@@ -646,7 +640,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         newLink.setType(parameterToShare.getType());
         associatedModel.addParameterLink(newLink);
         associatedModel.removeParameter(parameterToShare);
-        
+
         // add shared parameter
         rootSettings.getParameters().addParameter(parameterToShare);
         fireTreeNodesChanged(new Object[]{rootSettings},
@@ -670,7 +664,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     private void setModified(boolean flag) {
         logger.entering(className, "setModified", flag);
-        isModified = flag;       
+        isModified = flag;
     }
 
     public java.io.File getTempFile(boolean keepResult)
@@ -923,7 +917,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and make it much much simpler
-    public void addFile(java.io.File fileToAdd) throws IOException, MalformedURLException, FitsException{
+    public void addFile(java.io.File fileToAdd) throws IOException, MalformedURLException, FitsException {
         logger.entering(className, "addFile", fileToAdd);
         Files files = rootSettings.getFiles();
         // The file must be one oidata file
@@ -940,7 +934,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             fireTreeNodesInserted(new Object[]{rootSettings, files},
                     idx,
                     newFile);
-            setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));        
+            setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));
         }
     }
 
@@ -983,7 +977,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OifitsFile fits = null;
         // Populate the boundFile with oifits content
-        fileToPopulate.clearOitarget();
+        fileToPopulate.removeAllOitarget();
         // file extension can be *fits or *fits.gz
         fits = new OifitsFile(filename);
 
@@ -1069,7 +1063,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // Write settings into a File
         java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
         logger.fine("start setting file writting");
-        UtilsClass.marshal(rootSettings,writer);
+        UtilsClass.marshal(rootSettings, writer);
         logger.fine("finish file writting into " + fileToSave);
 
         if (fileToSave.equals(associatedFile)) {
