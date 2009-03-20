@@ -260,7 +260,7 @@ Model parameter representation.
         </xsd:annotation>
         
         <xsd:complexType>
-            <xsd:sequence>
+            <xsd:all>
                 <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="units" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="value" type="xsd:double" minOccurs="1" maxOccurs="1"/>
@@ -269,7 +269,7 @@ Model parameter representation.
                 <xsd:element name="scale" type="xsd:double" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="hasFixedValue" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
                 <xsd:element name="editable" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
-            </xsd:sequence>
+            </xsd:all>
             <xsd:attributeGroup ref="ParameterAttributes"/>
         </xsd:complexType>
     </xsd:element>
