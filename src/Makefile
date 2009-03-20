@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.20 2009-03-20 06:30:29 mella Exp $"
+# "@(#) $Id: Makefile,v 1.21 2009-03-20 09:54:04 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.20  2009/03/20 06:30:29  mella
+# Change due to castor 1.3
+#
 # Revision 1.19  2009/03/12 09:29:05  mella
 # add all xsl of fr.jmmc.mf dir
 #
@@ -230,12 +233,11 @@ JNLP=ModelFitting
 # TARGETS
 # -------
 
-all:	do_castor do_all
+all: do_all
 	@echo " . . . 'all' done" 
 	
 
 clean : clean_all 
-	rm -rf fr/jmmc/mf/models
 	@echo " . . . clean done"
 
 man   : do_man 
