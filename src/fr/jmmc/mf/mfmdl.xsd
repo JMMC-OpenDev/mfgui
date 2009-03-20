@@ -327,7 +327,7 @@ Result list.
         </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:any minOccurs="0" processContents="lax"/>
+                <xsd:any minOccurs="0" processContents="skip"/>
             </xsd:sequence>
         </xsd:complexType>
         
