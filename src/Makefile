@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.19 2009-03-12 09:29:05 mella Exp $"
+# "@(#) $Id: Makefile,v 1.20 2009-03-20 06:30:29 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2009/03/12 09:29:05  mella
+# add all xsl of fr.jmmc.mf dir
+#
 # Revision 1.18  2008/11/20 14:28:33  mella
 # castor is now in jmcs module
 #
@@ -232,6 +235,7 @@ all:	do_castor do_all
 	
 
 clean : clean_all 
+	rm -rf fr/jmmc/mf/models
 	@echo " . . . clean done"
 
 man   : do_man 
