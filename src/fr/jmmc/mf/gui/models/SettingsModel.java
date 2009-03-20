@@ -101,7 +101,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             throws java.io.FileNotFoundException, IOException, MalformedURLException, FitsException, ValidationException, XMLException {
         logger.entering(className, "SettingsModel", fileToLoad);
         init();
-        java.io.FileReader reader = new java.io.FileReader(fileToLoad);
+        final java.io.FileReader reader = new java.io.FileReader(fileToLoad);
         Settings newModel;
         try {
             newModel = Settings.unmarshal(reader);
@@ -109,8 +109,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             try {
                 logger.log(Level.WARNING, "Can't unmarshal as Settings", exc1);
                 // try to extract settings from a response file as fallback
-                reader = new java.io.FileReader(fileToLoad);
-                Response r = (Response) Response.unmarshal(reader);
+                final java.io.FileReader reader2 = new java.io.FileReader(fileToLoad);
+                Response r = (Response) Response.unmarshal(reader2);
                 newModel = UtilsClass.getSettings(r);
             } catch (org.exolab.castor.xml.MarshalException exc2) {
                 logger.log(Level.WARNING, "Can't unmarshal Settings from Response", exc2);
@@ -613,13 +613,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         newLink.setType(parameterToLink.getType());
 
         Model parentModel = getParent(parameterToLink);
+        parentModel.removeParameter(parameterToLink);
         parentModel.addParameterLink(newLink);
-        Parameter[] params = parentModel.getParameter();
-        for (int i = 0; i < params.length; i++) {
-            if (params[i] == parameterToLink) {
-                parentModel.removeParameter(params[i]);
-            }
-        }
+        
         Target parentTarget = getParent(parentModel);
         fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
                 getIndexOfChild(parentTarget, parentModel), parentModel);
