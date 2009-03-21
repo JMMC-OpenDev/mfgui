@@ -53,12 +53,14 @@
         <field name="id">
             <bind-xml name="id" node="attribute"/>
         </field>
-
         <field name="name">
             <bind-xml name="name" node="attribute"/>
         </field>
         <field name="href" >            
             <bind-xml name="href" node="attribute"/>
+        </field>
+        <field name="oitarget">
+            <bind-xml name="oitarget" node="element"/>
         </field>
     </class>
 
@@ -69,6 +71,15 @@
     <class name="fr.jmmc.mf.models.Files">
         <field name="file" type="fr.jmmc.mf.models.File" collection="array">
             <bind-xml name="file" node="element"/>
+        </field>
+    </class>
+
+    <class name="fr.jmmc.mf.models.Oitarget">
+        <field name="target">
+            <bind-xml name="target" node="element"/>
+        </field>
+        <field name="infos" >
+            <bind-xml name="infos" node="element"/>
         </field>
     </class>
 

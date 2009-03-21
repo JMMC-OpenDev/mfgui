@@ -63,10 +63,10 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add function to remove orphan data files.</change>
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
-                <change type="REQUEST">Remove local file name in the file panels</change>
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>                
             </prerelease>
             <prerelease version="1.1.3beta2">
+                <change type="CHANGE">include oitarget element into xml file output</change>
                 <change type="CHANGE">revert to Result as Result children.</change>
                 <change type="CHANGE">file plots (radial, uv coverage) get filename into the tree labels</change>
             </prerelease>
@@ -77,6 +77,7 @@
                 <change type="FEATURE">Accept gzipped oifits file (*.gz)</change>
                 <change type="FEATURE">Wrong settings file loading show an error message instead of feedback report</change>
                 <change type="CHANGE">Display error dialog box on file loading errors.</change>
+                <change type="CHANGE">Remove local file name in the file panels</change>
             </prerelease>
         </release>
         <release version="1.1.2">
