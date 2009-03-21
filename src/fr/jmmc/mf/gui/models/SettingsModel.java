@@ -974,7 +974,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OifitsFile fits = null;
         // Populate the boundFile with oifits content
-        fileToPopulate.removeAllOitarget();
+        fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
         fits = new OifitsFile(filename);
 
