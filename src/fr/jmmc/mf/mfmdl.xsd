@@ -312,7 +312,7 @@ Result list.
 
         <xsd:complexType >
             <xsd:sequence>
-                <xsd:element ref="result" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="resultFile" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
