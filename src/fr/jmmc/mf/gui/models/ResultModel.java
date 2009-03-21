@@ -4,18 +4,15 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
 import javax.swing.tree.DefaultMutableTreeNode;
-import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.StringWriter;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JFrame;
 import ptolemy.plot.plotml.PlotMLFrame;
 
 /**
- * This treeNode brings one Result castor into the JTrees.
+ * This treeNode brings one ResultFile castor into the JTrees.
  */
 public class ResultModel extends DefaultMutableTreeNode {
 
@@ -24,24 +21,20 @@ public class ResultModel extends DefaultMutableTreeNode {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
     private SettingsModel settingsModel;
     private String htmlReport = null;
-    private String xmlResult = null;
-    private Result result;
+    private File xmlResult = null;
+    private ResultFile result;
 
-    public ResultModel(SettingsModel settingsModel, Result result) {
+    public ResultModel(SettingsModel settingsModel, ResultFile result) {
         this.settingsModel = settingsModel;
         this.result = result;
 
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
-            StringWriter xmlResultSw = new StringWriter();
-            logger.fine("Start result marshaling");
-            UtilsClass.marshal(result,xmlResultSw);
-            logger.fine("End result marshaling");
-            xmlResult = xmlResultSw.toString();
-            logger.fine("Start report generation");
-            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            java.io.File file = UtilsClass.saveBASE64ToFile(result.getHref(), "xml");
+            htmlReport = UtilsClass.xsl(file, xslPath, null);
             logger.fine("End report generation");
 
+            genPlots();
         } catch (Exception exc) {
             htmlReport = "<html>Error during report generation.</html>";
             new FeedbackReport(null, true, exc);
@@ -59,29 +52,15 @@ public class ResultModel extends DefaultMutableTreeNode {
         new FeedbackReport(null, true, exc);
         }
          */
-
-        genPlots();
+        
         //genPlots(UtilsClass.getResultFiles(response));
         this.setUserObject(result);
     }
 
-    public Result getResult() {
-        return (Result) getUserObject();
+    public ResultFile getResultFile() {
+        return (ResultFile) getUserObject();
     }
-
-    /*
-    public void genResultReport(SettingsModel settingsModel, Response response) {
-    JFrame resultFrame = new JFrame();
-    JPanel p = new JPanel();
-    p.setLayout(new BorderLayout());
-    resultFrame.getContentPane().add(p);
-    genReport(settingsModel);
-    JScrollPane sp = new JScrollPane(new JEditorPane("text/html", resultPanel.getReport()));
-    p.add(sp);
-    //        addPlot(resultFrame, "--New fit result--");
-    genPlots(settingsModel);
-
-     */
+    
     public String getHtmlReport() {
         logger.entering("" + this.getClass(), "getHtmlReport");
         return htmlReport;
