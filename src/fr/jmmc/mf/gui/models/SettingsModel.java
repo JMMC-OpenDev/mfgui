@@ -15,7 +15,8 @@ import fr.jmmc.mf.models.Parameters;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Residuals;
 import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.Result;
+import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Results;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
@@ -76,7 +77,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private boolean isModified = false;
     /** Store a reference over the associated local file */
     public java.io.File associatedFile = null;
-    private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
+    private Hashtable<ResultFile, ResultModel> resultToModel = new Hashtable<ResultFile, ResultModel>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
 
         public String toString() {
@@ -335,7 +336,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public void removeFrame(FrameTreeNode frameNode) {
         logger.entering(className, "removeFrame", frameNode);
-        // actually only plotContainer or Result can have such elements as child
+        // actually only plotContainer or ResultFile can have such elements as child
         int idx = plotContainerNode.getIndex(frameNode);
         if (idx >= 0) {
             plotContainerNode.remove(frameNode);
@@ -410,9 +411,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Object lastPathComponent = treePath.getLastPathComponent();
             if (lastPathComponent instanceof ResultModel) {
                 ResultModel resultModel = (ResultModel) lastPathComponent;
-                Result selectedResult = resultModel.getResult();
-                int idx = getIndexOfChild(rootSettings.getResults(), selectedResult);
-                rootSettings.getResults().removeResult(selectedResult);
+                ResultFile selectedResultFile = resultModel.getResultFile();
+                int idx = getIndexOfChild(rootSettings.getResults(), selectedResultFile);
+                rootSettings.getResults().removeResultFile(selectedResultFile);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getResults()},
                         idx, lastPathComponent);
@@ -644,7 +645,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 rootSettings.getParameters());
     }
 
-    private ResultModel getModel(Result r) {
+    private ResultModel getModel(ResultFile r) {
         logger.entering(className, "getModel", r);
         ResultModel rm = resultToModel.get(r);
         if (rm == null) {
@@ -711,16 +712,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
-        Result[] newResults = newSettings.getResults().getResult();
-        // update settings results  with newResults
-        for (int i = 0; i < newResults.length; i++) {
-            Result newResult = newResults[i];
-            if (newResult != null) {
-                rootSettings.getResults().addResult(newResult);
-                ResultModel r = getModel(newResult);
+        ResultFile[] newResultFiles = newSettings.getResults().getResultFile();
+        // update settings results  with newResultFiles
+        for (int i = 0; i < newResultFiles.length; i++) {
+            ResultFile newResultFile = newResultFiles[i];
+            if (newResultFile != null) {
+                rootSettings.getResults().addResultFile(newResultFile);
+                ResultModel r = getModel(newResultFile);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
-                        rootSettings.getResults().getResultCount() - 1,
+                        rootSettings.getResults().getResultFileCount() - 1,
                         r);
             } else {
                 logger.warning("found null result while updating with new settings");
@@ -818,7 +819,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (rootSettings.getResults() == null) {
             rootSettings.setResults(new Results());
         }
-        Result[] results = rootSettings.getResults().getResult();
+        ResultFile[] results = rootSettings.getResults().getResultFile();
         for (int i = 0; i < results.length; i++) {
             getModel(results[i]);
         }
@@ -1244,7 +1245,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 return t.getModel(index - t.getFileLinkCount());
             }
         } else if (parent instanceof Results) {
-            Result r = ((Results) parent).getResult(index);
+            ResultFile r = ((Results) parent).getResultFile(index);
             return getModel(r);
         }
         logger.warning("child n=" + index + " of " + parent + " is not handled");
@@ -1273,7 +1274,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return t.getFileLinkCount() + t.getModelCount();
         } else if (parent instanceof Results) {
             Results r = (Results) parent;
-            return r.getResultCount();
+            return r.getResultFileCount();
         } else {
             return 1;
         }
@@ -1346,9 +1347,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.warning("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getResults()) {
-            Object[] elements = rootSettings.getResults().getResult();
-            // search for Result or ResultModel children
-            // we must search resultModel according ordered list of Result
+            Object[] elements = rootSettings.getResults().getResultFile();
+            // search for ResultFile or ResultModel children
+            // we must search resultModel according ordered list of ResultFile
             // because tha hastable is not ordered!!
             for (int i = 0; i <
                     elements.length; i++) {
