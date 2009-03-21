@@ -12,7 +12,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JFrame;
 import ptolemy.plot.plotml.PlotMLFrame;
-import ptolemy.plot.plotml.PlotMLParser;
 
 /**
  * This treeNode brings one Result castor into the JTrees.
@@ -26,15 +25,17 @@ public class ResultModel extends DefaultMutableTreeNode {
     private String htmlReport = null;
     private String xmlResult = null;
     private Result result;
+    private int index;
 
-    public ResultModel(SettingsModel settingsModel, Result result) {
+    public ResultModel(SettingsModel settingsModel, Result result, int index) {
         this.settingsModel = settingsModel;
         this.result = result;
+        this.index=index;
 
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
             StringWriter xmlResultSw = new StringWriter();
-            result.marshal(xmlResultSw);
+            UtilsClass.marshal(result,xmlResultSw);
             xmlResult = xmlResultSw.toString();
             htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
             //genPlots(UtilsClass.getResultFiles(response));
@@ -131,5 +132,13 @@ public class ResultModel extends DefaultMutableTreeNode {
         } catch (Exception exc) {
             new FeedbackReport(new Exception("Plot generation failed for " + plotName, exc));
         }
+    }
+    
+    public int getIndex(){
+        return index;
+    }
+
+    public String toString(){
+        return "Fit Result "+index;
     }
 }

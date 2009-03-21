@@ -85,6 +85,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     };
     // Use a delegate that will trigger listener on this model changes
     private ObservableDelegate observableDelegate;
+    /** store the resultModelIndex returned by getNewResultModelIndex() */
+    private int resultModelIndex;
 
     /**
      * Creates a new empty SettingsModel object.
@@ -649,11 +651,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 rootSettings.getParameters());
     }
 
+    /**
+     * Returns one incremented index to be used as label by new ResultModel.
+     */
+    private int getNewResultModelIndex(){
+        return resultModelIndex++;
+    }
+
     private ResultModel getModel(Result r) {
         logger.entering(className, "getModel", r);
         ResultModel rm = resultToModel.get(r);
         if (rm == null) {
-            rm = new ResultModel(this, r);
+            rm = new ResultModel(this, r, getNewResultModelIndex());
             resultToModel.put(r, rm);
         }
         return rm;
@@ -827,6 +836,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < results.length; i++) {
             getModel(results[i]);
         }
+        resultModelIndex=results.length;
 
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
@@ -1448,7 +1458,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "toXml");
         logger.fine("Start of marshalling");
         java.io.StringWriter writer = new java.io.StringWriter();
-        rootSettings.marshal(writer);
+        UtilsClass.marshal(rootSettings,writer);
         logger.fine("End of marshalling");
 
         writer.flush();
