@@ -466,8 +466,13 @@ public class FilePanel extends javax.swing.JPanel {
     
     public void showData(String requestedTables, String [] requestedColumns)
     {
-        logger.fine("Searching to plot "+requestedTables);
-        String plotName="data versus radial distance";
+        logger.fine("Searching to plot "+requestedTables);        
+        String plotName=current.getName()+"(";
+        for (int i = 0; i < requestedColumns.length; i++) {
+            plotName = plotName+requestedColumns[i]+" " ;
+        }
+        plotName = plotName+")" ;
+
         try
         {        
             int retainedHdu = 0;
@@ -636,7 +641,7 @@ public class FilePanel extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-        String plotName="UVCoverage";
+        String plotName="UVCoverage of "+current.getName();
         try
         {           
             StringBuffer sb   = new StringBuffer();
@@ -652,7 +657,7 @@ public class FilePanel extends javax.swing.JPanel {
             for (int i = 0; i < selected.length; i++)
             {
                 OiTable table  = (OiTable)selected[i];
-                String label = table.getExtName();
+                String label = table.getExtName()+"#"+table.getExtNb();
                 RealMatrixImpl ucoord=null;
                 RealMatrixImpl vcoord=null;
 
