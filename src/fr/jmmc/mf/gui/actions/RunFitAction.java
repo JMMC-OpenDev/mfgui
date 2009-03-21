@@ -47,10 +47,7 @@ public class RunFitAction extends MCSAction {
             }
         }
 
-        SettingsModel settingsModel = settingsViewer.getSettingsModel();
-        
-        // Copy response to imporve efficiency
-        settingsModel.setLastXml(ModelFitting.getLastXmlResult());
+        SettingsModel settingsModel = settingsViewer.getSettingsModel();                
 
         logger.fine("Requesting yoga \'" + methodName + "\' call");
         StatusBar.show("Running fitting process");
@@ -68,7 +65,9 @@ public class RunFitAction extends MCSAction {
                 //setCursor(null);
                 return;
             }
-            settingsModel.updateWithNewSettings(r);            
+            settingsModel.updateWithNewSettings(r);
+            // Copy buffer response to improve efficiency
+            settingsModel.setLastXml(ModelFitting.getLastXmlResult());
         } catch (UnknownHostException ex) {
             String msg = "Network seems down. Can\'t contact host " + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
