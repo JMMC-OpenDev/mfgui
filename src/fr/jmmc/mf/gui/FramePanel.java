@@ -60,7 +60,6 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     }
 
     public void toggleFrame() {
-        System.out.println("frame.isVisible() = " + frame.isVisible());
         if (frame.isVisible()) {
             //throw new UnsupportedOperationException("Not supported yet.");
             frame.setVisible(false);
