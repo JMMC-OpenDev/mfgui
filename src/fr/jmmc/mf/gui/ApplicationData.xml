@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.3beta2"/>
+    <program name="ModelFitting" version="1.1.3beta3"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -65,6 +65,9 @@
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
+            </prerelease>
+            <prerelease version="1.1.3beta3">
+                <change type="CHANGE">Fit Result nodes get one index value in their tree labels</change>
             </prerelease>
             <prerelease version="1.1.3beta2">
                 <change type="CHANGE">include oitarget element into xml file output</change>
