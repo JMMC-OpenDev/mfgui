@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+"http://castor.org/mapping.dtd">
+<!-- This file make validation fails because constraints (eg sequences) are not verified -->
+
+<mapping>
+    <description>Permit mapping with model fitting classes</description>
+    <!--
+    <class name="fr.jmmc.mf.models.Target">
+        <field name="ident">
+            <bind-xml name="ident" node="element"/>
+        </field>
+        <field name="fileLink" type="fr.jmmc.mf.models.FileLink" collection="array">            
+            <bind-xml name="fileLink" node="element"/>
+        </field>
+        <field name="model" type="fr.jmmc.mf.models.Model" collection="array">
+            <bind-xml name="model" node="element"/>
+        </field>
+    </class>
+    --> 
+    <class name="fr.jmmc.mf.models.ParameterLink">
+        <field name="parameterRef" >
+            <bind-xml name="parameterRef" reference="true" node="attribute"/>        
+        </field>
+        <field name="type" >
+            <bind-xml name="type" node="attribute"/>        
+        </field>
+    </class>
+    <!--
+    <class name="fr.jmmc.mf.models.Parameter" identity="id">
+        <field name="id">
+            <bind-xml name="id" node="attribute"/>
+        </field>
+        <field name="name">
+            <bind-xml name="name" node="attribute"/>
+        </field>
+        <field name="type" >            
+            <bind-xml name="type" node="attribute"/>
+        </field>
+    </class>
+    -->
+
+
+
+    <class name="fr.jmmc.mf.models.FileLink">
+        <field name="fileRef" >
+            <!--<bind-xml name="fileRef" reference="true" node="attribute"/>        -->
+            <bind-xml name="fileRef" reference="true" node="attribute"/>        
+        </field>
+    </class>
+
+    <class name="fr.jmmc.mf.models.File" identity="id">
+        <field name="id">
+            <bind-xml name="id" node="attribute"/>
+        </field>
+        <field name="name">
+            <bind-xml name="name" node="attribute"/>
+        </field>
+        <field name="href" >            
+            <bind-xml name="href" node="attribute"/>
+        </field>
+        <field name="oitarget">
+            <bind-xml name="oitarget" node="element"/>
+        </field>
+    </class>
+
+    <!-- place Files into mapping file else following error occurs:
+    settings.xml:76: element files: Schemas validity error : Element 'files', attribute 'type': The attribute 'type' is not allowed.
+    settings.xml:76: element files: Schemas validity error : Element 'files': Character content other than whitespace is not allowed because the content type is 'element-only'.
+    -->
+    <class name="fr.jmmc.mf.models.Files">
+        <field name="file" type="fr.jmmc.mf.models.File" collection="array">
+            <bind-xml name="file" node="element"/>
+        </field>
+    </class>
+
+    <class name="fr.jmmc.mf.models.Oitarget">
+        <field name="target">
+            <bind-xml name="target" node="element"/>
+        </field>
+        <field name="infos" >
+            <bind-xml name="infos" node="element"/>
+        </field>
+    </class>
+
+
+</mapping>
+
