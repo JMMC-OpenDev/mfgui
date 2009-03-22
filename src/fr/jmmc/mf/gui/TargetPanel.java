@@ -529,7 +529,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             Model        m;
             // Clone selected Model (this code could have been moved into model???
             StringWriter writer   = new StringWriter();
-            selectedModel.marshal(writer);
+            UtilsClass.marshal(selectedModel,writer);
             StringReader reader = new StringReader(writer.toString());
             m = (Model)Model.unmarshal(reader);
             rootSettingsModel.addModel(current, m);
