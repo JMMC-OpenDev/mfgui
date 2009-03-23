@@ -137,7 +137,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // Set normalizeCheckBox
         normalizeCheckBox.setSelected(current.getNormalize());
 
-        // Fix residual checkbox states
+        // Fix default residual checkbox states
         Residuals residuals = current.getResiduals();
         boolean initValue = residuals == null;
         visAmpCheckBox.setSelected(initValue);
@@ -146,6 +146,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         t3ampCheckBox.setSelected(initValue);
         t3phiCheckBox.setSelected(initValue);
 
+        // and search their values if residuals exist
         if (residuals != null) {
             for (String key : moduleNameToCheckBox.keySet()) {
                 JCheckBox cb = moduleNameToCheckBox.get(key);
@@ -570,10 +571,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                     vis2 = "default";
                 }
                 if (t3phiCheckBox.isSelected()) {
-                    t3Amp = "default";
+                    t3Phi = "default";
                 }
                 if (t3ampCheckBox.isSelected()) {
-                    t3Phi = "default";
+                    t3Amp = "default";
                 }
         rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
 
