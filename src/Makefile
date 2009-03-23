@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.21 2009-03-20 09:54:04 mella Exp $"
+# "@(#) $Id: Makefile,v 1.22 2009-03-23 10:12:42 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2009/03/20 09:54:04  mella
+# do not handle castor in main makefile targets
+#
 # Revision 1.20  2009/03/20 06:30:29  mella
 # Change due to castor 1.3
 #
@@ -178,11 +181,13 @@ mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
 # Java programs
 # ---------------------------------
 JAVA_EXECUTABLES = ModelFitting \
+				   mfguiReadAndWriteXml\
 									 mfguiShowXmlPlot
 
 #
 # <brief description of ModelFitting java program>
 ModelFitting_CLASS     = fr.jmmc.mf.gui.ModelFitting
+mfguiReadAndWriteXml_CLASS     = fr.jmmc.mf.ReadAndWriteXml
 mfguiShowXmlPlot_CLASS = fr.jmmc.mcs.ImageViewer
 
 #
