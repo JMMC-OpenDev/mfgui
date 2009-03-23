@@ -1,6 +1,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oifits.*;
@@ -33,6 +34,8 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JButton checkFileButton;
     private javax.swing.JPopupMenu fileListPopupMenu;
     private javax.swing.JList hduList;
+    private javax.swing.JButton helpButton1;
+    private javax.swing.JButton helpButton2;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -52,7 +55,6 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox visampCheckBox;
     private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
-
     protected SettingsModel settingsModel;
 
     /** Creates new form FilePanel */
@@ -67,10 +69,19 @@ public class FilePanel extends javax.swing.JPanel {
         hduList.addListSelectionListener(myListSelectionListener);
         //fix default state
         myListSelectionListener.valueChanged(null);
+
+        // set help buttons
+        helpButton1.setAction(new ShowHelpAction("_Check_embedded_Bt"));
+        helpButton2.setAction(new ShowHelpAction("_fits_fields_and_Show_selected_Bt"));
+        // next boutons are actually not usefull because they are linked onto the same page
+        //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
+        //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
+        //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
+        //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
     }
 
-    public void show(File file,SettingsModel settingsModel) {
-        this.settingsModel=settingsModel;
+    public void show(File file, SettingsModel settingsModel) {
+        this.settingsModel = settingsModel;
         // Try to load data file
         oifitsFile_ = null;
         try {
@@ -118,6 +129,7 @@ public class FilePanel extends javax.swing.JPanel {
         nameTextField = new javax.swing.JTextField();
         saveFileButton = new javax.swing.JButton();
         checkFileButton = new javax.swing.JButton();
+        helpButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         loadViewerButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -131,6 +143,7 @@ public class FilePanel extends javax.swing.JPanel {
         t3phiCheckBox = new javax.swing.JCheckBox();
         visampCheckBox = new javax.swing.JCheckBox();
         visphiCheckBox = new javax.swing.JCheckBox();
+        helpButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         listenersMenu.setText("Send to application"); // NOI18N
@@ -164,6 +177,9 @@ public class FilePanel extends javax.swing.JPanel {
         checkFileButton.setForeground(new java.awt.Color(51, 51, 52));
         jPanel2.add(checkFileButton, new java.awt.GridBagConstraints());
 
+        helpButton1.setText("jButton2");
+        jPanel2.add(helpButton1, new java.awt.GridBagConstraints());
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jPanel2, gridBagConstraints);
@@ -176,7 +192,7 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(loadViewerButton, gridBagConstraints);
@@ -204,7 +220,7 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
         jPanel1.add(jScrollPane1, gridBagConstraints);
@@ -219,7 +235,7 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(showUVCoverageButton, gridBagConstraints);
 
@@ -284,6 +300,12 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
         jPanel1.add(visphiCheckBox, gridBagConstraints);
+
+        helpButton2.setText("jButton2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(helpButton2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -641,7 +663,7 @@ public class FilePanel extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-        String plotName="UVCoverage of "+current.getName();
+        String plotName=current.getName()+"(UVCoverage)";
         try
         {           
             StringBuffer sb   = new StringBuffer();

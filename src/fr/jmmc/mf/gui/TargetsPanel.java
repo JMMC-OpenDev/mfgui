@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
@@ -17,6 +18,8 @@ public class TargetsPanel extends javax.swing.JPanel {
     public TargetsPanel(SettingsViewerInterface viewer) {
         settingsViewer = viewer;
         initComponents();
+        // set help buttons
+        helpButton1.setAction(new ShowHelpAction("_Targets_MT_ou_Add_new_target_Bt"));
     }
 
     public void show(Targets t, SettingsModel s) {
@@ -36,6 +39,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         addTargetButton = new javax.swing.JButton();
         targetNameComboBox = new javax.swing.JComboBox();
         removeTargetButton = new javax.swing.JButton();
+        helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Target list"));
         setLayout(new java.awt.GridBagLayout());
@@ -53,7 +57,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         jScrollPane2.setViewportView(targetList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -94,6 +98,12 @@ public class TargetsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         add(removeTargetButton, gridBagConstraints);
+
+        helpButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        add(helpButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 //GEN-FIRST:event_targetListMouseClicked
     private void targetListMouseClicked(java.awt.event.MouseEvent evt) {
@@ -142,6 +152,7 @@ public class TargetsPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTargetButton;
+    private javax.swing.JButton helpButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton removeTargetButton;
     private javax.swing.JList targetList;

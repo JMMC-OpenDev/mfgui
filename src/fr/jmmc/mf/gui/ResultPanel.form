@@ -25,7 +25,16 @@
     <Property name="axis" type="int" value="1"/>
   </Layout>
   <SubComponents>
+    <Component class="javax.swing.JButton" name="helpButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton1"/>
+        <Property name="alignmentX" type="float" value="1.0"/>
+      </Properties>
+    </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <Properties>
+        <Property name="alignmentX" type="float" value="1.0"/>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
