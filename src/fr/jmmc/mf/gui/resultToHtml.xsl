@@ -101,7 +101,7 @@ Generate Html view of given xml settings files .
                 <th>standard deviation(+/-)</th>
             </tr>
             <xsl:for-each select="exslt:node-set($worldCopy)/param/*">
-                <xsl:variable name="paramPosition" select="position()"/>
+                <xsl:variable name="paramName" select="name()"/>
                 <tr>
                     <td>
                         <xsl:value-of select="name()"/>
@@ -112,7 +112,12 @@ Generate Html view of given xml settings files .
                     <td>
                         <xsl:choose>
                             <xsl:when test="exslt:node-set($worldCopy)//_fitter/a_tracks">
-                                <xsl:value-of select="exslt:node-set($worldCopy)//_fitter/a_tracks//tr[position()=$paramPosition]//td[1]"/>
+                                <xsl:for-each select="exslt:node-set($worldCopy)/_fitter/names//td">
+                                    <xsl:variable name="paramPosition" select="position()"/>
+                                    <xsl:if test=".=$paramName">
+                                        <xsl:value-of select="exslt:node-set($worldCopy)//_fitter/a_tracks//tr[position()=$paramPosition]//td[1]"/>
+                                    </xsl:if>
+                                </xsl:for-each>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="'---'"/>
