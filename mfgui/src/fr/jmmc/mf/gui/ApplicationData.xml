@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationData link="http://www.jmmc.fr/modelfitting">
+    <program name="ModelFitting" version="1.1.3beta5"/>
+    <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
+    <text>
+    </text>
+    <!--<copyright>Copyrights JMMC 2008</copyright>-->
+    <dependences>
+        <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
+    </dependences>
+    <menubar>
+        <menu label="File">
+            <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"/>
+            <menu/>
+            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"/>
+            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
+            <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
+            <menu label="Open demo settings">
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel8"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel5"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel6"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel4"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel7"/>
+            </menu>
+            <menu/>
+            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModel" accelerator="S"/>
+            <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
+        </menu>
+        <menu label="Edit">
+            <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"/>
+            <menu/>
+            <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
+        </menu>
+    </menubar>
+    <releasenotes>
+        <release version="1.1.3">
+            <prerelease version="1.1.3beta1000">
+                <!--
+                <li>
+                Add one format version of all xml settings files
+                (Future revision will be able to check format validity
+                 and propose converter tools)
+                 </li>
+                 <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
+                 <change type="FEATURE"></change>
+                 <change type="CHANGE"></change>
+                 <change type="REQUEST"></change>
+                 <change type="BUGFIX"></change>
+                -->
+                <change type="REQUEST">Fix problem with Nan in oifits files</change>
+                <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
+                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
+                <change type="REQUEST">Add residual plots for VIS VIS2 and OIT3</change>
+                <change type="REQUEST">Flip the U axe of the UV plots</change>
+                <change type="REQUEST">Add url data file loading capability</change>
+                <change type="REQUEST">Add previous parameter value column in the parameter table</change>
+                <change type="REQUEST">Fix bug in result display for previous parameter value column (in multiple targets)</change>
+                <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
+                <change type="REQUEST">Add function to remove orphan data files.</change>
+                <change type="REQUEST">Add function to remove orphan sharedParameters</change>
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
+            </prerelease>
+            <prerelease version="1.1.3beta5">
+                <change type="CHANGE">Fix bug of unordered prev_value in result report</change>
+            </prerelease>
+            <prerelease version="1.1.3beta4">
+                <change type="CHANGE">Add first context help buttons</change>
+            </prerelease>
+            <prerelease version="1.1.3beta3">
+                <change type="CHANGE">Fit Result nodes get one index value in their tree labels</change>
+            </prerelease>
+            <prerelease version="1.1.3beta2">
+                <change type="CHANGE">include oitarget element into xml file output</change>
+                <change type="CHANGE">revert to Result as Result children.</change>
+                <change type="CHANGE">file plots (radial, uv coverage) get filename into the tree labels</change>
+            </prerelease>
+            <prerelease version="1.1.3beta1">
+                <change type="CHANGE">Use ResultFile as Result children.</change>
+                <change type="BUGFIX">Fix data file loading that added one leaf into the tree even if file was not an oifits file</change>
+                <change type="FEATURE">Add selector of data to be fitted into target panels</change>
+                <change type="FEATURE">Accept gzipped oifits file (*.gz)</change>
+                <change type="FEATURE">Wrong settings file loading show an error message instead of feedback report</change>
+                <change type="CHANGE">Display error dialog box on file loading errors.</change>
+                <change type="CHANGE">Remove local file name in the file panels</change>
+            </prerelease>
+        </release>
+        <release version="1.1.2">
+            <prerelease version="1.1.2beta1">
+                <change type="BUGFIX">Fix broken update of shared parameters widgets</change>
+                <change type="FEATURE">Add export of XY plots in TSV file</change>
+            </prerelease>
+        </release>
+        <release version="1.1.1">
+            <prerelease version="1.1.1beta1">
+                <change type="BUGFIX">Fix litpro settings file export</change>
+                <change type="BUGFIX">Fix plot build to handle multiwavelength data</change>
+            </prerelease>
+        </release>
+        <release version="1.1.0">
+            <prerelease version="1.1.0beta6">
+                <change type="FEATURE">Expand tree on tree node insertion or modification </change>
+                <change type="BUGFIX">Show scrollpane when tree content is bigger than container</change>
+                <change type="BUGFIX">Fix left tree displauy with invisible elements</change>
+                <change type="CHANGE">Fix default value of flux parameters to 1</change>
+                <change type="CHANGE">Use new version 3.4 of TOPCAT</change>
+            </prerelease>
+            <prerelease version="1.1.0beta5">
+                <change type="FEATURE">Add litpro settings file generation (in edit menu)</change>
+                <change type="FEATURE">Add multiwavelength uvcoverage plots in file panel</change>
+                <change type="BUGFIX">Settings with shared parameters use right names</change>
+            </prerelease>
+            <prerelease version="1.1.0beta4">
+                <change type="BUGFIX">Target get the full list of oifile which includes the associated target name</change>
+                <change type="CHANGE">Result panel get one titled border</change>
+                <change type="CHANGE">Improve result report for parameters</change>
+            </prerelease>
+            <prerelease version="1.1.0beta3">
+                <change type="CHANGE">Add attach, detach and remove button for plot list selection </change>
+            </prerelease>
+            <prerelease version="1.1.0beta2">
+                <change type="BUGFIX">fix shared parameter handling</change>
+            </prerelease>
+            <prerelease version="1.1.0beta1">
+                <change type="CHANGE">Major change: results and plots are now in the left tree</change>
+            </prerelease>
+        </release>
+        <release version="1.0.16">
+            <prerelease version="1.0.16beta1">
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+            </prerelease>
+        </release>
+        <release version="1.0.15">
+            <prerelease version="1.0.15beta1">
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+                <change type="BUGFIX">Remove Nan value for oldChi2 value when the chi2_track is not found</change>
+            </prerelease>
+        </release>
+        <release version="1.0.14">
+            <prerelease version="1.0.14beta6">
+                <change type="FEATURE">Propose on parameters view that group every parameter of one composed model</change>
+                <change type="CHANGE">Most plots can be exported (some must be detached to get export menu)</change>
+            </prerelease>
+            <prerelease version="1.0.14beta5">
+                <change type="BUGFIX" id="#1228748370">Permit user to revert to autoscaled parameter after one first init </change>
+            </prerelease>
+
+            <prerelease version="1.0.14beta4">
+                <change type="CHANGE">Change sniffer plot script name according server side modifications</change>
+            </prerelease>
+            <prerelease version="1.0.14beta3">
+                <change type="FEATURE">Minor presentation improvements with titled widgets for settings tree and plot list</change>
+                <change type="FEATURE">Display a feedback report window if the fitting server does not return any new settings and error.</change>
+            </prerelease>
+            <prerelease version="1.0.14beta2">
+                <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+                <change type="CHANGE">Added vis2 residual plot</change>
+            </prerelease>
+            <prerelease version="1.0.14beta1">
+                <change type="BUGFIX">Fix result report when the model contains only one parameter to fit</change>
+                <change type="FEATURE">Add split bar to enlarge model description</change>
+                <change type="FEATURE">Add arcturus demo file</change>
+                <change type="FEATURE">Fix result text display list if one parameter only as been fitted and remove 'Confidence level'</change>
+                <change type="CHANGE">Models are displayed using only the name. previous form was model[type:name] too long</change>
+                <change type="CHANGE">x, y and flux_weight parameter of first model have now better initial values</change>
+                <change type="CHANGE">Make amp or phi distinct in the OI_T3 result plot</change>
+                <change type="CHANGE">Return message of error for plot failures</change>
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
+                <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
+                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>
+            </prerelease>
+        </release>
+        <release version="1.0.13">
+            <prerelease version="1.0.13beta">
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
+                <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
+                <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>
+                <change type="CHANGE">One flag is activated on setting modification to ensure that program ask to save work before closing</change>
+                <change type="CHANGE">Fix parameter name conflict when one new target is added to an old setting file.</change>
+                <change type="FEATURE">Add plot sniffer and chi2 capabilities</change>
+            </prerelease>
+        </release>
+        <release version="1.0.12">
+            <prerelease version="1.0.12beta">
+                <change type="FEATURE">File panel gets one new button to use oifits validator.</change>
+                <change type="FEATURE">File panel gets new plotting capabilities.</change>
+                <change type="CHANGE">Yorick side errors are extracted for display, no more big xml document :-)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.11">
+            <prerelease version="1.0.11beta2">
+                <change type="FEATURE">User can plot observed data from the file panels (even if abscissae is not yet in spectral freq but meters)</change>
+                <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
+                <change type="FEATURE">Window closing button now quits application</change>
+                <change type="FEATURE">User can plot image or uv map of model for multiple targets</change>
+                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
+                <!--<change>Models and Targets name have uniq suffixes</change>-->
+            </prerelease>
+            <prerelease version="1.0.11beta1">
+                <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
+            </prerelease>
+        </release>
+        <release version="1.0.10">
+            <prerelease version="1.0.10beta">
+                <change>Fix bug of non solicited target ident changes during model construction </change>
+                <change>Fix right click support on windows platform view
+                    <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064"> bug description</a>
+                </change>
+                <change>Do not close application on preference window closing event</change>
+            </prerelease>
+        </release>
+        <release version="1.0.9">
+            <prerelease version="V1.0.9beta">
+                <change>Second level support of radial plots (T3 and VIS2 appears on same plot)</change>
+                <change>Textarea of result panel is not editable anymore</change>
+            </prerelease>
+        </release>
+        <release version="1.0.8">
+            <prerelease version="1.0.8.beta">
+                <change>First level support of radial plots (T3 do not yet work)</change>
+                <change> Show description of models in the
+                    <em>Model Panel</em>.Description is returned by getModelList script that extracts yorick informations through hashtable
+                </change>
+                <change> Right click on parameters is direct (no more selection need before click)</change>
+                <change> Removed limitation of param sharing based one same
+                    <em>type</em>User MUST take care of what he tries...
+                </change>
+                <change>Fix paramater sharing </change>
+            </prerelease>
+        </release>
+        <release version="1.0.7" >
+            <prerelease version="1.0.7.beta">
+                <change>Fix save bug</change>
+                <change>A dialog box is displayed when error occured on yorick side</change>
+            </prerelease>
+        </release>
+        <release version="1.0.6" >
+            <prerelease version="1.0.6.beta">
+                <change>Show most of informations about fitting process into result panel</change>
+                <change>Result panel starts to plot yoga results (baselines,uvcoverage,model image,model uv map)</change>
+                <change>Do not return error
+                    <em>not enough data point</em> anymore due to blank names into oitarget names
+                </change>
+                <change>A simple image viewer has been implemented with 3 selectable color models. Image should be in right sense and get correct values.</change>
+                <change>Velocity of result display has been improved</change>
+                <change>Parameter display has been fixed concerning exchanged values</change>
+            </prerelease>
+        </release>
+        <release version="1.0.5" >
+            <prerelease version="1.0.5.beta">
+                <change>Handle better oitargets name even if new fits library places some spaces into oitarget names</change>
+                <change>Use advanced menu to group interop menu and logging utility</change>
+                <change>Show covariance matrix into result panel</change>
+            </prerelease>
+        </release>
+        <release version="1.0.4" >
+            <prerelease version="1.0.4.beta">
+                <change> Fitting results are taken into account for parameters values</change>
+                <change> Models can share parameters </change>
+                <change> Fits files with zero length column supported </change>
+                <change> Fits viewer do not close anymore main application while quitting fits viewer</change>
+                <change> UV Coverage plot and interferometer sketch are automated at one basic level </change>
+            </prerelease>
+        </release>
+        <release version="1.0.3" >
+            <prerelease version="1.0.3.beta">
+                <change> Select by default oifiles associated to the added target </change>
+                <change> Display more info on observed data files </change>
+
+                <change> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</change>
+                <change> Quit action checks that every document have been saved </change>
+            </prerelease>
+        </release>
+        <release version="1.0.2" >
+            <prerelease version="1.0.2.beta">
+                <change> Display the release panel </change>
+
+                <change> Saving file does not use openDialog anymore but saveDialog instead</change>
+            </prerelease>
+        </release>
+        <release version="1.0.1" >
+            <prerelease version="1.0.1.beta">
+                <change> Fits file viewers can show selected tables with topcat defaut viewer </change>
+                <change> Embedded data extracted one time for every actions(viewing,saving...) </change>
+                <change> FilePanel permits to save embedded file </change>
+                <change> Delete button used to supress target refreshes the left tree </change>
+                <change> Preference window close button does not quit the application anylonger </change>
+                <change> Double clicks into list select view on clicked element </change>
+                <change> Settings splits sub components grouping FilesPanel and TargetsPanel </change>
+                <change> Report error loading bad format files (oifiles and settings ones) </change>
+            </prerelease>
+        </release>
+    </releasenotes>
+    <!--<acknowledgment><![CDATA[blah ]]></acknowledgment>-->
+</ApplicationData>
