@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ResultModel;
 
@@ -14,6 +15,9 @@ public class ResultPanel extends javax.swing.JPanel {
     public ResultPanel(SettingsViewerInterface viewer) {
         this.viewer = viewer;
         initComponents();
+
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("BEG_Results_MT")));
     }
 
     public void show(ResultModel r, SettingsModel s) {
@@ -28,6 +32,7 @@ public class ResultPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        helpButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -35,6 +40,12 @@ public class ResultPanel extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Result panel:"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+
+        helpButton1.setText("jButton1");
+        helpButton1.setAlignmentX(1.0F);
+        add(helpButton1);
+
+        jScrollPane1.setAlignmentX(1.0F);
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -49,6 +60,7 @@ public class ResultPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton helpButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

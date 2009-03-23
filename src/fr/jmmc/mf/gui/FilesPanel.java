@@ -5,8 +5,8 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
@@ -33,21 +33,10 @@ public class FilesPanel extends javax.swing.JPanel
     SettingsModel rootSettingsModel = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JButton     addFileButton;
-
-    /**
-     * DOCUMENT ME!
-     */
+    private javax.swing.JButton addFileButton;
     private javax.swing.JList fileList;
-
-    /**
-     * DOCUMENT ME!
-     */
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-
     // End of variables declaration//GEN-END:variables
 
     /** Creates new form FilesPanel */
@@ -57,6 +46,7 @@ public class FilesPanel extends javax.swing.JPanel
         loadFilesAction     = ActionRegistrar.getInstance().get(LoadDataFilesAction.className, LoadDataFilesAction.actionName);
         initComponents();
         addFileButton.setAction(loadFilesAction);
+        jButton1.setAction(new ShowHelpAction("_Load_Oifile_Bt_ou_Area"));
     }
 
     /**
@@ -82,41 +72,44 @@ public class FilesPanel extends javax.swing.JPanel
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane1      = new javax.swing.JScrollPane();
-        fileList          = new javax.swing.JList();
-        addFileButton     = new javax.swing.JButton();
-
-        setLayout(new java.awt.GridBagLayout());
+        jScrollPane1 = new javax.swing.JScrollPane();
+        fileList = new javax.swing.JList();
+        addFileButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Oifile list"));
-        fileList.setModel(settingsViewer.getSettingsModel().allFilesListModel);
-        fileList.addMouseListener(new java.awt.event.MouseAdapter()
-            {
-                public void mouseClicked(java.awt.event.MouseEvent evt)
-                {
-                    fileListMouseClicked(evt);
-                }
-            });
+        setLayout(new java.awt.GridBagLayout());
 
+        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fileListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(fileList);
 
-        gridBagConstraints             = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill        = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx     = 1.0;
-        gridBagConstraints.weighty     = 1.0;
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         add(jScrollPane1, gridBagConstraints);
 
         addFileButton.setAction(loadFilesAction);
-        gridBagConstraints            = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx      = 0;
-        gridBagConstraints.gridy      = 1;
-        gridBagConstraints.anchor     = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(addFileButton, gridBagConstraints);
-    } // </editor-fold>//GEN-END:initComponents
+
+        jButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        add(jButton1, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void fileListMouseClicked(java.awt.event.MouseEvent evt)

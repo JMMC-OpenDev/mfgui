@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.SaveFileAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
@@ -26,6 +27,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         this.viewer = viewer;
         initComponents();
         attachDetachButton.setAction(MFGui.attachDetachFrameAction);
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("BEG_ResultPlots_MT")));
     }
 
     public void show(FrameTreeNode frameTreeNode,SettingsModel s) {
@@ -44,6 +47,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             JButton button = new JButton(new SaveFileAction(files[i]));
             buttonsPanel.add(button);            
         }
+        buttonsPanel.add(helpButton1);
 
         contentPane = frame.getContentPane();
         blankPanel.removeAll();
@@ -86,6 +90,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
         buttonsPanel = new javax.swing.JPanel();
         attachDetachButton = new javax.swing.JButton();
+        helpButton1 = new javax.swing.JButton();
         blankPanel = new javax.swing.JPanel();
         fillerPanel = new javax.swing.JPanel();
 
@@ -96,6 +101,9 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
         attachDetachButton.setAlignmentX(0.5F);
         buttonsPanel.add(attachDetachButton);
+
+        helpButton1.setText("jButton1");
+        buttonsPanel.add(helpButton1);
 
         add(buttonsPanel);
 
@@ -109,6 +117,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JPanel blankPanel;
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JPanel fillerPanel;
+    private javax.swing.JButton helpButton1;
     // End of variables declaration//GEN-END:variables
 
     public void windowOpened(WindowEvent e) {

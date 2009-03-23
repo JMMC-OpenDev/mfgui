@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.GetModelListAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.actions.RunFitAction;
@@ -118,6 +119,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         // help to fix userobject that will be given to be shown by the Mutable TreeNode
         settingsModel.setPlotPanel(plotPanel);
         runFitButton.setAction(runFitAction);
+
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));
     }
 
     /**
@@ -301,6 +305,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         ITMaxCheckBox = new javax.swing.JCheckBox();
         ITMaxTextField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
+        helpButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         modifierPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -341,8 +346,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         jPanel1.add(runFitButton, gridBagConstraints);
 
         ITMaxCheckBox.setToolTipText("Define a maximum number of iterations");
@@ -356,8 +362,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weightx = 1.0;
         jPanel1.add(ITMaxTextField, gridBagConstraints);
 
         jLabel1.setText("Use max iterations");
@@ -365,6 +372,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         jPanel1.add(jLabel1, gridBagConstraints);
+
+        helpButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        jPanel1.add(helpButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -444,6 +457,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JCheckBox ITMaxCheckBox;
     private javax.swing.JFormattedTextField ITMaxTextField;
     private javax.swing.JPanel controlPanel;
+    private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

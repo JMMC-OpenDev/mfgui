@@ -6,6 +6,7 @@
 package fr.jmmc.mf.gui;
 
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Model;
@@ -25,6 +26,7 @@ public class ModelPanel extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descTextArea;
+    private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel4;
@@ -43,6 +45,8 @@ public class ModelPanel extends javax.swing.JPanel
         // first create our parameters table model
         parametersTableModel = new ParametersTableModel();
         initComponents();
+        // set help buttons
+        helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
     }
 
     public void show(Model m, SettingsModel s)
@@ -81,6 +85,7 @@ public class ModelPanel extends javax.swing.JPanel
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         parametersTable = new javax.swing.JTable();
+        helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
         setLayout(new java.awt.GridBagLayout());
@@ -148,6 +153,9 @@ public class ModelPanel extends javax.swing.JPanel
         jScrollPane1.setViewportView(parametersTable);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        helpButton1.setText("jButton1");
+        jPanel4.add(helpButton1, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setRightComponent(jPanel4);
 

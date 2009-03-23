@@ -3,6 +3,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.File;
@@ -65,6 +66,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         for (int i = 0; i < moduleNames.length; i++) {
             moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i] );
         }
+
+        // build help button
+        jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
 
     }
 
@@ -232,6 +236,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         addModelButton = new javax.swing.JButton();
         modelTypeComboBox = new javax.swing.JComboBox();
         removeModelButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         normalizeCheckBox = new javax.swing.JCheckBox();
         t3phiCheckBox = new javax.swing.JCheckBox();
@@ -353,6 +358,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         jPanel4.add(removeModelButton, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        jPanel4.add(jButton1, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -576,6 +584,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JButton addModelButton;
     private javax.swing.JList fileList;
     private javax.swing.JComboBox identComboBox;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

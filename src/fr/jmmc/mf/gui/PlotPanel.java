@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,7 +42,8 @@ public class PlotPanel extends javax.swing.JPanel
         plotChi2Panel = new PlotChi2Panel(this);
         add(plotModelPanel);
         add(plotChi2Panel);
-        //add(blankPanel);
+        add(blankPanel);
+        add(Box.createVerticalBox());
     }
 
     public void show(SettingsModel s)
@@ -133,6 +135,8 @@ public class PlotPanel extends javax.swing.JPanel
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot panel"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+
+        blankPanel.setLayout(new java.awt.GridBagLayout());
         add(blankPanel);
     }// </editor-fold>//GEN-END:initComponents
 
