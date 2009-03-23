@@ -17,12 +17,12 @@
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel8"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel5"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel4"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel5"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel6"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel4"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel7"/>
             </menu>
             <menu/>
