@@ -59,7 +59,7 @@
         <field name="href" >            
             <bind-xml name="href" node="attribute"/>
         </field>
-        <field name="oitarget">
+        <field name="oitarget" type="fr.jmmc.mf.models.Oitarget" collection="array">
             <bind-xml name="oitarget" node="element"/>
         </field>
     </class>
