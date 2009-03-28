@@ -204,8 +204,9 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 <xsl:variable name="db"><xsl:copy-of select="./*"/></xsl:variable>                 
                 <xsl:variable name="classname"><xsl:call-template name="getClassName"/></xsl:variable>
                 <xsl:variable name="ruv"><xsl:copy-of select=".//ruv//td"/></xsl:variable>
-                <xsl:variable name="errorTds"><xsl:copy-of select="exslt:node-set($db)/viserr//td|exslt:node-set($db)/vis2err//td|exslt:node-set($db)/t3amperr//td|exslt:node-set($db)/t3phierr//td"/></xsl:variable>
-                <xsl:for-each select="t3amp|t3phi|t3amp_model|t3phi_model">                                                                                
+                <xsl:for-each select="t3a
+                mp|t3phi|t3amp_model|t3phi_model">
+                    <xsl:variable name="errorTds"><xsl:copy-of select="./following-sibling::viserr//td|./following-sibling::vis2err//td|./following-sibling::t3amperr//td|./following-sibling::t3phierr//td"/></xsl:variable>
                     <xsl:variable name="source"><xsl:choose>
                             <xsl:when test="contains(name(),'_model')">model</xsl:when>
                             <xsl:otherwise>data</xsl:otherwise>
@@ -214,13 +215,13 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     -->
                     <xsl:element name="dataset">
                         <xsl:attribute name="name">
-                            <xsl:value-of select="concat($source,' ',$classname)"/>
+                            <xsl:value-of select="name()"/>
                         </xsl:attribute>
                         <xsl:attribute name="connected">no</xsl:attribute>
                         <xsl:attribute name="marks">
                             <xsl:choose>
-                                <xsl:when test="$source='model'">points</xsl:when>
-                                <xsl:otherwise>dots</xsl:otherwise>
+                                <xsl:when test="$source='model'">dots</xsl:when>
+                                <xsl:otherwise>points</xsl:otherwise>
                             </xsl:choose>
                         </xsl:attribute>
                         <xsl:for-each select=".//td">
@@ -235,6 +236,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                                 <xsl:for-each select="exslt:node-set($errorTds)/td[position()=$i]">
                                     <xsl:attribute name="lowErrorBar"><xsl:value-of select="$y - . div 2"/></xsl:attribute>
                                     <xsl:attribute name="highErrorBar"><xsl:value-of select="$y + . div 2"/></xsl:attribute>
+                                    <xsl:comment>Error on returned data: <xsl:value-of select="."/></xsl:comment>
                                 </xsl:for-each>
                                 </xsl:when>
                                 </xsl:choose>
