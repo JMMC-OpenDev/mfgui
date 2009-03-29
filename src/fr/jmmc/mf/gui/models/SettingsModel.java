@@ -264,6 +264,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 p.setValue(1);
             }
             p.setName(getNewParamName(p.getName()));
+            parameterComboBoxModel.addElement(p);
+            parameterListModel.addElement(p);
         }
 
         setModified(true);
@@ -280,6 +282,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < models.length; i++) {
             Model model = models[i];
             if (model == oldModel) {
+                Parameter[] params = model.getParameter();
+                for (int j = 0; j < params.length; j++) {
+                    Parameter p = params[j];
+                    parameterComboBoxModel.removeElement(p);
+                    parameterListModel.removeElement(p);
+                }
+
                 int idx = getIndexOfChild(parentTarget, model);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
@@ -620,9 +629,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         newLink.setType(parameterToLink.getType());
 
         Model parentModel = getParent(parameterToLink);
+        parameterComboBoxModel.removeElement(parameterToLink);
+        parameterListModel.removeElement(parameterToLink);
         parentModel.removeParameter(parameterToLink);
         parentModel.addParameterLink(newLink);
-
+        
         Target parentTarget = getParent(parentModel);
         fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
                 getIndexOfChild(parentTarget, parentModel), parentModel);
@@ -708,6 +719,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // @todo handle fireTreeEvent(...) update
 
         // update parameters of every targets
+        parameterComboBoxModel.removeAllElements();
+        parameterListModel.removeAllElements();
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < newTargets.length; i++) {
@@ -718,6 +731,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             for (int j = 0; j < newModels.length; j++) {
                 Model newModel = newModels[j];
                 Parameter[] newParameters = newModel.getParameter();
+                for (int k = 0; k < newParameters.length; k++) {
+                    Parameter parameter = newParameters[k];
+                    parameterComboBoxModel.addElement(parameter);
+                    parameterListModel.addElement(parameter);
+                }
                 Model model = models[j];
                 model.setParameter(newParameters);
                 fireTreeNodesChanged(new Object[]{rootSettings, target},
