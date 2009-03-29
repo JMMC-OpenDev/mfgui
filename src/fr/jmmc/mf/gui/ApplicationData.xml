@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.3beta6"/>
+    <program name="ModelFitting" version="1.1.3"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -51,23 +51,19 @@
                  <change type="REQUEST"></change>
                  <change type="BUGFIX"></change>
                 -->
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
-                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
-                <change type="REQUEST">Add residual plots for VIS VIS2 and OIT3</change>
+                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>               
                 <change type="REQUEST">Flip the U axe of the UV plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
                 <change type="REQUEST">Add previous parameter value column in the parameter table</change>
-                <change type="REQUEST">Fix bug in result display for previous parameter value column (in multiple targets)</change>
-                <change type="REQUEST">Enhance image viewer features ( legends, ticks, exports... ) or use another existing viewer</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add function to remove orphan data files.</change>
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
                 <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
-                <change type="REQUEST">Group chi2 plots with other ones</change>
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
-                <change type="REQUEST">Close detached window when the user asks to close one settings</change>
+                <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
             <prerelease version="1.1.3beta6">
