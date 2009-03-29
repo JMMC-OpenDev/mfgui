@@ -39,17 +39,28 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
                 -->
     <xsl:output method="xml" standalone="yes" />
-    <!-- this parameter should be one or more of the following types (separated by space, comma, or whatever)
+    <!-- plotName parameter should be one of the following types (separated by space, comma, or whatever)
      - plotBaselines plotUVCoverage visamp visphi vis2 t3amp t3phi
+     note: vis2 is sometimes called vis2data into the world structure
      -->
     <xsl:param name="plotName">plotBaselines</xsl:param>    
-    
+    <xsl:param name="residuals"></xsl:param>
+
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="contains($plotName,'vis2') or contains($plotName,'visamp') or contains($plotName,'visphi') or contains($plotName,'t3phi') or contains($plotName,'t3amp')">
-                <xsl:call-template name="plotRadial">
-                    <xsl:with-param name="plotName" select="$plotName"/>
-                </xsl:call-template>
+                <xsl:choose>
+                    <xsl:when test="$residuals">
+                        <xsl:call-template name="plotRadialResiduals">
+                            <xsl:with-param name="plotName" select="$plotName"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="plotRadial">
+                            <xsl:with-param name="plotName" select="$plotName"/>
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="$plotName='plotBaselines'">
                 <xsl:call-template name="plotBaselines"/>
@@ -114,6 +125,46 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             </xsl:for-each>
         </plot>
     </xsl:template>
+<xsl:template name="plotRadialResiduals">
+        <xsl:param name="plotName"/>
+        <plot>
+            <title>
+                <xsl:value-of select="concat('Plot ',$plotName,' residuals versus radial distance')"/>
+            </title>
+            <xLabel>spatial frequency (1/rad)</xLabel>
+            <yLabel>
+                <xsl:value-of select="$plotName"/> residuals = (d-m)/sigma
+            </yLabel>
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
+                <xsl:if test="./*[name()=$plotName or name()=concat($plotName,'data')]">
+                    <!-- plot (m-d)/w -->
+                    <xsl:call-template name="ptPlotResidualsDataSet">
+                        <xsl:with-param name="xElements">
+                            <xsl:copy-of select=".//ruv//td"/>
+                        </xsl:with-param>
+                        <xsl:with-param name="modelElements">
+                            <xsl:copy-of select="./*[name()=concat($plotName,'_model')]//td"/>
+                            <xsl:if test="$plotName='vis2'">
+                                <xsl:copy-of select="./vis2data_model//td"/>
+                            </xsl:if>
+                        </xsl:with-param>
+                        <xsl:with-param name="dataElements">
+                            <xsl:copy-of select="./*[name()=$plotName]//td"/>
+                            <xsl:if test="$plotName='vis2'">
+                                <xsl:copy-of select="./vis2data//td"/>
+                            </xsl:if>
+                        </xsl:with-param>
+                        <xsl:with-param name="weightElements">
+                            <xsl:copy-of select="./*[name()=concat($plotName,'_wght')]//td"/>
+                        </xsl:with-param>
+                        <xsl:with-param name="name" select="concat($plotName, ' (model)')"/>
+                        <xsl:with-param name="marks" select="'dots'"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:for-each>
+        </plot>
+    </xsl:template>
+
 
     <xsl:template name="ptPlotDataSet">
         <xsl:param name="xElements"/>
@@ -152,6 +203,42 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                             </xsl:attribute>
                         </xsl:for-each>
                     </xsl:if>
+                </xsl:element>
+            </xsl:for-each>
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template name="ptPlotResidualsDataSet">
+        <xsl:param name="xElements"/>
+        <xsl:param name="dataElements"/>
+        <xsl:param name="modelElements"/>
+        <xsl:param name="weightElements"/>
+        <xsl:param name="name" select="'missing name'"/>
+        <xsl:param name="marks" select="'points'"/>
+
+        <xsl:element name="dataset">
+            <xsl:attribute name="name">
+                <xsl:value-of select="$name"/>
+            </xsl:attribute>
+            <xsl:attribute name="connected">no</xsl:attribute>
+            <xsl:attribute name="marks">
+                <xsl:value-of select="$marks"/>
+            </xsl:attribute>
+
+            <xsl:for-each select="exslt:node-set($xElements)/*">
+                <xsl:variable name="i" select="position()"/>
+                <xsl:variable name="x" select="."/>
+                <xsl:variable name="m" select="exslt:node-set($modelElements)/*[position()=$i]"/>
+                <xsl:variable name="d" select="exslt:node-set($dataElements)/*[position()=$i]"/>
+                <xsl:variable name="w" select="exslt:node-set($weightElements)/*[position()=$i]"/>
+                <xsl:variable name="y" select="( $m - $d ) * $w"/>
+                <xsl:element name="p">
+                    <xsl:attribute name="x">
+                        <xsl:value-of select="$x"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="y">
+                        <xsl:value-of select="$y"/>
+                    </xsl:attribute>
                 </xsl:element>
             </xsl:for-each>
         </xsl:element>
