@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.3beta5"/>
+    <program name="ModelFitting" version="1.1.3beta6"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -63,11 +63,20 @@
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
                 <change type="REQUEST">Add function to remove orphan data files.</change>
                 <change type="REQUEST">Add function to remove orphan sharedParameters</change>
+                <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
+                <change type="REQUEST">Group chi2 plots with other ones</change>
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
+                <change type="REQUEST">Close detached window when the user asks to close one settings</change>
+                <change type="REQUEST">Add a 'back' button to return to previous panels</change>
+            </prerelease>
+            <prerelease version="1.1.3beta6">
+                <change type="BUGFIX">chi2 map parameter list becomes updated during user modifications</change>
+                <change type="BUGFIX">Fix error bars on radial result plots</change>
+                <change type="CHANGE">Results get one data/model and residuals plots(for each quantities or selected ones for the fitting process)</change>
             </prerelease>
             <prerelease version="1.1.3beta5">
-                <change type="CHANGE">Fix bug of unordered prev_value in result report</change>
+                <change type="BUGFIX">prev_values in result report were displayed in wrong order</change>
             </prerelease>
             <prerelease version="1.1.3beta4">
                 <change type="CHANGE">Add first context help buttons</change>
