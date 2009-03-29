@@ -41,16 +41,17 @@ public class PlotChi2Panel extends javax.swing.JPanel {
         settingsModel = s;
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
         Object[] params = s.getParameterListModel().toArray();
-
         Parameter tmp = oldXParam;
         xComboBox.removeAllItems();
         oldXParam = tmp;
         tmp = oldYParam;
         yComboBox.removeAllItems();
         oldYParam = tmp;
+        logger.fine("Searching "+params.length+" parameters to use in chi2 slice");
         for (int i = 0; i < params.length; i++) {
             Parameter p = (Parameter) params[i];
             if (!p.getHasFixedValue()) {
+                logger.fine(p.getName()+" added to the comboboxes");
                 xComboBox.addItem(p);
                 if (oldXParam.getName().equals(p.getName())) {
                     xComboBox.setSelectedItem(p);
@@ -59,6 +60,8 @@ public class PlotChi2Panel extends javax.swing.JPanel {
                 if (oldYParam.getName().equals(p.getName())) {
                     yComboBox.setSelectedItem(p);
                 }
+            }else{
+                logger.fine(p.getName()+" has a fixed value");
             }
         }
         updateTable();
@@ -278,12 +281,12 @@ public class PlotChi2Panel extends javax.swing.JPanel {
     }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
-        updateTable();
         Parameter yParam = (Parameter) yComboBox.getSelectedItem();
         if (yParam == null) {
             logger.warning("yparam null for chi2map");
             return;
         }
+        updateTable();
         oldYParam = yParam;
         if (yParam.hasMinValue()) {
             yminFormattedTextField.setText("" + yParam.getMinValue());
@@ -294,12 +297,12 @@ public class PlotChi2Panel extends javax.swing.JPanel {
 }//GEN-LAST:event_yComboBoxActionPerformed
 
     private void xComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xComboBoxActionPerformed
-        updateTable();
         Parameter xParam = (Parameter) xComboBox.getSelectedItem();
         if (xParam == null) {
             logger.warning("xparam null for chi2map");
             return;
         }
+        updateTable();
         oldXParam = xParam;
         if (xParam.hasMinValue()) {
             xminFormattedTextField.setText("" + xParam.getMinValue());
