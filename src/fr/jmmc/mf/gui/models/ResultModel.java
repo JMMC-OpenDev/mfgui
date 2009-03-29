@@ -3,11 +3,14 @@ package fr.jmmc.mf.gui.models;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
+import fr.jmmc.mf.models.Residual;
 import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.models.Target;
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JFrame;
@@ -30,12 +33,12 @@ public class ResultModel extends DefaultMutableTreeNode {
     public ResultModel(SettingsModel settingsModel, Result result, int index) {
         this.settingsModel = settingsModel;
         this.result = result;
-        this.index=index;
+        this.index = index;
 
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
             StringWriter xmlResultSw = new StringWriter();
-            UtilsClass.marshal(result,xmlResultSw);
+            UtilsClass.marshal(result, xmlResultSw);
             xmlResult = xmlResultSw.toString();
             htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
             //genPlots(UtilsClass.getResultFiles(response));
@@ -71,10 +74,33 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     public void genPlots() {
         logger.entering("" + this.getClass(), "genPlots");
-        String[] plotNames = new String[]{"plotBaselines", "plotUVCoverage", "plotRadialVIS", "plotRadialT3"};
+        Hashtable<String, String> plotTobuild = new Hashtable();
+        Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            if (target.getResiduals() != null) {
+                Residual[] residuals = target.getResiduals().getResidual();
+                for (int j = 0; j < residuals.length; j++) {
+                    Residual residual = residuals[j];
+                    plotTobuild.put(residual.getName(), residual.getName().toLowerCase());
+                }
+            }
+        }
+
+        // Plot baselines and uvcoverage
+        String[] plotNames = new String[]{"plotBaselines", "plotUVCoverage"};//, "visamp", "visphi", "vis2", "t3amp", "t3phi"};
         for (int i = 0; i < plotNames.length; i++) {
             String plotName = plotNames[i];
-            ptplot(plotName);
+            ptplot(plotName, false);
+        }
+        plotNames = plotTobuild.values().toArray(new String[0]);
+        if (plotTobuild.size() == 0) {
+            plotNames = new String[]{"visamp", "visphi", "vis2", "t3amp", "t3phi"};
+        }
+        for (int i = 0; i < plotNames.length; i++) {
+            String plotName = plotNames[i];
+            ptplot(plotName, false);
+            ptplot(plotName, true);
         }
     }
 
@@ -92,7 +118,7 @@ public class ResultModel extends DefaultMutableTreeNode {
                     for (int j = 0; j < resultFiles.length; j++) {
                         ResultFile r2 = resultFiles[j];
                         String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
-                        if (r.getName().startsWith(filenameWOExt+".") && r2.getName().endsWith("pdf")) {
+                        if (r.getName().startsWith(filenameWOExt + ".") && r2.getName().endsWith("pdf")) {
                             b64file = r2.getHref();
                             File pdfFile = UtilsClass.saveBASE64ToFile(b64file, "pdf");
                             filesToExport.add(pdfFile);
@@ -111,21 +137,26 @@ public class ResultModel extends DefaultMutableTreeNode {
     }
 
     /** Plots using ptplot widgets */
-    protected void ptplot(final String plotName) {
+    protected void ptplot(String plotName, boolean residuals) {
         logger.entering("" + this.getClass(), "ptplot", plotName);
         String xmlStr = null;
         try {
-            logger.fine("Start plot generation:"+plotName);
-            // Contruct xml document to plot           
+            logger.fine("Start plot generation:" + plotName + "(residuals=" + residuals + ")");
+            // Contruct xml document to plot
+            String[] args = new String[]{"plotName", plotName};
+            if (residuals) {
+                args = new String[]{"plotName", plotName, "residuals", "" + residuals};
+                plotName = plotName + " residuals";
+            }
             xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",
-                    new String[]{"plotName", plotName});
+                    args);
 
             // generate frame and tsv file
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
-            logger.fine("End plot generation:"+plotName);
-            logger.fine("Start tsv generation:"+plotName);
+            logger.fine("End plot generation:" + plotName);
+            logger.fine("Start tsv generation:" + plotName);
             File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
-            logger.fine("End tsv generation:"+plotName);
+            logger.fine("End tsv generation:" + plotName);
 
             // add on frameTreeNode as child
             this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));
@@ -133,12 +164,12 @@ public class ResultModel extends DefaultMutableTreeNode {
             new FeedbackReport(new Exception("Plot generation failed for " + plotName, exc));
         }
     }
-    
-    public int getIndex(){
+
+    public int getIndex() {
         return index;
     }
 
-    public String toString(){
-        return "Fit Result "+index;
+    public String toString() {
+        return "Fit Result " + index;
     }
 }
