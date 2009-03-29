@@ -146,16 +146,26 @@ public class ModelPanel extends javax.swing.JPanel
         jSplitPane1.setTopComponent(jPanel6);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        jPanel4.setLayout(new java.awt.BorderLayout());
+        jPanel4.setLayout(new java.awt.GridBagLayout());
 
         parametersTable.setModel(parametersTableModel);
         parametersTable.setToolTipText("Use right click to manage parameters");
+        parametersTable.setAlignmentX(0.0F);
         jScrollPane1.setViewportView(parametersTable);
 
-        jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel4.add(jScrollPane1, gridBagConstraints);
 
         helpButton1.setText("jButton1");
-        jPanel4.add(helpButton1, java.awt.BorderLayout.PAGE_START);
+        helpButton1.setAlignmentX(1.0F);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel4.add(helpButton1, gridBagConstraints);
 
         jSplitPane1.setRightComponent(jPanel4);
 
