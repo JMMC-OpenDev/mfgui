@@ -716,9 +716,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // update shared parameters
         Parameters params = newSettings.getParameters();
         rootSettings.setParameters(params);
+        fireTreeNodesChanged(new Object[]{rootSettings  },
+                        getIndexOfChild(rootSettings, params), params);
         // @todo handle fireTreeEvent(...) update
-
-        // update parameters of every targets
+           
+        // update parameters and parameterLinks of every targets
         parameterComboBoxModel.removeAllElements();
         parameterListModel.removeAllElements();
         Target[] newTargets = newSettings.getTargets().getTarget();
@@ -738,6 +740,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
                 Model model = models[j];
                 model.setParameter(newParameters);
+                model.setParameterLink(newModel.getParameterLink());
                 fireTreeNodesChanged(new Object[]{rootSettings, target},
                         getIndexOfChild(target, model), model);
             }

@@ -7,6 +7,7 @@ import fr.jmmc.mf.models.Parameters;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 import javax.swing.*;
 
 public class ParametersPanel extends javax.swing.JPanel implements Observer{
@@ -21,6 +22,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
     private javax.swing.JTable sharedParametersTable;
     // End of variables declaration//GEN-END:variables
     private ParametersTableModel sharedTableModel;
+    private Vector<SettingsModel> knownSettingsModels = new Vector();
 
     /** Creates new form ParametersPanel */
     public ParametersPanel(SettingsViewerInterface viewer) {
@@ -34,10 +36,14 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         settingsModel = s;
         current = p;
         parameterListModel.clear();
-        Parameter[] params = current.getParameter();        
+        Parameter[] params = s.getSharedParameters();
         sharedTableModel.setModel(s, params, false);
+        // we want to listen model change events
+        if (!knownSettingsModels.contains(settingsModel)) {
+            settingsModel.addObserver(this);
+            knownSettingsModels.add(settingsModel);
+        }
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -79,7 +85,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         add(jLabel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {        
         if(isShowing()){
             show(settingsModel, current);
         }
