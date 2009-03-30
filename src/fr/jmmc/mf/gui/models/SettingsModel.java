@@ -183,7 +183,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void setNormalize(Target target, boolean flag) {
         logger.entering(className, "setNormalize", new Object[]{target, flag});
         target.setNormalize(flag);
-        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), target},
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets()},
                 getIndexOfChild(rootSettings.getTargets(), target),
                 target);
     }
@@ -216,7 +216,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         target.setResiduals(residuals);
-        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), target},
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets()},
                 getIndexOfChild(rootSettings.getTargets(), target),
                 target);
     }
