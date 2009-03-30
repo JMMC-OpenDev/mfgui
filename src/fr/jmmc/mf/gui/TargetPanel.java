@@ -60,11 +60,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         subplotPanel.add(plotModelImagePanel);
 
         // link residual module name with its widget
-        String[]moduleNames=new String[]{"VISamp","VISphi","VIS2","T3amp","T3phi"};
-        JCheckBox[]modulesCheckBoxes=new JCheckBox[]{visAmpCheckBox,
-            visPhiCheckBox,vis2CheckBox,t3ampCheckBox,t3phiCheckBox};
+        String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
+        JCheckBox[] modulesCheckBoxes = new JCheckBox[]{visAmpCheckBox,
+            visPhiCheckBox, vis2CheckBox, t3ampCheckBox, t3phiCheckBox};
         for (int i = 0; i < moduleNames.length; i++) {
-            moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i] );
+            moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i]);
         }
 
         // build help button
@@ -105,6 +105,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         if (targetFiles != null) {
             fileList.setModel(targetFiles);
+            // next line doesn't work
+            // @todo fix it
+            fileList.getSelectionModel().clearSelection();
             // define selected files reading fileLinks
             //      File[] files   = rootSettings.getFiles().getFile();
             for (int i = 0; i < targetFiles.getSize(); i++) {
@@ -153,7 +156,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 Residual[] res = residuals.getResidual();
                 for (int i = 0; i < res.length; i++) {
                     Residual residual = res[i];
-                    if(residual.getName().equals(key)){
+                    if (residual.getName().equals(key)) {
                         cb.setSelected(true);
                     }
                 }
