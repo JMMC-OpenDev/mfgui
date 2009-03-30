@@ -68,7 +68,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
         String args = radialComboBox.getSelectedItem()+" " + groupValue;
-        plotPanel.plot("getModelRadialPlot", args, radialComboBox.getSelectedItem()+" "+targetToPlot.getIdent());
+        plotPanel.plot("getModelRadialPlot", args, "Model " + radialComboBox.getSelectedItem()+" of "+targetToPlot.getIdent());
     }
 
     private void plotModelImage(Target targetToPlot)
