@@ -41,30 +41,35 @@ public class PlotChi2Panel extends javax.swing.JPanel {
         settingsModel = s;
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
         Object[] params = s.getParameterListModel().toArray();
-        Parameter tmp = oldXParam;
+        Parameter tmpX = oldXParam;
+        Parameter tmpY = oldYParam;
         xComboBox.removeAllItems();
-        oldXParam = tmp;
-        tmp = oldYParam;
         yComboBox.removeAllItems();
-        oldYParam = tmp;
         logger.fine("Searching "+params.length+" parameters to use in chi2 slice");
         for (int i = 0; i < params.length; i++) {
             Parameter p = (Parameter) params[i];
             if (!p.getHasFixedValue()) {
                 logger.fine(p.getName()+" added to the comboboxes");
-                xComboBox.addItem(p);
-                if (oldXParam.getName().equals(p.getName())) {
-                    xComboBox.setSelectedItem(p);
-                }
+                xComboBox.addItem(p);              
                 yComboBox.addItem(p);
-                if (oldYParam.getName().equals(p.getName())) {
-                    yComboBox.setSelectedItem(p);
-                }
             }else{
                 logger.fine(p.getName()+" has a fixed value");
             }
         }
         updateTable();
+
+        // fix old user entries
+        for (int i = 0; i < params.length; i++) {
+            Parameter p = (Parameter) params[i];
+            if (!p.getHasFixedValue()) {
+                if (tmpX!=null && tmpX.getName().equals(p.getName())) {
+                    xComboBox.setSelectedItem(p);
+                }
+                if (tmpY!=null && tmpY.getName().equals(p.getName())) {
+                    yComboBox.setSelectedItem(p);
+                }
+            }
+        }
     }
 
     /** This method is called from within the constructor to
