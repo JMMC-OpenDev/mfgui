@@ -33,16 +33,13 @@ public class SaveSettingsAction extends RegisteredAction {
             if (settingsModel == null) {
                 return;
             }
-            File file;
-            file = settingsModel.associatedFile;
+            File file = new File(settingsModel.getAssociatedFilename());
             // Open a filechooser in previous save directory
             JFileChooser fileChooser = new JFileChooser();
             if (lastDir != null) {
                 fileChooser.setCurrentDirectory(new File(lastDir));
             }
-            if (file != null) {
-                fileChooser.setSelectedFile(file);
-            }
+            fileChooser.setSelectedFile(file);
             fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + "?");
             // Open filechooser
             int returnVal = fileChooser.showSaveDialog(null);
