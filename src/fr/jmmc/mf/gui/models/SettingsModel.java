@@ -581,7 +581,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public String getAssociatedFilename() {
         logger.entering(className, "getAssociatedFilename");
         if (associatedFile == null) {
-            return "*";
+            return "Untitled.xml";
         }
         return associatedFile.getName();
     }
