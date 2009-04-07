@@ -48,11 +48,13 @@ public class PlotModelPanel extends javax.swing.JPanel
             Object object = targets[i];
             targetComboBox.addItem(object);
         }
+        // User can act only if settings is valid with a minimum of one target
         boolean hasOneTarget = targetComboBox.getItemCount()!=0;
-        plotImageButton.setEnabled(hasOneTarget);
-        plotSnifferMapButton.setEnabled(hasOneTarget);
-        plotUVMapButton.setEnabled(hasOneTarget);
-        plotRadialButton.setEnabled(hasOneTarget);
+        boolean valid = hasOneTarget && s.isValid();
+        plotImageButton.setEnabled(valid);
+        plotSnifferMapButton.setEnabled(valid);
+        plotUVMapButton.setEnabled(valid);
+        plotRadialButton.setEnabled(valid);
     }
   
     private void plotModelUVMap(Target targetToPlot)
