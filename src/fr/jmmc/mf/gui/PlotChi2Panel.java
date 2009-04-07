@@ -268,8 +268,9 @@ public class PlotChi2Panel extends javax.swing.JPanel {
     private void updateTable() {
         boolean hasParam = ( xComboBox.getSelectedItem() != null )
                 && ( yComboBox.getSelectedItem() != null );
-        plot1DChi2Button.setEnabled(hasParam);
-        plot2DChi2Button.setEnabled(hasParam);
+        boolean enabled = hasParam && settingsModel.isValid();
+        plot1DChi2Button.setEnabled(enabled);
+        plot2DChi2Button.setEnabled(enabled);
         if (hasParam) {
             Parameter[] parameters = new Parameter[2];
             parameters[0] = (Parameter) xComboBox.getSelectedItem();
