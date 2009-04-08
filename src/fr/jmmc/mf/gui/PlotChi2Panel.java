@@ -11,22 +11,27 @@ import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
 
 /**
  *
  * @author mella
  * @todo fix bu that doesnt remember oldXparam enad oldYparam
  */
-public class PlotChi2Panel extends javax.swing.JPanel {
+public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
 
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.PlotChi2Panel");
     public SettingsModel settingsModel = null;
+    public Target target = null;
     private PlotPanel plotPanel;
     private ParametersTableModel param1TableModel;
     private Parameter oldXParam = null;
     private Parameter oldYParam = null;
+    private Vector<SettingsModel> knownSettingsModels = new Vector();
 
     /** Creates new form PlotPanel */
     public PlotChi2Panel(PlotPanel plotPanel) {
@@ -40,15 +45,30 @@ public class PlotChi2Panel extends javax.swing.JPanel {
     }
 
     public void show(SettingsModel s) {
-        init(s, s.getParameterListModel().toArray());
+        init(s, null);
     }
 
     public void show(SettingsModel s, Target t) {
-        init(s,UtilsClass.getParameters(t));
+        init(s,t);
     }
 
-    public void init(SettingsModel s, Object[] params){
+    private void init(SettingsModel s, Target t){
         settingsModel = s;
+        target=t;
+
+        Object[] params;
+
+        if(t==null){
+            params=s.getParameterListModel().toArray();
+        }else{
+            params=UtilsClass.getParameters(t);
+        }
+        
+        // we want to listen model change events
+        if (!knownSettingsModels.contains(settingsModel)) {
+            settingsModel.addObserver(this);
+            knownSettingsModels.add(settingsModel);
+        }
 
         // Store old references
         Parameter tmpX = oldXParam;
@@ -341,4 +361,8 @@ public class PlotChi2Panel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField ymaxFormattedTextField;
     private javax.swing.JFormattedTextField yminFormattedTextField;
     // End of variables declaration//GEN-END:variables
+
+    public void update(Observable o, Object arg) {
+        init(settingsModel,target);
+    }
 }
