@@ -4,7 +4,10 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mcs.util.Urls;
 import fr.jmmc.mf.models.Message;
+import fr.jmmc.mf.models.Parameter;
+import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResponseItem;
 import fr.jmmc.mf.models.ResultFile;
@@ -543,5 +546,26 @@ public class UtilsClass {
             }
         }
         return str;
+    }
+
+
+    public static Parameter[] getParameters(Target t){
+        logger.entering(className, "getParameters",t);
+        Vector<Parameter> v = new Vector();
+        Model[] models = t.getModel();
+        for (int i = 0; i < models.length; i++) {
+            Model model = models[i];
+            Parameter[] params = model.getParameter();
+            for (int j = 0; j < params.length; j++) {
+                Parameter parameter = params[j];
+                v.add(parameter);
+            }
+            ParameterLink[] paramLinks= model.getParameterLink();
+            for (int j = 0; j < paramLinks.length; j++) {
+                ParameterLink parameterLink = paramLinks[j];
+                v.add((Parameter)parameterLink.getParameterRef());
+            }
+        }
+        return v.toArray(new Parameter[0]);
     }
 }
