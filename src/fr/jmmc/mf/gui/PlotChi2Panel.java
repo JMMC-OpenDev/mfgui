@@ -9,6 +9,7 @@ import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Parameter;
+import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
 
 /**
@@ -35,14 +36,25 @@ public class PlotChi2Panel extends javax.swing.JPanel {
         // build help button
         //todo modify latex to use only BEG_Plots_PlotChi2_Bt
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
+        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
     }
 
     public void show(SettingsModel s) {
+        init(s, s.getParameterListModel().toArray());
+    }
+
+    public void show(SettingsModel s, Target t) {
+        init(s,UtilsClass.getParameters(t));
+    }
+
+    public void init(SettingsModel s, Object[] params){
         settingsModel = s;
-        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
-        Object[] params = s.getParameterListModel().toArray();
+
+        // Store old references
         Parameter tmpX = oldXParam;
         Parameter tmpY = oldYParam;
+
+        // Populates combo with given params & Call old user entries back
         xComboBox.removeAllItems();
         yComboBox.removeAllItems();
         logger.fine("Searching "+params.length+" parameters to use in chi2 slice");
@@ -50,18 +62,8 @@ public class PlotChi2Panel extends javax.swing.JPanel {
             Parameter p = (Parameter) params[i];
             if (!p.getHasFixedValue()) {
                 logger.fine(p.getName()+" added to the comboboxes");
-                xComboBox.addItem(p);              
+                xComboBox.addItem(p);
                 yComboBox.addItem(p);
-            }else{
-                logger.fine(p.getName()+" has a fixed value");
-            }
-        }
-        updateTable();
-
-        // fix old user entries
-        for (int i = 0; i < params.length; i++) {
-            Parameter p = (Parameter) params[i];
-            if (!p.getHasFixedValue()) {
                 if (tmpX!=null && tmpX.getName().equals(p.getName())) {
                     xComboBox.setSelectedItem(p);
                 }
@@ -70,6 +72,9 @@ public class PlotChi2Panel extends javax.swing.JPanel {
                 }
             }
         }
+       
+        // update table with
+        updateTable();
     }
 
     /** This method is called from within the constructor to
@@ -222,7 +227,7 @@ public class PlotChi2Panel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         add(xComboBox, gridBagConstraints);
 
@@ -232,7 +237,7 @@ public class PlotChi2Panel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         add(yComboBox, gridBagConstraints);
 
@@ -250,9 +255,8 @@ public class PlotChi2Panel extends javax.swing.JPanel {
 
         helpButton1.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(helpButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
@@ -282,14 +286,13 @@ public class PlotChi2Panel extends javax.swing.JPanel {
             parameters[1] = (Parameter) yComboBox.getSelectedItem();
             param1TableModel.setModel(settingsModel, parameters,true);
         } else {
-            logger.warning("No parameter to use for chi2map");
+            logger.fine("No parameter to use for chi2map");
         }
     }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
         Parameter yParam = (Parameter) yComboBox.getSelectedItem();
         if (yParam == null) {
-            logger.warning("yparam null for chi2map");
             return;
         }
         updateTable();
@@ -305,7 +308,6 @@ public class PlotChi2Panel extends javax.swing.JPanel {
     private void xComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xComboBoxActionPerformed
         Parameter xParam = (Parameter) xComboBox.getSelectedItem();
         if (xParam == null) {
-            logger.warning("xparam null for chi2map");
             return;
         }
         updateTable();
