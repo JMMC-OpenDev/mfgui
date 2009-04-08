@@ -39,6 +39,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public Settings rootSettings = null;
     public SettingsModel rootSettingsModel = null;
     private PlotModelPanel plotModelImagePanel;
+    private PlotChi2Panel plotChi2Panel;
     private ParametersTableModel parametersTableModel;
     private Vector<MouseListener> mouseListeners = new Vector();
     private Hashtable<String, JCheckBox> moduleNameToCheckBox = new Hashtable();
@@ -58,6 +59,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         plotModelImagePanel = new PlotModelPanel(plotPanel);
         subplotPanel.add(plotModelImagePanel);
+
+        plotChi2Panel = new PlotChi2Panel(plotPanel);
+        subplotPanel.add(plotChi2Panel);
 
         // link residual module name with its widget
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -164,6 +168,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         plotModelImagePanel.show(settingsModel, current);
+        plotChi2Panel.show(settingsModel, current);
     }
 
     private void updateModels() {
