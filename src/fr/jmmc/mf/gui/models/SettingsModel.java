@@ -711,18 +711,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Settings newSettings = UtilsClass.getSettings(newResponse);
         // we can ignore all but:
         //  parameters, result
+        parameterComboBoxModel.removeAllElements();
+        parameterListModel.removeAllElements();
         setModified(true);
 
         // update shared parameters
         Parameters params = newSettings.getParameters();
         rootSettings.setParameters(params);
-        fireTreeNodesChanged(new Object[]{rootSettings  },
-                        getIndexOfChild(rootSettings, params), params);
-        // @todo handle fireTreeEvent(...) update
+        // add shared parameters to the parameter list containers
+        Parameter[] sharedParams = newSettings.getParameters().getParameter();
+        for (int i = 0; i < sharedParams.length; i++) {
+            parameterListModel.addElement(sharedParams[i]);
+            parameterComboBoxModel.addElement(sharedParams[i]);
+        }
+        fireTreeNodesChanged(new Object[]{rootSettings},
+                getIndexOfChild(rootSettings, params), params);
            
-        // update parameters and parameterLinks of every targets
-        parameterComboBoxModel.removeAllElements();
-        parameterListModel.removeAllElements();
+        // update parameters and parameterLinks of every targets        
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < newTargets.length; i++) {
@@ -757,6 +762,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1,
                         r);
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
             } else {
                 logger.warning("found null result while updating with new settings");
             }
@@ -818,7 +824,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         targetListModel.clear();
         parameterListModel.clear();
         targetComboBoxModel.removeAllElements();
-        getParameterComboBoxModel().removeAllElements();
+        parameterComboBoxModel.removeAllElements();
 
         for (int i = 0; i < rootSettings.getTargets().getTargetCount(); i++) {
             Target t = rootSettings.getTargets().getTarget(i);
@@ -846,7 +852,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // assert that rootSettings get container for shared parameters
         if (rootSettings.getParameters() == null) {
             rootSettings.setParameters(new Parameters());
+        }else{
+            // add shared parameters to the parameter list containers
+            Parameter[] params = rootSettings.getParameters().getParameter();
+            for (int i = 0; i < params.length; i++) {
+                parameterListModel.addElement(params[i]);
+                parameterComboBoxModel.addElement(params[i]);
+            }
         }
+
+
 
 
         // assert that rootSettings get container for results and build model for every result child
