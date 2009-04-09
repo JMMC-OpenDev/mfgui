@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.4"/>
+    <program name="ModelFitting" version="1.1.5"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -37,8 +37,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.1.4">
-            <prerelease version="1.1.4beta1000">
+        <release version="1.1.5">
+            <prerelease version="1.1.5beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -54,7 +54,7 @@
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
                 <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
-                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>               
+                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Flip the U axe of the UV plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
                 <change type="REQUEST">Add previous parameter value column in the parameter table</change>
@@ -66,6 +66,15 @@
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="1.1.5beta1">
+                <change type="BUGFIX">Fix bug that prevent submission of remote actions with an invalid settings</change>
+                <change type="BUGFIX">Shared parameters can be used in chi2 map after run fit action</change>
+                <change type="BUGFIX">Plots panel remind user selection of parameter to use for chi2map</change>
+                <change type="FEATURE">Show last result node after run fit call</change>
+                <change type="FEATURE">Target Panel embed one plotChi2Panel restricted to its parameters</change>
+            </prerelease>
+         </release>
+                 <release version="1.1.4">
             <prerelease version="1.1.4beta1">
                 <change type="BUGFIX">Fix bug that prevent update of fitter parameters in the 'Target panel'</change>
                 <change type="BUGFIX">shared parameters are updated after run fit action</change>
