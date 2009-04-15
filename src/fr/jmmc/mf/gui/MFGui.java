@@ -107,6 +107,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
         ActionRegistrar registrar = ActionRegistrar.getInstance();
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
+        toolBar.add(ModelFitting.showHelpAction());
+
         
         // Handle status bar
         statusBar = new StatusBar();
