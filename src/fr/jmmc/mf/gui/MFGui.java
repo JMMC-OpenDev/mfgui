@@ -45,6 +45,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             className_);
    
     protected  static Preferences myPreferences = Preferences.getInstance();
+
+    protected static JToolBar toolBar;
     protected static StatusBar statusBar;
 
     // Application actions
@@ -100,10 +102,16 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         // Handle menu bar
         setJMenuBar(new MainMenuBar(this));
 
+        // Handle toolbar
+        toolBar = new JToolBar();
+        getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
+        ActionRegistrar registrar = ActionRegistrar.getInstance();
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
+        
         // Handle status bar
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
-        
+
         setTitle("ModelFitting V"+ModelFitting.getSharedApplicationDataModel().getProgramVersion());
 
         if (filenames.length >= 1)
