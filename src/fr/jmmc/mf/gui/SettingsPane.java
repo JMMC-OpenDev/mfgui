@@ -318,7 +318,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jSplitPane2.setBorder(null);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(1.0);
-        jSplitPane2.setMinimumSize(new java.awt.Dimension(275, 234));
+        jSplitPane2.setMinimumSize(new java.awt.Dimension(205, 234));
         jSplitPane2.setPreferredSize(new java.awt.Dimension(260, 234));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings tree"));
@@ -326,8 +326,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel2.setPreferredSize(new java.awt.Dimension(91, 168));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        settingsTreeScrollPane.setMinimumSize(new java.awt.Dimension(150, 23));
-        settingsTreeScrollPane.setPreferredSize(new java.awt.Dimension(150, 4));
+        settingsTreeScrollPane.setMinimumSize(new java.awt.Dimension(110, 23));
+        settingsTreeScrollPane.setPreferredSize(new java.awt.Dimension(110, 4));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
@@ -340,9 +340,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         controlPanel.setLayout(new java.awt.GridBagLayout());
 
+        jPanel1.setMinimumSize(new java.awt.Dimension(232, 57));
         jPanel1.setLayout(new java.awt.GridBagLayout());
-
-        runFitButton.setMinimumSize(new java.awt.Dimension(175, 29));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
