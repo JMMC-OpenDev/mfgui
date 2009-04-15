@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.5"/>
+    <program name="ModelFitting" version="1.1.6beta1"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -30,15 +30,16 @@
             <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
         </menu>
         <menu label="Edit">
-            <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
+            icon="/fr/jmmc/mf/gui/icons/button_fewer.png"/>
             <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"/>
             <menu/>
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.1.5">
-            <prerelease version="1.1.5beta1000">
+        <release version="1.1.6">
+            <prerelease version="1.1.6beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -66,6 +67,11 @@
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="1.1.6beta1">
+                <change type="FEATURE">Add toolbar</change>
+            </prerelease>
+        </release>
+        <release version="1.1.5">
             <prerelease version="1.1.5beta1">
                 <change type="BUGFIX">Fix bug that prevent submission of remote actions with an invalid settings</change>
                 <change type="BUGFIX">Shared parameters can be used in chi2 map after run fit action</change>
@@ -73,15 +79,15 @@
                 <change type="FEATURE">Show last result node after run fit call</change>
                 <change type="FEATURE">Target Panel embed one plotChi2Panel restricted to its parameters</change>
             </prerelease>
-         </release>
-                 <release version="1.1.4">
+        </release>
+        <release version="1.1.4">
             <prerelease version="1.1.4beta1">
                 <change type="BUGFIX">Fix bug that prevent update of fitter parameters in the 'Target panel'</change>
                 <change type="BUGFIX">shared parameters are updated after run fit action</change>
                 <change type="FEATURE">Add model radial plot capability (vis and vis2)</change>
             </prerelease>
-         </release>
-         <release version="1.1.3">
+        </release>
+        <release version="1.1.3">
             <prerelease version="1.1.3beta6">
                 <change type="BUGFIX">chi2 map parameter list becomes updated during user modifications</change>
                 <change type="BUGFIX">Fix error bars on radial result plots</change>
