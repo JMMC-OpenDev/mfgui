@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.16 2008-11-20 14:10:17 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.17 2009-04-15 11:56:17 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.16  2008/11/20 14:10:17  mella
+ * Change default location of beta test url
+ *
  * Revision 1.15  2008/10/17 10:11:27  mella
  * Jalopization of major refactoring mimicking searchcal template
  *
@@ -75,7 +78,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
     SavePrefAction savePrefAction_;
     RestorePrefAction restorePrefAction_;
     
-    private static String _version=ModelFitting.getSharedApplicationDataModel().getProgramVersion();
+    private static String _version = ModelFitting.getSharedApplicationDataModel().getProgramVersion();
     /**
      * Privatized constructor that must be empty.
      */
@@ -114,6 +117,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         setDefaultPreference("mf.version", _version);
         /* Place general preferences  */
         setDefaultPreference("help.tooltips.show", "true");
+        setDefaultPreference("show.toolbar", "true");
         setDefaultPreference("show.recursive.parameters", "false");
         setDefaultPreference("yoga.remote.use", "true");
         setDefaultPreference("yoga.local.home", "../ys");
