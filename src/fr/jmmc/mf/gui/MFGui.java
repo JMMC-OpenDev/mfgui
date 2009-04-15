@@ -109,7 +109,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
         toolBar.add(ModelFitting.showHelpAction());
-
+        toolBar.setVisible(myPreferences.getPreferenceAsBoolean("show.toolbar"));
         
         // Handle status bar
         statusBar = new StatusBar();
@@ -132,6 +132,13 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
 
         pack();
         fr.jmmc.mcs.gui.StatusBar.show("Application inited");
+    }
+
+    public static void showToolbar(boolean visible){
+        if(toolBar==null){
+            return;
+        }
+        toolBar.setVisible(visible);
     }
 
     /**
