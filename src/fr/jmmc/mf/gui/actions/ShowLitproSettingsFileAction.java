@@ -36,9 +36,9 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
 
     public void actionPerformed(ActionEvent e) {
         try{
-            JTextArea msg = new JTextArea(settingsModel.toLITproDesc(),20,80);
+            JTextArea msg = new JTextArea(settingsModel.toLITproDesc(),40,60);
             JScrollPane pane = new JScrollPane(msg);
-            JOptionPane.showMessageDialog(null, pane, "Here comes the fresh associated LITpro desc file", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, pane, "LITpro settings file", JOptionPane.INFORMATION_MESSAGE);
         }catch(Exception ex){
             new FeedbackReport(ex);
         }
