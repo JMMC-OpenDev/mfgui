@@ -101,7 +101,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         framePanel = new FramePanel(this);
 
         ActionRegistrar actionRegistrar = ActionRegistrar.getInstance();
-        saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveModelAction", "saveModel");
+        saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
 
 

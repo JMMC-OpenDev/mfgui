@@ -10,7 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class SaveSettingsAction extends RegisteredAction {
-    private final static String className="fr.jmmc.mf.gui.actions.SaveModelAction";
+    private final static String className="fr.jmmc.mf.gui.actions.SaveSettingsAction";
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
@@ -23,6 +23,7 @@ public class SaveSettingsAction extends RegisteredAction {
         super(className, actionName);
         this.mfgui = mfgui;
         this.saveResult=saveResult;
+        setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
