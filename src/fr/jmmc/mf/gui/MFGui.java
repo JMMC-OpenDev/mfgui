@@ -51,7 +51,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
 
     // Application actions
     static Action getYogaVersionAction;
-    public static Action saveModelAction;
+    public static Action saveSettingsAction;
     public static DeleteTreeSelectionAction deleteTreeSelectionAction;
     public static AttachDetachFrameAction attachDetachFrameAction;
 
@@ -75,8 +75,8 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         new LoadModelAction(this);
         new LoadRemoteModelAction(this);
         // @todo use a preference to choose from one of the two following for default saveaction
-        saveModelAction=new SaveSettingsAction(this, "saveModel", false);
-        new SaveSettingsAction(this, "saveModelWithResults", true);
+        saveSettingsAction=new SaveSettingsAction(this, "saveSettings", false);
+        new SaveSettingsAction(this, "saveSettingsWithResults", true);
         
         deleteTreeSelectionAction =  new DeleteTreeSelectionAction(this) ;
         attachDetachFrameAction = new AttachDetachFrameAction(this);
@@ -103,13 +103,19 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         setJMenuBar(new MainMenuBar(this));
 
         // Handle toolbar
-        toolBar = new JToolBar();
+
+        toolBar=new JToolBar();
         getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
         ActionRegistrar registrar = ActionRegistrar.getInstance();
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction","newModel"));
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings"));
+        toolBar.addSeparator();
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
+        toolBar.addSeparator();
         toolBar.add(ModelFitting.showHelpAction());
         toolBar.setVisible(myPreferences.getPreferenceAsBoolean("show.toolbar"));
+
         
         // Handle status bar
         statusBar = new StatusBar();
