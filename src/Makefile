@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.22 2009-03-23 10:12:42 mella Exp $"
+# "@(#) $Id: Makefile,v 1.23 2009-04-28 11:11:23 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2009/03/23 10:12:42  mella
+# add mfguiReadAndWriteXml programm
+#
 # Revision 1.21  2009/03/20 09:54:04  mella
 # do not handle castor in main makefile targets
 #
@@ -175,6 +178,7 @@ mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
                  fr/jmmc/mf/gui/*.html \
                  fr/jmmc/mf/gui/*.xml \
                  fr/jmmc/mf/gui/*.xsl \
+                 fr/jmmc/mf/gui/icons/*.png \
                  fr/jmmc/mf/*.xsl \
 
 #
