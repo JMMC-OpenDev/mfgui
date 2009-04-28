@@ -10,9 +10,11 @@
     </dependences>
     <menubar>
         <menu label="File">
-            <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"/>
+            <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
+            icon="/fr/jmmc/mf/gui/icons/filenew.png"/>
             <menu/>
-            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"/>
+            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
+            icon="/fr/jmmc/mf/gui/icons/fileopen.png"/>
             <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
@@ -26,13 +28,15 @@
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel7"/>
             </menu>
             <menu/>
-            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModel" accelerator="S"/>
-            <menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveModelAction" action="saveModelWithResults"/>
+            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
+            icon="/fr/jmmc/mf/gui/icons/filesaveas.png"/>
+            <!--<menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettingsWithResults"/>-->
         </menu>
         <menu label="Edit">
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
             icon="/fr/jmmc/mf/gui/icons/button_fewer.png"/>
-            <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"
+            icon="/fr/jmmc/mf/gui/icons/view_sidetree.png"/>
             <menu/>
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
@@ -68,7 +72,8 @@
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
             <prerelease version="1.1.6beta1">
-                <change type="FEATURE">Add toolbar</change>
+                <change type="FEATURE">Add toolbar ( use preferences to hide/show it )</change>
+                <change type="BUGFIX">Fix LITpro setting file generation</change>
             </prerelease>
         </release>
         <release version="1.1.5">
