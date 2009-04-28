@@ -780,8 +780,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 new FeedbackReport(null, true, exc);
             }
         } else {
-            // trigger saveModelAction
-            MFGui.saveModelAction.actionPerformed(null);
+            // trigger saveSettingsAction
+            MFGui.saveSettingsAction.actionPerformed(null);
         }
     }
 
