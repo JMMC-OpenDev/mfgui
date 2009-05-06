@@ -1,6 +1,7 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
@@ -354,6 +355,16 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                  */
                 shareMenu.add(menuItem);
             }
+
+            // Add model information into the
+            parameterPopupMenu.add(new JSeparator());
+            Model m = settingsModel.getParent(p);
+            if(m!=null){
+                menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
+                menuItem.setEnabled(false);
+                parameterPopupMenu.add(menuItem);
+            }
+            
             parameterPopupMenu.validate();
             parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
