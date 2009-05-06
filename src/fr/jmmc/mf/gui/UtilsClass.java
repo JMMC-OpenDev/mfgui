@@ -3,6 +3,8 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mcs.gui.FeedbackReport;
 
 import fr.jmmc.mcs.util.Urls;
+import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Target;
@@ -59,6 +61,28 @@ public class UtilsClass {
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
     static java.util.Hashtable alreadyExpandedFiles = new java.util.Hashtable();
+
+    /** This method wal along the targets and check if no one of them are linked to the given file.
+     * 
+     * @param settingsModel model that contains target which can contain given file.
+     * @param file file to search.
+     * @return true if one target is liked to the given file.
+     */
+    public static boolean containsFile(SettingsModel settingsModel, fr.jmmc.mf.models.File file) {
+        Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            FileLink[] fileLinks = target.getFileLink();
+            for (int j = 0; j < fileLinks.length; j++) {
+                FileLink fileLink = fileLinks[j];
+                fr.jmmc.mf.models.File f = (fr.jmmc.mf.models.File) fileLink.getFileRef();
+                if(f==file){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public static PlotMLFrame getPlotMLFrame(String xmlStr, String plotName) throws Exception {
         PlotMLParser plotMLParser;
@@ -568,4 +592,53 @@ public class UtilsClass {
         }
         return v.toArray(new Parameter[0]);
     }
+
+    /** Return a string that describe the rho theta information of the given
+     * model.
+     * @param m
+     * @return the rho theta informations
+     */
+    public static String getRhoTheta(Model m){
+        // compute rho theta from x y parameters
+        double x=0;
+        double y=0;
+
+        Parameter[] params = m.getParameter();
+        for (int i = 0; i < params.length; i++) {
+            Parameter parameter = params[i];
+            if (parameter.getType().equals("x")){
+                x=parameter.getValue();
+            }
+            if (parameter.getType().equals("y")){
+                y=parameter.getValue();
+            }
+        }
+        ParameterLink[] paramLinks = m.getParameterLink();
+        for (int i = 0; i < paramLinks.length; i++) {
+            ParameterLink parameterLink = paramLinks[i];
+            Parameter parameter = (Parameter)parameterLink.getParameterRef();
+            if (parameterLink.getType().equals("x")){
+                x=parameter.getValue();
+            }
+            if (parameterLink.getType().equals("y")){
+                y=parameter.getValue();
+            }
+        }
+
+        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(3);
+        return "rho='"+nf.format(getRho(x, y))+"' theta='"+nf.format(getTheta(x, y))+"'";
+    }
+
+    public static double getRho(double x, double y){
+        return Math.sqrt(x*x+y*y);
+    }
+    public static double getTheta(double x, double y){
+        double r=Math.atan2(x, y)/(Math.PI/180);
+        if(r>=0){
+            return r;
+        }
+        return r+360.0;        
+    }
+
 }
