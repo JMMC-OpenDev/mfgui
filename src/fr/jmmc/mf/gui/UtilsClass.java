@@ -76,7 +76,7 @@ public class UtilsClass {
             for (int j = 0; j < fileLinks.length; j++) {
                 FileLink fileLink = fileLinks[j];
                 fr.jmmc.mf.models.File f = (fr.jmmc.mf.models.File) fileLink.getFileRef();
-                if(f==file){
+                if (f == file) {
                     return true;
                 }
             }
@@ -173,7 +173,7 @@ public class UtilsClass {
     }
 
     public static void marshal(Object objectToMarshal, Writer writer) throws IOException, MappingException, MarshalException, ValidationException {
-                // Do marshalling
+        // Do marshalling
         URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Using mapping file :" + mappingURL);
         Marshaller marshaller = new Marshaller(writer);
@@ -183,7 +183,7 @@ public class UtilsClass {
         marshaller.setMapping(mapping);
         marshaller.setValidation(false);
         marshaller.marshal(objectToMarshal);
-        writer.flush();        
+        writer.flush();
     }
 
     private static void expandAll(JTree tree, TreePath parent, boolean expand) {
@@ -205,9 +205,8 @@ public class UtilsClass {
             tree.collapsePath(parent);
         }
     }
-
-    public static final String IMAGE_FITS_DATATYPE="image/fits";
-    public static final String IMAGE_PNG_DATATYPE="image/png";
+    public static final String IMAGE_FITS_DATATYPE = "image/fits";
+    public static final String IMAGE_PNG_DATATYPE = "image/png";
 
     /**
      * Return base 64 href of given file with given datatype
@@ -216,15 +215,13 @@ public class UtilsClass {
      * @return the base64 buffer
      * @throws java.io.IOException
      */
-    public static String getBase64Href(String filenameToEncode, String dataType) throws IOException
-    {
+    public static String getBase64Href(String filenameToEncode, String dataType) throws IOException {
         java.io.File fileToEncode = new java.io.File(filenameToEncode);
         return getBase64Href(fileToEncode, dataType);
     }
 
-    public static String getBase64Href(java.io.File fileToEncode, String dataType) throws IOException
-    {
-        String base64DataType = "data:"+dataType+";base64,";      
+    public static String getBase64Href(java.io.File fileToEncode, String dataType) throws IOException {
+        String base64DataType = "data:" + dataType + ";base64,";
         // Create a read-only memory-mapped file
         java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(fileToEncode, "r").getChannel();
         java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
@@ -298,13 +295,13 @@ public class UtilsClass {
             throws IOException {
         Object key = dataFile;
 
-        String filename="tmpOifile";
-        String fileExtension=".oifits";
+        String filename = "tmpOifile";
+        String fileExtension = ".oifits";
         File tmp = new File(dataFile.getName());
         int dotPos = tmp.getName().lastIndexOf(".");
-        if(dotPos>1){
-            filename = tmp.getName().substring(0,dotPos);
-            fileExtension=tmp.getName().substring(dotPos);
+        if (dotPos > 1) {
+            filename = tmp.getName().substring(0, dotPos);
+            fileExtension = tmp.getName().substring(dotPos);
         }
 
         // Search if this file has already been loaded
@@ -318,7 +315,7 @@ public class UtilsClass {
             alreadyExpandedFiles.put(key, outputFile);
             logger.fine("expanding '" + key + "' into " + outputFile.getAbsolutePath());
             return saveBASE64ToFile(b64, outputFile);
-        }else{
+        } else {
             logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());
         }
         return outputFile;
@@ -572,9 +569,13 @@ public class UtilsClass {
         return str;
     }
 
-
-    public static Parameter[] getParameters(Target t){
-        logger.entering(className, "getParameters",t);
+    /** Return the parameter and source of shared parameters for the given target.
+     *
+     * @param t the target to search parameters into
+     * @return one parameter list
+     */
+    public static Parameter[] getParameters(Target t) {
+        logger.entering(className, "getParameters", t);
         Vector<Parameter> v = new Vector();
         Model[] models = t.getModel();
         for (int i = 0; i < models.length; i++) {
@@ -584,13 +585,46 @@ public class UtilsClass {
                 Parameter parameter = params[j];
                 v.add(parameter);
             }
-            ParameterLink[] paramLinks= model.getParameterLink();
+            ParameterLink[] paramLinks = model.getParameterLink();
             for (int j = 0; j < paramLinks.length; j++) {
                 ParameterLink parameterLink = paramLinks[j];
-                v.add((Parameter)parameterLink.getParameterRef());
+                v.add((Parameter) parameterLink.getParameterRef());
             }
         }
         return v.toArray(new Parameter[0]);
+    }
+
+    /**
+     * Returns the list of model that contains some parameterLink that point to
+     * the given parameter.
+     * @param settingsModel main settingsModel to search into.
+     * @param parameter is one shared parameter
+     * @return model list
+     */
+    public static Model[] getSharedParameterOwners(SettingsModel settingsModel, Parameter sharedParameter) {
+        logger.entering(className, "getOwners");
+        Vector<Model> v = new Vector();
+
+        Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            Model[] models = target.getModel();
+            for (int j = 0; j < models.length; j++) {
+                Model model = models[j];
+                ParameterLink[] paramLinks = model.getParameterLink();
+                for (int k = 0; k < paramLinks.length; k++) {
+                    ParameterLink paramLink = paramLinks[k];
+                    if (paramLink.getParameterRef() == sharedParameter) {
+                        if (!v.contains(model)) {
+                            v.add(model);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return v.toArray(new Model[0]);
     }
 
     /** Return a string that describe the rho theta information of the given
@@ -598,47 +632,47 @@ public class UtilsClass {
      * @param m
      * @return the rho theta informations
      */
-    public static String getRhoTheta(Model m){
+    public static String getRhoTheta(Model m) {
         // compute rho theta from x y parameters
-        double x=0;
-        double y=0;
+        double x = 0;
+        double y = 0;
 
         Parameter[] params = m.getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
-            if (parameter.getType().equals("x")){
-                x=parameter.getValue();
+            if (parameter.getType().equals("x")) {
+                x = parameter.getValue();
             }
-            if (parameter.getType().equals("y")){
-                y=parameter.getValue();
+            if (parameter.getType().equals("y")) {
+                y = parameter.getValue();
             }
         }
         ParameterLink[] paramLinks = m.getParameterLink();
         for (int i = 0; i < paramLinks.length; i++) {
             ParameterLink parameterLink = paramLinks[i];
-            Parameter parameter = (Parameter)parameterLink.getParameterRef();
-            if (parameterLink.getType().equals("x")){
-                x=parameter.getValue();
+            Parameter parameter = (Parameter) parameterLink.getParameterRef();
+            if (parameterLink.getType().equals("x")) {
+                x = parameter.getValue();
             }
-            if (parameterLink.getType().equals("y")){
-                y=parameter.getValue();
+            if (parameterLink.getType().equals("y")) {
+                y = parameter.getValue();
             }
         }
 
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setMaximumFractionDigits(3);
-        return "rho='"+nf.format(getRho(x, y))+"' theta='"+nf.format(getTheta(x, y))+"'";
+        return "rho='" + nf.format(getRho(x, y)) + "' theta='" + nf.format(getTheta(x, y)) + "'";
     }
 
-    public static double getRho(double x, double y){
-        return Math.sqrt(x*x+y*y);
+    public static double getRho(double x, double y) {
+        return Math.sqrt(x * x + y * y);
     }
-    public static double getTheta(double x, double y){
-        double r=Math.atan2(x, y)/(Math.PI/180);
-        if(r>=0){
+
+    public static double getTheta(double x, double y) {
+        double r = Math.atan2(x, y) / (Math.PI / 180);
+        if (r >= 0) {
             return r;
         }
-        return r+360.0;        
+        return r + 360.0;
     }
-
 }
