@@ -132,12 +132,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             logger.warning("Can't find list of files");
         }
 
-        listenToFileSelection = true;
-
-        // Fill modelTypeComboBox model if empty
-        if (modelTypeComboBox.getItemCount() < 1) {
-            settingsViewer.getSettingsPane().getModelListAction.actionPerformed(null);
-        }
+        listenToFileSelection = true;        
 
         updateModels();
 
@@ -217,9 +212,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 rootSettingsModel.removeFile(current, (File) file);
             }
         }
-
-
-
     }
 
     /** This method is called from within the constructor to
@@ -348,7 +340,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 1;
         jPanel4.add(addModelButton, gridBagConstraints);
 
-        modelTypeComboBox.setModel(settingsViewer.getSettingsModel().supportedModelsModel);
+        modelTypeComboBox.setModel(settingsViewer.getSettingsModel().getSupportedModelsModel());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
