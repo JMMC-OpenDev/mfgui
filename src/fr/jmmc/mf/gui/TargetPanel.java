@@ -96,7 +96,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
-
+        
         listenToFileSelection = false;
 
         //// Select current ident
@@ -173,6 +173,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             models.addElement(current.getModel(i));
         }
         parametersTableModel.setModel(rootSettingsModel, current, true);
+        UtilsClass.initColumnSizes(parametersTable, 330);
     }
 
     public void valueChanged(ListSelectionEvent e) {
