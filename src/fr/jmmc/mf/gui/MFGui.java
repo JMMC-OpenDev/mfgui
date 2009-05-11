@@ -137,7 +137,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         }
 
         // handle frame icon
-        this.setIconImage(new ImageIcon(getClass().getResource("/fr/jmmc/mcs/gui/favicon.png")).getImage());
+        this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/mcs/gui/favicon.png"))).getImage());
 
         pack();
         fr.jmmc.mcs.gui.StatusBar.show("Application inited");
