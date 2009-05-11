@@ -38,7 +38,6 @@ import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
 import org.exolab.castor.xml.ValidationException;
-import org.exolab.castor.xml.XMLException;
 
 /**
  * This class manages the castor generated classes to bring 
@@ -52,9 +51,9 @@ import org.exolab.castor.xml.XMLException;
 public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
 
     /** list of supported models   */
-    protected static Hashtable supportedModels = new Hashtable();
+    private static Hashtable supportedModels = new Hashtable();
     /** Combobox model of supported models */
-    public static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
+    private static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
     public final static String className = "fr.jmmc.mf.gui.models.SettingsModel";
     /** Class logger */
     static Logger logger = Logger.getLogger(className);
@@ -139,6 +138,36 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setRootSettings(newModel);
         setModified(false);
         associatedFile = new java.io.File(urlToLoad.getFile());
+    }
+
+    /**
+     * Return the supported models. This method autoatically make a request to get server
+     * list if the current list is empty.
+     * @return the supportedModelsModel
+     */
+    public static DefaultComboBoxModel getSupportedModelsModel() {
+        // Fill modelTypeComboBox model if empty
+        if (supportedModelsModel.getSize() < 1) {
+            try {
+                Response r = ModelFitting.execMethod("getModelList", null);
+                // Search model into return result
+                Model newModel = UtilsClass.getModel(r);
+                // update list of supported models
+                supportedModels.clear();
+                // update MVC model of available models checkboxes
+                supportedModelsModel.removeAllElements();
+                Model[] models = newModel.getModel();
+                for (int i = 0; i < models.length; i++) {
+                    Model model = models[i];
+                    supportedModelsModel.addElement(model);
+                    logger.fine("Adding supported model:" + model.getType());
+                    supportedModels.put(model.getType(), model);
+                }
+            } catch (Exception exc) {
+                new FeedbackReport(exc);
+            }
+        }
+        return supportedModelsModel;
     }
 
     /** Add a new FileLink associated to the given File.
@@ -236,6 +265,119 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
+     * Replace one model of the given target.
+     * The model should keep as many parameters as possible.
+     * @param parentTarget
+     * @param newModel
+     */
+    public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
+        logger.entering(className, "replaceModel", new Object[]{parentTarget, newModel});
+
+
+
+        // try to recover previous parameters
+        Parameter[] currentModelParams = currentModel.getParameter();
+        Parameter[] newModelParams = newModel.getParameter();
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter np = newModelParams[i];
+            np.setName(getNewParamName(np.getName()));
+            for (int j = 0; j < currentModelParams.length; j++) {
+                Parameter cp = currentModelParams[j];
+                if (matchType(np.getType(),cp.getType())) {
+                    np.setValue(cp.getValue());
+                    np.setHasFixedValue(cp.getHasFixedValue());
+                    np.setScale(cp.getScale());
+                    np.setMaxValue(cp.getMaxValue());
+                    np.setMinValue(cp.getMinValue());
+                    if(np.getType().equals(cp.getType())){
+                        // the name is not always copyed because min_diameter matches with diameter
+                        np.setName(cp.getName());
+                    }                    
+                }
+            }                        
+        }
+        // try to recover previous shared parameters
+        ParameterLink[] currentParameterLinks = currentModel.getParameterLink();
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter np = newModelParams[i];
+            for (int j = 0; j < currentParameterLinks.length; j++) {
+                ParameterLink  cpl = currentParameterLinks[j];
+                if (np.getType().equals(cpl.getType())) {
+                    newModel.removeParameter(np);
+                    newModel.addParameterLink(cpl);
+                }
+            }
+        }
+
+        //update content of contentModels      
+        for (int i = 0; i < currentModelParams.length; i++) {
+            Parameter p = currentModelParams[i];
+            parameterComboBoxModel.removeElement(p);
+            parameterListModel.removeElement(p);
+        }
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter p = newModelParams[i];
+            parameterComboBoxModel.addElement(p);
+            parameterListModel.addElement(p);
+        }
+
+        setModified(true);
+        // add the new element to current target at the same position
+        int childPosition = 0;
+        Model[] models = parentTarget.getModel();
+        for (int i = 0; i < models.length; i++) {
+            Model model = models[i];
+            if (model == currentModel) {
+                childPosition = i;
+            }
+        }
+
+        parentTarget.removeModel(currentModel);
+        newModel.setName(getNewModelName(newModel.getType()));
+        parentTarget.addModel(childPosition, newModel);
+        //update treenode and ask to update viewer of new model
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
+    }
+
+    /** try to tell if the data of the old param can be copied to new Param
+     * according to both names. If they ends with te same string after the '_'
+     * character, then this method returns true.
+     * @return true if both string ends with same keyword, else returns false
+     */
+    private boolean matchType(String oldParamType, String newParamType){
+        int idx;
+        idx=oldParamType.lastIndexOf('_');
+        if(idx>=0){
+            oldParamType=oldParamType.substring(idx+1);
+        }
+        idx=newParamType.lastIndexOf('_');
+        if(idx>=0){
+            newParamType=newParamType.substring(idx+1);
+        }
+
+
+        if(newParamType.equals(oldParamType)){
+            return true;
+        }
+        if(newParamType.contains(oldParamType)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Replace one model of the given target.
+     * The model should keep as many parameters as possible.
+     * @param parentTarget
+     * @param newModel
+     */
+    public void replaceModel(Model currentModel, Model newModel) {
+        replaceModel(getParent(currentModel), currentModel, newModel);
+    }
+
+    /**
      * Add the given model to the given target.
      * The model will change parameter name
      * @param parentTarget
@@ -287,6 +429,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     Parameter p = params[j];
                     parameterComboBoxModel.removeElement(p);
                     parameterListModel.removeElement(p);
+                }
+
+                ParameterLink[] paramLinks = model.getParameterLink();
+                for (int j = 0; j < paramLinks.length; j++) {
+                    ParameterLink parameterLink = paramLinks[j];
+                    Model[] ms = UtilsClass.getSharedParameterOwners(this, (Parameter) parameterLink.getParameterRef());
+                    if (ms.length <= 1) {
+                        parameterComboBoxModel.removeElement(parameterLink.getParameterRef());
+                        parameterListModel.removeElement(parameterLink.getParameterRef());
+                        rootSettings.getParameters().removeParameter((Parameter) parameterLink.getParameterRef());
+                        logger.fine("removing shared parameter : " + parameterLink.getParameterRef());
+                    }
                 }
 
                 int idx = getIndexOfChild(parentTarget, model);
@@ -342,6 +496,24 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 new Object[]{rootSettings, rootSettings.getTargets()},
                 indice, oldTarget);
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
+    }
+
+    public void removeFile(File oldFile) {
+        logger.entering(className, "removeFile", oldFile);
+        setModified(true);
+
+        if (UtilsClass.containsFile(this, oldFile)) {
+            logger.fine("file " + oldFile + " has not been removed because it is used by one or more targets");
+            return;
+        }
+
+        int indice = getIndexOfChild(rootSettings.getFiles(), oldFile);
+        allFilesListModel.removeElement(oldFile);
+        rootSettings.getFiles().removeFile(oldFile);
+        fireTreeNodesRemoved(this,
+                new Object[]{rootSettings, rootSettings.getFiles()},
+                indice, oldFile);
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getFiles()}));
     }
 
     public void removeFrame(FrameTreeNode frameNode) {
@@ -406,7 +578,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     object instanceof Model ||
                     object instanceof FrameTreeNode) {
                 return true;
-
+            }
+            if (object instanceof File) {
+                return !UtilsClass.containsFile(this, (File) object);
             }
         }
         return false;
@@ -439,6 +613,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 removeModel((Model) lastPathComponent);
             } else if (lastPathComponent instanceof FrameTreeNode) {
                 removeFrame((FrameTreeNode) lastPathComponent);
+            } else if (lastPathComponent instanceof File) {
+                removeFile((File) lastPathComponent);
             } else {
                 logger.warning("No code implemented to remove : " + lastPathComponent.getClass());
             }
@@ -633,7 +809,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         parameterListModel.removeElement(parameterToLink);
         parentModel.removeParameter(parameterToLink);
         parentModel.addParameterLink(newLink);
-        
+
         Target parentTarget = getParent(parentModel);
         fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
                 getIndexOfChild(parentTarget, parentModel), parentModel);
@@ -665,7 +841,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Returns one incremented index to be used as label by new ResultModel.
      */
-    private int getNewResultModelIndex(){
+    private int getNewResultModelIndex() {
         return resultModelIndex++;
     }
 
@@ -726,7 +902,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         fireTreeNodesChanged(new Object[]{rootSettings},
                 getIndexOfChild(rootSettings, params), params);
-           
+
         // update parameters and parameterLinks of every targets        
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
@@ -852,7 +1028,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // assert that rootSettings get container for shared parameters
         if (rootSettings.getParameters() == null) {
             rootSettings.setParameters(new Parameters());
-        }else{
+        } else {
             // add shared parameters to the parameter list containers
             Parameter[] params = rootSettings.getParameters().getParameter();
             for (int i = 0; i < params.length; i++) {
@@ -872,7 +1048,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < results.length; i++) {
             getModel(results[i]);
         }
-        resultModelIndex=results.length;
+        resultModelIndex = results.length;
 
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
@@ -907,6 +1083,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         logger.warning("Can't find parent of :" + child);
+        logger.warning("Models are:");
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            Model[] models = target.getModel();
+            for (int j = 0; j < models.length; j++) {
+                Model model = models[j];
+                logger.warning("Models are:" + model);
+            }
+        }
         new Throwable("Can't find parent of :" + child).printStackTrace();
         return null;
     }
@@ -1035,7 +1220,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         OiTarget oiTarget = fits.getOiTarget();
 
         String[] targetNames = oiTarget.getTargetNames();
-       
+
         //generate and store base64 href
         fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
 
@@ -1123,26 +1308,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
-    // 
-    /**
-     * Register the given model array as supported models.
-     * @param models array of models to be supported
-     */
-    public void setSupportedModels(Model[] models) {
-        logger.entering(className, "setSupportedModels", models);
-        // update list of supported models
-        supportedModels.clear();
-        // update MVC model of available models checkboxes
-        supportedModelsModel.removeAllElements();
-
-        for (int i = 0; i < models.length; i++) {
-            Model newModel = models[i];
-            supportedModelsModel.addElement(newModel);
-            logger.fine("Adding supported model:" + newModel.getType());
-            supportedModels.put(newModel.getType(), newModel);
-        }
-    }
-
     /**
      * Get the Model associated to the given model name
      *
@@ -1152,6 +1317,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public Model getSupportedModel(String type) {
         logger.entering(className, "getSupportedModel", type);
+        //assert that list has been inited
+        getSupportedModelsModel();
         return (Model) supportedModels.get(type);
     }
 
@@ -1494,7 +1661,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "toXml");
         logger.fine("Start of marshalling");
         java.io.StringWriter writer = new java.io.StringWriter();
-        UtilsClass.marshal(rootSettings,writer);
+        UtilsClass.marshal(rootSettings, writer);
         logger.fine("End of marshalling");
 
         writer.flush();
