@@ -33,7 +33,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     Target current = null;
     ListModel targetFiles;
     boolean listenToFileSelection;
-    ListSelectionModel selectedFiles = new DefaultListSelectionModel();
     DefaultListModel models = new DefaultListModel();
     SettingsViewerInterface settingsViewer;
     public Settings rootSettings = null;
@@ -51,9 +50,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         initComponents();
 
         listenToFileSelection = false;
-
-        fileList.addListSelectionListener(this);
-        fileList.setSelectionModel(selectedFiles);
 
         modelList.setModel(models);
 
@@ -96,22 +92,24 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
-        
-        listenToFileSelection = false;
 
         //// Select current ident
         identComboBox.setSelectedItem(t.getIdent());
 
-        //// Set file selection according target info
-        selectedFiles.clearSelection();
-        // select fileListModel corresponding to target ident
+        listenToFileSelection = false;
+        // a new empty chekbox list is created each time, because the selection can't be reset
+        fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
+        jScrollPane1.setViewportView(fileList);
+        fileList.addListSelectionListener(this);             
+
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
 
+        fileList.setModel(targetFiles);
         if (targetFiles != null) {
             fileList.setModel(targetFiles);
             // next line doesn't work
             // @todo fix it
-            fileList.getSelectionModel().clearSelection();
+            fileList.clearSelection();
             // define selected files reading fileLinks
             //      File[] files   = rootSettings.getFiles().getFile();
             for (int i = 0; i < targetFiles.getSize(); i++) {
@@ -131,8 +129,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             // should not append except if user delete some files??
             logger.warning("Can't find list of files");
         }
-
-        listenToFileSelection = true;        
+        listenToFileSelection = true;
 
         updateModels();
 
