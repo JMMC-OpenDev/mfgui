@@ -11,7 +11,10 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Model;
 
+import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Vector;
 
 
@@ -29,9 +32,10 @@ public class ModelPanel extends javax.swing.JPanel
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField nameTextField;
@@ -51,18 +55,27 @@ public class ModelPanel extends javax.swing.JPanel
 
     public void show(Model m, SettingsModel s)
     {
-        current           = m;
         settingsModel     = s;
+
+        // select corresponding element with current=null to ignore event
+        current=null;
+        typeComboBox.setSelectedItem(s.getSupportedModel(m.getType()));
+
+        current           = m;
         nameTextField.setText(m.getName());
-        typeComboBox.setSelectedItem(m);
+        
+
         parametersTableModel.setModel(s, m, false);
+        jPanel2.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
+        UtilsClass.initColumnSizes(parametersTable, 330);
+
         if(!mouseListeners.contains(parametersTableModel)){
             parametersTable.addMouseListener(parametersTableModel);
             mouseListeners.add(parametersTableModel);
         }
         descTextArea.setText(m.getDesc());
         descTextArea.setCaretPosition(0);
-    }
+     }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -83,9 +96,10 @@ public class ModelPanel extends javax.swing.JPanel
         jScrollPane2 = new javax.swing.JScrollPane();
         descTextArea = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        parametersTable = new javax.swing.JTable();
         helpButton1 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        parametersTable = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
         setLayout(new java.awt.GridBagLayout());
@@ -114,8 +128,12 @@ public class ModelPanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 0;
         add(jLabel1, gridBagConstraints);
 
-        typeComboBox.setModel(SettingsModel.supportedModelsModel);
-        typeComboBox.setEnabled(false);
+        typeComboBox.setModel(SettingsModel.getSupportedModelsModel());
+        typeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeComboBoxActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -148,10 +166,19 @@ public class ModelPanel extends javax.swing.JPanel
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
+        helpButton1.setText("jButton1");
+        helpButton1.setAlignmentX(1.0F);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel4.add(helpButton1, gridBagConstraints);
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
         parametersTable.setModel(parametersTableModel);
         parametersTable.setToolTipText("Use right click to manage parameters");
         parametersTable.setAlignmentX(0.0F);
-        jScrollPane1.setViewportView(parametersTable);
+        jPanel2.add(parametersTable, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -159,13 +186,14 @@ public class ModelPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel4.add(jScrollPane1, gridBagConstraints);
-
-        helpButton1.setText("jButton1");
-        helpButton1.setAlignmentX(1.0F);
+        jPanel4.add(jPanel2, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel4.add(helpButton1, gridBagConstraints);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        jPanel4.add(jPanel3, gridBagConstraints);
 
         jSplitPane1.setRightComponent(jPanel4);
 
@@ -184,5 +212,34 @@ public class ModelPanel extends javax.swing.JPanel
         logger.entering("" + this.getClass(), "nameTextFieldActionPerformed");
         settingsModel.setModelName(current, nameTextField.getText());
     }//GEN-LAST:event_nameTextFieldActionPerformed
+
+    private void typeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeComboBoxActionPerformed
+        if(current==null){
+            return;
+        }
+        if(evt.getSource() != typeComboBox){
+            return;
+        }
+        if(!typeComboBox.isShowing()){
+            return;
+        }
+        try
+        {
+            // Construct a new copy
+            Model        selectedModel = (Model) typeComboBox.getSelectedItem();
+            Model        m;
+            // Clone selected Model (this code could have been moved into model???
+            StringWriter writer   = new StringWriter();
+            UtilsClass.marshal(selectedModel,writer);
+            StringReader reader = new StringReader(writer.toString());
+            m = (Model)Model.unmarshal(reader);
+            settingsModel.replaceModel(current, m);
+        }
+        catch (Exception e)
+        {
+            // this occurs when add button is pressed without selection
+            logger.log(logger.getLevel().WARNING,"No model selected",e);
+        }
+    }//GEN-LAST:event_typeComboBoxActionPerformed
 
 }
