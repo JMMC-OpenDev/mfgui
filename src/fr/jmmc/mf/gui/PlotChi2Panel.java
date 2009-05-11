@@ -308,6 +308,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         } else {
             logger.fine("No parameter to use for chi2map");
         }
+        UtilsClass.initColumnSizes(jTable1, 400);
     }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
