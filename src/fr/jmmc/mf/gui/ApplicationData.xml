@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.6"/>
+    <program name="ModelFitting" version="1.1.7beta1"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -42,8 +42,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.1.6">
-            <prerelease version="1.1.6beta1000">
+        <release version="1.1.7">
+            <prerelease version="1.1.7beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -63,14 +63,22 @@
                 <change type="REQUEST">Flip the U axe of the UV plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
                 <change type="REQUEST">Add previous parameter value column in the parameter table</change>
-                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
-                <change type="REQUEST">Add function to remove orphan data files.</change>
-                <change type="REQUEST">Add function to remove orphan sharedParameters</change>
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                
                 <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
                 <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="1.1.7beta1">
+                <change type="FEATURE">Add rha theta information into the popup menu of parameters tables (right-clic)</change>
+                <change type="FEATURE">Files that are not linked to any target can be removed</change>
+                <change type="FEATURE">Clean up shared parameters when last using models are removed.</change>
+                <change type="FEATURE">Type of models can be changed dynamically into the 'Model panel'.</change>
+                <change type="FEATURE">The column widths are automatically adjusted on most tables.</change>
+                <change type="BUGFIX">Fix problem of file list into the 'Target panel'</change>
+            </prerelease>
+        </release>
+        <release version="1.1.6">
             <prerelease version="1.1.6beta1">
                 <change type="FEATURE">Add toolbar ( use preferences to hide/show it )</change>
                 <change type="BUGFIX">Fix LITpro setting file generation</change>
