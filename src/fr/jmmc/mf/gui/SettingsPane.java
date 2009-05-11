@@ -1,7 +1,6 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.ShowHelpAction;
-import fr.jmmc.mf.gui.actions.GetModelListAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.actions.RunFitAction;
 
@@ -11,12 +10,9 @@ import fr.jmmc.mf.models.*;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 
 import java.lang.reflect.*;
 
-
-import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -32,7 +28,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     // Application actions
     public static RunFitAction runFitAction;
-    public Action getModelListAction;
     public Action saveSettingsAction;
     public Action closeSettingsAction;
     /** Model reference */
@@ -71,8 +66,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void init(SettingsModel settingsModel) {
         // instanciate actions
         runFitAction = new RunFitAction(this);
-        getModelListAction = new GetModelListAction(settingsModel);
-
+        
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
         rootSettingsModel = settingsModel;
