@@ -273,7 +273,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
         logger.entering(className, "replaceModel", new Object[]{parentTarget, newModel});
 
-
+        parentTarget.removeModel(currentModel);
 
         // try to recover previous parameters
         Parameter[] currentModelParams = currentModel.getParameter();
@@ -286,9 +286,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 if (matchType(np.getType(),cp.getType())) {
                     np.setValue(cp.getValue());
                     np.setHasFixedValue(cp.getHasFixedValue());
-                    np.setScale(cp.getScale());
+                    if(cp.hasScale()){
+                        np.setScale(cp.getScale());
+                    }
+                    if(cp.hasMaxValue()){
                     np.setMaxValue(cp.getMaxValue());
+                    }
+                    if(cp.hasMinValue()){
                     np.setMinValue(cp.getMinValue());
+                    }
                     if(np.getType().equals(cp.getType())){
                         // the name is not always copyed because min_diameter matches with diameter
                         np.setName(cp.getName());
@@ -332,7 +338,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
-        parentTarget.removeModel(currentModel);
         newModel.setName(getNewModelName(newModel.getType()));
         parentTarget.addModel(childPosition, newModel);
         //update treenode and ask to update viewer of new model

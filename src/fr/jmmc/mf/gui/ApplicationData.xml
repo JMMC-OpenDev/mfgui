@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.7beta1"/>
+    <program name="ModelFitting" version="1.1.7beta2"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -68,6 +68,9 @@
                 <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
+            </prerelease>
+            <prerelease version="1.1.7beta2">
+                <change type="BUGFIX">Init properly the parameters on model type changes</change>
             </prerelease>
             <prerelease version="1.1.7beta1">
                 <change type="FEATURE">Add rha theta information into the popup menu of parameters tables (right-clic)</change>
