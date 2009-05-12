@@ -11,18 +11,18 @@ import javax.swing.JOptionPane;
 
 public class LoadModelAction extends RegisteredAction {
     /** Class name. This name is used to register to the ActionRegistrar */
-    public final static String classPath = "fr.jmmc.mf.gui.actions.LoadModelAction";
+    public final static String className = "fr.jmmc.mf.gui.actions.LoadModelAction";
     /** Action name. This name is used to register to the ActionRegistrar */
     public final static String actionName = "loadModel";
 
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            classPath);
+            className);
     public String lastDir = System.getProperty("user.home");
     MFGui mfgui;
 
     public LoadModelAction(MFGui mfgui) {
-        super(classPath, actionName);
+        super(className, actionName);
         this.mfgui = mfgui;
     }
 
