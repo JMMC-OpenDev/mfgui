@@ -11,7 +11,11 @@ import javax.swing.JOptionPane;
 
 public class LoadModelAction extends RegisteredAction {
 
-    private final static String className = "fr.jmmc.mf.gui.actions.LoadModelAction";
+    /** Class name. This name is used to register to the ActionRegistrar */
+    public final static String className = "fr.jmmc.mf.gui.actions.LoadModelAction";
+    /** Action name. This name is used to register to the ActionRegistrar */
+    public final static String actionName = "loadModel";
+
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
@@ -19,7 +23,7 @@ public class LoadModelAction extends RegisteredAction {
     MFGui mfgui;
 
     public LoadModelAction(MFGui mfgui) {
-        super(className, "loadModel");
+        super(className, actionName);
         this.mfgui = mfgui;
     }
 
