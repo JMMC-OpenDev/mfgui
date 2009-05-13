@@ -108,6 +108,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
         ActionRegistrar registrar = ActionRegistrar.getInstance();
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction","newModel"));
+        toolBar.add(registrar.get(LoadModelAction.className,LoadModelAction.actionName));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings"));
         toolBar.addSeparator();
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
