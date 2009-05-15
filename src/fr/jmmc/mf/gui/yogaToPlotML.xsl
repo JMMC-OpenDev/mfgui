@@ -87,6 +87,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <xLabel>spatial frequency (1/rad)</xLabel>
             <yLabel>
                 <xsl:value-of select="$plotName"/>
+                <xsl:if test="contains($plotName,'phi')"> (deg)</xsl:if>
             </yLabel>
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
                 <xsl:if test="./*[name()=$plotName or name()=concat($plotName,'data')]">
