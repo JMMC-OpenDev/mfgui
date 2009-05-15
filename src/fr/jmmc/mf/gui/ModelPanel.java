@@ -16,6 +16,8 @@ import java.awt.event.MouseListener;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Vector;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTextField;
 
 
 public class ModelPanel extends javax.swing.JPanel
@@ -51,6 +53,11 @@ public class ModelPanel extends javax.swing.JPanel
         initComponents();
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
+
+        // set one click edition on following table and show all decimals in numerical values
+        //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
+        ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
+        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
     }
 
     public void show(Model m, SettingsModel s)

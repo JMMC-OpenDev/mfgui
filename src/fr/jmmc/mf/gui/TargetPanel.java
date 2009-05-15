@@ -93,6 +93,12 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
 
+        // set one click edition on following table and show all decimals in numerical values
+        //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
+        ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
+        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
+
+
         //// Select current ident
         identComboBox.setSelectedItem(t.getIdent());
 
@@ -100,7 +106,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // a new empty chekbox list is created each time, because the selection can't be reset
         fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
         jScrollPane1.setViewportView(fileList);
-        fileList.addListSelectionListener(this);             
+        fileList.addListSelectionListener(this);
 
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
 
@@ -173,6 +179,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         UtilsClass.initColumnSizes(parametersTable, 330);
     }
 
+    /* receive event on file list */
     public void valueChanged(ListSelectionEvent e) {
         logger.entering("" + this.getClass(), "valueChanged");
 
@@ -510,6 +517,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             updateModels();            
         }
         removeModelButton.setEnabled(false);
+        plotModelImagePanel.show(rootSettingsModel, current);
+        plotChi2Panel.show(rootSettingsModel, current);
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
     private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
@@ -523,6 +532,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         {
             removeModelButton.setEnabled(false);
         }
+
+
     }//GEN-LAST:event_modelListValueChanged
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
@@ -541,6 +552,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             m = (Model)Model.unmarshal(reader);
             rootSettingsModel.addModel(current, m);
             updateModels();
+            plotModelImagePanel.show(rootSettingsModel, current);
+            plotChi2Panel.show(rootSettingsModel, current);
         }
         catch (Exception e)
         {
@@ -556,8 +569,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         String visAmp=null;
         String visPhi=null;
         String vis2=null;
-                String t3Amp = null;
-                String t3Phi = null;
+        String t3Amp = null;
+        String t3Phi = null;
 
                 if (visAmpCheckBox.isSelected()) {
                     visAmp = "default";
