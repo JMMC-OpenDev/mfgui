@@ -32,11 +32,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
     private Parameter oldXParam = null;
     private Parameter oldYParam = null;
     private Vector<SettingsModel> knownSettingsModels = new Vector();
+    private int startValue=0;
 
     /** Creates new form PlotPanel */
     public PlotChi2Panel(PlotPanel plotPanel) {
         this.plotPanel = plotPanel;
         param1TableModel = new ParametersTableModel();
+        startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
         initComponents();
         // build help button
         //todo modify latex to use only BEG_Plots_PlotChi2_Bt
@@ -159,7 +161,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         add(jLabel6, gridBagConstraints);
 
         xminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xminFormattedTextField.setText("-50");
+        xminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
@@ -168,7 +170,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         add(xminFormattedTextField, gridBagConstraints);
 
         xmaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xmaxFormattedTextField.setText("50");
+        xmaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
@@ -212,7 +214,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         add(jLabel7, gridBagConstraints);
 
         yminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        yminFormattedTextField.setText("50");
+        yminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
@@ -233,7 +235,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         add(jLabel10, gridBagConstraints);
 
         ymaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        ymaxFormattedTextField.setText("50");
+        ymaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 2;

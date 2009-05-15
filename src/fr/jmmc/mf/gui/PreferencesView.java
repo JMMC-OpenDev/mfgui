@@ -38,12 +38,14 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField preferenceFilenaTextfield;
     private javax.swing.JButton restoreButton;
     private javax.swing.JButton saveButton;
@@ -126,6 +128,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         toolbarCheckBox = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         saveResultCheckBox = new javax.swing.JCheckBox();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         tooltipsCheckBox = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
@@ -228,6 +232,20 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         yogaPanel.add(saveResultCheckBox, gridBagConstraints);
+
+        jTextField3.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(myPreferences,"user.fov"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        yogaPanel.add(jTextField3, gridBagConstraints);
+
+        jLabel8.setText("Default Image width:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel8, gridBagConstraints);
 
         jTabbedPane1.addTab("General", yogaPanel);
 
