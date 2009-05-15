@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.17 2009-04-15 11:56:17 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.18 2009-05-15 14:32:28 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.17  2009/04/15 11:56:17  mella
+ * manage show.toolbar preference
+ *
  * Revision 1.16  2008/11/20 14:10:17  mella
  * Change default location of beta test url
  *
@@ -119,6 +122,7 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         setDefaultPreference("help.tooltips.show", "true");
         setDefaultPreference("show.toolbar", "true");
         setDefaultPreference("show.recursive.parameters", "false");
+        setDefaultPreference("save.results", "false");
         setDefaultPreference("yoga.remote.use", "true");
         setDefaultPreference("yoga.local.home", "../ys");
         setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");       
