@@ -75,8 +75,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         new LoadModelAction(this);
         new LoadRemoteModelAction(this);
         // @todo use a preference to choose from one of the two following for default saveaction
-        saveSettingsAction=new SaveSettingsAction(this, "saveSettings", false);
-        new SaveSettingsAction(this, "saveSettingsWithResults", true);
+        saveSettingsAction=new SaveSettingsAction(this, "saveSettings");        
         
         deleteTreeSelectionAction =  new DeleteTreeSelectionAction(this) ;
         attachDetachFrameAction = new AttachDetachFrameAction(this);
