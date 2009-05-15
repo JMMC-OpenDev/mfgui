@@ -16,11 +16,13 @@ public class PlotModelPanel extends javax.swing.JPanel
             "fr.jmmc.mf.gui.PlotModelPanel");
     public SettingsModel settingsModel = null;
     private PlotPanel plotPanel;
+    private int startValue=0;
 
     /** Creates new form PlotPanel */
     public PlotModelPanel(PlotPanel plotPanel)
     {
         this.plotPanel=plotPanel;
+        startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
         initComponents();
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_PlotSniffer_Bt")));
@@ -188,7 +190,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(targetComboBox, gridBagConstraints);
 
         xminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xminFormattedTextField.setText("-50");
+        xminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
@@ -197,7 +199,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(xminFormattedTextField, gridBagConstraints);
 
         yminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        yminFormattedTextField.setText("-50");
+        yminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
@@ -206,7 +208,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(yminFormattedTextField, gridBagConstraints);
 
         xmaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xmaxFormattedTextField.setText("50");
+        xmaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 1;
@@ -215,7 +217,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(xmaxFormattedTextField, gridBagConstraints);
 
         ymaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        ymaxFormattedTextField.setText("50");
+        ymaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 1;
@@ -263,7 +265,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(jLabel7, gridBagConstraints);
 
         xminFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xminFormattedTextField1.setText("-50");
+        xminFormattedTextField1.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
@@ -278,7 +280,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(jLabel8, gridBagConstraints);
 
         yminFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        yminFormattedTextField1.setText("-50");
+        yminFormattedTextField1.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 4;
@@ -293,7 +295,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(jLabel9, gridBagConstraints);
 
         xmaxFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        xmaxFormattedTextField1.setText("50");
+        xmaxFormattedTextField1.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 4;
@@ -308,7 +310,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         add(jLabel10, gridBagConstraints);
 
         ymaxFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        ymaxFormattedTextField1.setText("50");
+        ymaxFormattedTextField1.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 4;
