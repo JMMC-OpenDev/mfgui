@@ -37,8 +37,10 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
@@ -46,6 +48,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     private javax.swing.JButton restoreButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JPanel saveRestorePanel;
+    private javax.swing.JCheckBox saveResultCheckBox;
     private javax.swing.JCheckBox toolbarCheckBox;
     private javax.swing.JCheckBox tooltipsCheckBox;
     private javax.swing.JPanel yogaPanel;
@@ -118,13 +121,16 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel6 = new javax.swing.JLabel();
+        toolbarCheckBox = new javax.swing.JCheckBox();
+        jLabel7 = new javax.swing.JLabel();
+        saveResultCheckBox = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         tooltipsCheckBox = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         preferenceFilenaTextfield = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        toolbarCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -182,8 +188,48 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(jSeparator1, gridBagConstraints);
 
-        jTabbedPane1.addTab("Yoga", yogaPanel);
+        jLabel6.setText("Show  Toolbar:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel6, gridBagConstraints);
+
+        toolbarCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "show.toolbar"));
+        toolbarCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(toolbarCheckBox, gridBagConstraints);
+
+        jLabel7.setText("Save  Result in xml:");
+        jLabel7.setAutoscrolls(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel7, gridBagConstraints);
+
+        saveResultCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "save.results"));
+        saveResultCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(saveResultCheckBox, gridBagConstraints);
+
+        jTabbedPane1.addTab("General", yogaPanel);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
@@ -217,22 +263,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel2.add(jLabel5, gridBagConstraints);
-
-        jLabel6.setText("Show  Toolbar:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel2.add(jLabel6, gridBagConstraints);
-
-        toolbarCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "show.toolbar"));
-        toolbarCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel2.add(toolbarCheckBox, gridBagConstraints);
 
         jTabbedPane1.addTab("Help", jPanel2);
 

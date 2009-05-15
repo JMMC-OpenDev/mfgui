@@ -17,17 +17,18 @@ public class SaveSettingsAction extends RegisteredAction {
 
     private String lastDir = System.getProperty("user.home");
     MFGui mfgui;
-    private boolean saveResult;
+    protected  static Preferences myPreferences = Preferences.getInstance();
 
-    public SaveSettingsAction(MFGui mfgui,String actionName, boolean saveResult) {
+
+    public SaveSettingsAction(MFGui mfgui,String actionName) {
         super(className, actionName);
         this.mfgui = mfgui;
-        this.saveResult=saveResult;
         setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
         logger.entering("" + this.getClass(), "actionPerformed");
+        boolean saveResults = myPreferences.getPreferenceAsBoolean("save.results");
         try {
             // @todo replace next coede part by enable and disabled event asociated to actions...
             SettingsModel settingsModel=mfgui.getSelectedSettings();
@@ -41,7 +42,11 @@ public class SaveSettingsAction extends RegisteredAction {
                 fileChooser.setCurrentDirectory(new File(lastDir));
             }
             fileChooser.setSelectedFile(file);
-            fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + "?");
+            String res="";
+            if (saveResults){
+                res=" with results";
+            }
+            fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + res + "?");
             // Open filechooser
             int returnVal = fileChooser.showSaveDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -59,7 +64,7 @@ public class SaveSettingsAction extends RegisteredAction {
             lastDir = file.getParent();
             // Fix user associated file and save it with result
             settingsModel.setAssociatedFile(file);
-            settingsModel.saveSettingsFile(file, saveResult);
+            settingsModel.saveSettingsFile(file, saveResults);
             /* ask to update title */
             mfgui.getSelectedSettings();
         } catch (Exception exc) {
