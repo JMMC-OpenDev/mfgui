@@ -29,8 +29,7 @@
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
-            icon="/fr/jmmc/mf/gui/icons/filesaveas.png"/>
-            <!--<menu label="Save settings (with results)..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettingsWithResults"/>-->
+            icon="/fr/jmmc/mf/gui/icons/filesaveas.png"/>            
         </menu>
         <menu label="Edit">
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
@@ -71,6 +70,9 @@
             </prerelease>
             <prerelease version="1.1.7beta2">
                 <change type="BUGFIX">Init properly the parameters on model type changes</change>
+                <change type="BUGFIX">One tree display the use of the shared parameters</change>
+                <change type="FEATURE">Add one preference to save results elements into the xml file</change>
+                <change type="FEATURE">Tables of parameters can be edited on first click</change>
             </prerelease>
             <prerelease version="1.1.7beta1">
                 <change type="FEATURE">Add rha theta information into the popup menu of parameters tables (right-clic)</change>
