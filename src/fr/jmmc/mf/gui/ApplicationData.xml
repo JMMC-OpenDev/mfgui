@@ -69,7 +69,7 @@
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
             <prerelease version="1.1.7beta3">
-                <change type="CHANGE">Add unit on t3phi and visphi result plots</change>
+                <change type="CHANGE">Add unit on t3phi and visphi result or file plots </change>
                 <change type="FEATURE">Add one preference to define the initial values into Plot panels</change>
             </prerelease>
             <prerelease version="1.1.7beta2">
