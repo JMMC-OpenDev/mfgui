@@ -48,10 +48,11 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         sharedTableModel.setModel(s, params, false);
         tablePanel.add(sharedParametersTable.getTableHeader(), BorderLayout.NORTH);
 
-        // set one click edition on following table and show all decimals in numerical values
-        //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
+        // set one click edition on following table and show all decimals in numerical values        
         ((DefaultCellEditor)sharedParametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
         sharedParametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)sharedParametersTable.getDefaultEditor(String.class));
+        sharedParametersTable.setDefaultRenderer(Double.class, sharedParametersTable.getDefaultRenderer(String.class));
+
 
         // we want to listen model change events
         if (!knownSettingsModels.contains(settingsModel)) {

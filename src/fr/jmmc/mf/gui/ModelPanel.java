@@ -54,10 +54,10 @@ public class ModelPanel extends javax.swing.JPanel
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
 
-        // set one click edition on following table and show all decimals in numerical values
-        //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
+        // set one click edition on following table and show all decimals of numerical values
         ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
         parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
+        parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
     }
 
     public void show(Model m, SettingsModel s)

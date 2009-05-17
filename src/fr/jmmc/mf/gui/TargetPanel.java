@@ -97,6 +97,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
         ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
         parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
+        parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
 
 
         //// Select current ident
