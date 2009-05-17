@@ -73,11 +73,11 @@ public class FilePanel extends javax.swing.JPanel {
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_Check_embedded_Bt"));
         helpButton2.setAction(new ShowHelpAction("_fits_fields_and_Show_selected_Bt"));
-        // next boutons are actually not usefull because they are linked onto the same page
-        //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
-        //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
-        //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
-        //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
+    // next boutons are actually not usefull because they are linked onto the same page
+    //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
+    //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
+    //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
+    //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
     }
 
     public void show(File file, SettingsModel settingsModel) {
@@ -531,15 +531,14 @@ public class FilePanel extends javax.swing.JPanel {
 
             /* Start plotting loop on retained HDU*/
             StringBuffer sb = new StringBuffer();
-            String dataName;
-            String errName;
             sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
                     //+ "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
                     //" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
                     + "<plot>" +
                     "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
                     "<title>data versus radial distance</title>" +
-                    "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + requestedTables + "</yLabel>");
+                    "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + 
+                    requestedTables + "</yLabel>");
 
             for (int i = 0; i < retainedHdu; i++)
             {
@@ -548,7 +547,12 @@ public class FilePanel extends javax.swing.JPanel {
                 for (int j = 0; j < requestedColumns.length; j++)
                 {
                     String requestedColumn = requestedColumns[j];
-                    String label = table.getExtName()+"#"+table.getExtNb()+":"+requestedColumn;
+                    String units="";
+                    if(requestedColumn.contains("PHI")){
+                        units="(deg)";
+                    }
+                    String label = table.getExtName()+"#"+
+                            table.getExtNb()+":"+requestedColumn+ units;
                     double data[][] = null;
                     double err[][] = null;
                     double dist[][] = null;
