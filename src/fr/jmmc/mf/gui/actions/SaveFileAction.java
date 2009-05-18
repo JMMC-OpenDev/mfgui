@@ -49,7 +49,8 @@ public class SaveFileAction extends RegisteredAction {
                 fileType=fileToSave.getName().substring(dotIndex+1);
             }
         }
-        this.putValue(SaveFileAction.NAME, originalActionName + " " + fileType.toUpperCase());
+        this.putValue(SaveFileAction.NAME, originalActionName + " " +
+                fileType.toUpperCase() + " ... ");
         this.fileToSave = fileToSave;
         this.fileName = "Untitled."+fileType.toLowerCase();
     }
