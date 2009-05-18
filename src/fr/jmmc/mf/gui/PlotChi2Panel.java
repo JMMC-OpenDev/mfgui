@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import javax.swing.DefaultCellEditor;
 
 /**
  *
@@ -44,6 +45,11 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         //todo modify latex to use only BEG_Plots_PlotChi2_Bt
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+
+        // set one click edition on following table and show all decimals of numerical values
+        ((DefaultCellEditor)jTable1.getDefaultEditor(String.class)).setClickCountToStart(1);
+        jTable1.setDefaultEditor(Double.class, (DefaultCellEditor)jTable1.getDefaultEditor(String.class));
+        jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
     }
 
     public void show(SettingsModel s) {
