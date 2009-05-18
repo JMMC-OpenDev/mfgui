@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.7beta3"/>
+    <program name="ModelFitting" version="1.1.7"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -57,7 +57,6 @@
                 -->
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
-                <change type="REQUEST">Fix labels of buttons which save plot in pdf and png on the windows platform</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
                 <change type="REQUEST">Flip the U axe of the UV plots</change>
                 <change type="REQUEST">Add url data file loading capability</change>
@@ -69,8 +68,10 @@
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
             <prerelease version="1.1.7beta3">
+                <change type="BUGFIX">Labels of export buttons in tsv, pdf or png are now properly displayed on the windows platform</change>
                 <change type="CHANGE">Add unit on t3phi and visphi result or file plots </change>
                 <change type="FEATURE">Add one preference to define the initial values into Plot panels</change>
+                <change type="FEATURE">Tables of parameters can be edited on first click and numerical values are handled as simple strings</change>
             </prerelease>
             <prerelease version="1.1.7beta2">
                 <change type="BUGFIX">Init properly the parameters on model type changes</change>
