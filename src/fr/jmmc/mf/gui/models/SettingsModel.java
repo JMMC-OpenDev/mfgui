@@ -519,6 +519,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 new Object[]{rootSettings, rootSettings.getFiles()},
                 indice, oldFile);
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getFiles()}));
+        updateOiTargetList();
     }
 
     public void removeFrame(FrameTreeNode frameNode) {
