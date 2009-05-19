@@ -47,6 +47,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
 import ptolemy.plot.plotml.PlotMLParser;
 import ptolemy.plot.Plot;
 import ptolemy.plot.plotml.PlotMLFrame;
@@ -175,15 +176,37 @@ public class UtilsClass {
     public static void marshal(Object objectToMarshal, Writer writer) throws IOException, MappingException, MarshalException, ValidationException {
         // Do marshalling
         URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
-        logger.fine("Using mapping file :" + mappingURL);
+        logger.fine("Start of marshal using mapping file :" + mappingURL);
         Marshaller marshaller = new Marshaller(writer);
         // old simple code sometimes break xml elements order then use a mapping file
         Mapping mapping = new Mapping();
         mapping.loadMapping(mappingURL);
-        marshaller.setMapping(mapping);
+        synchronized (mapping) {
+            marshaller.setMapping(mapping);
+        }
+        //marshaller.setMapping(mapping);
         marshaller.setValidation(false);
         marshaller.marshal(objectToMarshal);
         writer.flush();
+        logger.fine("End of marshal");
+    }
+    
+    public static Object unmarshal(Class c, Reader reader) throws IOException, MappingException, MarshalException, ValidationException{
+        // Do marshalling
+        URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
+        logger.fine("Start of unmarshal using mapping file :" + mappingURL);
+        Unmarshaller unmarshaller = new Unmarshaller();
+        // old simple code sometimes break xml elements order then use a mapping file
+        Mapping mapping = new Mapping();
+        mapping.loadMapping(mappingURL);
+        synchronized (mapping) {
+            unmarshaller.setMapping(mapping);
+        }
+        //marshaller.setMapping(mapping);
+        unmarshaller.setValidation(false);
+        Object o = unmarshaller.unmarshal(c, reader);
+        logger.fine("End of unmarshal");
+        return o;
     }
 
     private static void expandAll(JTree tree, TreePath parent, boolean expand) {
