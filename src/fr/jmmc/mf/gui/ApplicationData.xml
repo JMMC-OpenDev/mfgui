@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.7"/>
+    <program name="ModelFitting" version="1.1.8beta1"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -41,8 +41,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.1.7">
-            <prerelease version="1.1.7beta1000">
+        <release version="1.1.8">
+            <prerelease version="1.1.8beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -63,10 +63,15 @@
                 <change type="REQUEST">Add previous parameter value column in the parameter table</change>
                 <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>                
                 <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
-                <change type="REQUEST">Improve efficiency and reliability for big multiwalength data</change>
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="1.1.8beta1">
+                <change type="BUGFIX">Improve efficiency and reliability for big multiwalength data</change>
+                
+            </prerelease>
+        </release>
+        <release version="1.1.7">
             <prerelease version="1.1.7beta3">
                 <change type="BUGFIX">Labels of export buttons in tsv, pdf or png are now properly displayed on the windows platform</change>
                 <change type="CHANGE">Add unit on t3phi and visphi result or file plots </change>
