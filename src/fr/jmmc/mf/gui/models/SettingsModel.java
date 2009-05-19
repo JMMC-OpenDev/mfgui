@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import org.exolab.castor.xml.ValidationException;
 
 /**
- * This class manages the castor generated classes to bring 
+ * This class manages the castor generated classes to bring
  * one interface over a more conventionnal object.
  * It implements:
  *  - the treemodel to be used by the settingsPane tree
@@ -298,9 +298,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     if(np.getType().equals(cp.getType())){
                         // the name is not always copyed because min_diameter matches with diameter
                         np.setName(cp.getName());
-                    }                    
+                    }
                 }
-            }                        
+            }
         }
         // try to recover previous shared parameters
         ParameterLink[] currentParameterLinks = currentModel.getParameterLink();
@@ -315,7 +315,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
-        //update content of contentModels      
+        //update content of contentModels
         for (int i = 0; i < currentModelParams.length; i++) {
             Parameter p = currentModelParams[i];
             parameterComboBoxModel.removeElement(p);
@@ -660,7 +660,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         parameterComboBoxModel = new DefaultComboBoxModel();
         oiTargets = new DefaultComboBoxModel();
 
-        // Init children for a new settings 
+        // Init children for a new settings
         rootSettings = new Settings();
         rootSettings.setFiles(new Files());
         rootSettings.setTargets(new Targets());
@@ -909,7 +909,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         fireTreeNodesChanged(new Object[]{rootSettings},
                 getIndexOfChild(rootSettings, params), params);
 
-        // update parameters and parameterLinks of every targets        
+        // update parameters and parameterLinks of every targets
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < newTargets.length; i++) {
@@ -1251,7 +1251,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         File[] files = s.getFiles().getFile();
 
         for (int i = 0; i < files.length; i++) {
-            // Check file           
+            // Check file
             checkFile(files[i]);
         }
 
