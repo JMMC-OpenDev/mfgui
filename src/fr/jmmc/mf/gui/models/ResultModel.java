@@ -37,14 +37,26 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         try {
             String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
-            logger.fine("Start result section write into stringbuffer");
-            StringWriter xmlResultSw = new StringWriter();
-            UtilsClass.marshal(result, xmlResultSw);
-            logger.fine("End result section write into stringbuffer");
-            xmlResult = xmlResultSw.toString();
-            logger.fine("Start html generation");
-            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
-            logger.fine("End html generation");
+
+            // use content or href to get the result element
+            if (result.getHref() == null) {
+                logger.fine("Start result section write into stringbuffer");
+                StringWriter xmlResultSw = new StringWriter();
+                UtilsClass.marshal(result, xmlResultSw);
+                logger.fine("End result section write into stringbuffer");
+                xmlResult = xmlResultSw.toString();
+                logger.fine("Start html generation");
+                htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+                logger.fine("End html generation");
+            } else {
+                xmlResult = "<result>" +
+                        UtilsClass.saveBASE64ToString(result.getHref()) +
+                        "</result>";
+                logger.fine("Start html generation");
+                htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+                logger.fine("End html generation");
+            }
+
             //genPlots(UtilsClass.getResultFiles(response));
             genPlots();
         } catch (Exception exc) {
