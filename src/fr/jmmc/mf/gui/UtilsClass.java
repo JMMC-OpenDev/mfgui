@@ -262,6 +262,49 @@ public class UtilsClass {
      *
      * @throws IOException
      */
+    public static String saveBASE64ToString(String b64) throws IOException{
+        String[] dataTypes = new String[]{
+            IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
+        };
+        for (int i = 0; i <= dataTypes.length; i++) {
+            String base64DataType;
+            if (i < dataTypes.length) {
+                base64DataType = "data:" + dataTypes[i] + ";base64,";
+            } else {
+                base64DataType = "data:" + b64.substring(0, 100).substring(5, b64.indexOf(";base64,")) + ";base64,";
+            }
+
+            if (b64.startsWith(base64DataType)) {
+                logger.fine("start of decoding '" + base64DataType);
+                java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
+                StringBuffer sb = new StringBuffer();
+                while (st.hasMoreTokens()) {
+                    sb.append(st.nextToken());
+                }
+                byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                out.write(buf);
+                out.flush();
+                out.close();
+                logger.fine("end of decoding '" + base64DataType);
+                logger.finest("decoded content is: '" + out+"'");
+                return out.toString();
+            }
+        }
+
+        logger.severe("Nothing has been decoded for given base64 encoded file\n" + b64.substring(0, b64.indexOf(";base64,")));
+        return null;
+    }
+    /**
+     * Decode the base64 encoded file and store it into the given file.
+     *
+     * @param b64 the base64 encoded file
+     * @param outputFile the file to store result
+     *
+     * @return The given outputFile or null if nothing has been decoded.
+     *
+     * @throws IOException
+     */
     public static File saveBASE64ToFile(String b64, File outputFile)
             throws IOException {
         String[] dataTypes = new String[]{
@@ -276,7 +319,7 @@ public class UtilsClass {
             }
 
             if (b64.startsWith(base64DataType)) {
-                logger.fine("decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
+                logger.fine("start of decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
                 java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
                 StringBuffer sb = new StringBuffer();
                 while (st.hasMoreTokens()) {
@@ -287,6 +330,7 @@ public class UtilsClass {
                 out.write(buf);
                 out.flush();
                 out.close();
+                logger.fine("end of decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
                 return outputFile;
             }
         }
