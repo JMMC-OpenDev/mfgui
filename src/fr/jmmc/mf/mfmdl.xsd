@@ -313,6 +313,7 @@ Result list.
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="result" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="resultFile" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
@@ -334,11 +335,11 @@ Result list.
     </xsd:element>
 
 
-     <!-- Result Section -->
+     <!-- Message Section -->
     <xsd:element name="message">
         <xsd:annotation>
             <xsd:documentation>
-                Result of a fit section.
+                Define a message to be displayed.
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexType>
