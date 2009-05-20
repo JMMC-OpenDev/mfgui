@@ -33,6 +33,7 @@ import java.net.URL;
 import java.util.Enumeration;
 
 import java.util.Vector;
+import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.JTree;
@@ -253,12 +254,11 @@ public class UtilsClass {
     }
 
     /**
-     * Decode the base64 encoded file and store it into the given file.
+     * Decode the base64 encoded file and return the associated original buffer.
      *
-     * @param b64 the base64 encoded file
-     * @param outputFile the file to store result
+     * @param b64 the base64 encoded file     
      *
-     * @return The given outputFile or null if nothing has been decoded.
+     * @return The original file content.
      *
      * @throws IOException
      */
@@ -282,8 +282,21 @@ public class UtilsClass {
                     sb.append(st.nextToken());
                 }
                 byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                out.write(buf);
+                ByteArrayOutputStream out=null;
+                if(base64DataType.contains("x-gzip")){
+                    logger.fine("base64 file was gzipped, unzipping'" + base64DataType);
+                    GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
+                    out = new ByteArrayOutputStream();
+                    // Transfer bytes from the compressed file to the output file
+                    byte[] b = new byte[1024];
+                    int len;
+                    while ((len = gzipInputStream.read(b)) > 0) {
+                        out.write(b, 0, len);
+                    }
+                } else {
+                    out.write(buf);
+                }
+
                 out.flush();
                 out.close();
                 logger.fine("end of decoding '" + base64DataType);
