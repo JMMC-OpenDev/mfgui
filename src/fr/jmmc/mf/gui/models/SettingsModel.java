@@ -69,8 +69,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private DefaultListModel parameterListModel;
     private DefaultComboBoxModel targetComboBoxModel;
     private DefaultComboBoxModel parameterComboBoxModel;
-    /** Store last xml buffer (it has been done to save time on marshal */
-    private String lastXml;
     /** flag used to respond for the ModifyAndSaveObject interface */
     private boolean isModified = false;
     /** Store a reference over the associated local file */
@@ -933,6 +931,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
+        // update userinfo
+        rootSettings.setUserInfo(newSettings.getUserInfo());
+
         Result[] newResults = newSettings.getResults().getResult();
         // update settings results  with newResults
         for (int i = 0; i < newResults.length; i++) {
@@ -948,7 +949,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             } else {
                 logger.warning("found null result while updating with new settings");
             }
-        }
+        }        
     }
 
     // respond to ModifyAndSaveObject interface
@@ -1658,6 +1659,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     //fireTreeNodesChanged(path,modifiedObject);
     }
 
+    @Override
     public String toString() {
         return className + " " + getAssociatedFilename();
     }
@@ -1684,21 +1686,5 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             new FeedbackReport(e);
             return null;
         }
-    }
-
-    /** This method can be used to skip the  marshalling */
-    public void setLastXml(String xml) {
-        logger.entering(className, "setLastXml");
-        this.lastXml = xml;
-    }
-
-    public String getLastXml() throws Exception {
-        logger.entering(className, "getLastXml");
-
-        if (lastXml == null) {
-            this.lastXml = toXml();
-        }
-
-        return this.lastXml;
     }
 }

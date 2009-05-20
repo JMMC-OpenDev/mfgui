@@ -29,11 +29,10 @@ import javax.swing.JTextArea;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.31 2009-05-19 10:58:06 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.32 2009-05-20 07:02:56 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
-    static String xmlResult=null;
 
     /**
      * Creates a new ModelFitting object.
@@ -122,6 +121,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
         throws Exception
     {
+        String xmlResult=null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use"))
         {
             xmlResult=doPost(methodName, xmlFile, methodArg);
@@ -147,11 +147,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
         return r;
-    }
-
-    public static String getLastXmlResult(){
-        return xmlResult;
-    }
+    }    
 
     /**
      * Execute given command on local machine.
