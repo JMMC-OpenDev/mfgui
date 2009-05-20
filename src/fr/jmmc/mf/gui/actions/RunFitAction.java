@@ -65,9 +65,7 @@ public class RunFitAction extends MCSAction {
                 //setCursor(null);
                 return;
             }
-            settingsModel.updateWithNewSettings(r);
-            // Copy buffer response to improve efficiency
-            settingsModel.setLastXml(ModelFitting.getLastXmlResult());
+            settingsModel.updateWithNewSettings(r);            
         } catch (UnknownHostException ex) {
             String msg = "Network seems down. Can\'t contact host " + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
