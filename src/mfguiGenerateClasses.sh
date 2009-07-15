@@ -2,11 +2,14 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.18 2009-03-21 08:47:38 mella Exp $"
+# "@(#) $Id: mfguiGenerateClasses.sh,v 1.19 2009-07-15 14:59:05 mella Exp $"
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2009/03/21 08:47:38  mella
+# fix castor source generation option
+#
 # Revision 1.17  2009/03/20 09:43:46  mella
 # update for castor 1.3
 #
@@ -99,6 +102,9 @@ do
     elif [ "$className" == "Parameter" ]
     then
         toString="\"Parameter[\"+getName()+\"]\";"
+    elif [ "$className" == "Residual" ]
+    then
+        toString="getName();"
     elif [ "$className" == "ParameterLink" ]
     then
         toString="\"ParameterLink[\"+((Parameter)getParameterRef()).getName()+\"]\";"
