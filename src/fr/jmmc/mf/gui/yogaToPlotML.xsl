@@ -166,7 +166,6 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         </plot>
     </xsl:template>
 
-
     <xsl:template name="ptPlotDataSet">
         <xsl:param name="xElements"/>
         <xsl:param name="yElements"/>

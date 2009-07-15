@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="1.1.8beta1"/>
+    <program name="ModelFitting" version="1.1.8beta2"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -54,6 +54,7 @@
                  <change type="CHANGE"></change>
                  <change type="REQUEST"></change>
                  <change type="BUGFIX"></change>
+                 placer les boutons expand unexpand et delete just au dessu de l'arbre
                 -->
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
@@ -65,6 +66,11 @@
                 <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
+            </prerelease>
+            <prerelease version="1.1.8beta2">
+                <change type="BUGFIX">Allow user to plot radial data of it's model according data selection into the fitter setup</change>
+                <change type="BUGFIX">Fix handling and result display of the scale value for parameters</change>
+                <change type="FEATURE">Fill file name while saving one embedded file into the 'File panel'</change>
             </prerelease>
             <prerelease version="1.1.8beta1">
                 <change type="BUGFIX">Improve efficiency and reliability for big multiwalength data</change>

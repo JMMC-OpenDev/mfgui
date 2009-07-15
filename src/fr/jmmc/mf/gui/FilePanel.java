@@ -888,6 +888,7 @@ public class FilePanel extends javax.swing.JPanel {
                 fileChooser.setCurrentDirectory(new java.io.File(lastDir));
             }
 
+            fileChooser.setSelectedFile(new java.io.File(current.getName()));
             try
             {
                 // Open filechooser
