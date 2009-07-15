@@ -590,7 +590,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 }
         rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
 
-
+        // refresh modelpanel to get updated list of residual plots
+        plotModelImagePanel.show(rootSettingsModel, current);
 }//GEN-LAST:event_targetFitterParamActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
