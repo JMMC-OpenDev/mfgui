@@ -17,8 +17,6 @@
     <xsl:output method="text" indent="no"/>
     <xsl:param name="workingDirectory">LIT_MODEL</xsl:param>
 
-
-
     <!--                                                                   -->
     <!-- This xslt transform one xml settings file into                    --> 
     <!-- one LITpro description                                            -->
