@@ -24,6 +24,9 @@ Generate Html view of given xml settings files .
     exclude-result-prefixes="math str" >
  
     <xsl:output method="html"/>
+
+    <!-- The input document may not contain all settings related part.
+    Result should always be present -->
     <xsl:variable name="root" select="/" />
 
     <xsl:template match="/">
@@ -51,35 +54,111 @@ Generate Html view of given xml settings files .
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template name="get_parameter_scale">
-        <xsl:param name="paramName"/>
-        <xsl:variable name="settings" select="p_settings"/>
-        <xsl:for-each select="exslt:node-set($root)//settings/parameters/parameter|exslt:node-set($root)//settings/targets//parameter">
-            <xsl:if test="@name=$paramName">
-                <xsl:choose>
-                    <xsl:when test="scale">
-                        <xsl:value-of select="scale"/>
-                    </xsl:when>
-                    <xsl:otherwise>AUTO</xsl:otherwise>
-                </xsl:choose>
-                <xsl:value-of select="scale"/>
-            </xsl:if>
-        </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="is_parameter_fixed">
-        <xsl:param name="paramName"/>
-        <xsl:variable name="settings" select="p_settings"/>
-        <xsl:for-each select="exslt:node-set($root)//settings/parameters/parameter|exslt:node-set($root)//settings/targets//parameter">
-            <xsl:if test="@name=$paramName">
-                <xsl:choose>
-                    <xsl:when test="hasFixedValue">
-                        <xsl:value-of select="hasFixedValue"/>
-                    </xsl:when>
-                    <xsl:otherwise>0</xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
-        </xsl:for-each>
+    <xsl:template name="hasFlag">
+    <xsl:param name="p_value"/>
+    <xsl:param name="p_flag"/>
+    <xsl:variable name="value" select="$p_value"/>
+    <xsl:variable name="flag" select="$p_flag"/>
+    <xsl:message>Searching flag '<xsl:value-of select="$flag"/>' into '<xsl:value-of select="$value"/>'</xsl:message>
+    <xsl:variable name="refs">
+            <v v="0">
+                <f v="1">0</f>
+                <f v="2">0</f>
+                <f v="4">0</f>
+                <f v="8">0</f>
+            </v>
+            <v v="1">
+                <f v="1">1</f>
+                <f v="2">0</f>
+                <f v="4">0</f>
+                <f v="8">0</f>
+            </v>
+            <v v="2">
+                <f v="1">0</f>
+                <f v="2">1</f>
+                <f v="4">0</f>
+                <f v="8">0</f>
+            </v>
+            <v v="3">
+                <f v="1">1</f>
+                <f v="2">1</f>
+                <f v="4">0</f>
+                <f v="8">0</f>
+            </v>
+            <v v="4">
+                <f v="1">0</f>
+                <f v="2">0</f>
+                <f v="4">1</f>
+                <f v="8">0</f>
+            </v>
+            <v v="5">
+                <f v="1">1</f>
+                <f v="2">0</f>
+                <f v="4">1</f>
+                <f v="8">0</f>
+            </v>
+            <v v="6">
+                <f v="1">0</f>
+                <f v="2">1</f>
+                <f v="4">1</f>
+                <f v="8">0</f>
+            </v>
+            <v v="7">
+                <f v="1">1</f>
+                <f v="2">1</f>
+                <f v="4">1</f>
+                <f v="8">0</f>
+            </v>
+            <v v="8">
+                <f v="1">0</f>
+                <f v="2">0</f>
+                <f v="4">0</f>
+                <f v="8">1</f>
+            </v>
+            <v v="9">
+                <f v="1">1</f>
+                <f v="2">0</f>
+                <f v="4">0</f>
+                <f v="8">1</f>
+            </v>
+            <v v="10">
+                <f v="1">0</f>
+                <f v="2">1</f>
+                <f v="4">0</f>
+                <f v="8">1</f>
+            </v>
+            <v v="11">
+                <f v="1">1</f>
+                <f v="2">1</f>
+                <f v="4">0</f>
+                <f v="8">1</f>
+            </v>
+            <v v="12">
+                <f v="1">0</f>
+                <f v="2">0</f>
+                <f v="4">1</f>
+                <f v="8">1</f>
+            </v>
+            <v v="13">
+                <f v="1">1</f>
+                <f v="2">0</f>
+                <f v="4">1</f>
+                <f v="8">1</f>
+            </v>
+            <v v="14">
+                <f v="1">0</f>
+                <f v="2">1</f>
+                <f v="4">1</f>
+                <f v="8">1</f>
+            </v>
+            <v v="15">
+                <f v="1">1</f>
+                <f v="2">1</f>
+                <f v="4">1</f>
+                <f v="8">1</f>
+            </v>
+    </xsl:variable>
+    <xsl:value-of select="exslt:node-set($refs)//v[@v=$value]/f[@v=$flag]"/>
     </xsl:template>
 
     <xsl:template name="show_parameters">
@@ -126,29 +205,32 @@ Generate Html view of given xml settings files .
                     </td>
                     <td>
                         <xsl:value-of select="vmin"/>
-                    </td>
-                    <td>
-                        <xsl:value-of select="vmax"/>
-                    </td>
-                    <td>
-                        <!-- yorick world contains flags but no  scale element-->
-                        <xsl:call-template name="get_parameter_scale">
-                            <xsl:with-param name="paramName" select="name()"/>
-                        </xsl:call-template>
-                    </td>
-                    <td>
-                        <!-- yorick world contains flags but no  fixed element-->
-                        <xsl:call-template name="is_parameter_fixed">
-                            <xsl:with-param name="paramName" select="name()"/>
-                        </xsl:call-template>
-                    </td>
+                        </td>
+                        <td>
+                            <xsl:value-of select="vmax"/>
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="scale/text()">
+                                    <xsl:value-of select="scale"/>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="'AUTO'"/></xsl:otherwise>
+                            </xsl:choose>
+                            
+                        </td>
+                        <td>
+                            <xsl:call-template name="hasFlag">
+                                <xsl:with-param name="p_value" select="flags"/>
+                                <xsl:with-param name="p_flag" select="1"/>
+                            </xsl:call-template>
+                        </td>
                     <td>
                         <xsl:value-of select="units"/>
                     </td>
                     <td>
                         <xsl:call-template name="get_standard_deviation">
                             <xsl:with-param name="world" select="$worldCopy"/>
-                            <xsl:with-param name="paramName" select="name()"/>
+                            <xsl:with-param name="paramName" select="$paramName"/>
                         </xsl:call-template>
                     </td>
                 </tr>
@@ -279,5 +361,6 @@ Generate Html view of given xml settings files .
         </xsl:if>
     </xsl:template>
 
+    <!-- Do not show any part of resultFile -->
     <xsl:template match="resultFile"></xsl:template>
 </xsl:stylesheet>

@@ -2,11 +2,14 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Target;
 
 /**
- *
- * @author mella
+ * Give access to plot function. This panel can be embedded into one target
+ * panel or be displayed one time for all targets. It does not display the
+ * target combo box when the
+ * 
  */
 public class PlotModelPanel extends javax.swing.JPanel
 {
@@ -39,6 +42,8 @@ public class PlotModelPanel extends javax.swing.JPanel
         {
             targetComboBox.setSelectedItem(t);
         }
+        // update content of combobox
+        targetComboBoxActionPerformed(null);
     }
 
     public void show(SettingsModel s)
@@ -57,6 +62,8 @@ public class PlotModelPanel extends javax.swing.JPanel
         plotSnifferMapButton.setEnabled(valid);
         plotUVMapButton.setEnabled(valid);
         plotRadialButton.setEnabled(valid);
+        // update content of combobox
+        targetComboBoxActionPerformed(null);
     }
   
     private void plotModelUVMap(Target targetToPlot)
@@ -182,6 +189,12 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
         add(targetLabel, gridBagConstraints);
+
+        targetComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                targetComboBoxActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -366,7 +379,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(plotRadialButton, gridBagConstraints);
 
-        radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VIS2", "VISamp", "VISphi" }));
+        radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VIS2", "VISamp", "VISphi", "T3amp", "T3phi" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
@@ -391,6 +404,28 @@ public class PlotModelPanel extends javax.swing.JPanel
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
         plotModelRadial((Target) targetComboBox.getSelectedItem());
 }//GEN-LAST:event_plotRadialButtonActionPerformed
+
+    private void targetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetComboBoxActionPerformed
+        // We have to ensure that plot radial choices are consistent with fitter setup
+        radialComboBox.removeAllItems();
+        Target selectedTarget = (Target) targetComboBox.getSelectedItem();
+        if(selectedTarget==null){
+            return;
+        }
+        // Add default values or these which 
+        if(selectedTarget.getResiduals()==null){
+            radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VIS2", "VISamp", "VISphi", "T3amp", "T3phi" }));
+        } else {
+            Residual[] residuals = selectedTarget.getResiduals().getResidual();
+            for (int i = 0; i < residuals.length; i++) {
+                Residual residual = residuals[i];
+                residual.getName();
+                radialComboBox.addItem(residual);
+            }
+        }
+        
+
+    }//GEN-LAST:event_targetComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton helpButton1;
