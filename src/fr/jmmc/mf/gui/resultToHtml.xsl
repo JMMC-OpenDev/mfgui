@@ -59,7 +59,6 @@ Generate Html view of given xml settings files .
     <xsl:param name="p_flag"/>
     <xsl:variable name="value" select="$p_value"/>
     <xsl:variable name="flag" select="$p_flag"/>
-    <xsl:message>Searching flag '<xsl:value-of select="$flag"/>' into '<xsl:value-of select="$value"/>'</xsl:message>
     <xsl:variable name="refs">
             <v v="0">
                 <f v="1">0</f>
