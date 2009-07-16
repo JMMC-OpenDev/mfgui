@@ -17,7 +17,7 @@ public class ResultsPanel extends javax.swing.JPanel {
         initComponents();
 
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_Results_MT")));
+        helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
     }
 
     public void show(Results r, SettingsModel s) {

@@ -41,8 +41,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         param1TableModel = new ParametersTableModel();
         startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
         initComponents();
-        // build help button
-        //todo modify latex to use only BEG_Plots_PlotChi2_Bt
+        // build help button        
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
 
@@ -132,6 +131,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         yComboBox = new javax.swing.JComboBox();
         tablePanel = new javax.swing.JPanel();
         jTable1 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot chi2 panel"));
@@ -281,12 +281,22 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(tablePanel, gridBagConstraints);
 
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
         helpButton1.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        add(helpButton1, gridBagConstraints);
+        jPanel1.add(helpButton1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plot1DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot1DChi2ButtonActionPerformed
@@ -357,6 +367,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton plot1DChi2Button;
     private javax.swing.JButton plot2DChi2Button;
