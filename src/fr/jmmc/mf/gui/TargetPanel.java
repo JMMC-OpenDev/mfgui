@@ -69,7 +69,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         // build help button
         jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
-        jButton2.setAction(new ShowHelpAction(("BEG_FitterSetup_TargetPanel")));
+        jButton2.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
 
     }
 
