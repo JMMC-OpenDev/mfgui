@@ -69,6 +69,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         // build help button
         jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
+        jButton2.setAction(new ShowHelpAction(("BEG_FitterSetup_TargetPanel")));
 
     }
 
@@ -95,8 +96,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         // set one click edition on following table and show all decimals in numerical values
         //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
-        ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
-        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
+        ((DefaultCellEditor) parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
+        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor) parametersTable.getDefaultEditor(String.class));
         parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
 
 
@@ -252,6 +253,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         vis2CheckBox = new javax.swing.JCheckBox();
         visAmpCheckBox = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         subplotPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -379,7 +383,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
         jPanel6.setLayout(new java.awt.GridBagLayout());
 
-        normalizeCheckBox.setText("Normalize total flux");
         normalizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 targetFitterParamActionPerformed(evt);
@@ -388,9 +391,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
         jPanel6.add(normalizeCheckBox, gridBagConstraints);
 
         t3phiCheckBox.setText("T3phi");
@@ -403,7 +404,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
         jPanel6.add(t3phiCheckBox, gridBagConstraints);
 
         t3ampCheckBox.setText("T3amp");
@@ -415,6 +415,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(t3ampCheckBox, gridBagConstraints);
 
         visPhiCheckBox.setText("VISphi");
@@ -426,6 +427,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(visPhiCheckBox, gridBagConstraints);
 
         vis2CheckBox.setText("VIS2");
@@ -437,6 +439,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(vis2CheckBox, gridBagConstraints);
 
         visAmpCheckBox.setText("VISamp");
@@ -455,7 +458,36 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel6.add(jLabel2, gridBagConstraints);
+
+        jLabel3.setText("Normalize total flux:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel6.add(jLabel3, gridBagConstraints);
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jButton2.setText("jButton2");
+        jButton2.setAlignmentX(1.0F);
+        jButton2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(jButton2, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel6.add(jPanel3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -599,10 +631,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     private javax.swing.JList fileList;
     private javax.swing.JComboBox identComboBox;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
