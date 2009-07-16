@@ -1,60 +1,32 @@
 /*
  * FitterPanel.java
  *
- * Created on 11 janvier 2007, 12:40
  */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.models.Settings;
 
+public class FitterPanel extends javax.swing.JPanel {
 
-/**
- *
- * @author  mella
- */
-public class FitterPanel extends javax.swing.JPanel
-{
     /**
-     * DOCUMENT ME!
+     * Main logger.
      */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.FitterPanel");
-
-    /**
-     * DOCUMENT ME!
-     */
     Settings current = null;
-
-    /**
-     * DOCUMENT ME!
-     */
     SettingsViewerInterface settingsViewer = null;
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    /**
-     * DOCUMENT ME!
-     */
-    private javax.swing.JComboBox fitterComboBox;
-
     /** Creates new form FitterPanel */
-    public FitterPanel(SettingsViewerInterface viewer)
-    {
+    public FitterPanel(SettingsViewerInterface viewer) {
         settingsViewer = viewer;
         initComponents();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param s DOCUMENT ME!
-     */
-    public void show(Settings s)
-    {
+    public void show(Settings s) {
         logger.entering("" + this.getClass(), "show");
         current = s;
 
-        if (s.getFitter() != null)
-        {
+        if (s.getFitter() != null) {
             fitterComboBox.setSelectedItem(s.getFitter());
         }
     }
@@ -85,16 +57,13 @@ public class FitterPanel extends javax.swing.JPanel
         add(fitterComboBox);
     } // </editor-fold>//GEN-END:initComponents
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param evt DOCUMENT ME!
-     */
     private void fitterComboBoxActionPerformed(java.awt.event.ActionEvent evt)
-    { //GEN-FIRST:event_fitterComboBoxActionPerformed
+    {//GEN-FIRST:event_fitterComboBoxActionPerformed
         logger.entering("" + this.getClass(), "fitterComboBoxActionPerformed");
         current.setFitter((String) fitterComboBox.getSelectedItem());
-    } //GEN-LAST:event_fitterComboBoxActionPerformed
+    }//GEN-LAST:event_fitterComboBoxActionPerformed
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox fitterComboBox;
     // End of variables declaration//GEN-END:variables
 }
