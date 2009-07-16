@@ -68,6 +68,7 @@
             </prerelease>
             <prerelease version="0.25beta3">
                 <change type="BUGFIX">Fix long latency on preference changes</change>
+                <change type="BUGFIX">Fix wrong inline documentation indexes</change>
             </prerelease>
             <prerelease version="0.25beta2">
                 <change type="BUGFIX">Allow user to plot radial data of it's model according data selection into the fitter setup</change>
