@@ -106,8 +106,9 @@ public class FilesPanel extends javax.swing.JPanel
 
         jButton1.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
