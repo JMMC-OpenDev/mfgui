@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
@@ -22,6 +23,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
     SettingsModel settingsModel;
     DefaultListModel parameterListModel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
@@ -38,6 +40,9 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         parameterListModel = new DefaultListModel();
         sharedTableModel = new ParametersTableModel();
         sharedParametersTable.setModel(sharedTableModel);
+
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("ENDtt_SharedParameters")));
     }
 
     public void show(SettingsModel s, Parameters p) {
@@ -60,7 +65,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
             knownSettingsModels.add(settingsModel);
         }
 
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode("View the parameters linked to shared parameters");
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Here comes the list of models that get one or more shared parameters");
         for (int spIndex = 0; spIndex < params.length; spIndex++) {
             Parameter sharedParameter = params[spIndex];
             DefaultMutableTreeNode sharedParameterNode = new DefaultMutableTreeNode(sharedParameter);
@@ -83,6 +88,10 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
             }
         }
 
+        if (params.length==0){
+            top = new DefaultMutableTreeNode("There is no shared parameters yet");
+        }
+
         jTree1 = new JTree(top);
         UtilsClass.expandAll(jTree1, true);
         jScrollPane1.setViewportView(jTree1);
@@ -98,6 +107,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
         sharedParametersTable = new javax.swing.JTable();
+        helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Parameter list"));
         setLayout(new java.awt.GridBagLayout());
@@ -114,12 +124,14 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.5;
         add(jScrollPane1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
@@ -143,9 +155,15 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         add(tablePanel, gridBagConstraints);
+
+        helpButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(helpButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     public void update(Observable o, Object arg) {        
