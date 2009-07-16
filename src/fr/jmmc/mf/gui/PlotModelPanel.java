@@ -28,9 +28,11 @@ public class PlotModelPanel extends javax.swing.JPanel
         startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
         initComponents();
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_PlotSniffer_Bt")));
-        helpButton2.setAction(new ShowHelpAction(("BEG_Plots_PlotUVmap_Bt")));
-        helpButton3.setAction(new ShowHelpAction(("END_Plots_PlotSniffer_Bt")));
+        //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
+        helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
+        helpButton2.setAction(new ShowHelpAction(("ENDtt_PlotUVmap_Bt")));
+        helpButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
+        helpButton4.setAction(new ShowHelpAction(("ENDtt_PlotSniffer_Bt")));
     }
 
     public void show(SettingsModel s, Target t)
@@ -137,6 +139,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         helpButton3 = new javax.swing.JButton();
         plotRadialButton = new javax.swing.JButton();
         radialComboBox = new javax.swing.JComboBox();
+        helpButton4 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot model panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -363,7 +366,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         helpButton3.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(helpButton3, gridBagConstraints);
 
@@ -386,6 +389,13 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(radialComboBox, gridBagConstraints);
+
+        helpButton4.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(helpButton4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotImageButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotImageButtonActionPerformed
@@ -431,6 +441,7 @@ public class PlotModelPanel extends javax.swing.JPanel
     private javax.swing.JButton helpButton1;
     private javax.swing.JButton helpButton2;
     private javax.swing.JButton helpButton3;
+    private javax.swing.JButton helpButton4;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
