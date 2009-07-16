@@ -89,7 +89,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         }
 
         if (params.length==0){
-            top = new DefaultMutableTreeNode("There is no shared parameters yet");
+            top = new DefaultMutableTreeNode("There is no shared parameter yet");
         }
 
         jTree1 = new JTree(top);
