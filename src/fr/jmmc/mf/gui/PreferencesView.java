@@ -1,27 +1,22 @@
 /*
  * PreferencesView.java
  *
- * Created on 26 février 2008, 09:45
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.util.ActionRegistrar;
-import java.awt.Color;
 
 import java.io.File;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.Action;
 import javax.swing.ToolTipManager;
-
 
 /**
  * Preference GUI
  */
-public class PreferencesView extends javax.swing.JFrame implements Observer
-{
+public class PreferencesView extends javax.swing.JFrame implements Observer {
+
     static Preferences myPreferences = Preferences.getInstance();
     static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
@@ -57,29 +52,22 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
     // End of variables declaration//GEN-END:variables
 
     /** Creates new form PreferencesView */
-    public PreferencesView()
-    {        
+    public PreferencesView() {
         initComponents();
         myPreferences.addObserver(this);
         preferenceFilenaTextfield.setText(myPreferences.getPreferenceFilename());
         update(null, null);
     }
 
-    public void update(Observable o, Object arg)
-    {
+    public void update(Observable o, Object arg) {
         // Adjust view and behaviour according preferences entries        
         // Keep eye on help.tooltips.show                        
         boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");
-
-        if (b)
-        {
-            logger.fine("Adjusting ToolTipManager to on");
+        if (b) {
+            logger.fine("Enable ToolTipManager");
+        } else {
+            logger.fine("Disable ToolTipManager");
         }
-        else
-        {
-            logger.fine("Adjusting ToolTipManager to off");
-        }
-
         toolTipManager.setEnabled(b);
         tooltipsCheckBox.setSelected(b);
 
@@ -87,23 +75,24 @@ public class PreferencesView extends javax.swing.JFrame implements Observer
         toolbarCheckBox.setSelected(b);
         MFGui.showToolbar(b);
 
-
         File f = new File(myPreferences.getPreference("yoga.local.home") +
                 myPreferences.getPreference("yoga.local.progname"));
+    /*
+     * This part of code has been commented because a color change run the documentModel to many loops
+    if (f.exists())
+    {
+    //  Commented since it is was not in 1.5 API if(f.canExecute()){
+    jTextField2.setForeground(Color.GREEN);
 
-        if (f.exists())
-        {
-            //  Commented since it is was not in 1.5 API if(f.canExecute()){
-            jTextField2.setForeground(Color.GREEN);
-
-            /* }else{
-               JOptionPane.showMessageDialog(this, f.getName()+" has been found but is not executable, please change execution right.");
-               }*/
-        }
-        else
-        {
-            jTextField2.setForeground(Color.RED);
-        }
+    // }else{
+    JOptionPane.showMessageDialog(this, f.getName()+" has been found but is not executable, please change execution right.");
+    //   }
+    }
+    else
+    {
+    jTextField2.setForeground(Color.RED);
+    }
+     */
     }
 
     /** This method is called from within the constructor to
