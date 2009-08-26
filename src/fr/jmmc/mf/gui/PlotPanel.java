@@ -5,18 +5,11 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
-import java.awt.BorderLayout;
-import java.awt.Image;
 import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
-import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 
 public class PlotPanel extends javax.swing.JPanel
@@ -26,7 +19,7 @@ public class PlotPanel extends javax.swing.JPanel
             "fr.jmmc.mf.gui.PlotPanel");
 
     /** settings model reference */
-    private static SettingsModel settingsModel = null;
+    private SettingsModel settingsModel = null;
     
     private PlotModelPanel plotModelPanel = null;
     private PlotChi2Panel plotChi2Panel = null;
