@@ -31,6 +31,7 @@ public class FilePanel extends javax.swing.JPanel {
             "fr.jmmc.mf.gui.FilePanel");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addFileButton1;
     private javax.swing.JButton checkFileButton;
     private javax.swing.JPopupMenu fileListPopupMenu;
     private javax.swing.JList hduList;
@@ -145,6 +146,7 @@ public class FilePanel extends javax.swing.JPanel {
         visphiCheckBox = new javax.swing.JCheckBox();
         helpButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        addFileButton1 = new javax.swing.JButton();
 
         listenersMenu.setText("Send to application"); // NOI18N
         fileListPopupMenu.add(listenersMenu);
@@ -181,6 +183,7 @@ public class FilePanel extends javax.swing.JPanel {
         jPanel2.add(helpButton1, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jPanel2, gridBagConstraints);
 
@@ -310,6 +313,7 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weightx = 1.0;
@@ -322,6 +326,13 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(jButton1, gridBagConstraints);
+
+        addFileButton1.setAction(FilesPanel.loadRemoteFilesAction);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(addFileButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app)
