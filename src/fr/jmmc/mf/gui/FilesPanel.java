@@ -1,8 +1,3 @@
-/*
- * FilesPanel.java
- *
- * Created on 6 décembre 2006, 11:33
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.ShowHelpAction;
@@ -10,30 +5,25 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 
 import fr.jmmc.mcs.util.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
+import fr.jmmc.mf.gui.actions.LoadRemoteDataFilesAction;
 import fr.jmmc.mf.models.Files;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 
-
-/**
- *
- * @author  mella
- */
 public class FilesPanel extends javax.swing.JPanel
 {
-    /**
-     * DOCUMENT ME!
-     */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.FilesPanel");
     static Files current = null;
     SettingsViewerInterface settingsViewer = null;
     public static Action loadFilesAction;
+    public static Action loadRemoteFilesAction;
     SettingsModel rootSettingsModel = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton;
+    private javax.swing.JButton addFileButton1;
     private javax.swing.JList fileList;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -44,17 +34,13 @@ public class FilesPanel extends javax.swing.JPanel
     {
         settingsViewer      = viewer;
         loadFilesAction     = ActionRegistrar.getInstance().get(LoadDataFilesAction.className, LoadDataFilesAction.actionName);
+        loadRemoteFilesAction     = ActionRegistrar.getInstance().get(LoadRemoteDataFilesAction.className, LoadRemoteDataFilesAction.actionName);
         initComponents();
-        addFileButton.setAction(loadFilesAction);
         jButton1.setAction(new ShowHelpAction("_Load_Oifile_Bt_ou_Area"));
+        addFileButton.setAction(loadFilesAction);
+        addFileButton1.setAction(loadRemoteFilesAction);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param f DOCUMENT ME!
-     * @param s DOCUMENT ME!
-     */
     public void show(Files f, SettingsModel s)
     {
         current           = f;
@@ -79,6 +65,7 @@ public class FilesPanel extends javax.swing.JPanel
         fileList = new javax.swing.JList();
         addFileButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        addFileButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Oifile list"));
         setLayout(new java.awt.GridBagLayout());
@@ -110,6 +97,13 @@ public class FilesPanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jButton1, gridBagConstraints);
+
+        addFileButton1.setAction(loadRemoteFilesAction);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(addFileButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
