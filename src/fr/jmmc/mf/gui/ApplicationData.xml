@@ -69,6 +69,7 @@
             <prerelease version="0.26beta1">
                 <change type="BUGFIX">The new plots are for the shown settings and no more for the last opened one</change>
                 <change type="FEATURE">User can download oidata files direcly from the oidata repository</change>
+                <change type="CHANGE">Improve algorythm that find new model and parameters names</change>
             </prerelease>
         </release>
         <release version="0.25">
