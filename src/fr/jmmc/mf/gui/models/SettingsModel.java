@@ -273,27 +273,29 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         parentTarget.removeModel(currentModel);
 
+        int modelIdx = getNewModelIdx(newModel.getType());
+        newModel.setName(newModel.getType() + modelIdx);
         // try to recover previous parameters
         Parameter[] currentModelParams = currentModel.getParameter();
         Parameter[] newModelParams = newModel.getParameter();
         for (int i = 0; i < newModelParams.length; i++) {
             Parameter np = newModelParams[i];
-            np.setName(getNewParamName(np.getName()));
+            np.setName(getNewParamName(np.getName(), modelIdx));
             for (int j = 0; j < currentModelParams.length; j++) {
                 Parameter cp = currentModelParams[j];
-                if (matchType(np.getType(),cp.getType())) {
+                if (matchType(np.getType(), cp.getType())) {
                     np.setValue(cp.getValue());
                     np.setHasFixedValue(cp.getHasFixedValue());
-                    if(cp.hasScale()){
+                    if (cp.hasScale()) {
                         np.setScale(cp.getScale());
                     }
-                    if(cp.hasMaxValue()){
-                    np.setMaxValue(cp.getMaxValue());
+                    if (cp.hasMaxValue()) {
+                        np.setMaxValue(cp.getMaxValue());
                     }
-                    if(cp.hasMinValue()){
-                    np.setMinValue(cp.getMinValue());
+                    if (cp.hasMinValue()) {
+                        np.setMinValue(cp.getMinValue());
                     }
-                    if(np.getType().equals(cp.getType())){
+                    if (np.getType().equals(cp.getType())) {
                         // the name is not always copyed because min_diameter matches with diameter
                         np.setName(cp.getName());
                     }
@@ -305,7 +307,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < newModelParams.length; i++) {
             Parameter np = newModelParams[i];
             for (int j = 0; j < currentParameterLinks.length; j++) {
-                ParameterLink  cpl = currentParameterLinks[j];
+                ParameterLink cpl = currentParameterLinks[j];
                 if (np.getType().equals(cpl.getType())) {
                     newModel.removeParameter(np);
                     newModel.addParameterLink(cpl);
@@ -336,7 +338,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
 
-        newModel.setName(getNewModelName(newModel.getType()));
         parentTarget.addModel(childPosition, newModel);
         //update treenode and ask to update viewer of new model
         fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
@@ -348,22 +349,22 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * character, then this method returns true.
      * @return true if both string ends with same keyword, else returns false
      */
-    private boolean matchType(String oldParamType, String newParamType){
+    private boolean matchType(String oldParamType, String newParamType) {
         int idx;
-        idx=oldParamType.lastIndexOf('_');
-        if(idx>=0){
-            oldParamType=oldParamType.substring(idx+1);
+        idx = oldParamType.lastIndexOf('_');
+        if (idx >= 0) {
+            oldParamType = oldParamType.substring(idx + 1);
         }
-        idx=newParamType.lastIndexOf('_');
-        if(idx>=0){
-            newParamType=newParamType.substring(idx+1);
+        idx = newParamType.lastIndexOf('_');
+        if (idx >= 0) {
+            newParamType = newParamType.substring(idx + 1);
         }
 
 
-        if(newParamType.equals(oldParamType)){
+        if (newParamType.equals(oldParamType)) {
             return true;
         }
-        if(newParamType.contains(oldParamType)){
+        if (newParamType.contains(oldParamType)) {
             return true;
         }
 
@@ -391,14 +392,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // force another name with unique position
         String type = newModel.getType();
-        newModel.setName(getNewModelName(type));
+        int modelIdx = getNewModelIdx(type);
+        newModel.setName(type + modelIdx);
 
         boolean firstModel = parentTarget.getModelCount() == 0;
 
         // and change parameters name also
         Parameter[] params = newModel.getParameter();
         for (int i = 0; i < params.length; i++) {
-            Parameter p = params[i];
+            Parameter p = params[i];            
             // init some default parameters depending on first place
             if (firstModel) {
                 if (p.getName().equals("x") || p.getName().equals("y")) {
@@ -408,7 +410,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
             }
-            p.setName(getNewParamName(p.getName()));
+            p.setName(getNewParamName(p.getName(), modelIdx));
             parameterComboBoxModel.addElement(p);
             parameterListModel.addElement(p);
         }
@@ -685,11 +687,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             File file = files[i];
             ids.add(file.getId());
         }
-        return getNewId("fileId", ids.size() + 1, ids);
+        return "fileId" + getNewId("fileId", ids,1);
     }
 
-    /** Returns a new uniq Model Name */
-    public String getNewModelName(String prefix) {
+    /** Returns a new id to build a new uniq Model Name by suffixing given prefix */
+    public int getNewModelIdx(String prefix) {
         logger.entering(className, "getNewModelName", prefix);
 
         Vector<String> ids = new Vector();
@@ -702,12 +704,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 ids.add(model.getName());
             }
         }
-        return getNewId(prefix, ids.size() + 1, ids);
+        return getNewId(prefix, ids,1);
     }
 
-    /** Returns a new uniq param name */
-    public String getNewParamName(String prefix) {
-        logger.entering(className, "getNewParamName", prefix);
+    /** Returns a new uniq param name with a preferenced suffixe idx*/
+    public String getNewParamName(String prefix, int suffix) {
+        logger.entering(className, "getNewParamName", new Object[]{prefix,suffix});
         Vector<String> ids = new Vector();
         Target[] targets = rootSettings.getTargets().getTarget();
         int nextId = 1;
@@ -726,7 +728,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        return getNewId(prefix, nextId, ids);
+        return prefix+getNewId(prefix, ids, suffix);
+    }
+
+    /** Returns a new uniq param name */
+    public String getNewParamName(String prefix) {
+        return getNewParamName(prefix, 1);
     }
 
     public void setModelName(Model model, String newName) {
@@ -745,13 +752,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param previousIds list of previous ids
      * @return the new id
      */
-    protected String getNewId(String prefix, int firstId, Vector<String> previousIds) {
+    protected int getNewId(String prefix, Vector<String> previousIds, int firstId) {
         String newId = prefix + firstId;
         while (previousIds.contains(newId)) {
             firstId++;
             newId = prefix + firstId;
         }
-        return newId;
+        return firstId;
     }
 
     /**
@@ -949,7 +956,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             } else {
                 logger.warning("found null result while updating with new settings");
             }
-        }        
+        }
     }
 
     // respond to ModifyAndSaveObject interface
@@ -1656,7 +1663,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "valueForPathChanged", new Object[]{path, newValue});
         Object modifiedObject = path.getLastPathComponent();
         new FeedbackReport();
-    //fireTreeNodesChanged(path,modifiedObject);
+        //fireTreeNodesChanged(path,modifiedObject);
     }
 
     @Override
