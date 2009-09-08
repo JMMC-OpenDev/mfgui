@@ -41,8 +41,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="0.26">
-            <prerelease version="0.26beta1000">
+        <release version="0.27">
+            <prerelease version="0.27beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -66,6 +66,11 @@
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="0.27beta1">
+                <change type="CHANGE">Use new remote oifits browser</change>
+            </prerelease>
+        </release>
+        <release version="0.26">
             <prerelease version="0.26beta1">
                 <change type="BUGFIX">The new plots are for the shown settings and no more for the last opened one</change>
                 <change type="FEATURE">User can download oidata files direcly from the oidata repository</change>
