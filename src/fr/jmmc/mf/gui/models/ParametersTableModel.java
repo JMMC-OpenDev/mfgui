@@ -37,7 +37,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     // Init columns titles and types
     protected final String[] columnNames = new String[]{"Name", "Type", "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
-    protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
+    protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
     private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
     ;
     private SettingsModel settingsModel;
