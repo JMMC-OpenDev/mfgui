@@ -741,7 +741,7 @@ public class UtilsClass {
 
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setMaximumFractionDigits(3);
-        return "rho='" + nf.format(getRho(x, y)) + "' theta='" + nf.format(getTheta(x, y)) + "'";
+        return "rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
     }
 
     public static double getRho(double x, double y) {
