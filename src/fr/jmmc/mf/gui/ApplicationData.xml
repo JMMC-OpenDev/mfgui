@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="0.27beta1"/>
+    <program name="ModelFitting" version="0.28beta1"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -18,14 +18,9 @@
             <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel8"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel5"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>                
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel6"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel4"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel7"/>
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
@@ -41,8 +36,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="0.27">
-            <prerelease version="0.27beta1000">
+        <release version="0.28">
+            <prerelease version="0.28beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -66,6 +61,11 @@
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="0.28beta1">
+                <change type="CHANGE">Update GUI according last meeting discussions</change>
+            </prerelease>
+        </release>
+        <release version="0.27">
             <prerelease version="0.27beta1">
                 <change type="CHANGE">Use new remote oifits browser</change>
             </prerelease>

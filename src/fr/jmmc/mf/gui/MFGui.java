@@ -229,22 +229,12 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         Action                    action;
 
         Hashtable<String, String> demo = new Hashtable();
-        demo.put("Binary disk (Obj1)",
-            "http://jmmc.fr/modelfitting/xml/Obj1_binary_disk_with_oidata.xml");
-        demo.put("Binary punct (Obj1)",
-            "http://jmmc.fr/modelfitting/xml/Obj1_binary_punct_with_oidata.xml");
-        demo.put("Uniform disk (Obj1)",
-            "http://jmmc.fr/modelfitting/xml/Obj1_uniform_disk_with_oidata.xml");
-        demo.put("Binary punct (Obj2)",
-            "http://jmmc.fr/modelfitting/xml/Obj2_binary_punct_with_oidata.xml");
-        demo.put("Disk and punct (Obj2)",
-            "http://jmmc.fr/modelfitting/xml/Obj2_disk_and_punct_with_oidata.xml");
-        demo.put("Triple punct (Obj2)",
-            "http://jmmc.fr/modelfitting/xml/Obj2_triple_punct_with_oidata.xml");
-        demo.put("Uniform disk (Obj2)",
-            "http://jmmc.fr/modelfitting/xml/Obj2_uniform_disk_with_oidata.xml");
-        demo.put("Arcturus",
-            "http://jmmc.fr/modelfitting/xml/Arcturus_uniform_disk_with_oidata.xml");
+        demo.put("Tutorial example 1: angular diameter of a single star",
+            "http://apps.jmmc.fr/modelfitting/xml/arcturus_1.79mu_tutorial.xml");
+        demo.put("Tutorial example 2: sharing parameters",
+            "http://apps.jmmc.fr/modelfitting/xml/arcturus_1.52-1.79mu_tutorial.xml");
+        demo.put("Tutorial example 3: ﬁt with degenerated parameters ",
+            "http://apps.jmmc.fr/modelfitting/xml/Theta1OriC_tutorial.xml");
         
         Enumeration keys = demo.keys();
         int i=1;
