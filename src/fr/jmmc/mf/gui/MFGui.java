@@ -228,7 +228,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         JMenuItem                 menuItem;
         Action                    action;
 
-        Hashtable<String, String> demo = new Hashtable();
+        LinkedHashMap<String, String> demo = new LinkedHashMap<String, String>();
         demo.put("Tutorial example 1: angular diameter of a single star",
             "http://apps.jmmc.fr/modelfitting/xml/arcturus_1.79mu_tutorial.xml");
         demo.put("Tutorial example 2: sharing parameters",
@@ -236,12 +236,12 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         demo.put("Tutorial example 3: ﬁt with degenerated parameters ",
             "http://apps.jmmc.fr/modelfitting/xml/Theta1OriC_tutorial.xml");
         
-        Enumeration keys = demo.keys();
+        Iterator<String> iterator = demo.keySet().iterator();
+        
         int i=1;
-        while (keys.hasMoreElements()){
-            String title = (String)keys.nextElement();
-            action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title,this);
-            action.putValue(action.NAME, title);
+        while (iterator.hasNext()){
+            String title = iterator.next();
+            action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title,this);            
             i++;                 
         }
     
