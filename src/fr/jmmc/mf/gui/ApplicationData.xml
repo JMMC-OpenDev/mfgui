@@ -398,7 +398,8 @@
         </release>
     </releasenotes>
     <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{ModelFitting} service
-\footnote{Available at http://www.jmmc.fr/modelfitting} co-developped by CRAL, LAOG, FIZEAU
+    co-developped by CRAL, LAOG and FIZEAU.
+\footnote{ModelFitting software available at http://www.jmmc.fr/modelfitting}
 
 @INPROCEEDINGS{2008SPIE.7013E..44T,
    author = {{Tallon-Bosc}, I. and {Tallon}, M. and {Thi{\'e}baut}, E. and
