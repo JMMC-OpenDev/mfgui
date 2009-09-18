@@ -397,7 +397,10 @@
             </prerelease>
         </release>
     </releasenotes>
-    <acknowledgment><![CDATA[@INPROCEEDINGS{2008SPIE.7013E..44T,
+    <acknowledgment><![CDATA[This research has made use of the \texttt{ModelFitting} service of the Jean-Marie Mariotti Center
+\footnote{Available at http://www.jmmc.fr/modelfitting}
+
+@INPROCEEDINGS{2008SPIE.7013E..44T,
    author = {{Tallon-Bosc}, I. and {Tallon}, M. and {Thi{\'e}baut}, E. and
 	{B{\'e}chet}, C. and {Mella}, G. and {Lafrasse}, S. and {Chesneau}, O. and
 	{Domiciano de Souza}, A. and {Duvert}, G. and {Mourard}, D. and
