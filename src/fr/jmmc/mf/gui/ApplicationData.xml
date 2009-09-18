@@ -397,5 +397,19 @@
             </prerelease>
         </release>
     </releasenotes>
-    <!--<acknowledgment><![CDATA[blah ]]></acknowledgment>-->
+    <acknowledgment><![CDATA[@INPROCEEDINGS{2008SPIE.7013E..44T,
+   author = {{Tallon-Bosc}, I. and {Tallon}, M. and {Thi{\'e}baut}, E. and
+	{B{\'e}chet}, C. and {Mella}, G. and {Lafrasse}, S. and {Chesneau}, O. and
+	{Domiciano de Souza}, A. and {Duvert}, G. and {Mourard}, D. and
+	{Petrov}, R. and {Vannier}, M.},
+    title = "{LITpro: a model fitting software for optical interferometry}",
+booktitle = {Society of Photo-Optical Instrumentation Engineers (SPIE) Conference Series},
+     year = 2008,
+   series = {Society of Photo-Optical Instrumentation Engineers (SPIE) Conference Series},
+   volume = 7013,
+    month = jul,
+      doi = {10.1117/12.788871},
+   adsurl = {http://cdsads.u-strasbg.fr/abs/2008SPIE.7013E..44T},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}]]></acknowledgment>
 </ApplicationData>
