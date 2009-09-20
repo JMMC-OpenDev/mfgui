@@ -216,6 +216,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     t3ampCheckBox.setEnabled(false);
     t3phiCheckBox.setEnabled(false);
 
+    Residuals residuals = current.getResiduals();
+
     Object[] selectedFiles = fileList.getSelectedValues();
     for (int j = 0; j <
             selectedFiles.length; j++) {
@@ -224,32 +226,37 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
         if (oifile.hasOiVis2()) {
           vis2CheckBox.setEnabled(true);
-          vis2CheckBox.setSelected(true);
+          if (residuals == null) {
+            vis2CheckBox.setSelected(true);
+          }
         }
 
         if (oifile.hasOiVis()) {
           visAmpCheckBox.setEnabled(true);
           visPhiCheckBox.setEnabled(true);
-          visAmpCheckBox.setSelected(true);
-          visPhiCheckBox.setSelected(true);
+          if (residuals == null) {
+            visAmpCheckBox.setSelected(true);
+            visPhiCheckBox.setSelected(true);
+          }
         }
 
         if (oifile.hasOiT3()) {
           t3ampCheckBox.setEnabled(true);
           t3phiCheckBox.setEnabled(true);
-          t3ampCheckBox.setSelected(true);
-          t3phiCheckBox.setSelected(true);
+          if (residuals == null) {
+            t3ampCheckBox.setSelected(true);
+            t3phiCheckBox.setSelected(true);
+          }
         }
       } catch (Exception ex) {
-           new FeedbackReport(null, true, ex);
+        new FeedbackReport(null, true, ex);
       }
     }
 
     // Set normalizeCheckBox
     normalizeCheckBox.setSelected(current.getNormalize());
-    
+
     // and search their values if residuals exist
-    Residuals residuals = current.getResiduals();
     if (residuals != null) {
       for (String key : moduleNameToCheckBox.keySet()) {
         JCheckBox cb = moduleNameToCheckBox.get(key);
@@ -265,7 +272,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
           }
         }
-      }    
+      }
     }
     // updateResidual content into model
     targetFitterParamActionPerformed(null);
