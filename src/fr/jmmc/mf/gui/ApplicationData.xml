@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/modelfitting">
-    <program name="ModelFitting" version="0.28"/>
+    <program name="ModelFitting" version="0.29beta1"/>
     <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
@@ -36,8 +36,8 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="0.28">
-            <prerelease version="0.28beta1000">
+        <release version="0.29">
+            <prerelease version="0.29beta1000">
                 <!--
                 <li>
                 Add one format version of all xml settings files
@@ -61,6 +61,12 @@
                 <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
                 <change type="REQUEST">Add a 'back' button to return to previous panels</change>
             </prerelease>
+            <prerelease version="0.29beta1">
+                <change type="CHANGE">Update Fitter settup according selected files</change>
+                <change type="BUGFIX">Remember user input into plot chi2 panel even if the parameter have one min or max value</change>
+            </prerelease>
+        </release>
+        <release version="0.28">
             <prerelease version="0.28beta1">
                 <change type="CHANGE">Update GUI according last meeting discussions</change>
             </prerelease>
