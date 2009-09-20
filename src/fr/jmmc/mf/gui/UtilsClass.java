@@ -373,7 +373,7 @@ public class UtilsClass {
         return outputFile;
     }
 
-    public static OifitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile, String b64)
+    public static OifitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile)
             throws IOException, FitsException {
         fr.jmmc.mf.models.File key = dataFile;
 
@@ -391,7 +391,7 @@ public class UtilsClass {
 
         if (oifitsFile == null) {            
             File outputFile = java.io.File.createTempFile(filename, fileExtension);
-            saveBASE64ToFile(b64, outputFile);
+            saveBASE64ToFile(dataFile.getHref(), outputFile);
             oifitsFile = new OifitsFile(outputFile);
             alreadyExpandedOifitsFiles.put(key, oifitsFile);
             logger.fine("expanding '" + key + "' into " + oifitsFile.getFile().getAbsolutePath());            
