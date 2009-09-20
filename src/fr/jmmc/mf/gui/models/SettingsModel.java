@@ -1208,7 +1208,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (boundFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
                 // restore file from base64 and try to continue
-                filename = UtilsClass.saveBASE64ToFile(boundFile, href).getAbsolutePath();
+                filename = UtilsClass.saveBASE64ToFile(boundFile, href).getFile().getAbsolutePath();
             } else {
                 return true;
             }
