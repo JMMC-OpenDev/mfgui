@@ -3,6 +3,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
@@ -13,220 +14,271 @@ import fr.jmmc.mf.models.Residuals;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
+import fr.jmmc.oifits.OifitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
+import org.eso.fits.FitsException;
 
 /** Display GUI for Target elements */
 public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener {
 
-    /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.TargetPanel");
-    /** Main model object of this GUI controller */
-    Target current = null;
-    ListModel targetFiles;
-    boolean listenToFileSelection;
-    DefaultListModel models = new DefaultListModel();
-    SettingsViewerInterface settingsViewer;
-    public Settings rootSettings = null;
-    public SettingsModel rootSettingsModel = null;
-    private PlotModelPanel plotModelImagePanel;
-    private PlotChi2Panel plotChi2Panel;
-    private ParametersTableModel parametersTableModel;
-    private Vector<MouseListener> mouseListeners = new Vector();
-    private Hashtable<String, JCheckBox> moduleNameToCheckBox = new Hashtable();
+  /** Class logger */
+  static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+          "fr.jmmc.mf.gui.TargetPanel");
+  /** Main model object of this GUI controller */
+  Target current = null;
+  ListModel targetFiles;
+  boolean listenToFileSelection;
+  DefaultListModel models = new DefaultListModel();
+  SettingsViewerInterface settingsViewer;
+  public Settings rootSettings = null;
+  public SettingsModel rootSettingsModel = null;
+  private PlotModelPanel plotModelImagePanel;
+  private PlotChi2Panel plotChi2Panel;
+  private ParametersTableModel parametersTableModel;
+  private Vector<MouseListener> mouseListeners = new Vector();
+  private Hashtable<String, JCheckBox> moduleNameToCheckBox = new Hashtable();
 
-    /** Creates new form TargetPanel */
-    public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel) {
-        settingsViewer = viewer;
-        parametersTableModel = new ParametersTableModel();
-        initComponents();
+  /** Creates new form TargetPanel */
+  public TargetPanel(SettingsViewerInterface viewer, PlotPanel plotPanel) {
+    settingsViewer = viewer;
+    parametersTableModel = new ParametersTableModel();
+    initComponents();
 
-        listenToFileSelection = false;
+    listenToFileSelection = false;
 
-        modelList.setModel(models);
+    modelList.setModel(models);
 
-        plotModelImagePanel = new PlotModelPanel(plotPanel);
-        subplotPanel.add(plotModelImagePanel);
+    plotModelImagePanel = new PlotModelPanel(plotPanel);
+    subplotPanel.add(plotModelImagePanel);
 
-        plotChi2Panel = new PlotChi2Panel(plotPanel);
-        subplotPanel.add(plotChi2Panel);
+    plotChi2Panel = new PlotChi2Panel(plotPanel);
+    subplotPanel.add(plotChi2Panel);
 
-        // link residual module name with its widget
-        String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
-        JCheckBox[] modulesCheckBoxes = new JCheckBox[]{visAmpCheckBox,
-            visPhiCheckBox, vis2CheckBox, t3ampCheckBox, t3phiCheckBox};
-        for (int i = 0; i < moduleNames.length; i++) {
-            moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i]);
+    // link residual module name with its widget
+    String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
+    JCheckBox[] modulesCheckBoxes = new JCheckBox[]{visAmpCheckBox,
+      visPhiCheckBox, vis2CheckBox, t3ampCheckBox, t3phiCheckBox};
+    for (int i = 0; i < moduleNames.length; i++) {
+      moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i]);
+    }
+
+    // build help button
+    jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
+    jButton2.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
+
+  }
+
+  /**
+   * Display graphical view of given target.
+   *
+   * @param t the target to show
+   * @param settingsModel its associated settingsModel
+   */
+  public void show(Target t, SettingsModel settingsModel) {
+    logger.entering("" + this.getClass(), "show");
+
+    current = t;
+    this.rootSettingsModel = settingsModel;
+    this.rootSettings = settingsModel.getRootSettings();
+
+    parametersTableModel.setModel(rootSettingsModel, current, true);
+    if (!mouseListeners.contains(parametersTableModel)) {
+      parametersTable.addMouseListener(parametersTableModel);
+      mouseListeners.add(parametersTableModel);
+    }
+
+    jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
+
+    // set one click edition on following table and show all decimals in numerical values
+    //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
+    ((DefaultCellEditor) parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
+    parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor) parametersTable.getDefaultEditor(String.class));
+    parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
+
+
+    //// Select current ident
+    identComboBox.setSelectedItem(t.getIdent());
+
+    listenToFileSelection = false;
+    // a new empty chekbox list is created each time, because the selection can't be reset
+    fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
+    jScrollPane1.setViewportView(fileList);
+    fileList.addListSelectionListener(this);
+
+    targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
+
+    fileList.setModel(targetFiles);
+    if (targetFiles != null) {
+      fileList.setModel(targetFiles);
+      // next line doesn't work
+      // @todo fix it
+      fileList.clearSelection();
+      // define selected files reading fileLinks
+      //      File[] files   = rootSettings.getFiles().getFile();
+      for (int i = 0; i < targetFiles.getSize(); i++) {
+        Object file = targetFiles.getElementAt(i);
+        FileLink[] links = current.getFileLink();
+        for (int j = 0; j < links.length; j++) {
+          FileLink fileLink = links[j];
+          if (fileLink.getFileRef() == file) {
+            // modify dirrectly the widget instead of its model
+            // because jmcs.gui.CheckBoxJList does not handle properly
+            fileList.setSelectedIndex(i);
+            //selectedFiles.addSelectionInterval(i, i);
+          }
         }
+      }
+    } else {
+      // should not append except if user delete some files??
+      logger.warning("Can't find list of files");
+    }
+    listenToFileSelection = true;
 
-        // build help button
-        jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
-        jButton2.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
+    updateModels();
+
+    fixFitterSetup();
+
+    plotModelImagePanel.show(settingsModel, current);
+    plotChi2Panel.show(settingsModel, current);
+  }
+
+  private void updateModels() {
+    // Set model list
+    models.clear();
+    for (int i = 0; i < current.getModelCount(); i++) {
+      models.addElement(current.getModel(i));
+    }
+    parametersTableModel.setModel(rootSettingsModel, current, true);
+    UtilsClass.initColumnSizes(parametersTable, 330);
+  }
+
+  /* receive event on file list */
+  public void valueChanged(ListSelectionEvent e) {
+    logger.entering("" + this.getClass(), "valueChanged");
+
+    if (!listenToFileSelection || e.getValueIsAdjusting()) {
+      return;
+    }
+
+// We will try to detect differences between selection and target filelinks
+    // for all possible file
+
+    for (int i = 0; i < targetFiles.getSize(); i++) {
+      Object file = targetFiles.getElementAt(i);
+      boolean isInTarget = false;
+      FileLink[] targetLinks = current.getFileLink();
+      for (int j = 0; j < targetLinks.length; j++) {
+        FileLink targetLink = targetLinks[j];
+        if (targetLink.getFileRef() == file) {
+          isInTarget = true;
+        }
+      }
+
+      boolean isInSelection = false;
+      Object[] selectedOnes = fileList.getSelectedValues();
+      for (int j = 0; j < selectedOnes.length; j++) {
+        Object selectedOne = selectedOnes[j];
+        if (selectedOne == file) {
+          isInSelection = true;
+        }
+      }
+
+      if (isInSelection && (!isInTarget)) {
+        rootSettingsModel.addFile(current, (File) file);
+      }
+
+      if ((!isInSelection) && isInTarget) {
+        rootSettingsModel.removeFile(current, (File) file);
+      }
 
     }
 
-    /**
-     * Display graphical view of given target.
-     *
-     * @param t the target to show
-     * @param settingsModel its associated settingsModel
+    fixFitterSetup();
+  }
+
+  private void fixFitterSetup() {
+    /* disable and unselect every fitter entries
+     * and enable them if one or more files have relevant data 
      */
-    public void show(Target t, SettingsModel settingsModel) {
-        logger.entering("" + this.getClass(), "show");
+    boolean initValue = false;
+    visAmpCheckBox.setSelected(initValue);
+    visPhiCheckBox.setSelected(initValue);
+    vis2CheckBox.setSelected(initValue);
+    t3ampCheckBox.setSelected(initValue);
+    t3phiCheckBox.setSelected(initValue);
+    vis2CheckBox.setEnabled(false);
+    visAmpCheckBox.setEnabled(false);
+    visPhiCheckBox.setEnabled(false);
+    t3ampCheckBox.setEnabled(false);
+    t3phiCheckBox.setEnabled(false);
 
-        current = t;
-        this.rootSettingsModel = settingsModel;
-        this.rootSettings = settingsModel.getRootSettings();
-
-        parametersTableModel.setModel(rootSettingsModel, current, true);
-        if (!mouseListeners.contains(parametersTableModel)) {
-            parametersTable.addMouseListener(parametersTableModel);
-            mouseListeners.add(parametersTableModel);
+    Object[] selectedFiles = fileList.getSelectedValues();
+    for (int j = 0; j <
+            selectedFiles.length; j++) {
+      File selectedFile = (File) selectedFiles[j];
+      try {
+        OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+        if (oifile.hasOiVis2()) {
+          vis2CheckBox.setEnabled(true);
+          vis2CheckBox.setSelected(true);
         }
 
-        jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
-
-        // set one click edition on following table and show all decimals in numerical values
-        //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
-        ((DefaultCellEditor) parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
-        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor) parametersTable.getDefaultEditor(String.class));
-        parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
-
-
-        //// Select current ident
-        identComboBox.setSelectedItem(t.getIdent());
-
-        listenToFileSelection = false;
-        // a new empty chekbox list is created each time, because the selection can't be reset
-        fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
-        jScrollPane1.setViewportView(fileList);
-        fileList.addListSelectionListener(this);
-
-        targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
-
-        fileList.setModel(targetFiles);
-        if (targetFiles != null) {
-            fileList.setModel(targetFiles);
-            // next line doesn't work
-            // @todo fix it
-            fileList.clearSelection();
-            // define selected files reading fileLinks
-            //      File[] files   = rootSettings.getFiles().getFile();
-            for (int i = 0; i < targetFiles.getSize(); i++) {
-                Object file = targetFiles.getElementAt(i);
-                FileLink[] links = current.getFileLink();
-                for (int j = 0; j < links.length; j++) {
-                    FileLink fileLink = links[j];
-                    if (fileLink.getFileRef() == file) {
-                        // modify dirrectly the widget instead of its model 
-                        // because jmcs.gui.CheckBoxJList does not handle properly
-                        fileList.setSelectedIndex(i);
-                    //selectedFiles.addSelectionInterval(i, i);
-                    }
-                }
-            }
-        } else {
-            // should not append except if user delete some files??
-            logger.warning("Can't find list of files");
-        }
-        listenToFileSelection = true;
-
-        updateModels();
-
-        // Set normalizeCheckBox
-        normalizeCheckBox.setSelected(current.getNormalize());
-
-        // Fix default residual checkbox states
-        Residuals residuals = current.getResiduals();
-        boolean initValue = residuals == null;
-        visAmpCheckBox.setSelected(initValue);
-        visPhiCheckBox.setSelected(initValue);
-        vis2CheckBox.setSelected(initValue);
-        t3ampCheckBox.setSelected(initValue);
-        t3phiCheckBox.setSelected(initValue);
-
-        // and search their values if residuals exist
-        if (residuals != null) {
-            for (String key : moduleNameToCheckBox.keySet()) {
-                JCheckBox cb = moduleNameToCheckBox.get(key);
-                Residual[] res = residuals.getResidual();
-                for (int i = 0; i < res.length; i++) {
-                    Residual residual = res[i];
-                    if (residual.getName().equals(key)) {
-                        cb.setSelected(true);
-                    }
-                }
-            }
+        if (oifile.hasOiVis()) {
+          visAmpCheckBox.setEnabled(true);
+          visPhiCheckBox.setEnabled(true);
         }
 
-        plotModelImagePanel.show(settingsModel, current);
-        plotChi2Panel.show(settingsModel, current);
+        if (oifile.hasOiT3()) {
+          t3ampCheckBox.setEnabled(true);
+          t3phiCheckBox.setEnabled(true);
+        }
+      } catch (Exception ex) {
+           new FeedbackReport(null, true, ex);
+      }
     }
 
-    private void updateModels() {
-        // Set model list
-        models.clear();
-        for (int i = 0; i < current.getModelCount(); i++) {
-            models.addElement(current.getModel(i));
+    // Set normalizeCheckBox
+    normalizeCheckBox.setSelected(current.getNormalize());
+    
+    // and search their values if residuals exist
+    Residuals residuals = current.getResiduals();
+    if (residuals != null) {
+      for (String key : moduleNameToCheckBox.keySet()) {
+        JCheckBox cb = moduleNameToCheckBox.get(key);
+        Residual[] res = residuals.getResidual();
+        for (int i = 0; i < res.length; i++) {
+          Residual residual = res[i];
+          if (residual.getName().equals(key)) {
+            if (cb.isEnabled()) {
+              cb.setSelected(true);
+            } else {
+              // the residual must be updated according available files's observables
+              residuals.removeResidual(residual);
+            }
+          }
         }
-        parametersTableModel.setModel(rootSettingsModel, current, true);
-        UtilsClass.initColumnSizes(parametersTable, 330);
+      }    
     }
+    // updateResidual content into model
+    targetFitterParamActionPerformed(null);
+  }
 
-    /* receive event on file list */
-    public void valueChanged(ListSelectionEvent e) {
-        logger.entering("" + this.getClass(), "valueChanged");
-
-        if (!listenToFileSelection || e.getValueIsAdjusting()) {
-            return;
-        }
-
-        // We will try to detect differences between selection and target filelinks
-        // for all possible file
-
-        for (int i = 0; i < targetFiles.getSize(); i++) {
-            Object file = targetFiles.getElementAt(i);
-            boolean isInTarget = false;
-            FileLink[] targetLinks = current.getFileLink();
-            for (int j = 0; j < targetLinks.length; j++) {
-                FileLink targetLink = targetLinks[j];
-                if (targetLink.getFileRef() == file) {
-                    isInTarget = true;
-                }
-            }
-
-            boolean isInSelection = false;
-            Object[] selectedOnes = fileList.getSelectedValues();
-            for (int j = 0; j < selectedOnes.length; j++) {
-                Object selectedOne = selectedOnes[j];
-                if (selectedOne == file) {
-                    isInSelection = true;
-                }
-            }
-
-            if (isInSelection && (!isInTarget)) {
-                rootSettingsModel.addFile(current, (File) file);
-            }
-            if ((!isInSelection) && isInTarget) {
-                rootSettingsModel.removeFile(current, (File) file);
-            }
-        }
-    }
-
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-
+  /** This method is called from within the constructor to
+   * initialize the form.
+   * WARNING: Do NOT modify this code. The content of this method is
+   * always regenerated by the Form Editor.
+   */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -512,8 +564,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
- 
-    private void modelListMouseClicked(java.awt.event.MouseEvent evt)
+
+private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_modelListMouseClicked
         if (evt.getClickCount() == 2)
         {
@@ -537,7 +589,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 current,
                 fileList.getSelectedValue() } ));
         }
-        
+
     }//GEN-LAST:event_fileListMouseClicked
 
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
@@ -547,14 +599,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         for (int i = 0; i < values.length; i++) {
             Object object = values[i];
             rootSettingsModel.removeModel(current, (Model)object);
-            updateModels();            
+            updateModels();
         }
         removeModelButton.setEnabled(false);
         plotModelImagePanel.show(rootSettingsModel, current);
         plotChi2Panel.show(rootSettingsModel, current);
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
-    private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
+private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     {//GEN-FIRST:event_modelListValueChanged
 
         if (modelList.getSelectedIndex() != -1)
@@ -566,7 +618,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             removeModelButton.setEnabled(false);
         }
 
-
     }//GEN-LAST:event_modelListValueChanged
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
@@ -574,11 +625,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         logger.entering("" + this.getClass(), "addModelButtonActionPerformed");
 
         try
-        {
+{
             // Construct a new copy
             Model        selectedModel = (Model) modelTypeComboBox.getSelectedItem();
             Model        m;
-            // Clone selected Model (this code could have been moved into model???
+// Clone selected Model (this code could have been moved into model???
             StringWriter writer   = new StringWriter();
             UtilsClass.marshal(selectedModel,writer);
             StringReader reader = new StringReader(writer.toString());
@@ -588,7 +639,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             plotModelImagePanel.show(rootSettingsModel, current);
             plotChi2Panel.show(rootSettingsModel, current);
         }
-        catch (Exception e)
+catch (Exception e)
         {
             // this occurs when add button is pressed without selection
             logger.warning("No model selected");
@@ -608,19 +659,19 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 if (visAmpCheckBox.isSelected()) {
                     visAmp = "default";
                 }
-                if (visPhiCheckBox.isSelected()) {
+if (visPhiCheckBox.isSelected()) {
                     visPhi = "default";
                 }
-                if (vis2CheckBox.isSelected()) {
+if (vis2CheckBox.isSelected()) {
                     vis2 = "default";
                 }
-                if (t3phiCheckBox.isSelected()) {
+if (t3phiCheckBox.isSelected()) {
                     t3Phi = "default";
                 }
-                if (t3ampCheckBox.isSelected()) {
+if (t3ampCheckBox.isSelected()) {
                     t3Amp = "default";
                 }
-        rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
+rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
 
         // refresh modelpanel to get updated list of residual plots
         plotModelImagePanel.show(rootSettingsModel, current);
