@@ -1,8 +1,3 @@
-/*
- * PlotPanel.java
- *
- * Created on 29 oct. 2008, 08:16:23
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.ShowHelpAction;
@@ -16,99 +11,100 @@ import java.util.Observer;
 import java.util.Vector;
 import javax.swing.DefaultCellEditor;
 
-/**
- *
- * @author mella
- * @todo fix bu that doesnt remember oldXparam enad oldYparam
- */
-public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
+public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
-    /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.PlotChi2Panel");
-    public SettingsModel settingsModel = null;
-    public Target target = null;
-    private PlotPanel plotPanel;
-    private ParametersTableModel param1TableModel;
-    private Parameter oldXParam = null;
-    private Parameter oldYParam = null;
-    private Vector<SettingsModel> knownSettingsModels = new Vector();
-    private int startValue=0;
+  /** Class logger */
+  static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+          "fr.jmmc.mf.gui.PlotChi2Panel");
+  public SettingsModel settingsModel = null;
+  public Target target = null;
+  private PlotPanel plotPanel;
+  private ParametersTableModel param1TableModel;
+  private Parameter oldXParam = null;
+  private Parameter oldYParam = null;
+  private Vector<SettingsModel> knownSettingsModels = new Vector();
+  private int startValue = 0;
+  /** this variable is true during init method and false else */
+  private boolean isIniting;
 
-    /** Creates new form PlotPanel */
-    public PlotChi2Panel(PlotPanel plotPanel) {
-        this.plotPanel = plotPanel;
-        param1TableModel = new ParametersTableModel();
-        startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
-        initComponents();
-        // build help button        
-        helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+  /** Creates new form PlotPanel */
+  public PlotChi2Panel(PlotPanel plotPanel) {
+    this.plotPanel = plotPanel;
+    param1TableModel = new ParametersTableModel();
+    startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
+    initComponents();
+    // build help button
+    helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
+    tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
 
-        // set one click edition on following table and show all decimals of numerical values
-        ((DefaultCellEditor)jTable1.getDefaultEditor(String.class)).setClickCountToStart(1);
-        jTable1.setDefaultEditor(Double.class, (DefaultCellEditor)jTable1.getDefaultEditor(String.class));
-        jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
+    // set one click edition on following table and show all decimals of numerical values
+    ((DefaultCellEditor) jTable1.getDefaultEditor(String.class)).setClickCountToStart(1);
+    jTable1.setDefaultEditor(Double.class, (DefaultCellEditor) jTable1.getDefaultEditor(String.class));
+    jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
+  }
+
+  public void show(SettingsModel s) {
+    init(s, null);
+  }
+
+  public void show(SettingsModel s, Target t) {
+    init(s, t);
+  }
+
+  private void init(SettingsModel s, Target t) {
+    settingsModel = s;
+    target = t;
+
+    isIniting = true;
+
+    Object[] params;
+
+    if (t == null) {
+      params = s.getParameterListModel().toArray();
+    } else {
+      params = UtilsClass.getParameters(t);
     }
 
-    public void show(SettingsModel s) {
-        init(s, null);
+    // we want to listen model change events
+    if (!knownSettingsModels.contains(settingsModel)) {
+      settingsModel.addObserver(this);
+      knownSettingsModels.add(settingsModel);
     }
 
-    public void show(SettingsModel s, Target t) {
-        init(s,t);
-    }
+    // Store old references
+    Parameter tmpX = oldXParam;
+    Parameter tmpY = oldYParam;
 
-    private void init(SettingsModel s, Target t){
-        settingsModel = s;
-        target=t;
-
-        Object[] params;
-
-        if(t==null){
-            params=s.getParameterListModel().toArray();
-        }else{
-            params=UtilsClass.getParameters(t);
+    // Populates combo with given params & Call old user entries back
+    xComboBox.removeAllItems();
+    yComboBox.removeAllItems();
+    logger.fine("Searching " + params.length + " parameters to use in chi2 slice");
+    for (int i = 0; i < params.length; i++) {
+      Parameter p = (Parameter) params[i];
+      if (!p.getHasFixedValue()) {
+        logger.fine(p.getName() + " added to the comboboxes");
+        xComboBox.addItem(p);
+        yComboBox.addItem(p);
+        if (tmpX != null && tmpX.getName().equals(p.getName())) {
+          xComboBox.setSelectedItem(p);
         }
-        
-        // we want to listen model change events
-        if (!knownSettingsModels.contains(settingsModel)) {
-            settingsModel.addObserver(this);
-            knownSettingsModels.add(settingsModel);
+        if (tmpY != null && tmpY.getName().equals(p.getName())) {
+          yComboBox.setSelectedItem(p);
         }
-
-        // Store old references
-        Parameter tmpX = oldXParam;
-        Parameter tmpY = oldYParam;
-
-        // Populates combo with given params & Call old user entries back
-        xComboBox.removeAllItems();
-        yComboBox.removeAllItems();
-        logger.fine("Searching "+params.length+" parameters to use in chi2 slice");
-        for (int i = 0; i < params.length; i++) {
-            Parameter p = (Parameter) params[i];
-            if (!p.getHasFixedValue()) {
-                logger.fine(p.getName()+" added to the comboboxes");
-                xComboBox.addItem(p);
-                yComboBox.addItem(p);
-                if (tmpX!=null && tmpX.getName().equals(p.getName())) {
-                    xComboBox.setSelectedItem(p);
-                }
-                if (tmpY!=null && tmpY.getName().equals(p.getName())) {
-                    yComboBox.setSelectedItem(p);
-                }
-            }
-        }
-       
-        // update table with
-        updateTable();
+      }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
+    // update table with
+    updateTable();
+
+    isIniting = false;
+  }
+
+  /** This method is called from within the constructor to
+   * initialize the form.
+   * WARNING: Do NOT modify this code. The content of this method is
+   * always regenerated by the Form Editor.
+   */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -302,63 +298,68 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
     private void plot1DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot1DChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plot1DChi2ButtonActionPerformed
 
-        String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
-        plotPanel.plot("getChi2Map", args, "1D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
+      String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
+      plotPanel.plot("getChi2Map", args, "1D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
 }//GEN-LAST:event_plot1DChi2ButtonActionPerformed
 
     private void plot2DChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plot2DChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plot2DChi2ButtonActionPerformed
-        String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText() + " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
-        plotPanel.plot("getChi2Map", args, "2D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
+      String args = ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText() + " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
+      plotPanel.plot("getChi2Map", args, "2D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
 }//GEN-LAST:event_plot2DChi2ButtonActionPerformed
 
-    private void updateTable() {
-        boolean hasParam = ( xComboBox.getSelectedItem() != null )
-                && ( yComboBox.getSelectedItem() != null );
-        boolean enabled = hasParam && settingsModel.isValid();
-        plot1DChi2Button.setEnabled(enabled);
-        plot2DChi2Button.setEnabled(enabled);
-        if (hasParam) {
-            Parameter[] parameters = new Parameter[2];
-            parameters[0] = (Parameter) xComboBox.getSelectedItem();
-            parameters[1] = (Parameter) yComboBox.getSelectedItem();
-            param1TableModel.setModel(settingsModel, parameters,true);
-        } else {
-            logger.fine("No parameter to use for chi2map");
-        }
-        UtilsClass.initColumnSizes(jTable1, 400);
+  private void updateTable() {
+    boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
+    boolean enabled = hasParam && settingsModel.isValid();
+    plot1DChi2Button.setEnabled(enabled);
+    plot2DChi2Button.setEnabled(enabled);
+    if (hasParam) {
+      Parameter[] parameters = new Parameter[2];
+      parameters[0] = (Parameter) xComboBox.getSelectedItem();
+      parameters[1] = (Parameter) yComboBox.getSelectedItem();
+      param1TableModel.setModel(settingsModel, parameters, true);
+    } else {
+      logger.fine("No parameter to use for chi2map");
     }
+    UtilsClass.initColumnSizes(jTable1, 400);
+  }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
+      /* Do not update during init method */
+      if (!isIniting) {
         Parameter yParam = (Parameter) yComboBox.getSelectedItem();
         if (yParam == null) {
-            return;
+          return;
         }
         updateTable();
         oldYParam = yParam;
         if (yParam.hasMinValue()) {
-            yminFormattedTextField.setText("" + yParam.getMinValue());
+          yminFormattedTextField.setText("" + yParam.getMinValue());
         }
         if (yParam.hasMaxValue()) {
-            ymaxFormattedTextField.setText("" + yParam.getMaxValue());
+          ymaxFormattedTextField.setText("" + yParam.getMaxValue());
         }
+      }
 }//GEN-LAST:event_yComboBoxActionPerformed
 
     private void xComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xComboBoxActionPerformed
+      /* Do not update during init method */
+      if (!isIniting) {
         Parameter xParam = (Parameter) xComboBox.getSelectedItem();
+
         if (xParam == null) {
-            return;
+          return;
         }
         updateTable();
         oldXParam = xParam;
         if (xParam.hasMinValue()) {
-            xminFormattedTextField.setText("" + xParam.getMinValue());
+          xminFormattedTextField.setText("" + xParam.getMinValue());
         }
         if (xParam.hasMaxValue()) {
-            xmaxFormattedTextField.setText("" + xParam.getMaxValue());
+          xmaxFormattedTextField.setText("" + xParam.getMaxValue());
         }
+      }
     }//GEN-LAST:event_xComboBoxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel10;
@@ -382,7 +383,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer{
     private javax.swing.JFormattedTextField yminFormattedTextField;
     // End of variables declaration//GEN-END:variables
 
-    public void update(Observable o, Object arg) {
-        init(settingsModel,target);
-    }
+  public void update(Observable o, Object arg) {
+    init(settingsModel, target);
+  }
 }
