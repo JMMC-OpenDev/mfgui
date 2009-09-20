@@ -14,7 +14,9 @@ import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResponseItem;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Settings;
+import fr.jmmc.oifits.OifitsFile;
 import java.awt.BorderLayout;
+import org.eso.fits.FitsException;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
@@ -62,7 +64,7 @@ public class UtilsClass {
     static String className = "fr.jmmc.mf.gui.UtilsClass";
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    static java.util.Hashtable alreadyExpandedFiles = new java.util.Hashtable();
+    private static java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile> alreadyExpandedOifitsFiles= new java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile>();
 
     /** This method wal along the targets and check if no one of them are linked to the given file.
      * 
@@ -371,9 +373,9 @@ public class UtilsClass {
         return outputFile;
     }
 
-    public static File saveBASE64ToFile(fr.jmmc.mf.models.File dataFile, String b64)
-            throws IOException {
-        Object key = dataFile;
+    public static OifitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile, String b64)
+            throws IOException, FitsException {
+        fr.jmmc.mf.models.File key = dataFile;
 
         String filename = "tmpOifile";
         String fileExtension = ".oifits";
@@ -385,20 +387,18 @@ public class UtilsClass {
         }
 
         // Search if this file has already been loaded
-        java.io.File outputFile = (java.io.File) alreadyExpandedFiles.get(key);
+        OifitsFile oifitsFile = (OifitsFile) alreadyExpandedOifitsFiles.get(key);
 
-        if (outputFile == null) {
-            // Create temp file.
-            outputFile = java.io.File.createTempFile(filename, fileExtension);
-            // Delete temp file when program exits.
-            outputFile.deleteOnExit();
-            alreadyExpandedFiles.put(key, outputFile);
-            logger.fine("expanding '" + key + "' into " + outputFile.getAbsolutePath());
-            return saveBASE64ToFile(b64, outputFile);
+        if (oifitsFile == null) {            
+            File outputFile = java.io.File.createTempFile(filename, fileExtension);
+            saveBASE64ToFile(b64, outputFile);
+            oifitsFile = new OifitsFile(outputFile);
+            alreadyExpandedOifitsFiles.put(key, oifitsFile);
+            logger.fine("expanding '" + key + "' into " + oifitsFile.getFile().getAbsolutePath());            
         } else {
-            logger.fine("file '" + key + "' was already expanded into " + outputFile.getAbsolutePath());
+            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getFile().getAbsolutePath());
         }
-        return outputFile;
+        return oifitsFile;
     }
 
     //
