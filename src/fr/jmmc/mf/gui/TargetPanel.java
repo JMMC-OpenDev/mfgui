@@ -1,6 +1,3 @@
-/*
- * Created on 3 novembre 2006, 15:48
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
@@ -17,17 +14,13 @@ import fr.jmmc.mf.models.Target;
 import fr.jmmc.oifits.OifitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
-import org.eso.fits.FitsException;
 
 /** Display GUI for Target elements */
 public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener {
@@ -237,11 +230,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         if (oifile.hasOiVis()) {
           visAmpCheckBox.setEnabled(true);
           visPhiCheckBox.setEnabled(true);
+          visAmpCheckBox.setSelected(true);
+          visPhiCheckBox.setSelected(true);
         }
 
         if (oifile.hasOiT3()) {
           t3ampCheckBox.setEnabled(true);
           t3phiCheckBox.setEnabled(true);
+          t3ampCheckBox.setSelected(true);
+          t3phiCheckBox.setSelected(true);
         }
       } catch (Exception ex) {
            new FeedbackReport(null, true, ex);
