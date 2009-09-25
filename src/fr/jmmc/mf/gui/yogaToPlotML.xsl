@@ -82,7 +82,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         <xsl:param name="plotName"/>
         <plot>
             <title>
-                <xsl:value-of select="concat('Plot ',$plotName,' versus radial distance')"/>
+                <xsl:value-of select="concat('Plot ',$plotName,' versus spatial frequency')"/>
             </title>
             <xLabel>spatial frequency (1/rad)</xLabel>
             <yLabel>
@@ -130,7 +130,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         <xsl:param name="plotName"/>
         <plot>
             <title>
-                <xsl:value-of select="concat('Plot ',$plotName,' residuals versus radial distance')"/>
+                <xsl:value-of select="concat('Plot ',$plotName,' residuals versus spatial frequency')"/>
             </title>
             <xLabel>spatial frequency (1/rad)</xLabel>
             <yLabel>

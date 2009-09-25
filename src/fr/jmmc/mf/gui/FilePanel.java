@@ -545,7 +545,7 @@ public class FilePanel extends javax.swing.JPanel {
                     //" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
                     + "<plot>" +
                     "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
-                    "<title>data versus radial distance</title>" +
+                    "<title>data versus spatial frequency</title>" +
                     "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + 
                     requestedTables + "</yLabel>");
 
