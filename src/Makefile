@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.24 2009-10-02 08:44:58 mella Exp $"
+# "@(#) $Id: Makefile,v 1.25 2009-10-02 10:08:32 ccmgr Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.24  2009/10/02 08:44:58  mella
+# fix jnlp file name
+#
 # Revision 1.23  2009/04/28 11:11:23  mella
 # add icons into jar
 #
@@ -187,13 +190,13 @@ mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
 #
 # Java programs
 # ---------------------------------
-JAVA_EXECUTABLES = ModelFitting \
+JAVA_EXECUTABLES = LITproGUI \
 				   mfguiReadAndWriteXml\
 									 mfguiShowXmlPlot
 
 #
 # <brief description of ModelFitting java program>
-ModelFitting_CLASS     = fr.jmmc.mf.gui.ModelFitting
+LITproGUI_CLASS     = fr.jmmc.mf.gui.ModelFitting
 mfguiReadAndWriteXml_CLASS     = fr.jmmc.mf.ReadAndWriteXml
 mfguiShowXmlPlot_CLASS = fr.jmmc.mcs.ImageViewer
 
