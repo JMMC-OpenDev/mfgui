@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <jnlp spec="1.0+" codebase="REPLACECODEBASE" href="REPLACEHREF">
 	<information>
-		<title>Model Fitting LITpro GUI</title>
+		<title>LITpro</title>
 		<vendor>JMMC</vendor>
         <homepage href="http://www.jmmc.fr/litpro"/>
 		<description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
