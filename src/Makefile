@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.23 2009-04-28 11:11:23 mella Exp $"
+# "@(#) $Id: Makefile,v 1.24 2009-10-02 08:44:58 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.23  2009/04/28 11:11:23  mella
+# add icons into jar
+#
 # Revision 1.22  2009/03/23 10:12:42  mella
 # add mfguiReadAndWriteXml programm
 #
@@ -237,7 +240,7 @@ CSOURCENAMES = \
 MAKEDIR = $(MCSROOT)/include
 include $(MAKEDIR)/mkfMakefile
 
-JNLP=ModelFitting
+JNLP=LITpro
 #
 # TARGETS
 # -------
