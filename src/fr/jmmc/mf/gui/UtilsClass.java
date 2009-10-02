@@ -64,7 +64,7 @@ public class UtilsClass {
     static String className = "fr.jmmc.mf.gui.UtilsClass";
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    private static java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile> alreadyExpandedOifitsFiles= new java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile>();
+    private static java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile> alreadyExpandedOifitsFiles = new java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile>();
 
     /** This method wal along the targets and check if no one of them are linked to the given file.
      * 
@@ -125,11 +125,17 @@ public class UtilsClass {
      * @return
      * @throws java.io.IOException
      */
-    public static JFrame buildFrameFor(File pngFile) throws IOException {
+    public static JFrame buildFrameFor(File pngFile) throws IOException {        
+        if (pngFile == null) {
+            return null;
+        }
         JFrame frame = new JFrame();
         JLabel label;
         JPanel p = new JPanel(new BorderLayout());
         Image image = ImageIO.read(pngFile);
+        if (image == null) {
+            return null;
+        }
         // Use a label to display the image
         label = new JLabel(new ImageIcon(image));
         p.add(label, BorderLayout.CENTER);
@@ -193,8 +199,8 @@ public class UtilsClass {
         writer.flush();
         logger.fine("End of marshal");
     }
-    
-    public static Object unmarshal(Class c, Reader reader) throws IOException, MappingException, MarshalException, ValidationException{
+
+    public static Object unmarshal(Class c, Reader reader) throws IOException, MappingException, MarshalException, ValidationException {
         // Do marshalling
         URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Start of unmarshal using mapping file :" + mappingURL);
@@ -264,7 +270,7 @@ public class UtilsClass {
      *
      * @throws IOException
      */
-    public static String saveBASE64ToString(String b64) throws IOException{
+    public static String saveBASE64ToString(String b64) throws IOException {
         String[] dataTypes = new String[]{
             IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
         };
@@ -284,8 +290,8 @@ public class UtilsClass {
                     sb.append(st.nextToken());
                 }
                 byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
-                ByteArrayOutputStream out=null;
-                if(base64DataType.contains("x-gzip")){
+                ByteArrayOutputStream out = null;
+                if (base64DataType.contains("x-gzip")) {
                     logger.fine("base64 file was gzipped, unzipping'" + base64DataType);
                     GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
                     out = new ByteArrayOutputStream();
@@ -302,7 +308,7 @@ public class UtilsClass {
                 out.flush();
                 out.close();
                 logger.fine("end of decoding '" + base64DataType);
-                logger.finest("decoded content is: '" + out+"'");
+                logger.finest("decoded content is: '" + out + "'");
                 return out.toString();
             }
         }
@@ -310,6 +316,7 @@ public class UtilsClass {
         logger.severe("Nothing has been decoded for given base64 encoded file\n" + b64.substring(0, b64.indexOf(";base64,")));
         return null;
     }
+
     /**
      * Decode the base64 encoded file and store it into the given file.
      *
@@ -330,7 +337,7 @@ public class UtilsClass {
             if (i < dataTypes.length) {
                 base64DataType = "data:" + dataTypes[i] + ";base64,";
             } else {
-                base64DataType = "data:" + b64.substring(0, 100).substring(5, b64.indexOf(";base64,")) + ";base64,";
+                base64DataType = "data:" + b64.substring(0, Math.min(100,b64.length())).substring(5, b64.indexOf(";base64,")) + ";base64,";
             }
 
             if (b64.startsWith(base64DataType)) {
@@ -389,12 +396,12 @@ public class UtilsClass {
         // Search if this file has already been loaded
         OifitsFile oifitsFile = (OifitsFile) alreadyExpandedOifitsFiles.get(key);
 
-        if (oifitsFile == null) {            
+        if (oifitsFile == null) {
             File outputFile = java.io.File.createTempFile(filename, fileExtension);
             saveBASE64ToFile(dataFile.getHref(), outputFile);
             oifitsFile = new OifitsFile(outputFile);
             alreadyExpandedOifitsFiles.put(key, oifitsFile);
-            logger.fine("expanding '" + key + "' into " + oifitsFile.getFile().getAbsolutePath());            
+            logger.fine("expanding '" + key + "' into " + oifitsFile.getFile().getAbsolutePath());
         } else {
             logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getFile().getAbsolutePath());
         }
