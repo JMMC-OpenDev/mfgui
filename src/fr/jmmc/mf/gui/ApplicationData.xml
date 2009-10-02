@@ -44,7 +44,7 @@
         <!--
         <release version="0.31">
             <prerelease version="0.31beta1000">
-                <!--
+                <! - -
                 <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
