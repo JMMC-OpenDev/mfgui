@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITproGUI" version="0.31"/>
-    <compilation date="16/06/2009" compiler="javac 1.5.0_13"/>
+    <program name="LITpro GUI" version="1.0"/>
+    <compilation date="01/10/2009" compiler="javac 1.5.0_13"/>
     <text>
     </text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,6 +36,12 @@
         </menu>
     </menubar>
     <releasenotes>
+        <release version="1.0">
+            <prerelease version="1.0beta0">
+                <change type="CHANGE">First public release</change>
+            </prerelease>
+        </release>
+        <!--
         <release version="0.31">
             <prerelease version="0.31beta1000">
                 <!--
@@ -50,7 +56,7 @@
                  <change type="REQUEST"></change>
                  <change type="BUGFIX"></change>
                  placer les boutons expand unexpand et delete just au dessu de l'arbre
-                -->
+                - - >
                 <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
                 <change type="REQUEST">Fix problem with Nan in oifits files</change>
                 <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
@@ -94,29 +100,7 @@
             </prerelease>
         </release>
         <release version="0.25">
-            <prerelease version="0.25beta1000">
-                <!--
-                <li>
-                Add one format version of all xml settings files
-                (Future revision will be able to check format validity
-                 and propose converter tools)
-                 </li>
-                 <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
-                 <change type="FEATURE"></change>
-                 <change type="CHANGE"></change>
-                 <change type="REQUEST"></change>
-                 <change type="BUGFIX"></change>
-                 placer les boutons expand unexpand et delete just au dessu de l'arbre
-                -->
-                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
-                <change type="REQUEST">Fix problem with Nan in oifits files</change>
-                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
-                <change type="REQUEST">Flip the U axe of the UV plots</change>
-                <change type="REQUEST">Add url data file loading capability</change>
-                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
-                <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
-                <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
-                <change type="REQUEST">Add a 'back' button to return to previous panels</change>
+            <prerelease version="0.25beta1000">                                
             </prerelease>
             <prerelease version="0.25beta3">
                 <change type="BUGFIX">Fix long latency on preference changes</change>
@@ -315,8 +299,7 @@
                 <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
                 <change type="FEATURE">Window closing button now quits application</change>
                 <change type="FEATURE">User can plot image or uv map of model for multiple targets</change>
-                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
-                <!--<change>Models and Targets name have uniq suffixes</change>-->
+                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>            
             </prerelease>
             <prerelease version="0.11beta1">
                 <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
@@ -412,6 +395,7 @@
                 <change> Report error loading bad format files (oifiles and settings ones) </change>
             </prerelease>
         </release>
+        -->
     </releasenotes>
     <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{ModelFitting} service
     co-developped by CRAL, LAOG and FIZEAU.
