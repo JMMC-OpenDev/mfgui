@@ -2,8 +2,8 @@
 <ApplicationData link="http://www.jmmc.fr/litpro">
     <program name="LITpro" version="1.0"/>
     <compilation date="01/10/2009" compiler="javac 1.5.0_13"/>
-    <!--<text></text>
-    <copyright>Copyrights JMMC 2008</copyright>-->
+    <text></text>
+    <!-- <copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
     </dependences>
@@ -396,9 +396,9 @@
         </release>
         -->
     </releasenotes>
-    <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{ModelFitting} service
+    <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{LITpro} service
     co-developped by CRAL, LAOG and FIZEAU.
-\footnote{ModelFitting software available at http://www.jmmc.fr/litpro}
+\footnote{LITpro software available at http://www.jmmc.fr/litpro}
 
 @INPROCEEDINGS{2008SPIE.7013E..44T,
    author = {{Tallon-Bosc}, I. and {Tallon}, M. and {Thi{\'e}baut}, E. and
