@@ -5,9 +5,11 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
 
+import fr.jmmc.mcs.util.Http;
 import fr.jmmc.mf.models.Response;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -22,17 +24,17 @@ import java.util.logging.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-
 /**
  *
  * @author mella
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App
 {
-    final static String rcsId = "$Id: ModelFitting.java,v 1.32 2009-05-20 07:02:56 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.33 2010-01-18 16:31:13 mella Exp $";
     static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
+    static HttpClient client_ = null;
 
     /**
      * Creates a new ModelFitting object.
@@ -250,17 +252,27 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App
         {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
 
-            HttpClient client = new HttpClient();
-            client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+            if (client_==null){
+                client_ = Http.getHttpClient();
+            }
+            // Since we can have long term exchanges
+            client_.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 
-            int status = client.executeMethod(myPost);
+            int status = client_.executeMethod(myPost);
 
             if (status == HttpStatus.SC_OK)
             {
                 StringBuffer sb = new StringBuffer();
                 Reader reader = new InputStreamReader(
                 myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
-                result = myPost.getResponseBodyAsString();
+                StringWriter sw = new StringWriter();
+                char cbuf[] = new char[1024];
+                int len = reader.read(cbuf);
+                while (len>0){
+                    sw.write(cbuf, 0, len);
+                    len = reader.read(cbuf);
+                }                
+                result = sw.toString();
                 logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
             }
             else
