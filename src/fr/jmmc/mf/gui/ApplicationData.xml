@@ -38,10 +38,9 @@
         <release version="1.0.1">
             <prerelease version="1.0.1b1">
                 <change type="CHANGE">Use proxy parameters to access remote webservice</change>
+                <change type="CHANGE">Improve efficiency of webservice return reading</change>
             </prerelease>
         </release>
-    </releasenotes>
-    <releasenotes>
         <release version="1.0">
             <prerelease version="1.0b0">
                 <change type="CHANGE">First public release</change>
