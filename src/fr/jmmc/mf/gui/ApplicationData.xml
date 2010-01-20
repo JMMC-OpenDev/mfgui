@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.1b1"/>
+    <program name="LITpro" version="1.0.1b2"/>
     <compilation date="01/10/2009" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,9 +36,12 @@
     </menubar>
     <releasenotes>
         <release version="1.0.1">
+          <prerelease version="1.0.1b2">
+                <change type="CHANGE">Show validation results of input files before doing anything else</change>
+            </prerelease>
             <prerelease version="1.0.1b1">
-                <change type="CHANGE">Use proxy parameters to access remote webservice</change>
-                <change type="CHANGE">Improve efficiency of webservice return reading</change>
+                <change type="CHANGE">Use proxy parameters to access the LITpro remote webservice</change>
+                <change type="CHANGE">Improve efficiency during the reading of the webservice return</change>
             </prerelease>
         </release>
         <release version="1.0">
