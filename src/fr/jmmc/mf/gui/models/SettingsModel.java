@@ -1217,7 +1217,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return populate(boundFile, filename);
     }
 
-    /** Set href attribute and search oitarget in io.File associated to filename.
+    /** 
+     * 
+     * Show validation GUI, set href attribute and search oitarget in
+     * io.File associated to filename.
      *
      * @param fileToPopulate
      * @param filename
@@ -1230,10 +1233,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
         fits = new OifitsFile(filename);
+        GUIValidator val = new GUIValidator(null);
+        val.checkFile(fits);
 
-        OiTarget oiTarget = fits.getOiTarget();
-
-        String[] targetNames = oiTarget.getTargetNames();
+        String[] targetNames;
+        try{
+          OiTarget oiTarget = fits.getOiTarget();
+          targetNames = oiTarget.getTargetNames();
+        }catch(NullPointerException npe){
+          throw new FitsException("Your file must contains one target / one OITARGET table");
+        }
 
         //generate and store base64 href
         fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
@@ -1246,8 +1255,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             fileToPopulate.addOitarget(t);
         }
 
-        GUIValidator val = new GUIValidator(null);
-        val.checkFile(fits);
         return true;
     }
 
