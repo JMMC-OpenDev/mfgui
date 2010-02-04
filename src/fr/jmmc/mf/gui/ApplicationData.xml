@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.1b2"/>
+    <program name="LITpro" version="1.0.1b3"/>
     <compilation date="01/10/2009" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,7 +36,10 @@
     </menubar>
     <releasenotes>
         <release version="1.0.1">
-          <prerelease version="1.0.1b2">
+            <prerelease version="1.0.1b3">
+                <change type="CHANGE">Fix handling of 1x1 arrays that could result in non displayed values</change>
+            </prerelease>
+            <prerelease version="1.0.1b2">
                 <change type="CHANGE">Show validation results of input files before doing anything else</change>
             </prerelease>
             <prerelease version="1.0.1b1">
