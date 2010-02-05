@@ -170,13 +170,13 @@ Generate Html view of given xml settings files .
             <tr>
                 <th>name</th>
                 <th>value</th>
+                <th>standard deviation(+/-)</th>
                 <th>prev_val</th>
                 <th>vmin</th>
                 <th>vmax</th>
                 <th>scale</th>
                 <th>fixed</th>
                 <th>units</th>
-                <th>standard deviation(+/-)</th>
             </tr>
             <xsl:for-each select="exslt:node-set($worldCopy)/param/*">
                 <xsl:variable name="paramName" select="name()"/>
@@ -186,6 +186,12 @@ Generate Html view of given xml settings files .
                     </td>
                     <td>
                         <xsl:value-of select="value"/>
+                    </td>
+                    <td>
+                        <xsl:call-template name="get_standard_deviation">
+                            <xsl:with-param name="world" select="$worldCopy"/>
+                            <xsl:with-param name="paramName" select="$paramName"/>
+                        </xsl:call-template>
                     </td>
                     <td>
                         <xsl:choose>
@@ -225,13 +231,7 @@ Generate Html view of given xml settings files .
                         </td>
                     <td>
                         <xsl:value-of select="units"/>
-                    </td>
-                    <td>
-                        <xsl:call-template name="get_standard_deviation">
-                            <xsl:with-param name="world" select="$worldCopy"/>
-                            <xsl:with-param name="paramName" select="$paramName"/>
-                        </xsl:call-template>
-                    </td>
+                    </td>                    
                 </tr>
             </xsl:for-each>
         </table>
