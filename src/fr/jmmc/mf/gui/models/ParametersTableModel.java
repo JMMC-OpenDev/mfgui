@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  * @todo: check if model container should be vectors instead of arrays
  *
  */
-public class ParametersTableModel extends AbstractTableModel implements MouseListener, Observer{
+public class ParametersTableModel extends AbstractTableModel implements MouseListener, Observer {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.models.ParametersTableModel");
@@ -39,11 +39,10 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
     protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
     private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
-    ;
     private SettingsModel settingsModel;
     private Target targetToPresent;
     private Model modelToPresent;
-    private Parameter[] parametersToPresent;
+    private Object[] parametersOrParameterLinksToPresent;
     private Vector<SettingsModel> knownSettingsModels = new Vector();
 
     public ParametersTableModel() {
@@ -52,48 +51,55 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         recursive = true;
     }
 
+    /**
+     * Tells to the table model to show the parameters of the given target.
+     */
     public void setModel(SettingsModel settingsModel, Target targetToPresent, boolean recursive) {
         refreshModel(settingsModel, targetToPresent, null, null, recursive);
     }
 
     /**
-     * tell table model to represent the parameters of the given model.
+     * Tells to the table model to show the parameters of the given model.
      */
     public void setModel(SettingsModel settingsModel, Model modelToPresent, boolean recursive) {
         refreshModel(settingsModel, null, modelToPresent, null, recursive);
     }
 
+    /**
+     * Tells to the table model to show the given parameters.
+     */
     public void setModel(SettingsModel settingsModel, Parameter[] parametersToPresent, boolean recursive) {
         refreshModel(settingsModel, null, null, parametersToPresent, recursive);
     }
 
-    private void refreshModel(SettingsModel settingsModel, Target target, Model model, Parameter[] parameters, boolean recursive) {
+    private void refreshModel(SettingsModel settingsModel, Target target, Model model, Object[] parametersAndParameterLinks, boolean recursive) {
         this.settingsModel = settingsModel;
         this.targetToPresent = target;
         this.modelToPresent = model;
-        this.parametersToPresent = parameters;
+        this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
         this.recursive = recursive;
 
         // we want to listen model change events
         if (!knownSettingsModels.contains(settingsModel)) {
             settingsModel.addObserver(this);
             knownSettingsModels.add(settingsModel);
+            logger.fine("Observing one new SettingsModel:" + settingsModel);
         }
 
         if (targetToPresent != null) {
-            parametersToPresent = new Parameter[]{};
+            parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
-            Vector<Parameter> params = new Vector();
+            Vector params = new Vector();
             Vector<Model> models = new Vector();
             Model[] array = targetToPresent.getModel();
             for (int i = 0; i < array.length; i++) {
                 Model m = array[i];
                 addParamsFor(m, params, models, recursive);
             }
-            parametersToPresent = new Parameter[params.size()];
+            parametersOrParameterLinksToPresent = new Object[params.size()];
             modelOfParameters = new Model[params.size()];
-            for (int i = 0; i < parametersToPresent.length; i++) {
-                parametersToPresent[i] = params.elementAt(i);
+            for (int i = 0; i < parametersOrParameterLinksToPresent.length; i++) {
+                parametersOrParameterLinksToPresent[i] = params.elementAt(i);
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
             // notify observers
@@ -102,15 +108,15 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         }
 
         if (modelToPresent != null) {
-            parametersToPresent = new Parameter[]{};
+            parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
-            Vector<Parameter> params = new Vector();
+            Vector params = new Vector();
             Vector<Model> models = new Vector();
             addParamsFor(modelToPresent, params, models, recursive);
-            parametersToPresent = new Parameter[params.size()];
+            parametersOrParameterLinksToPresent = new Object[params.size()];
             modelOfParameters = new Model[params.size()];
-            for (int i = 0; i < parametersToPresent.length; i++) {
-                parametersToPresent[i] = params.elementAt(i);
+            for (int i = 0; i < parametersOrParameterLinksToPresent.length; i++) {
+                parametersOrParameterLinksToPresent[i] = params.elementAt(i);
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
             // notify observers
@@ -118,13 +124,17 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             return;
         }
 
-        if (parametersToPresent != null) {
-            this.parametersToPresent = parameters;
-            modelOfParameters = new Model[this.parametersToPresent.length];
+        if (parametersOrParameterLinksToPresent != null) {
+            this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
+            modelOfParameters = new Model[this.parametersOrParameterLinksToPresent.length];
             if (recursive) {
-                for (int i = 0; i < parametersToPresent.length; i++) {
-                    Parameter parameter = parametersToPresent[i];
-                    modelOfParameters[i] = settingsModel.getParent(parameter);
+                for (int i = 0; i < parametersOrParameterLinksToPresent.length; i++) {
+                    Object o = parametersOrParameterLinksToPresent[i];
+                    if (isParameterLink(o)) {
+                        modelOfParameters[i] = settingsModel.getParent((ParameterLink) o);
+                    } else {
+                        modelOfParameters[i] = settingsModel.getParent((Parameter) o);
+                    }
                 }
             }
             // notify observers
@@ -133,7 +143,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         }
     }
 
-    protected void addParamsFor(Model model, Vector<Parameter> paramContainer, Vector<Model> modelContainer, boolean recursive) {
+    protected void addParamsFor(Model model, Vector paramContainer, Vector<Model> modelContainer, boolean recursive) {
         // Start to append model parameters
         Parameter[] params = model.getParameter();
         int nbOfParams = params.length;
@@ -145,14 +155,12 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         }
         // Then append model parameters that are linked
         ParameterLink[] paramLinks = model.getParameterLink();
-        nbOfParams = paramLinks.length;
-        logger.fine("Adding " +nbOfParams +" normal params and "
-                + nbOfParams + " shared parameters for " + model);
+        int nbOfSharedParams = paramLinks.length;
+        logger.fine("Adding " + nbOfParams + " normal params and " + nbOfSharedParams + " shared parameters for " + model);
         // Create with initial data
-        for (int i = 0; i < nbOfParams; i++) {
-            ParameterLink link = paramLinks[i];
-            Parameter p = (Parameter) link.getParameterRef();
-            paramContainer.add(p);
+        for (int i = 0; i < nbOfSharedParams; i++) {
+            ParameterLink link = paramLinks[i];            
+            paramContainer.add(link);
             modelContainer.add(model);
         }
         if (recursive) {
@@ -179,24 +187,34 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     public int getRowCount() {
-        if (parametersToPresent != null) {
-            return parametersToPresent.length;
+        if (parametersOrParameterLinksToPresent != null) {
+            return parametersOrParameterLinksToPresent.length;
         }
         return 0;
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Parameter p = parametersToPresent[rowIndex];
-        if (p == null) {
+        Object o = parametersOrParameterLinksToPresent[rowIndex];
+        if (o == null) {
             return null;
         }
+        Parameter p;
+        ParameterLink pl=null;
+        if (isParameterLink(o)) {
+            pl=(ParameterLink) o;
+            p = (Parameter) ((ParameterLink) o).getParameterRef();
+        } else {
+            p = (Parameter) o;
+        }
+
         // return name
         if (columnIndex == 0) {
             if (recursive) {
                 Model model = modelOfParameters[rowIndex];
-                if(settingsModel.isSharedParameter(p)){
+                if (isParameterLink(o)) {
+                    // hide the model name for one shared parameter
                     return p.getName();
-                }else if (model != null) {
+                } else if (model != null) {
                     return model.getName() + "." + p.getName();
                 } else {
                     logger.warning("Can't find model for parameter " + rowIndex);
@@ -206,6 +224,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 return p.getName();
             }
         } else if (columnIndex == 1) {
+            if (isParameterLink(o)) {                
+                    return pl.getType();
+            }
             return p.getType();
         }
         // @todo ask quality software responsible to validate following code
@@ -235,11 +256,18 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Parameter p = parametersToPresent[rowIndex];
-        if (aValue != null) {
-            logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
+        Object o = parametersOrParameterLinksToPresent[rowIndex];
+        Parameter p;
+        if (isParameterLink(o)) {
+            p = (Parameter) ((ParameterLink) o).getParameterRef();
         } else {
-            logger.fine("parameter " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
+            p = (Parameter) o;
+        }
+
+        if (aValue != null) {
+            logger.fine("parameter[row="+rowIndex+", hashcode="+p.hashCode()+"] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
+        } else {
+            logger.fine("parameter[row="+rowIndex+", hashcode="+p.hashCode()+"] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
         }
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
@@ -278,8 +306,8 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     methodName = "set" + columnNames[columnIndex];
                     Class[] c = new Class[]{aValue.getClass()};
                     Method set = Parameter.class.getMethod(methodName, c);
-                    Object[] o = new Object[]{aValue};
-                    set.invoke(p, o);
+                    Object[] obj = new Object[]{aValue};
+                    set.invoke(p, obj);
                 } else {
                     methodName = "delete" + columnNames[columnIndex];
                     Method m = Parameter.class.getMethod(methodName);
@@ -289,6 +317,11 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             } catch (Exception e) {
                 new FeedbackReport(null, true, e);
             }
+        }
+        // update the table for models that uses the same shared parameters more
+        // than once
+        if(isParameterLink(o)){
+            update(null, null);
         }
     }
 
@@ -311,7 +344,14 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             parametersTable.getSelectionModel().setSelectionInterval(rowIdx, rowIdx);
 
             // Build menu
-            final Parameter p = parametersToPresent[rowIdx];
+            Object o = parametersOrParameterLinksToPresent[rowIdx];
+            final Parameter p;
+            if (isParameterLink(o)) {
+                p = (Parameter) ((ParameterLink) o).getParameterRef();
+            } else {
+                p = (Parameter) o;
+            }
+            
             JMenuItem menuItem = new JMenuItem("Manage parameter " + p.getName() +
                     " of type " + p.getType());
             menuItem.setEnabled(false);
@@ -322,6 +362,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 // Show share parameter entry
                 menuItem = new JMenuItem("Share this parameter");
                 menuItem.addActionListener(new java.awt.event.ActionListener() {
+
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         settingsModel.shareParameter(p);
                         // notify observers
@@ -359,12 +400,12 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             // Add model information into the
             parameterPopupMenu.add(new JSeparator());
             Model m = settingsModel.getParent(p);
-            if(m!=null){
+            if (m != null) {
                 menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
                 menuItem.setEnabled(false);
                 parameterPopupMenu.add(menuItem);
             }
-            
+
             parameterPopupMenu.validate();
             parameterPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
@@ -391,24 +432,28 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     public void treeNodesChanged(TreeModelEvent e) {
-        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
     }
 
     public void treeNodesInserted(TreeModelEvent e) {
-        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
 
     }
 
     public void treeNodesRemoved(TreeModelEvent e) {
-        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
 
     }
 
     public void treeStructureChanged(TreeModelEvent e) {
-        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
     }
 
     public void update(Observable o, Object arg) {
-        refreshModel(settingsModel,targetToPresent, modelToPresent,parametersToPresent, recursive);
+        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
+    }
+
+    private boolean isParameterLink(Object parameterOrParameterLink) {
+        return parameterOrParameterLink instanceof ParameterLink;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.1"/>
-    <compilation date="01/10/2009" compiler="javac 1.5.0_13"/>
+    <program name="LITpro" version="1.0.2b1"/>
+    <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>
@@ -35,6 +35,11 @@
         </menu>
     </menubar>
     <releasenotes>
+        <release version="1.0.2">
+            <prerelease version="1.0.2b1">
+                <change type="CHANGE">Shared parameters are now properly displayed in the table(type was wrong)</change>
+            </prerelease>
+        </release>
         <release version="1.0.1">
             <prerelease version="1.0.1b4">
                 <change type="CHANGE">Move the standard deviation column into the result panel</change>

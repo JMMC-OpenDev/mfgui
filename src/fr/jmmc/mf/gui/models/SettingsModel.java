@@ -1132,6 +1132,28 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return null;
     }
 
+    public Model getParent(ParameterLink child) {
+        logger.entering(className, "getParent", child);
+        Target[] targets = rootSettings.getTargets().getTarget();
+        for (int i = 0; i < targets.length; i++) {
+            Target target = targets[i];
+            Model[] models = target.getModel();
+            for (int j = 0; j < models.length; j++) {
+                Model model = models[j];
+                ParameterLink[] parameterLinks = model.getParameterLink();
+                for (int k = 0; k < parameterLinks.length; k++) {
+                    ParameterLink parameterLink = parameterLinks[k];
+                    if (parameterLink == child) {
+                        return model;
+                    }
+                }
+            }
+        }
+        logger.warning("Can't find parent of :" + child);
+        new Throwable("Can't find parent of :" + child).printStackTrace();
+        return null;
+    }
+
     private void addFileListModelForOiTarget(Oitarget target, File file) {
         logger.entering(className, "addFileListModelForTarget", new Object[]{target, file});
 
