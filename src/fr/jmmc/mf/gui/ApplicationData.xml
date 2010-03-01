@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.2b1"/>
+    <program name="LITpro" version="1.0.3"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -35,6 +35,12 @@
         </menu>
     </menubar>
     <releasenotes>
+        <release version="1.0.3">
+            <prerelease version="1.0.3b1">
+                <change type="CHANGE">One system property is set on the machines which require one proxy for the web services (httpclient)</change>
+                <change type="CHANGE">The LITpro engine has been updated to plot images in the right orientation and draw color bars</change>
+        </prerelease>
+        </release>
         <release version="1.0.2">
             <prerelease version="1.0.2b1">
                 <change type="CHANGE">Shared parameters are now properly displayed in the table(type was wrong)</change>
