@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.19 2009-05-15 20:02:13 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.20 2010-03-30 15:53:25 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.19  2009/05/15 20:02:13  mella
+ * Add one preference (user.fov to  define some initial values into Plot panels
+ *
  * Revision 1.18  2009/05/15 14:32:28  mella
  * add save.results preference
  *
@@ -129,8 +132,9 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         setDefaultPreference("user.fov", "30");
         setDefaultPreference("yoga.remote.use", "true");
         setDefaultPreference("yoga.local.home", "../ys");
-        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");       
-        if (_version.contains("beta"))
+        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
+        // our actual convention tells that a beta version ends with b1...bN
+        if (_version.contains("b"))
         {
             setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproWebService/run.php");
         }
