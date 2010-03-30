@@ -27,6 +27,9 @@ public class PlotModelPanel extends javax.swing.JPanel
         this.plotPanel=plotPanel;
         startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
         initComponents();
+        // Set default value for angle
+        plotRadialAngleFormattedTextField1.setValue(0);
+
         // build help button
         //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
         helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
@@ -80,7 +83,9 @@ public class PlotModelPanel extends javax.swing.JPanel
     {
         int groupValue = settingsModel.getTargetListModel().indexOf(targetToPlot) +
                 1;
-        String args = radialComboBox.getSelectedItem()+" " + groupValue;
+        String angleValue = ""+plotRadialAngleFormattedTextField1.getValue();
+        String args = radialComboBox.getSelectedItem()+" " + groupValue +
+                " " + angleValue;
         plotPanel.plot("getModelRadialPlot", args, "Model " + radialComboBox.getSelectedItem()+" of "+targetToPlot.getIdent());
     }
 
@@ -140,6 +145,8 @@ public class PlotModelPanel extends javax.swing.JPanel
         plotRadialButton = new javax.swing.JButton();
         radialComboBox = new javax.swing.JComboBox();
         helpButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        plotRadialAngleFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot model panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -160,30 +167,35 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel2, gridBagConstraints);
 
         jLabel3.setText("xmax");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel3, gridBagConstraints);
 
         jLabel4.setText("ymax");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel4, gridBagConstraints);
 
         jLabel5.setText("pixscale");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel5, gridBagConstraints);
 
         jLabel6.setText("xmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel6, gridBagConstraints);
 
         targetLabel.setText("Target:");
@@ -278,6 +290,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel7, gridBagConstraints);
 
         xminFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -293,6 +306,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel8, gridBagConstraints);
 
         yminFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -308,6 +322,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel9, gridBagConstraints);
 
         xmaxFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -323,6 +338,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel10, gridBagConstraints);
 
         ymaxFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -338,6 +354,7 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel11, gridBagConstraints);
 
         pixscaleFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
@@ -353,21 +370,21 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(helpButton1, gridBagConstraints);
 
         helpButton2.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(helpButton2, gridBagConstraints);
 
         helpButton3.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(helpButton3, gridBagConstraints);
 
         plotRadialButton.setText("Plot Radial");
@@ -384,7 +401,7 @@ public class PlotModelPanel extends javax.swing.JPanel
 
         radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VIS2", "VISamp", "VISphi", "T3amp", "T3phi" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -394,8 +411,22 @@ public class PlotModelPanel extends javax.swing.JPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(helpButton4, gridBagConstraints);
+
+        jLabel1.setText("angle");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(jLabel1, gridBagConstraints);
+
+        plotRadialAngleFormattedTextField1.setText("jFormattedTextField1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(plotRadialAngleFormattedTextField1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotImageButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotImageButtonActionPerformed
@@ -442,6 +473,7 @@ public class PlotModelPanel extends javax.swing.JPanel
     private javax.swing.JButton helpButton2;
     private javax.swing.JButton helpButton3;
     private javax.swing.JButton helpButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -455,6 +487,7 @@ public class PlotModelPanel extends javax.swing.JPanel
     private javax.swing.JFormattedTextField pixscaleFormattedTextField;
     private javax.swing.JFormattedTextField pixscaleFormattedTextField1;
     private javax.swing.JButton plotImageButton;
+    private javax.swing.JFormattedTextField plotRadialAngleFormattedTextField1;
     private javax.swing.JButton plotRadialButton;
     private javax.swing.JButton plotSnifferMapButton;
     private javax.swing.JButton plotUVMapButton;
