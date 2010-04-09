@@ -159,7 +159,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         yogaPanel.add(jTextField1, gridBagConstraints);
 
-        jLabel2.setText("Yoga local path:"); // NOI18N
+        jLabel2.setText("LITpro package local path:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -205,7 +205,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.weightx = 1.0;
         yogaPanel.add(toolbarCheckBox, gridBagConstraints);
 
-        jLabel7.setText("Save  Result in xml:");
+        jLabel7.setText("Embed results in settings files:");
         jLabel7.setAutoscrolls(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
