@@ -14,20 +14,42 @@
  xmlns:test="http://xmlsoft.org/XSLT/"
  extension-element-prefixes="exslt math date func set str dyn saxon xalanredirect xt libxslt test"
  exclude-result-prefixes="math str">
-<xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
+    <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
 
-<xsl:template match="/">  
-  <xsl:for-each select="//p | //m">
-    <xsl:value-of select="@x"/>
-    <xsl:value-of select="'&#09;'"/>
-    <xsl:value-of select="@y"/>
-    <xsl:value-of select="'&#09;'"/>
-    <xsl:value-of select="@lowErrorBar"/>
-    <xsl:value-of select="'&#09;'"/>
-    <xsl:value-of select="@highErrorBar"/>
-    <xsl:value-of select="'&#09;'"/>
-    <xsl:value-of select="./ancestor::dataset/@name"/>
-    <xsl:value-of select="'&#10;'"/>
-  </xsl:for-each>
-</xsl:template>
+    <xsl:param name="title"></xsl:param>
+
+    <xsl:template match="/">
+        <xsl:value-of select="'# title : '"/>
+        <xsl:value-of select="//title"/>
+        <xsl:value-of select="'&#10;'"/>
+
+        <xsl:value-of select="'# xLabel : '"/>
+        <xsl:value-of select="//xLabel"/>
+        <xsl:value-of select="'&#10;'"/>
+
+        <xsl:value-of select="'# yLabel : '"/>
+        <xsl:value-of select="//yLabel"/>
+        <xsl:value-of select="'&#10;'"/>
+
+        <xsl:value-of select="'#'"/>
+        <xsl:value-of select="'x'"/>
+        <xsl:value-of select="'&#09;'"/>
+        <xsl:value-of select="'y'"/>
+        <xsl:value-of select="'&#09;'"/>
+        <xsl:value-of select="'error'"/>
+        <xsl:value-of select="'&#09;'"/>
+        <xsl:value-of select="'datasetName'"/>
+        <xsl:value-of select="'&#10;'"/>
+
+        <xsl:for-each select="//p | //m">
+            <xsl:value-of select="@x"/>
+            <xsl:value-of select="'&#09;'"/>
+            <xsl:value-of select="@y"/>
+            <xsl:value-of select="'&#09;'"/>
+            <xsl:value-of select="@lowErrorBar+@highErrorBar"/>
+            <xsl:value-of select="'&#09;'"/>
+            <xsl:value-of select="./ancestor::dataset/@name"/>
+            <xsl:value-of select="'&#10;'"/>
+        </xsl:for-each>
+    </xsl:template>
 </xsl:stylesheet>
