@@ -86,7 +86,10 @@ public class PlotModelPanel extends javax.swing.JPanel
         String angleValue = ""+plotRadialAngleFormattedTextField1.getValue();
         String args = radialComboBox.getSelectedItem()+" " + groupValue +
                 " " + angleValue;
-        plotPanel.plot("getModelRadialPlot", args, "Model " + radialComboBox.getSelectedItem()+" of "+targetToPlot.getIdent());
+        plotPanel.plot("getModelRadialPlot", args, "Model " +
+                radialComboBox.getSelectedItem() +
+                " of "+targetToPlot.getIdent() +
+                " " + angleValue +"°");
     }
 
     private void plotModelImage(Target targetToPlot)
