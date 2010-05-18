@@ -16,8 +16,7 @@ import java.awt.event.MouseListener;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Vector;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JTextField;
+import java.util.logging.Level;
 
 
 public class ModelPanel extends javax.swing.JPanel
@@ -52,12 +51,7 @@ public class ModelPanel extends javax.swing.JPanel
         parametersTableModel = new ParametersTableModel();
         initComponents();
         // set help buttons
-        helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
-
-        // set one click edition on following table and show all decimals of numerical values
-        ((DefaultCellEditor)parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
-        parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)parametersTable.getDefaultEditor(String.class));
-        parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
+        helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));  
     }
 
     public void show(Model m, SettingsModel s)
@@ -105,7 +99,7 @@ public class ModelPanel extends javax.swing.JPanel
         jPanel4 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        parametersTable = new javax.swing.JTable();
+        parametersTable = new fr.jmmc.mcs.gui.NumericJTable();
         jPanel3 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
@@ -245,7 +239,7 @@ public class ModelPanel extends javax.swing.JPanel
         catch (Exception e)
         {
             // this occurs when add button is pressed without selection
-            logger.log(logger.getLevel().WARNING,"No model selected",e);
+            logger.log(Level.WARNING,"No model selected",e);
         }
     }//GEN-LAST:event_typeComboBoxActionPerformed
 

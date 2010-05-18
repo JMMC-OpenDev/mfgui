@@ -93,13 +93,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
     jPanel5.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
 
-    // set one click edition on following table and show all decimals in numerical values
-    //((DefaultCellEditor)parametersTable.getDefaultEditor(Double.class)).setClickCountToStart(1);
-    ((DefaultCellEditor) parametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
-    parametersTable.setDefaultEditor(Double.class, (DefaultCellEditor) parametersTable.getDefaultEditor(String.class));
-    parametersTable.setDefaultRenderer(Double.class, parametersTable.getDefaultRenderer(String.class));
-
-
     //// Select current ident
     identComboBox.setSelectedItem(t.getIdent());
 
@@ -288,7 +281,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel5 = new javax.swing.JPanel();
-        parametersTable = new javax.swing.JTable();
+        parametersTable = new fr.jmmc.mcs.gui.NumericJTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
