@@ -207,6 +207,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         observableDelegate.addObserver(observer);
     }
 
+    /**
+     * Notify the observers of this model.
+     * As been put public to
+     */
+    public void notifyObservers(){
+        observableDelegate.notifyObservers();
+    }
+
     public void setNormalize(Target target, boolean flag) {
         logger.entering(className, "setNormalize", new Object[]{target, flag});
         target.setNormalize(flag);
