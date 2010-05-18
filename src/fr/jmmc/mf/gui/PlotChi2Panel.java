@@ -98,6 +98,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     updateTable();
 
     isIniting = false;
+    // fix bounds
+    xComboBoxActionPerformed(null);
+    yComboBoxActionPerformed(null);
   }
 
   /** This method is called from within the constructor to
@@ -414,7 +417,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     // End of variables declaration//GEN-END:variables
 
   public void update(Observable o, Object arg) {
-    init(settingsModel, target);
-    fr.jmmc.mcs.gui.StatusBar.show("Update received for "+this);
+    init(settingsModel, target);   
   }
 }
