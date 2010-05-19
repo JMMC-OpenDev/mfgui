@@ -629,7 +629,9 @@ public class UtilsClass {
             ResponseItem responseItem = responseItems[i];
             Message m = responseItem.getMessage();
             if (m != null) {
-                if (m.getType() == null || m.getType().equalsIgnoreCase("INFO") || m.getType().equalsIgnoreCase("MESSAGE")) {
+                if (m.getType() == null ||
+                        m.getType().equalsIgnoreCase("INFO") ||                        
+                        m.getType().equalsIgnoreCase("MESSAGE")) {
                     str = str + "\n" + m.getContent();
                 }
             }
@@ -646,7 +648,9 @@ public class UtilsClass {
             Message m = responseItem.getMessage();
             if (m != null) {
                 if (m.getType() != null) {
-                    if ((m.getType().equalsIgnoreCase("ERROR")) || (m.getType().equalsIgnoreCase("WARNING"))) {
+                    if ((m.getType().equalsIgnoreCase("ERROR")) ||
+                            m.getType().equalsIgnoreCase("USAGE") ||
+                            m.getType().equalsIgnoreCase("WARNING")) {
                         str = str + "\n" + m.getContent();
                         logger.fine("getErrorMsg find a message of type: " + m.getType());
                     }
