@@ -106,7 +106,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         jTree1 = new javax.swing.JTree();
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
-        sharedParametersTable = new javax.swing.JTable();
+        sharedParametersTable = new fr.jmmc.mcs.gui.NumericJTable();
         helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Parameter list"));

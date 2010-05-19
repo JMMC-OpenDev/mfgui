@@ -129,7 +129,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         xComboBox = new javax.swing.JComboBox();
         yComboBox = new javax.swing.JComboBox();
         tablePanel = new javax.swing.JPanel();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = new fr.jmmc.mcs.gui.NumericJTable();
         jPanel1 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jRadioButton1D = new javax.swing.JRadioButton();
@@ -183,7 +183,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.weightx = 1.0;
         add(xSamplingFormattedTextField, gridBagConstraints);
 
-        plotChi2Button.setText("Plot");
+        plotChi2Button.setText("Plot Chi2");
         plotChi2Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 plotChi2ButtonActionPerformed(evt);
