@@ -131,6 +131,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         saveButton = new javax.swing.JButton();
         restoreButton = new javax.swing.JButton();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
