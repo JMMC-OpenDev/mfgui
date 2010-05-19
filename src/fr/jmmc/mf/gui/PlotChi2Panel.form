@@ -102,7 +102,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="plotChi2Button">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Plot"/>
+        <Property name="text" type="java.lang.String" value="Plot Chi2"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plotChi2ButtonActionPerformed"/>
@@ -221,6 +221,9 @@
               <Connection code="param1TableModel" type="code"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.mcs.gui.NumericJTable()"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
               <BorderConstraints direction="Center"/>
