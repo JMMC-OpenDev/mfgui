@@ -47,4 +47,8 @@ public class FrameTreeNode extends DefaultMutableTreeNode{
         return title;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
 }
