@@ -291,7 +291,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <yLabel>Vcoord (1/rad)</yLabel>
             <!-- we should follow crlst list according yorick code ->
             //_modeler/dataset//crlst
-            -->
+            -->           
             <xsl:for-each select="//_modeler/dataset//CR1">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">

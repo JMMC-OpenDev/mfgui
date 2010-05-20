@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.5b2"/>
+    <program name="LITpro" version="1.0.5b3"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,12 +36,18 @@
     </menubar>
     <releasenotes>
         <release version="1.0.5">
+            <prerelease version="1.0.5b3">                
+                <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
+                <change type="CHANGE">Fix behaviour for the editing int the tables of parameters</change><!-- DOCUPDATE -->
+                <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive</change><!-- DOCUPDATE -->
+                <change type="CHANGE">The bounds values of the chi2 parameters are changed on every parameter change</change>
+            </prerelease>
             <prerelease version="1.0.5b2">
                 <change type="CHANGE">Add one header to the TSV exported files</change>
                 <change type="CHANGE">Set the user info field with a post-it-like background</change>
             </prerelease>
             <prerelease version="1.0.5b1">
-                <change type="CHANGE">The angle of radial plots is displayed in the label presented into the left tree</change>
+                <change type="CHANGE">The angle of radial plots is displayed in the label presented into the left tree and can get decimals</change>
             </prerelease>
         </release>
         <release version="1.0.4">
