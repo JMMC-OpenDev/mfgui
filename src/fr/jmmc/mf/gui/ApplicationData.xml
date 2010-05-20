@@ -38,7 +38,7 @@
         <release version="1.0.5">
             <prerelease version="1.0.5b3">                
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
-                <change type="CHANGE">Fix behaviour for the editing int the tables of parameters</change><!-- DOCUPDATE -->
+                <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The bounds values of the chi2 parameters are changed on every parameter change</change>
             </prerelease>
