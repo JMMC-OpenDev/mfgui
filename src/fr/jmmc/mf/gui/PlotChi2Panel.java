@@ -328,15 +328,17 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
         // Build command line arguments according to the widget states
         String args="";
+        String type="Chi2";
         if(jCheckBoxLogChi2.isSelected()){
             args+= "-o 'log_chi2=1' ";
+            type="log(Chi2)";
         }
         args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
         if (jRadioButton1D.isSelected()) {            
-            plotPanel.plot("getChi2Map", args, "1D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
+            plotPanel.plot("getChi2Map", args, "1D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
         } else {
             args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
-            plotPanel.plot("getChi2Map", args, "2D Chi2 Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
+            plotPanel.plot("getChi2Map", args, "2D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
         }
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 

@@ -40,6 +40,7 @@
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
                 <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive</change><!-- DOCUPDATE -->
+                <change type="CHANGE">One checkbox allow to plot the chi2 slices or the log(chi2)</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The bounds values of the chi2 parameters are changed on every parameter change</change>
             </prerelease>
             <prerelease version="1.0.5b2">
