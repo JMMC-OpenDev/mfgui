@@ -39,7 +39,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             frame.addWindowListener(this);
         }
 
-        titleLabel.setText(frameTreeNode.)
+        titleLabel.setText(frameTreeNode.getTitle());
 
         // Update buttonsPanel content
         buttonsPanel.removeAll();
@@ -89,6 +89,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         buttonsPanel = new javax.swing.JPanel();
         attachDetachButton = new javax.swing.JButton();
@@ -111,8 +112,15 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
         add(buttonsPanel);
 
-        titlePanel.setPreferredSize(new java.awt.Dimension(0, 0));
-        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.PAGE_AXIS));
+        titlePanel.setAlignmentX(1.0F);
+        titlePanel.setMaximumSize(new java.awt.Dimension(32767, 20));
+        titlePanel.setPreferredSize(new java.awt.Dimension(10, 20));
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("jLabel1");
+        titleLabel.setAlignmentX(12.0F);
+        titleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         titlePanel.add(titleLabel);
 
         add(titlePanel);
