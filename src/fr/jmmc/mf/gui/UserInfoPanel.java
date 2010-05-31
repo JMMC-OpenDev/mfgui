@@ -44,7 +44,7 @@ public class UserInfoPanel extends javax.swing.JPanel
         jScrollPane1 = new javax.swing.JScrollPane();
         userInfoTextArea = new javax.swing.JTextArea();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("User info:"));
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Personal notebook:"));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         userInfoTextArea.setBackground(new java.awt.Color(255, 255, 153));
