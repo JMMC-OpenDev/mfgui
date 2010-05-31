@@ -957,6 +957,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
+                stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1,
                         r);
@@ -966,6 +967,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
     }
+
+    private void stampLastUserInfo(ResultModel r){
+        String info = rootSettings.getUserInfo();
+        String update = info.replaceAll("new fit occured","\n"+r+" occured");
+        rootSettings.setUserInfo(update);
+    }
+
 
     // respond to ModifyAndSaveObject interface
     public void save() {
