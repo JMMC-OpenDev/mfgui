@@ -49,6 +49,7 @@ public class UserInfoPanel extends javax.swing.JPanel
 
         userInfoTextArea.setBackground(new java.awt.Color(255, 255, 153));
         userInfoTextArea.setColumns(20);
+        userInfoTextArea.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
         userInfoTextArea.setRows(5);
         userInfoTextArea.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
