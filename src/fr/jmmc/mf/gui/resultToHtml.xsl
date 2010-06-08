@@ -55,11 +55,11 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template name="hasFlag">
-    <xsl:param name="p_value"/>
-    <xsl:param name="p_flag"/>
-    <xsl:variable name="value" select="$p_value"/>
-    <xsl:variable name="flag" select="$p_flag"/>
-    <xsl:variable name="refs">
+        <xsl:param name="p_value"/>
+        <xsl:param name="p_flag"/>
+        <xsl:variable name="value" select="$p_value"/>
+        <xsl:variable name="flag" select="$p_flag"/>
+        <xsl:variable name="refs">
             <v v="0">
                 <f v="1">0</f>
                 <f v="2">0</f>
@@ -156,8 +156,8 @@ Generate Html view of given xml settings files .
                 <f v="4">1</f>
                 <f v="8">1</f>
             </v>
-    </xsl:variable>
-    <xsl:value-of select="exslt:node-set($refs)//v[@v=$value]/f[@v=$flag]"/>
+        </xsl:variable>
+        <xsl:value-of select="exslt:node-set($refs)//v[@v=$value]/f[@v=$flag]"/>
     </xsl:template>
 
     <xsl:template name="show_parameters">
@@ -210,28 +210,30 @@ Generate Html view of given xml settings files .
                     </td>
                     <td>
                         <xsl:value-of select="vmin"/>
-                        </td>
-                        <td>
-                            <xsl:value-of select="vmax"/>
-                        </td>
-                        <td>
-                            <xsl:choose>
-                                <xsl:when test="scale/text()">
-                                    <xsl:value-of select="scale"/>
-                                </xsl:when>
-                                <xsl:otherwise><xsl:value-of select="'AUTO'"/></xsl:otherwise>
-                            </xsl:choose>
+                    </td>
+                    <td>
+                        <xsl:value-of select="vmax"/>
+                    </td>
+                    <td>
+                        <xsl:choose>
+                            <xsl:when test="scale/text()">
+                                <xsl:value-of select="scale"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="'AUTO'"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                             
-                        </td>
-                        <td>
-                            <xsl:call-template name="hasFlag">
-                                <xsl:with-param name="p_value" select="flags"/>
-                                <xsl:with-param name="p_flag" select="1"/>
-                            </xsl:call-template>
-                        </td>
+                    </td>
+                    <td>
+                        <xsl:call-template name="hasFlag">
+                            <xsl:with-param name="p_value" select="flags"/>
+                            <xsl:with-param name="p_flag" select="1"/>
+                        </xsl:call-template>
+                    </td>
                     <td>
                         <xsl:value-of select="units"/>
-                    </td>                    
+                    </td>
                 </tr>
             </xsl:for-each>
         </table>
@@ -263,13 +265,13 @@ Generate Html view of given xml settings files .
                 <xsl:value-of select="itmax"/> )
                 <!-- disp parameters info -->
                 <xsl:copy-of select="$paramTable"/>
-
+                
                 <h1>Chi2</h1>
                 <xsl:call-template name="Chi2"/>
 
                 <xsl:if test="n_free">
-                    <h1>Degrees of freedom</h1>
-                    <p>Number of degrees of freedom =
+                    <p>
+                        <b>Number of degrees of freedom</b> =
                         <xsl:value-of select="n_free"/>
                     </p>
                 </xsl:if>
@@ -346,18 +348,38 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template name="Chi2">
-        <xsl:if test=".//chi2_tracks//td[1]">    Initial Chi2 =
-            <xsl:value-of select=".//chi2_tracks//td[1]"/>
-        </xsl:if>    -  Final Chi2 =
-        <xsl:value-of select=".//chi2"/>
-   
-        <xsl:if test=".//n_free">
-            <br/>
-            <xsl:if test=".//chi2_tracks//td[1]">     Initial reduced Chi2 =
-                <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>
-            </xsl:if>    -  Final reduced Chi2 =
-            <xsl:value-of select=".//chi2 div .//n_free"/>
-        </xsl:if>
+        <table>
+            <tr>
+                <td>Chi2:</td>
+                <td><xsl:if test=".//chi2_tracks//td[1]">initial=</xsl:if></td>
+                <td><xsl:if test=".//chi2_tracks//td[1]">
+                        <xsl:value-of select=".//chi2_tracks//td[1]"/>
+                    </xsl:if></td>
+                <td> - </td>
+                <td> final=</td>
+                <td>
+                    <xsl:value-of select=".//chi2"/>
+                </td>
+                <td> - </td>
+                <td> sigma=</td>
+                <td><xsl:if test=".//n_free"><xsl:value-of select="math:sqrt(2 * .//n_free)"/></xsl:if></td>
+            </tr>
+            <xsl:if test=".//n_free">
+                <tr>
+                    <td>reduced Chi2:</td>
+                    <td><xsl:if test=".//chi2_tracks//td[1]">initial=</xsl:if></td>
+                    <td><xsl:if test=".//chi2_tracks//td[1]">
+                            <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>
+                        </xsl:if></td>
+                    <td> - </td>
+                    <td> final=</td>
+                    <td><xsl:value-of select=".//chi2 div .//n_free"/></td>
+                    <td> - </td>
+                    <td> sigma=</td>
+                    <td><xsl:value-of select="math:sqrt(2 div .//n_free)"/></td>
+                </tr>
+            </xsl:if>
+        </table>
     </xsl:template>
 
     <!-- Do not show any part of resultFile -->
