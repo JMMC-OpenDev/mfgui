@@ -271,7 +271,7 @@ Generate Html view of given xml settings files .
 
                 <xsl:if test="n_free">
                     <p>
-                        <b>Number of degrees of freedom</b> =
+                        <b>Number of degrees of freedom:</b>
                         <xsl:value-of select="n_free"/>
                     </p>
                 </xsl:if>
@@ -348,35 +348,36 @@ Generate Html view of given xml settings files .
     </xsl:template>
 
     <xsl:template name="Chi2">
+        <xsl:param name="format" select="'0.0##E0'"/>
         <table>
             <tr>
-                <td>Chi2:</td>
+                <td><b>Chi2:</b></td>
                 <td><xsl:if test=".//chi2_tracks//td[1]">initial=</xsl:if></td>
                 <td><xsl:if test=".//chi2_tracks//td[1]">
-                        <xsl:value-of select=".//chi2_tracks//td[1]"/>
+                        <xsl:value-of select="format-number(.//chi2_tracks//td[1],$format)"/>
                     </xsl:if></td>
                 <td> - </td>
                 <td> final=</td>
                 <td>
-                    <xsl:value-of select=".//chi2"/>
+                    <xsl:value-of select="format-number(.//chi2,$format)"/>
                 </td>
                 <td> - </td>
                 <td> sigma=</td>
-                <td><xsl:if test=".//n_free"><xsl:value-of select="math:sqrt(2 * .//n_free)"/></xsl:if></td>
+                <td><xsl:if test=".//n_free"><xsl:value-of select="format-number(math:sqrt(2 * .//n_free), $format)"/></xsl:if></td>
             </tr>
             <xsl:if test=".//n_free">
                 <tr>
-                    <td>reduced Chi2:</td>
+                    <td><b>reduced Chi2:</b></td>
                     <td><xsl:if test=".//chi2_tracks//td[1]">initial=</xsl:if></td>
                     <td><xsl:if test=".//chi2_tracks//td[1]">
-                            <xsl:value-of select=".//chi2_tracks//td[1] div .//n_free"/>
+                            <xsl:value-of select="format-number(.//chi2_tracks//td[1] div .//n_free, $format)"/>
                         </xsl:if></td>
                     <td> - </td>
                     <td> final=</td>
-                    <td><xsl:value-of select=".//chi2 div .//n_free"/></td>
+                    <td><xsl:value-of select="format-number(.//chi2 div .//n_free, $format)"/></td>
                     <td> - </td>
                     <td> sigma=</td>
-                    <td><xsl:value-of select="math:sqrt(2 div .//n_free)"/></td>
+                    <td><xsl:value-of select="format-number(math:sqrt(2 div .//n_free), $format)"/></td>
                 </tr>
             </xsl:if>
         </table>
