@@ -1144,7 +1144,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         logger.warning("Can't find parent of :" + child);
-        new Throwable("Can't find parent of :" + child).printStackTrace();
+        //new Throwable("Can't find parent of :" + child).printStackTrace();
         return null;
     }
 
