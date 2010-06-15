@@ -90,7 +90,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         parametersPanel = new ParametersPanel(this);
         resultsPanel = new ResultsPanel(this);
         resultPanel = new ResultPanel(this);
-        plotPanel = new PlotPanel(this);
+        plotPanel = new PlotPanel(this,true);
         targetPanel = new TargetPanel(this, plotPanel);
         framePanel = new FramePanel(this);
 
