@@ -17,7 +17,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
   static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
           "fr.jmmc.mf.gui.PlotChi2Panel");
   public SettingsModel settingsModel = null;
-  public Target target = null;
   private PlotPanel plotPanel;
   private ParametersTableModel param1TableModel;
   private Parameter oldXParam = null;
@@ -44,27 +43,14 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
   }
 
   public void show(SettingsModel s) {
-    init(s, null);
-  }
-
-  public void show(SettingsModel s, Target t) {
-    init(s, t);
-  }
-
-  private void init(SettingsModel s, Target t) {
     settingsModel = s;
-    target = t;
 
     isIniting = true;
 
     Object[] params;
 
-    if (t == null) {
-      params = s.getParameterListModel().toArray();
-    } else {
-      params = UtilsClass.getParameters(t);
-    }
-
+    params = s.getParameterListModel().toArray();
+    
     // we want to listen model change events
     if (!knownSettingsModels.contains(settingsModel)) {
       settingsModel.addObserver(this);
@@ -432,6 +418,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
   // End of variables declaration//GEN-END:variables
 
   public void update(Observable o, Object arg) {
-    init(settingsModel, target);   
+    show(settingsModel);
   }
 }
