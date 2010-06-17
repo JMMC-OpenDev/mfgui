@@ -136,7 +136,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     fixFitterSetup();
 
     plotModelImagePanel.show(settingsModel, current);
-    plotChi2Panel.show(settingsModel, current);
+    plotChi2Panel.show(settingsModel);
   }
 
   private void updateModels() {
@@ -600,7 +600,7 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
         }
         removeModelButton.setEnabled(false);
         plotModelImagePanel.show(rootSettingsModel, current);
-        plotChi2Panel.show(rootSettingsModel, current);
+        plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
 private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
@@ -634,7 +634,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
             rootSettingsModel.addModel(current, m);
             updateModels();
             plotModelImagePanel.show(rootSettingsModel, current);
-            plotChi2Panel.show(rootSettingsModel, current);
+            plotChi2Panel.show(rootSettingsModel);
         }
 catch (Exception e)
         {
