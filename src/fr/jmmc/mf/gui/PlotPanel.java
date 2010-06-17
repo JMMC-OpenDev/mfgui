@@ -119,9 +119,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
   }
 
-  private void plotBaselineButton(Object[] targetsToPlot) {
+  private void plotBaselinesButton(Object[] targetsToPlot) {
     String args = getGroupValue(targetsToPlot);
-    plot("getBaselinePlot", args, "Baselines of targets " +
+    plot("getBaselinesPlot", args, "Baselines of targets " +
             getGroupValue(targetsToPlot));
   }
 
@@ -244,7 +244,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     modelPanel = new javax.swing.JPanel();
     chi2Panel = new javax.swing.JPanel();
     commonPanel = new javax.swing.JPanel();
-    plotBaselineButton = new javax.swing.JButton();
+    plotBaselinesButton = new javax.swing.JButton();
     plotRadialButton = new javax.swing.JButton();
     plotUvCoverageButton = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -279,10 +279,10 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     commonPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Common plots panel"));
     commonPanel.setLayout(new java.awt.GridBagLayout());
 
-    plotBaselineButton.setText("Plot baselines");
-    plotBaselineButton.addActionListener(new java.awt.event.ActionListener() {
+    plotBaselinesButton.setText("Plot baselines");
+    plotBaselinesButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        plotBaselineButtonActionPerformed(evt);
+        plotBaselinesButtonActionPerformed(evt);
       }
     });
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -290,7 +290,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    commonPanel.add(plotBaselineButton, gridBagConstraints);
+    commonPanel.add(plotBaselinesButton, gridBagConstraints);
 
     plotRadialButton.setText("Plot Radial");
     plotRadialButton.addActionListener(new java.awt.event.ActionListener() {
@@ -434,9 +434,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
       plotRadialAngleFormattedTextField1.setEnabled(flag);
     }//GEN-LAST:event_addModelCheckBoxActionPerformed
 
-    private void plotBaselineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotBaselineButtonActionPerformed
-      plotBaselineButton(getTargetsToPlot());
-    }//GEN-LAST:event_plotBaselineButtonActionPerformed
+    private void plotBaselinesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotBaselinesButtonActionPerformed
+      plotBaselinesButton(getTargetsToPlot());
+    }//GEN-LAST:event_plotBaselinesButtonActionPerformed
 
     private void plotUvCoverageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUvCoverageButtonActionPerformed
       plotUVCoverage(getTargetsToPlot());
@@ -465,7 +465,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
   private javax.swing.JButton jButton3;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JPanel modelPanel;
-  private javax.swing.JButton plotBaselineButton;
+  private javax.swing.JButton plotBaselinesButton;
   private javax.swing.JFormattedTextField plotRadialAngleFormattedTextField1;
   private javax.swing.JButton plotRadialButton;
   private javax.swing.JButton plotUvCoverageButton;
@@ -480,7 +480,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     boolean oneOrMoreTarget = targetList.getModel().getSize() > 0;
     boolean flag = someSelection ||
             (oneOrMoreTarget && useAllTargetsCheckBox.isSelected());
-    plotBaselineButton.setEnabled(flag);
+    plotBaselinesButton.setEnabled(flag);
     plotRadialButton.setEnabled(flag);
     plotUvCoverageButton.setEnabled(flag);
   }
