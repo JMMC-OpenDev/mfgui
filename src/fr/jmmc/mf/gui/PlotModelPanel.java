@@ -240,7 +240,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
     add(residualsCheckBox, gridBagConstraints);
 
     addModelCheckBox.setSelected(true);
-    addModelCheckBox.setText("Add model with cut angle");
+    addModelCheckBox.setText("Overplot model with cut angle");
     addModelCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         addModelCheckBoxActionPerformed(evt);
