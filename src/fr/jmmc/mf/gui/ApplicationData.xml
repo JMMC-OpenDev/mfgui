@@ -37,8 +37,8 @@
     <releasenotes>
         <release version="1.0.6">
             <prerelease version="1.0.6b1">
-                <change type="CHANGE"></change>
-                <change type="CHANGE"></change>
+                <change type="CHANGE">Change the title of the chi2 panel: Cuts in the chi2 space panel</change>
+                <change type="CHANGE">Add the common panel (click on the plots node of the settings tree) that enables plotting with a higher granularity</change>
                 <change type="CHANGE">Add the personal notebook widget into the result panels</change>
             </prerelease>
         </release>
