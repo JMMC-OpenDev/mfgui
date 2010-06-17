@@ -210,7 +210,7 @@
         <Component class="javax.swing.JCheckBox" name="addModelCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="Add model with cut angle"/>
+            <Property name="text" type="java.lang.String" value="Overplot model with cut angle"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addModelCheckBoxActionPerformed"/>

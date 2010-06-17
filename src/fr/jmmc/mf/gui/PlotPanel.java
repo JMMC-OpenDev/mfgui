@@ -386,7 +386,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     commonPanel.add(jButton3, gridBagConstraints);
 
     addModelCheckBox.setSelected(true);
-    addModelCheckBox.setText("Add model with cut angle");
+    addModelCheckBox.setText("Overplot model with cut angle");
     addModelCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         addModelCheckBoxActionPerformed(evt);
