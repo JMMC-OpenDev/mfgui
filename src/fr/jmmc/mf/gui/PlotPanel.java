@@ -10,7 +10,6 @@ import fr.jmmc.mf.models.ResultFile;
 import java.io.File;
 import java.util.Vector;
 import java.util.logging.Level;
-import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -41,11 +40,11 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
       modelPanel.add(plotModelPanel);
       chi2Panel.add(plotChi2Panel);
     }
-    
+
     // Change widget for target list
     targetList = new fr.jmmc.mcs.gui.CheckBoxJList();
     jScrollPane1.setViewportView(targetList);
-    //targetList.addListSelectionListener(this);
+    targetList.addListSelectionListener(this);
 
     // Set online help
     jButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
@@ -76,6 +75,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     if (targetList.getSelectedIndex() < 0) {
       targetList.setSelectedIndex(0);
     }
+
+    // fix state according selection
+    valueChanged(null);
   }
 
   /** Return the syntax used by yorick code to describe a list of targets */
@@ -115,6 +117,18 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
                 " of targets " + getGroupValue(targetsToPlot));
       }
     }
+  }
+
+  private void plotBaselineButton(Object[] targetsToPlot) {
+    String args = getGroupValue(targetsToPlot);
+    plot("getBaselinePlot", args, "Baselines of targets " +
+            getGroupValue(targetsToPlot));
+  }
+
+  private void plotUVCoverage(Object[] targetsToPlot) {
+    String args = getGroupValue(targetsToPlot);
+    plot("getUVCoveragePlot", args, "UV coverage of targets " +
+            getGroupValue(targetsToPlot));
   }
 
   public void plotModelSnifferMap(Target targetToPlot, String xmin, String xmax,
@@ -211,6 +225,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
   }
 
+  private Object[] getTargetsToPlot() {
+    if (useAllTargetsCheckBox.isSelected()) {
+      return settingsModel.getRootSettings().getTargets().getTarget();
+    }
+    return targetList.getSelectedValues();
+  }
+
   /** This method is called from within the constructor to
    * initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is
@@ -228,7 +249,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     plotUvCoverageButton = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     targetList = new javax.swing.JList();
-    jCheckBox3 = new javax.swing.JCheckBox();
+    useAllTargetsCheckBox = new javax.swing.JCheckBox();
     radialComboBox = new javax.swing.JComboBox();
     plotRadialAngleFormattedTextField1 = new javax.swing.JFormattedTextField();
     jButton1 = new javax.swing.JButton();
@@ -317,12 +338,17 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     gridBagConstraints.weightx = 1.0;
     commonPanel.add(jScrollPane1, gridBagConstraints);
 
-    jCheckBox3.setText("Use all targets");
+    useAllTargetsCheckBox.setText("Use all targets");
+    useAllTargetsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        useAllTargetsCheckBoxActionPerformed(evt);
+      }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.gridwidth = 5;
-    commonPanel.add(jCheckBox3, gridBagConstraints);
+    commonPanel.add(useAllTargetsCheckBox, gridBagConstraints);
 
     radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VIS2" }));
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -409,18 +435,26 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }//GEN-LAST:event_addModelCheckBoxActionPerformed
 
     private void plotBaselineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotBaselineButtonActionPerformed
+      plotBaselineButton(getTargetsToPlot());
     }//GEN-LAST:event_plotBaselineButtonActionPerformed
 
     private void plotUvCoverageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUvCoverageButtonActionPerformed
+      plotUVCoverage(getTargetsToPlot());
     }//GEN-LAST:event_plotUvCoverageButtonActionPerformed
 
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
       String observableType = radialComboBox.getSelectedItem().toString();
-      plotModelRadial(targetList.getSelectedValues(),
+
+      plotModelRadial(getTargetsToPlot(),
               observableType, residualsCheckBox.isSelected(),
               addModelCheckBox.isSelected(),
               plotRadialAngleFormattedTextField1.getText());
     }//GEN-LAST:event_plotRadialButtonActionPerformed
+
+    private void useAllTargetsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useAllTargetsCheckBoxActionPerformed
+      // simulate a list selection change to update button states
+      valueChanged(null);
+    }//GEN-LAST:event_useAllTargetsCheckBoxActionPerformed
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JCheckBox addModelCheckBox;
   private javax.swing.JPanel blankPanel;
@@ -429,7 +463,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
-  private javax.swing.JCheckBox jCheckBox3;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JPanel modelPanel;
   private javax.swing.JButton plotBaselineButton;
@@ -439,12 +472,16 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
   private javax.swing.JComboBox radialComboBox;
   private javax.swing.JCheckBox residualsCheckBox;
   private javax.swing.JList targetList;
+  private javax.swing.JCheckBox useAllTargetsCheckBox;
   // End of variables declaration//GEN-END:variables
 
   public void valueChanged(ListSelectionEvent e) {
-    // if (!listenToFileSelection || e.getValueIsAdjusting()) {
-    if (e.getValueIsAdjusting()) {
-      return;
-    }
+    boolean someSelection = targetList.getSelectedIndex() >= 0;
+    boolean oneOrMoreTarget = targetList.getModel().getSize() > 0;
+    boolean flag = someSelection ||
+            (oneOrMoreTarget && useAllTargetsCheckBox.isSelected());
+    plotBaselineButton.setEnabled(flag);
+    plotRadialButton.setEnabled(flag);
+    plotUvCoverageButton.setEnabled(flag);
   }
 }
