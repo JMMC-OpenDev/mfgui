@@ -5,6 +5,7 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
@@ -497,6 +498,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     updateAvailableObservables();
   }
 
+  // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel 
   private void updateAvailableObservables() {
     // disable widget to flag automatic action into radialComboBoxActionPerformed
     radialComboBox.setEnabled(false);
@@ -517,25 +519,52 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
 
+
     HashSet<String> set = new HashSet();
     for (Object object : selectedTargets) {
       Target target = (Target) object;
+
+      // First check that file observavbles are allowed to be plotted
+      HashSet<String> targetResidualsSet = new HashSet();
+      if (target.getResiduals() == null) {
+        targetResidualsSet.add("VIS2");
+        targetResidualsSet.add("VISamp");
+        targetResidualsSet.add("VISphi");
+        targetResidualsSet.add("T3amp");
+        targetResidualsSet.add("T3phi");
+      } else {
+        Residual[] residuals = target.getResiduals().getResidual();
+        for (int i = 0; i < residuals.length; i++) {
+          Residual residual = residuals[i];
+          targetResidualsSet.add(residual.getName());
+        }
+      }
+
       FileLink[] filelinks = target.getFileLink();
       for (FileLink fileLink : filelinks) {
         fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
 
         try {
           OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
-          if (oifile.hasOiVis2()) {
-            set.add("VIS2");
+          String obs = "VIS2";
+          if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
+            set.add(obs);
           }
-          if (oifile.hasOiVis()) {
-            set.add("VISamp");
-            set.add("VISphi");
+          obs = "VISamp";
+          if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
+            set.add(obs);
           }
-          if (oifile.hasOiT3()) {
-            set.add("T3amp");
-            set.add("T3phi");
+          obs = "VISphi";
+          if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
+            set.add(obs);
+          }
+          obs = "T3amp";
+          if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
+            set.add(obs);
+          }
+          obs = "T3phi";
+          if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
+            set.add(obs);
           }
         } catch (Exception ex) {
           new FeedbackReport(null, true, ex);
@@ -552,14 +581,19 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     if (set.contains(lastObservable)) {
       radialComboBox.setSelectedItem(lastObservable);
     }
-    
+
     radialComboBox.setEnabled(true);
 
     // Ensure that plot radial choices are consistent with selected observable
+    boolean canOverplotModelFlag;
+    if (radialComboBox.getSelectedIndex() == -1) {
+      canOverplotModelFlag = false;
+    } else {
       String observableType = radialComboBox.getSelectedItem().toString();
-      boolean canOverplotModelFlag = ! ( observableType.contains("T3") || residualsCheckBox.isSelected() );
-      addModelCheckBox.setEnabled(canOverplotModelFlag);
-      plotRadialAngleFormattedTextField1.setEnabled(canOverplotModelFlag);
-      
+      canOverplotModelFlag = !(observableType.contains("T3") || residualsCheckBox.isSelected());
+    }
+    addModelCheckBox.setEnabled(canOverplotModelFlag);
+    plotRadialAngleFormattedTextField1.setEnabled(canOverplotModelFlag);
+
   }
 }
