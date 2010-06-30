@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.6b1"/>
+    <program name="LITpro" version="1.0.6b2"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -35,13 +35,16 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.0.6">
-            <prerelease version="1.0.6b1">
-                <change type="CHANGE">Change the title of the chi2 panel: Cuts in the chi2 space panel</change>
-                <change type="CHANGE">Add the common panel (click on the plots node of the settings tree) that enables plotting with a higher granularity</change>
-                <change type="CHANGE">Add the personal notebook widget into the result panels</change>
-            </prerelease>
-        </release>
+      <release version="1.0.6">
+        <prerelease version="1.0.6b2">
+          <change type="BUGFIX">Allow to perform residual plots only on observables that are in the file and included into the associated residual settings of the targets.</change>
+        </prerelease>
+        <prerelease version="1.0.6b1">
+          <change type="CHANGE">Change the title of the chi2 panel: Cuts in the chi2 space panel</change>
+          <change type="CHANGE">Add the common panel (click on the plots node of the settings tree) that enables plotting with a higher granularity</change>
+          <change type="CHANGE">Add the personal notebook widget into the result panels</change>
+        </prerelease>
+      </release>
         <release version="1.0.5">
             <prerelease version="1.0.5b3">                
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
