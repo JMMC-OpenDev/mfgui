@@ -458,7 +458,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
       plotModelRadial(getTargetsToPlot(),
               observableType, residualsCheckBox.isSelected(),
-              addModelCheckBox.isSelected(),
+              addModelCheckBox.isSelected()&&addModelCheckBox.isEnabled(),
               plotRadialAngleFormattedTextField1.getText());
     }//GEN-LAST:event_plotRadialButtonActionPerformed
 
