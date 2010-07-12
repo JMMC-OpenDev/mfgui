@@ -52,7 +52,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     targetList.addListSelectionListener(this);
 
     // Set online help    
-    jButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
+    jButton3.setAction(new ShowHelpAction(("ENDtt_CommonPlots_Bt")));
 
     // Set default value for angle
     plotRadialAngleFormattedTextField1.setValue(0);
@@ -375,8 +375,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
         jButton3.setText("jButton3");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
         commonPanel.add(jButton3, gridBagConstraints);
 
         addModelCheckBox.setSelected(true);
