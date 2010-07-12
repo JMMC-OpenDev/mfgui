@@ -36,6 +36,7 @@
     </menubar>
     <releasenotes>
       <release version="1.0.6">
+      <!-- no comment for 1.0.6b4 Since it only fix help. -->
       <!-- no comment for 1.0.6b3 Since it only fix a bug. The model was always plotted ... -->
       <prerelease version="1.0.6b2">
           <change type="BUGFIX">Allow to perform residual plots only on observables that are in the file and included into the associated residual settings of the targets.</change>
