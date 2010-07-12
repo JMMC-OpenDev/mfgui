@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.6b5"/>
+    <program name="LITpro" version="1.0.6b6"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,6 +36,9 @@
     </menubar>
     <releasenotes>
       <release version="1.0.6">
+       <prerelease version="1.0.6b6">
+          <change type="CHANGE">Application download from web site asks to create an application shortcut to the desktop. This is not handled by all operating systems...</change>
+        </prerelease>
       <prerelease version="1.0.6b5">
           <change type="BUGFIX">Chi2 plot's bounds can be decimal</change>
         </prerelease>
