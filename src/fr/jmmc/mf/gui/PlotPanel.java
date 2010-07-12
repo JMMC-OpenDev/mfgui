@@ -51,10 +51,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     jScrollPane1.setViewportView(targetList);
     targetList.addListSelectionListener(this);
 
-    // Set online help
-    jButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-    jButton2.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-    jButton3.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
+    // Set online help    
+    jButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
 
     // Set default value for angle
     plotRadialAngleFormattedTextField1.setValue(0);
@@ -257,8 +255,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         useAllTargetsCheckBox = new javax.swing.JCheckBox();
         radialComboBox = new javax.swing.JComboBox();
         plotRadialAngleFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         addModelCheckBox = new javax.swing.JCheckBox();
         residualsCheckBox = new javax.swing.JCheckBox();
@@ -377,18 +373,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         gridBagConstraints.weightx = 1.0;
         commonPanel.add(plotRadialAngleFormattedTextField1, gridBagConstraints);
 
-        jButton1.setText("jButton1");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        commonPanel.add(jButton1, gridBagConstraints);
-
-        jButton2.setText("jButton2");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        commonPanel.add(jButton2, gridBagConstraints);
-
         jButton3.setText("jButton3");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -478,8 +462,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private javax.swing.JPanel blankPanel;
     private javax.swing.JPanel chi2Panel;
     private javax.swing.JPanel commonPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel modelPanel;
