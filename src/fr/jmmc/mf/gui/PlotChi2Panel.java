@@ -89,6 +89,23 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     yComboBoxActionPerformed(null);
   }
 
+  private void plotChi2(boolean log){
+     // Build command line arguments according to the widget states
+        String args="";
+        String type="Chi2";
+        if(log){
+            args+= "-o 'log_chi2=1' ";
+            type="log(Chi2)";
+        }
+        args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
+        if (jRadioButton1D.isSelected()) {
+            plotPanel.plot("getChi2Map", args, "1D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
+        } else {
+            args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
+            plotPanel.plot("getChi2Map", args, "2D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
+        }
+}
+
   /** This method is called from within the constructor to
    * initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is
@@ -120,7 +137,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         helpButton1 = new javax.swing.JButton();
         jRadioButton1D = new javax.swing.JRadioButton();
         jRadioButton2D = new javax.swing.JRadioButton();
-        jCheckBoxLogChi2 = new javax.swing.JCheckBox();
+        plotLogChi2Button = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Cuts in the chi2 space panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -179,7 +196,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(plotChi2Button, gridBagConstraints);
 
@@ -286,7 +302,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         add(jRadioButton1D, gridBagConstraints);
 
         buttonGroup1.add(jRadioButton2D);
@@ -298,34 +314,26 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         add(jRadioButton2D, gridBagConstraints);
 
-        jCheckBoxLogChi2.setSelected(true);
-        jCheckBoxLogChi2.setText("log");
+        plotLogChi2Button.setText("Plot log(Chi2)");
+        plotLogChi2Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotLogChi2ButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        add(jCheckBoxLogChi2, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(plotLogChi2Button, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
-        // Build command line arguments according to the widget states
-        String args="";
-        String type="Chi2";
-        if(jCheckBoxLogChi2.isSelected()){
-            args+= "-o 'log_chi2=1' ";
-            type="log(Chi2)";
-        }
-        args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
-        if (jRadioButton1D.isSelected()) {            
-            plotPanel.plot("getChi2Map", args, "1D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
-        } else {
-            args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
-            plotPanel.plot("getChi2Map", args, "2D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
-        }
+        plotChi2(false);
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 
     private void updateTable() {
@@ -391,10 +399,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jLabel7.setEnabled(flag);
     }//GEN-LAST:event_jRadioButton1DActionPerformed
 
+    private void plotLogChi2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotLogChi2ButtonActionPerformed
+        plotChi2(true);
+    }//GEN-LAST:event_plotLogChi2ButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton helpButton1;
-    private javax.swing.JCheckBox jCheckBoxLogChi2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -406,6 +417,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private javax.swing.JRadioButton jRadioButton2D;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton plotChi2Button;
+    private javax.swing.JButton plotLogChi2Button;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JComboBox xComboBox;
     private javax.swing.JFormattedTextField xSamplingFormattedTextField;
