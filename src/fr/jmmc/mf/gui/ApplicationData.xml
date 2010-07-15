@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.6b6"/>
+    <program name="LITpro" version="1.0.6b7"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,6 +36,7 @@
     </menubar>
     <releasenotes>
       <release version="1.0.6">
+       <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
        <prerelease version="1.0.6b6">
           <change type="CHANGE">Application download from web site asks to create an application shortcut to the desktop. This is not handled by all operating systems...</change>
         </prerelease>
@@ -57,8 +58,7 @@
             <prerelease version="1.0.5b3">                
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
                 <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
-                <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive</change><!-- DOCUPDATE -->
-                <change type="CHANGE">One checkbox allow to plot the chi2 slices or the log(chi2)</change><!-- DOCUPDATE -->
+                <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive and chi2 can be plotted in log</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The bounds values of the chi2 parameters are changed on every parameter change</change>
             </prerelease>
             <prerelease version="1.0.5b2">
