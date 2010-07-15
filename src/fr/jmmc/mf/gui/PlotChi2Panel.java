@@ -340,6 +340,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
         boolean enabled = hasParam && settingsModel.isValid();
     plotChi2Button.setEnabled(enabled);
+    plotLogChi2Button.setEnabled(enabled);
     if (hasParam) {
       Parameter[] parameters = new Parameter[2];
       parameters[0] = (Parameter) xComboBox.getSelectedItem();

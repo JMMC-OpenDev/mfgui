@@ -273,7 +273,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         chi2Panel.setLayout(new javax.swing.BoxLayout(chi2Panel, javax.swing.BoxLayout.LINE_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(chi2Panel, gridBagConstraints);
 
@@ -404,7 +404,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         add(commonPanel, gridBagConstraints);
