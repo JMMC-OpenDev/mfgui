@@ -313,7 +313,7 @@
         <Component class="javax.swing.JButton" name="restoreButton">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="myPreferences.restorePrefAction_" type="code"/>
+              <Connection code="myPreferences.getRestoreDefaultPreferences()" type="code"/>
             </Property>
           </Properties>
           <Constraints>
