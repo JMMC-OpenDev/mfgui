@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.20 2010-03-30 15:53:25 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.21 2010-09-02 09:55:49 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.20  2010/03/30 15:53:25  mella
+ * fix detection handing of beta versions
+ *
  * Revision 1.19  2009/05/15 20:02:13  mella
  * Add one preference (user.fov to  define some initial values into Plot panels
  *
@@ -84,8 +87,6 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className_);
 
-    SavePrefAction savePrefAction_;
-    RestorePrefAction restorePrefAction_;
     
     private static String _version = ModelFitting.getSharedApplicationDataModel().getProgramVersion();
     /**
@@ -95,8 +96,6 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
     {
         //_version=ApplicationDataModel.getProgramVersion();
         //_version=ModelFitting.getVersion()
-        savePrefAction_=new SavePrefAction();
-        restorePrefAction_=new RestorePrefAction();
     }
 
     /**
@@ -173,51 +172,6 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         return 1;
     }
     
-     // @todo try to move it into the mcs preferences area
-    protected class SavePrefAction extends RegisteredAction
-    {
-        public SavePrefAction()
-        {
-            super(className_,"savePreferences");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            try
-            {
-                saveToFile();
-                //@todo move next line into Preferences
-                logger.fine("Saving preferences");
-            }
-            catch (Exception exc)
-            {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }
-
-    protected class RestorePrefAction extends RegisteredAction
-    {
-        public RestorePrefAction()
-        {
-            super(className_,"restorePreferences");
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            try
-            {
-                resetToDefaultPreferences();
-                //@todo move next line into Preferences
-                logger.fine("Restoring preferences");
-            }
-            catch (Exception exc)
-            {
-                // @todo handle this error at user level
-                exc.printStackTrace();
-            }
-        }
-    }
+    
     
 }

@@ -296,7 +296,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         saveRestorePanel.setAlignmentY(0.0F);
         saveRestorePanel.setLayout(new java.awt.GridBagLayout());
 
-        saveButton.setAction(myPreferences.savePrefAction_);
+        saveButton.setAction(myPreferences.getSavePreferences());
         saveRestorePanel.add(saveButton, new java.awt.GridBagConstraints());
 
         restoreButton.setAction(myPreferences.restorePrefAction_);
