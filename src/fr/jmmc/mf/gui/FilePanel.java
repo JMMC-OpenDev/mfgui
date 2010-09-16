@@ -450,8 +450,8 @@ public class FilePanel extends javax.swing.JPanel {
                 sb.append("<m x=\"" + x[i] + "\" y=\"" + y[i] + "\"");
                 if (errorBar != null)
                 {
-                    double lowEB = y[i] - errorBar[i] / 2;
-                    double highEB = y[i] + errorBar[i] / 2;
+                    double lowEB = y[i] - errorBar[i];
+                    double highEB = y[i] + errorBar[i];
                     sb.append(" lowErrorBar=\"" + lowEB + "\"");
                     sb.append(" highErrorBar=\"" + highEB + "\"");
                 }
@@ -482,8 +482,8 @@ public class FilePanel extends javax.swing.JPanel {
                     sb.append("<m x=\"" + x[i][j] + "\" y=\"" + y[i][j] + "\"");
                     if (errorBar != null)
                     {
-                        double lowEB = y[i][j] - errorBar[i][j] / 2;
-                        double highEB = y[i][j] + errorBar[i][j] / 2;
+                        double lowEB = y[i][j] - errorBar[i][j];
+                        double highEB = y[i][j] + errorBar[i][j];
                         sb.append(" lowErrorBar=\"" + lowEB + "\"");
                         sb.append(" highErrorBar=\"" + highEB + "\"");
                     }

@@ -196,10 +196,10 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     <xsl:if test="$errorBarElements!='no'">
                         <xsl:for-each select="exslt:node-set($errorBarElements)/*[position()=$i]">
                             <xsl:attribute name="lowErrorBar">
-                                <xsl:value-of select="$y - . div 2"/>
+                                <xsl:value-of select="$y - ."/>
                             </xsl:attribute>
                             <xsl:attribute name="highErrorBar">
-                                <xsl:value-of select="$y + . div 2"/>
+                                <xsl:value-of select="$y + ."/>
                             </xsl:attribute>
                         </xsl:for-each>
                     </xsl:if>
