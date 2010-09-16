@@ -468,6 +468,9 @@ public class UtilsClass {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
 
+            // allow use of extensions
+            factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, false);
+
             // Use the factory to create a template containing the xsl file
             Templates template = factory.newTemplates(new StreamSource(xslURL.openStream()));
 
