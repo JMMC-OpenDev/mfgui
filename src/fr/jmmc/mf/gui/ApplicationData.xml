@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.6"/>
+    <program name="LITpro" version="1.0.7"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
     <!-- <copyright>Copyrights JMMC 2008</copyright>-->
@@ -35,6 +35,18 @@
         </menu>
     </menubar>
     <releasenotes>
+        <release version="1.0.7">
+       <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
+       <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
+       <prerelease version="1.0.7b1">
+          <change type="BUGFIX">Set real sigma value for error bar and not half value</change>
+          <change type="BUGFIX">Fix xsl processing that generated one RunTime Error with math extension</change>
+          <!-- The message was : the following error Use of the extension function
+'http://exslt.org/math:sqrt' is not allowed when the secure processing
+feature is set to true.
+-->
+        </prerelease>
+        </release>
       <release version="1.0.6">
        <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
        <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
