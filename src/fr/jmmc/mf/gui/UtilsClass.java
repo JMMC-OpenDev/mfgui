@@ -459,20 +459,33 @@ public class UtilsClass {
         return true;
     }
 
+    private static TransformerFactory factory_=null;
+
+    private static TransformerFactory getTransformerFactoryInstance() throws TransformerConfigurationException {
+        if (factory_ == null) {
+            // Create transformer factory
+            factory_ = TransformerFactory.newInstance();
+
+            // @todo try to suppress this kind of workarround
+            // Allow use of xslt with SECURE set to False in JNLP mode
+            System.setSecurityManager( null );
+
+            // allow use of extensions
+            factory_.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, false);
+        }
+
+        return factory_;
+    }
+
     private static String xsl(Source source, String filepath, String[] params) {
         logger.entering(className, "xsl");
         URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
         xslURL = Urls.fixJarURL(xslURL);
         logger.fine("using next url for transformation" + xslURL);
-        try {
-            // Create transformer factory
-            TransformerFactory factory = TransformerFactory.newInstance();
-
-            // allow use of extensions
-            factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, false);
+        try {            
 
             // Use the factory to create a template containing the xsl file
-            Templates template = factory.newTemplates(new StreamSource(xslURL.openStream()));
+            Templates template = getTransformerFactoryInstance().newTemplates(new StreamSource(xslURL.openStream()));
 
             // Use the template to create a transformer
             Transformer xformer = template.newTransformer();
