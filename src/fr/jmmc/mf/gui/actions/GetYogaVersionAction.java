@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.util.RegisteredAction;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ public class GetYogaVersionAction extends RegisteredAction {
         } catch (Exception ex) {
             logger.warning(ex.getClass().getName() + " " + ex.getMessage());
             fr.jmmc.mcs.gui.StatusBar.show("Can\'t get Yoga version");
+            new FeedbackReport(new Exception("Can\'t get Yoga version", ex));
         }
     }
 }
