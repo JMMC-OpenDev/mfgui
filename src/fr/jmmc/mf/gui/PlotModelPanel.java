@@ -554,7 +554,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
       String observableType = radialComboBox.getSelectedItem().toString();
       plotPanel.plotModelRadial((Target) targetComboBox.getSelectedItem(),
               observableType, residualsCheckBox.isSelected(),
-              addModelCheckBox.isSelected(),
+              addModelCheckBox.isSelected()&& addModelCheckBox.isEnabled(),
               plotRadialAngleFormattedTextField1.getText());
 
 
