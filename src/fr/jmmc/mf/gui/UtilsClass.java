@@ -468,7 +468,13 @@ public class UtilsClass {
 
             // @todo try to suppress this kind of workarround
             // Allow use of xslt with SECURE set to False in JNLP mode
-            System.setSecurityManager( null );
+            try{
+                System.setSecurityManager( null );
+            }catch(SecurityException se){
+                // This case occurs with java netx and
+                // OpenJDK Runtime Environment (IcedTea6 1.6) (rhel-1.13.b16.el5-x86_64)
+                logger.warning("Can't set security manager to null");
+            }
 
             // allow use of extensions
             factory_.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, false);
