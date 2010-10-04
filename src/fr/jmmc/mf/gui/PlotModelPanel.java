@@ -556,9 +556,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
               observableType, residualsCheckBox.isSelected(),
               addModelCheckBox.isSelected()&& addModelCheckBox.isEnabled(),
               plotRadialAngleFormattedTextField1.getText());
-
-
-
 }//GEN-LAST:event_plotRadialButtonActionPerformed
 
     private void targetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetComboBoxActionPerformed
