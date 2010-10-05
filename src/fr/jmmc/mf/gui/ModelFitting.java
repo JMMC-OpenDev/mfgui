@@ -59,7 +59,7 @@ import org.exolab.castor.xml.ValidationException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.35 2010-10-05 12:49:21 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.36 2010-10-05 14:53:38 bourgesl Exp $";
     final static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -352,64 +352,58 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
     private void declareInteroperability() {
         // Add handler to load one new setting given oifits and model description
 
+        new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
 
-        try {
-            SampMessageHandler handler = new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
+            public Map processCall(HubConnection c, String senderId, Message msg) throws SampException {
 
-                public Map processCall(HubConnection c, String senderId, Message msg) throws SampException {
+                SampMap params = Message.asMessage(msg.getParams());
+                String xmlModel = params.getString("model");
+                String filename = params.getString("filename");
 
-                    SampMap params = Message.asMessage(msg.getParams());
-                    String xmlModel = params.getString("model");
-                    String filename = params.getString("filename");
-
-                    if (filename == null) {
-                        throw new SampException("Missing parameter 'filename'");
-                    }
-                    if (xmlModel == null) {
-                        throw new SampException("Missing parameter 'model'");
-                    }
-
-                    fr.jmmc.mcs.gui.StatusBar.show("Samp message received : building new model");
-
-                    SettingsModel sm = new SettingsModel();
-                    sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
-
-                    // Try to read file on disk as one oifits file
-                    try {
-                        sm.addFile(new java.io.File(filename));
-                    } catch (Exception ex) {
-                        MessagePane.showErrorMessage(
-                                "Could not build oifits from samp message : \n", ex);
-                        throw new SampException("Could not build oifits from samp message", ex);
-                    }
-
-                    // Try to build one new model object from given string
-                    StringReader sr = new StringReader(xmlModel);
-                    Model m = null;
-                    try {
-                        m = (Model) UtilsClass.unmarshal(Model.class, sr);
-                    } catch (Exception ex) {
-                        MessagePane.showErrorMessage(
-                                "Could not build model from samp message : \n", ex);
-                        throw new SampException("Could not build model from samp message", ex);
-                    }
-                    fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
-                    String targetIdent = f.getOitarget(0).getTarget();
-                    Target target = sm.addTarget(targetIdent);
-                    Model[] models = m.getModel();
-                    for (int i = 0; i < models.length; i++) {
-                        Model model = models[i];
-                        target.addModel(model);
-                    }
-                    gui.addSettings(sm);
-
-                    return null;
+                if (filename == null) {
+                    throw new SampException("Missing parameter 'filename'");
                 }
-            };
-        } catch (SampException se) {
-            MessagePane.showErrorMessage(
-                    "Could not handle samp message properly: \n" + se);
-        }
+                if (xmlModel == null) {
+                    throw new SampException("Missing parameter 'model'");
+                }
+
+                fr.jmmc.mcs.gui.StatusBar.show("Samp message received : building new model");
+
+                SettingsModel sm = new SettingsModel();
+                sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
+
+                // Try to read file on disk as one oifits file
+                try {
+                    sm.addFile(new java.io.File(filename));
+                } catch (Exception ex) {
+                    MessagePane.showErrorMessage(
+                            "Could not build oifits from samp message : \n", ex);
+                    throw new SampException("Could not build oifits from samp message", ex);
+                }
+
+                // Try to build one new model object from given string
+                StringReader sr = new StringReader(xmlModel);
+                Model m = null;
+                try {
+                    m = (Model) UtilsClass.unmarshal(Model.class, sr);
+                } catch (Exception ex) {
+                    MessagePane.showErrorMessage(
+                            "Could not build model from samp message : \n", ex);
+                    throw new SampException("Could not build model from samp message", ex);
+                }
+                fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
+                String targetIdent = f.getOitarget(0).getTarget();
+                Target target = sm.addTarget(targetIdent);
+                Model[] models = m.getModel();
+                for (int i = 0; i < models.length; i++) {
+                    Model model = models[i];
+                    target.addModel(model);
+                }
+                gui.addSettings(sm);
+
+                return null;
+            }
+        };
     }
 
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
