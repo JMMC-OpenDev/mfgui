@@ -212,9 +212,6 @@ public class FilePanel extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 hduListMouseClicked(evt);
             }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                hduListMousePressed(evt);
-            }
         });
         jScrollPane1.setViewportView(hduList);
 
@@ -332,92 +329,6 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(addFileButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-    public void menuRequested(uk.ac.starlink.plastic.ApplicationItem app)
-    {
-        try
-        {
-            URI loadFromURLURI = new URI("ivo://votech.org/votable/loadFromURL");
-
-            if (app.getSupportedMessages().contains(loadFromURLURI))
-            {
-                int[] indices = hduList.getSelectedIndices();
-
-                for (int i = 0; i < indices.length; i++)
-                {
-                    String       filename = oifitsFile_.getName();
-                    
-                    java.util.Vector args = new Vector();
-                    args.addElement("file://localhost/" + filename + "#" + (indices[i]));
-                    logger.warning("request app '" + app + "' to load:" + args.get(0));
-                    MFGui.getPlasticServer().perform(app.getId(), loadFromURLURI, args);
-                }
-            }
-            else
-            {
-                logger.info("app does not support:" + loadFromURLURI);
-            }
-        }
-        catch (Exception exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
-
-        /*list.getElementAt();
-           MainFrame.getPlasticServer().perform();
-         **/
-    }
-
-    private void hduListMousePressed(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_hduListMousePressed
-        logger.entering("" + this.getClass(), "hduListMousePressed");
-
-        //if (evt.isPopupTrigger() && hduList.getSelectedIndex()>0 ) {
-        if (evt.isPopupTrigger())
-        {
-            logger.finest("Menu required");
-            listenersMenu.removeAll();
-
-            ListModel list = MFGui.getPlasticServer().getApplicationListModel();
-
-            for (int i = 0; i < list.getSize(); i++)
-            {
-                final uk.ac.starlink.plastic.ApplicationItem app     = (uk.ac.starlink.plastic.ApplicationItem) list.getElementAt(i);
-                String                                       appName = "" + app;
-
-                if (! appName.equalsIgnoreCase("hub") &&
-                        ! appName.equalsIgnoreCase("modelfitting"))
-                {
-                    JMenuItem menuItem = new JMenuItem(appName);
-                    menuItem.addActionListener(new java.awt.event.ActionListener()
-                        {
-                            public void actionPerformed(java.awt.event.ActionEvent evt)
-                            {
-                                menuRequested(app);
-                            }
-                        });
-
-                    listenersMenu.add(menuItem);
-                }
-            }
-
-            if (listenersMenu.getComponentCount() == 0)
-            {
-                JMenuItem menuItem = new JMenuItem(
-                        "Please register with plastic or start another interop application");
-                menuItem.setEnabled(false);
-                listenersMenu.add(menuItem);
-                logger.fine("No application can handle the files");
-            }
-
-            fileListPopupMenu.validate();
-            fileListPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        }
-        else
-        {
-            logger.finest("No menu required");
-        }
-    }//GEN-LAST:event_hduListMousePressed
 
     private void hduListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMouseClicked
