@@ -15,7 +15,6 @@ import fr.jmmc.mf.gui.actions.CloseModelAction;
 import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.MainMenuBar;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.*;
 
@@ -54,9 +53,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     static Action getYogaVersionAction;
     public static Action saveSettingsAction;
     public static DeleteTreeSelectionAction deleteTreeSelectionAction;
-    public static AttachDetachFrameAction attachDetachFrameAction;
-
-    private static PlasticListener plasticServer_;
+    public static AttachDetachFrameAction attachDetachFrameAction;    
 
     /** instance link */
     private static MFGui instance = null;
@@ -94,15 +91,10 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         tabbedPane_.addChangeListener(new ShowLitproSettingsFileAction(this));
 
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
-
-        /* Plastic transmitter. */
-        plasticServer_ = new PlasticListener();
-
+    
         // Build demo action into initMenuBar
         initMenuBar();
-        // Handle menu bar
-        setJMenuBar(new MainMenuBar(this));
-
+        
         // Handle toolbar
 
         toolBar=new JToolBar();
@@ -160,11 +152,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     public static MFGui getInstance()
     {
         return instance;
-    }
-
-   public static PlasticListener getPlasticServer()
-    {
-        return plasticServer_;
     }
 
    public void addSettings(SettingsModel settingsModel){
@@ -243,34 +230,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             String title = iterator.next();
             action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title,this);            
             i++;                 
-        }
-    
-        // Add Advanced->Interop
-        JMenu interopMenu = new JMenu();
-        interopMenu.setText("Interop");
-        advancedMenu.add(interopMenu);
-        advancedMenu.addSeparator();
-
-        // Fill Interop menu
-        try
-        {
-            interopMenu.add(plasticServer_.getRegisterAction(true));
-            interopMenu.add(plasticServer_.getRegisterAction(false));
-            interopMenu.add(plasticServer_.getHubStartAction(true));
-            interopMenu.add(plasticServer_.getHubStartAction(false));
-            interopMenu.add(new HubWatchAction(plasticServer_));
-            //          interopMenu.addSeparator();
-            //          interopMenu.add( tableTransmitter_.getBroadcastAction() );
-            //          interopMenu.add( tableTransmitter_.createSendMenu() );
-            //          interopMenu.addSeparator();
-            //          interopMenu.add( interophelpAct );
-        }
-        catch (SecurityException e)
-        {
-            interopMenu.setEnabled(false);
-            logger.warning("Security manager denies use of PLASTIC");
-        }
-      
+        }            
     }
 
     /** 
@@ -361,37 +321,4 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         return UtilsClass.checkUserModificationToQuit(objs);
     }
 
-    /**
-     * Action which displays a window giving some information about
-     * the state of the PLASTIC hub.
-     *
-     * this action must be refactored but it is leaved here without any idea
-     */
-    private class HubWatchAction extends MCSAction
-    {
-        private final uk.ac.starlink.plastic.HubManager hubManager_;
-        private JFrame                                  hubWindow_;
-
-        HubWatchAction(uk.ac.starlink.plastic.HubManager hubManager)
-        {
-            /*super( "Show Registered Applications", null,
-               "Display applications registered with the PLASTIC hub" );
-             **/
-            super("hubWatch");
-            hubManager_ = hubManager;
-        }
-
-        public void actionPerformed(java.awt.event.ActionEvent evt)
-        {
-            if (hubWindow_ == null)
-            {
-                hubWindow_ = new uk.ac.starlink.plastic.PlasticListWindow(hubManager_.getApplicationListModel());
-                hubWindow_.setTitle("PLASTIC apps");
-                //AuxWindow.positionAfter( ControlWindow.this, hubWindow_ );
-                hubWindow_.pack();
-            }
-
-            hubWindow_.setVisible(true);
-        }
-    }
     }

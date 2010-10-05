@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.7b2"/>
+    <program name="LITpro" version="1.0.7b4"/>
     <compilation date="01/10/2010" compiler="javac 1.5.0_13"/>
     <text></text>
-    <!-- <copyright>Copyrights JMMC 2008</copyright>-->
+    <!--<copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>
         <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
     </dependences>
@@ -36,20 +36,26 @@
     </menubar>
     <releasenotes>
         <release version="1.0.7">
-       <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
-       <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
-       <prerelease version="1.0.7b2">
-          <change type="CHANGE">Throw on feedback report if the 'get yoga version' action fails (called from preference panel)</change>
-        </prerelease>
-       <prerelease version="1.0.7b1">
-          <change type="BUGFIX">Set real sigma value for error bar and not half value</change>
-          <change type="BUGFIX">Fix xsl processing that generated one RunTime Error with math extension</change>
-          <!-- The message was : the following error Use of the extension function
+            <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
+            <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
+            <prerelease version="1.0.7b4">
+                <change type="FEATURE">Support reception of new setting from aspro using VO samp technology</change>
+            </prerelease>
+            <prerelease version="1.0.7b3">
+                <change type="BUGFIX">Do not overplot model on radial plots when T3 data are selected</change>
+            </prerelease>
+            <prerelease version="1.0.7b2">
+                <change type="CHANGE">Throw one feedback report if the 'get yoga version' action fails (called from preference panel)</change>
+            </prerelease>
+            <prerelease version="1.0.7b1">
+                <change type="BUGFIX">Set real sigma value for error bar and not half value</change>
+                <change type="BUGFIX">Fix xsl processing that generated one RunTime Error with math extension</change>
+            <!-- The message was : the following error Use of the extension function
 'http://exslt.org/math:sqrt' is not allowed when the secure processing
 feature is set to true.
 -->
-        </prerelease>
-        </release>
+            </prerelease>
+       </release>
       <release version="1.0.6">
        <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
        <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->

@@ -6,6 +6,9 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mcs.gui.App;
 import fr.jmmc.mcs.gui.ApplicationDataModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.interop.SampCapability;
+import fr.jmmc.mcs.interop.SampMessageHandler;
 
 import fr.jmmc.mcs.util.Http;
 import fr.jmmc.mcs.util.MCSExceptionHandler;
@@ -13,11 +16,13 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -42,6 +47,11 @@ import org.astrogrid.samp.client.ClientProfile;
 import org.astrogrid.samp.client.DefaultClientProfile;
 import org.astrogrid.samp.client.HubConnection;
 import org.astrogrid.samp.client.HubConnector;
+import org.astrogrid.samp.client.SampException;
+import org.eso.fits.FitsException;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 
 /**
  *
@@ -49,7 +59,7 @@ import org.astrogrid.samp.client.HubConnector;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.34 2010-10-04 10:16:56 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.35 2010-10-05 12:49:21 mella Exp $";
     final static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -340,71 +350,66 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
     }
 
     private void declareInteroperability() {
-        // Construct a connector
-        ClientProfile profile = DefaultClientProfile.getProfile();
-        HubConnector conn = new HubConnector(profile);
+        // Add handler to load one new setting given oifits and model description
 
-        // Configure it with metadata about this application
-        Metadata meta = new Metadata();
-        ApplicationDataModel adm = getSharedApplicationDataModel();
-        meta.setName(adm.getProgramName());
-        meta.setDescriptionText("Application that does stuff");
-        conn.declareMetadata(meta);
 
-        // Prepare to receive messages with specific MType(s)
-        conn.addMessageHandler(new AbstractMessageHandler("stuff.do") {
+        try {
+            SampMessageHandler handler = new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
 
-            public Map processCall(HubConnection c, String senderId, Message msg) {
-                // do stuff
-                System.out.println("msg = " + msg);
-                return null;
-            }
-        });
-        // Prepare to receive messages with specific MType(s)
-        conn.addMessageHandler(new AbstractMessageHandler("LITpro.runfit") {
+                public Map processCall(HubConnection c, String senderId, Message msg) throws SampException {
 
-            public Map processCall(HubConnection c, String senderId, Message msg) throws Exception {
-                SampMap params = Message.asMessage(msg.getParams());
-                String xmlModel = params.getString("model");
-                String filename = params.getString("filename");
+                    SampMap params = Message.asMessage(msg.getParams());
+                    String xmlModel = params.getString("model");
+                    String filename = params.getString("filename");
 
-                if (filename == null) {
-                    throw new Exception("Missing parameter 'filename'");
+                    if (filename == null) {
+                        throw new SampException("Missing parameter 'filename'");
+                    }
+                    if (xmlModel == null) {
+                        throw new SampException("Missing parameter 'model'");
+                    }
+
+                    fr.jmmc.mcs.gui.StatusBar.show("Samp message received : building new model");
+
+                    SettingsModel sm = new SettingsModel();
+                    sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
+
+                    // Try to read file on disk as one oifits file
+                    try {
+                        sm.addFile(new java.io.File(filename));
+                    } catch (Exception ex) {
+                        MessagePane.showErrorMessage(
+                                "Could not build oifits from samp message : \n", ex);
+                        throw new SampException("Could not build oifits from samp message", ex);
+                    }
+
+                    // Try to build one new model object from given string
+                    StringReader sr = new StringReader(xmlModel);
+                    Model m = null;
+                    try {
+                        m = (Model) UtilsClass.unmarshal(Model.class, sr);
+                    } catch (Exception ex) {
+                        MessagePane.showErrorMessage(
+                                "Could not build model from samp message : \n", ex);
+                        throw new SampException("Could not build model from samp message", ex);
+                    }
+                    fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
+                    String targetIdent = f.getOitarget(0).getTarget();
+                    Target target = sm.addTarget(targetIdent);
+                    Model[] models = m.getModel();
+                    for (int i = 0; i < models.length; i++) {
+                        Model model = models[i];
+                        target.addModel(model);
+                    }
+                    gui.addSettings(sm);
+
+                    return null;
                 }
-                if (xmlModel == null) {
-                    throw new Exception("Missing parameter 'model'");
-                }
-
-                fr.jmmc.mcs.gui.StatusBar.show("Samp message received : building new model");
-
-                SettingsModel sm = new SettingsModel();
-                sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
-                sm.addFile(new java.io.File(filename));
-                StringReader sr = new StringReader(xmlModel);
-                Model m = (Model) UtilsClass.unmarshal(Model.class, sr);
-                fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
-                String targetIdent = f.getOitarget(0).getTarget();
-                Target target = sm.addTarget(targetIdent);
-                Model[] models = m.getModel();
-                for (int i = 0; i < models.length; i++) {
-                    Model model = models[i];
-                    target.addModel(model);
-                }
-                gui.addSettings(sm);
-
-                return null;
-            }
-        });
-
-        // This step required even if no custom message handlers added.
-        conn.declareSubscriptions(conn.computeSubscriptions());
-
-        // Keep a look out for hubs if initial one shuts down
-        conn.setAutoconnect(10);
-
-        // Broadcast a message
-        //conn.getConnection().notifyAll(new Message("stuff.event.doing"));
-
+            };
+        } catch (SampException se) {
+            MessagePane.showErrorMessage(
+                    "Could not handle samp message properly: \n" + se);
+        }
     }
 
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
