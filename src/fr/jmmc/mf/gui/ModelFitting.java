@@ -4,9 +4,9 @@ JMMC
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.App;
-import fr.jmmc.mcs.gui.ApplicationDataModel;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.interop.SampCapability;
 import fr.jmmc.mcs.interop.SampMessageHandler;
 
@@ -16,13 +16,11 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -40,18 +38,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.astrogrid.samp.Message;
-import org.astrogrid.samp.Metadata;
-import org.astrogrid.samp.SampMap;
-import org.astrogrid.samp.client.AbstractMessageHandler;
-import org.astrogrid.samp.client.ClientProfile;
-import org.astrogrid.samp.client.DefaultClientProfile;
-import org.astrogrid.samp.client.HubConnection;
-import org.astrogrid.samp.client.HubConnector;
 import org.astrogrid.samp.client.SampException;
-import org.eso.fits.FitsException;
-import org.exolab.castor.mapping.MappingException;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
 
 /**
  *
@@ -59,7 +46,7 @@ import org.exolab.castor.xml.ValidationException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.36 2010-10-05 14:53:38 bourgesl Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.37 2010-10-11 14:15:20 bourgesl Exp $";
     final static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -354,11 +341,17 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
 
-            public Map processCall(HubConnection c, String senderId, Message msg) throws SampException {
+            /**
+             * Implements message processing
+             *
+             * @param senderId public ID of sender client
+             * @param message message with MType this handler is subscribed to
+             * @throws SampException if any error occured while message processing
+             */
+            protected void processMessage(final String senderId, final Message message) throws SampException {
 
-                SampMap params = Message.asMessage(msg.getParams());
-                String xmlModel = params.getString("model");
-                String filename = params.getString("filename");
+                final String xmlModel = message.getString("model");
+                final String filename = message.getString("filename");
 
                 if (filename == null) {
                     throw new SampException("Missing parameter 'filename'");
@@ -367,7 +360,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                     throw new SampException("Missing parameter 'model'");
                 }
 
-                fr.jmmc.mcs.gui.StatusBar.show("Samp message received : building new model");
+                StatusBar.show("Samp message received : building new model");
 
                 SettingsModel sm = new SettingsModel();
                 sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
@@ -400,8 +393,6 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                     target.addModel(model);
                 }
                 gui.addSettings(sm);
-
-                return null;
             }
         };
     }
