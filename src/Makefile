@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.25 2009-10-02 10:08:32 ccmgr Exp $"
+# "@(#) $Id: Makefile,v 1.26 2010-10-21 11:13:04 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2009/10/02 10:08:32  ccmgr
+# generate LITproGUI instead of previous ModelFitting
+#
 # Revision 1.24  2009/10/02 08:44:58  mella
 # fix jnlp file name
 #
@@ -248,7 +251,7 @@ JNLP=LITpro
 # TARGETS
 # -------
 
-all: do_all
+all: do_castor do_all
 	@echo " . . . 'all' done" 
 	
 
