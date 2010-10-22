@@ -1,13 +1,16 @@
 #*******************************************************************************
 # JMMC project
 #
-# "@(#) $Id: Makefile,v 1.26 2010-10-21 11:13:04 mella Exp $"
+# "@(#) $Id: Makefile,v 1.27 2010-10-22 11:21:06 mella Exp $"
 #
 # Makefile of mfgui module
 #
 # History
 # -------
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2010/10/21 11:13:04  mella
+# add castor generation class in the 'all' target
+#
 # Revision 1.25  2009/10/02 10:08:32  ccmgr
 # generate LITproGUI instead of previous ModelFitting
 #
@@ -221,13 +224,7 @@ MAN8 =
 #
 # other files to be installed
 #----------------------------
-INSTALL_FILES = ../lib/commons-codec-1.2.jar \
-				../lib/commons-httpclient-3.0.1.jar \
-				../lib/commons-httpclient-3.1-beta1.jar \
-				../lib/commons-lang-2.1.jar \
-				../lib/commons-logging-1.0.3.jar \
-				../lib/commons-math-1.2-RC2.jar \
-				../lib/topcat-full.jar
+INSTALL_FILES = ../lib/topcat-full.jar
 																
 
 #
