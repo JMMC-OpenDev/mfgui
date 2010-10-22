@@ -39,7 +39,7 @@ import fr.jmmc.oitools.model.OITarget;
 import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
-import nom.tam.fits.FitsException;
+import fr.nom.tam.fits.FitsException;
 import org.exolab.castor.xml.ValidationException;
 
 /**
@@ -1231,7 +1231,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and refactor this CODE
-    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, nom.tam.fits.FitsException {
+    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, fr.nom.tam.fits.FitsException {
         logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
@@ -1267,7 +1267,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param filename
      * @return
      */
-    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, nom.tam.fits.FitsException {
+    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, fr.nom.tam.fits.FitsException {
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         System.out.println("filename = " + filename);
         OIFitsFile fits;

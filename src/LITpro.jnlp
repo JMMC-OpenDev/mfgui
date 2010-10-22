@@ -25,7 +25,8 @@
     <jar href="jar/oitools.jar" />
 
     <!-- Astrogrid topcat -->
-    <extension href="topcat-parts.jnlp" />
+    <extension href="topcat-parts.jnlp">
+    </extension>
   </resources>
   <application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>
 </jnlp>

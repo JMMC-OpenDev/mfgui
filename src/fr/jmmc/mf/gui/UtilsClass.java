@@ -48,7 +48,7 @@ import javax.swing.tree.TreePath;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
-import nom.tam.fits.FitsException;
+import fr.nom.tam.fits.FitsException;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
