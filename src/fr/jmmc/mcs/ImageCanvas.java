@@ -1,30 +1,16 @@
-/*
- * ImageCanvas.java
- *
- * Created on 19 mars 2007, 11:10
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 package fr.jmmc.mcs;
 
 import fr.jmmc.mf.gui.UtilsClass;
 
-import java.io.FileNotFoundException;
-import org.eso.fits.*;
 
 import org.w3c.dom.*;
 
-import org.xml.sax.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.*;
 import java.awt.image.*;
 
-import java.io.DataInput;
-import java.io.RandomAccessFile;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -32,11 +18,10 @@ import java.util.Observer;
 /*
    import nom.tam.fits.*;
  */
-import javax.xml.parsers.*;
 
 
 /**
- *
+ * Canvas dedicated to plot one image with interactive informations.
  * @author mella
  */
 public class ImageCanvas extends Canvas implements MouseMotionListener
@@ -337,32 +322,7 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
 
         return pixels;
     }
-
-    /** Init image shown set width and height to fits naxis values */
-    public void fitsInit(String fitsFilename) throws
-     FileNotFoundException, FitsException{
-        logger.entering("" + this.getClass(), "fitsInit");
-
-            /* Try using nom.tam.fits library
-             * but fits file generate error reading image hdu
-             *
-               Fits fitsFile = new Fits(fitsFilename);
-               BasicHDU[] hdus = fitsFile.read();
-               System.out.println("Nb of HDU "+hdus.length);
-               ImageHDU fitsImage = (ImageHDU)fitsFile.readHDU();
-               fitsImage.info();
-             */
-            DataInput  file      = new RandomAccessFile(fitsFilename, "r");
-            FitsHeader header    = new FitsHeader(file);
-            FitsMatrix fitsImage = new FitsMatrix(header, file, false);
-            int[]      naxis     = fitsImage.getNaxis();
-            w_                   = naxis[0];
-            h_                   = naxis[1];
-
-            float[] array        = fitsImage.getFloatValues(0, w_ * h_, null);
-            initImage(w_, h_, array);
-    }
-
+    
     /**
      * DOCUMENT ME!
      *
