@@ -9,7 +9,7 @@ import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
-import fr.jmmc.oifits.OifitsFile;
+import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Vector;
@@ -527,7 +527,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
 
         try {
-          OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+          OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
           String obs = "VIS2";
           if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
             set.add(obs);

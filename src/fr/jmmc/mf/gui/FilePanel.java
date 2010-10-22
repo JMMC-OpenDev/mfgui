@@ -4,12 +4,10 @@ import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
-import fr.jmmc.oifits.*;
-
-import fr.jmmc.oifits.validator.GUIValidator;
+//OIVAL import fr.jmmc.oifits.*;
+//OIVAL import fr.jmmc.oifits.validator.GUIValidator;
+import fr.jmmc.oitools.model.*;
 import ptolemy.plot.plotml.*;
-import java.net.URI;
-import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.apache.commons.math.linear.RealMatrixImpl;
@@ -21,7 +19,7 @@ import org.apache.commons.math.linear.RealMatrixImpl;
 public class FilePanel extends javax.swing.JPanel {
 
     File current = null;
-    OifitsFile oifitsFile_ = null;
+    OIFitsFile oifitsFile_ = null;
     static Action saveEmbeddedFileAction;
     static Action checkEmbeddedFileAction;
     static Action showEmbeddedFileAction;
@@ -422,15 +420,15 @@ public class FilePanel extends javax.swing.JPanel {
             // plot all reqeusted if nothing selected or selection does not contains requested
             // else plot only selected
             Object[] selected = hduList.getSelectedValues();
-            OiTable[] oiTables = oifitsFile_.getOiTables();
+            OITable[] OITables = oifitsFile_.getOiTables();
             selected = hduList.getSelectedValues();
             // Search in selection
             for (int i = 0; i < selected.length; i++)
             {
-                OiTable t = (OiTable) selected[i];
+                OITable t = (OITable) selected[i];
                 if (t.getExtName().equals(requestedTables))
                 {
-                    oiTables[retainedHdu] = t;
+                    OITables[retainedHdu] = t;
                     retainedHdu++;
                 }
             }
@@ -438,12 +436,12 @@ public class FilePanel extends javax.swing.JPanel {
             if (retainedHdu == 0)
             {
                 // no hdu found, we will try again on all hdu
-                for (int i = 0; i < oiTables.length; i++)
+                for (int i = 0; i < OITables.length; i++)
                 {
-                    OiTable t = (OiTable) oiTables[i];
+                    OITable t = (OITable) OITables[i];
                     if (t.getExtName().equals(requestedTables))
                     {
-                        oiTables[retainedHdu] = t;
+                        OITables[retainedHdu] = t;
                         retainedHdu++;
                     }
                 }
@@ -462,7 +460,7 @@ public class FilePanel extends javax.swing.JPanel {
 
             for (int i = 0; i < retainedHdu; i++)
             {
-                OiTable table = oiTables[i];
+                OITable table = OITables[i];
 
                 for (int j = 0; j < requestedColumns.length; j++)
                 {
@@ -477,9 +475,9 @@ public class FilePanel extends javax.swing.JPanel {
                     double err[][] = null;
                     double dist[][] = null;
                     boolean flags[][] = null;
-                    if (table instanceof OiT3)
+                    if (table instanceof OIT3)
                     {
-                        OiT3 t = (OiT3) table;
+                        OIT3 t = (OIT3) table;
                         if (requestedColumn.equals("T3AMP"))
                         {
                             data = t.getT3Amp();
@@ -493,10 +491,10 @@ public class FilePanel extends javax.swing.JPanel {
                             err = m.scalarMultiply(Math.PI/180).getData();
                         }
                         dist = t.getSpacial();
-                        flags = t.getFlags();
-                    } else if (table instanceof OiVis)
+                        flags = t.getFlag();
+                    } else if (table instanceof OIVis)
                     {
-                        OiVis t = (OiVis) table;
+                        OIVis t = (OIVis) table;
                         if (requestedColumn.equals("VISAMP"))
                         {                            
                             data = t.getVisAmp();
@@ -508,15 +506,15 @@ public class FilePanel extends javax.swing.JPanel {
                             data = m.scalarMultiply(Math.PI/180).getData();                            
                             err = t.getVisPhiErr();
                         }
-                        dist = t.getSpacial();
-                        flags = t.getFlags();
+                        dist = t.getSpacialFreq();
+                        flags = t.getFlag();
                     } else
                     {
-                        OiVis2 t = (OiVis2) table;
+                        OIVis2 t = (OIVis2) table;
                         data = t.getVis2Data();
                         err = t.getVis2Err();
                         dist = t.getSpacialFreq();
-                        flags = t.getFlags();
+                        flags = t.getFlag();
                     }
                     sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
                 }
@@ -602,26 +600,26 @@ public class FilePanel extends javax.swing.JPanel {
             Object selected[] = hduList.getSelectedValues();
             for (int i = 0; i < selected.length; i++)
             {
-                OiTable table  = (OiTable)selected[i];
+                OITable table  = (OITable)selected[i];
                 String label = table.getExtName()+"#"+table.getExtNb();
                 RealMatrixImpl ucoord=null;
                 RealMatrixImpl vcoord=null;
 
-                if (table instanceof OiVis )
+                if (table instanceof OIVis )
                 {
-                    OiVis t=(OiVis)table;
+                    OIVis t=(OIVis)table;
                     ucoord = new RealMatrixImpl(t.getSpacialUCoord());
                     vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
-                if (table instanceof OiVis2 )
+                if (table instanceof OIVis2 )
                 {
-                    OiVis2 t=(OiVis2)table;
+                    OIVis2 t=(OIVis2)table;
                     ucoord = new RealMatrixImpl(t.getSpacialUCoord());
                     vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
-                if (table instanceof OiT3 )
+                if (table instanceof OIT3 )
                 {
-                    OiT3 t=(OiT3)table;
+                    OIT3 t=(OIT3)table;
                     double [][] u1s = t.getSpacialU1Coord();
                     double [][] u2s = t.getSpacialU2Coord();
                     double [][] us = new double[(u1s.length)*2][u1s[0].length] ;
@@ -722,23 +720,23 @@ public class FilePanel extends javax.swing.JPanel {
          
                 for (int i = 0; i < selected.length; i++)
                 {
-                    OiTable t = (OiTable) selected[i];
+                    OITable t = (OITable) selected[i];
 
-                    if (t instanceof OiData)
+                    if (t instanceof OIData)
                     {
                         showUVCoverageButton.setEnabled(true);
                     }
-                    if (t instanceof OiVis)
+                    if (t instanceof OIVis)
                     {
                         showVisButton.setText("Plot data of selected OI_VIS");
                     }
 
-                    if (t instanceof OiVis2)
+                    if (t instanceof OIVis2)
                     {
                         showVis2Button.setText("Plot VIS2DATA of selected OI_VIS2");
                     }
 
-                    if (t instanceof OiT3)
+                    if (t instanceof OIT3)
                     {
                         showT3Button.setText("Plot data of selected OI_T3");
                     }
@@ -757,8 +755,10 @@ public class FilePanel extends javax.swing.JPanel {
 
         public void actionPerformed(java.awt.event.ActionEvent e)
         {
-            GUIValidator val = new GUIValidator(null);
-            val.checkFile(oifitsFile_);
+          throw new UnsupportedOperationException("TODO");
+            // TODO replace next lines of code!
+            // GUIValidator val = new GUIValidator(null);
+            // val.checkFile(oifitsFile_);
         }
     }
      

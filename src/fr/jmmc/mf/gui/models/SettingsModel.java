@@ -2,6 +2,7 @@ package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.gui.MessagePane;
 
 import fr.jmmc.mcs.util.ObservableDelegate;
 import fr.jmmc.mf.models.File;
@@ -22,7 +23,6 @@ import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import org.eso.fits.FitsException;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -32,11 +32,14 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-import fr.jmmc.oifits.*;
-import fr.jmmc.oifits.validator.GUIValidator;
+//import fr.jmmc.oifits.validator.GUIValidator;
+import fr.jmmc.oitools.model.OIFitsFile;
+import fr.jmmc.oitools.model.OIFitsLoader;
+import fr.jmmc.oitools.model.OITarget;
 import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
+import nom.tam.fits.FitsException;
 import org.exolab.castor.xml.ValidationException;
 
 /**
@@ -1206,7 +1209,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Files files = rootSettings.getFiles();
 
         // The file must be one oidata file (next line automatically unzip gz files)
-        OifitsFile oifitsFile = new OifitsFile(fileToAdd.getAbsolutePath());
+        OIFitsFile oifitsFile = new OIFitsFile(fileToAdd.getAbsolutePath());
         String fitsFileName = oifitsFile.getName();
 
         File newFile = new File();
@@ -1228,7 +1231,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and refactor this CODE
-    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, FitsException {
+    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, nom.tam.fits.FitsException {
         logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
@@ -1246,7 +1249,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (boundFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
                 // restore file from base64 and try to continue
-                filename = UtilsClass.saveBASE64ToFile(boundFile).getFile().getAbsolutePath();
+                filename = UtilsClass.saveBASE64ToFile(boundFile).getAbsoluteFilePath();
             } else {
                 return true;
             }
@@ -1264,24 +1267,31 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param filename
      * @return
      */
-    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, FitsException {
+    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, nom.tam.fits.FitsException {
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
-        OifitsFile fits = null;
+        System.out.println("filename = " + filename);
+        OIFitsFile fits;
         // Populate the boundFile with oifits content
         fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
-        fits = new OifitsFile(filename);
-        GUIValidator val = new GUIValidator(null);
-        val.checkFile(fits);
+        fits = OIFitsLoader.loadOIFits(filename);
 
-        String[] targetNames;
-        try{
-          OiTarget oiTarget = fits.getOiTarget();
-          targetNames = oiTarget.getTargetNames();
-        }catch(NullPointerException npe){
-          throw new FitsException("Your file must contains one target / one OITARGET table");
+        // TODO replace new part of code
+        MessagePane.showErrorMessage("TODO: add validator back in SettingsModel.populate");
+        //GUIValidator val = new GUIValidator(null);
+        //val.checkFile(fits);
+                
+        OITarget oiTarget = fits.getOiTarget();
+        
+        System.out.println("oiTarget = " + oiTarget);
+        oiTarget.getTarget();
+        if (oiTarget==null){
+          // throw new FitsException("Your file must contains one target / one OITARGET table");
+          return false;
         }
-
+        String[] targetNames;
+        targetNames = oiTarget.getTarget();
+        
         //generate and store base64 href
         fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
 

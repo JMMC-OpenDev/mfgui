@@ -11,7 +11,7 @@ import fr.jmmc.mf.models.Residuals;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
-import fr.jmmc.oifits.OifitsFile;
+import fr.jmmc.oitools.model.OIFitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
 import java.io.StringReader;
@@ -216,7 +216,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             selectedFiles.length; j++) {
       File selectedFile = (File) selectedFiles[j];
       try {
-        OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+        OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
         if (oifile.hasOiVis2()) {
           vis2CheckBox.setEnabled(true);
           if (residuals == null) {
