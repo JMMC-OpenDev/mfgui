@@ -16,6 +16,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -46,7 +47,7 @@ import org.astrogrid.samp.client.SampException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.37 2010-10-11 14:15:20 bourgesl Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.38 2010-10-22 10:16:56 bourgesl Exp $";
     final static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -350,8 +351,8 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
              */
             protected void processMessage(final String senderId, final Message message) throws SampException {
 
-                final String xmlModel = message.getString("model");
-                final String filename = message.getString("filename");
+                final String xmlModel = (String)message.getParam("model");
+                final String filename = (String)message.getParam("filename");
 
                 if (filename == null) {
                     throw new SampException("Missing parameter 'filename'");
@@ -362,12 +363,12 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
                 StatusBar.show("Samp message received : building new model");
 
-                SettingsModel sm = new SettingsModel();
+                final SettingsModel sm = new SettingsModel();
                 sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
 
                 // Try to read file on disk as one oifits file
                 try {
-                    sm.addFile(new java.io.File(filename));
+                    sm.addFile(new File(filename));
                 } catch (Exception ex) {
                     MessagePane.showErrorMessage(
                             "Could not build oifits from samp message : \n", ex);
@@ -375,24 +376,36 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                 }
 
                 // Try to build one new model object from given string
-                StringReader sr = new StringReader(xmlModel);
-                Model m = null;
+                final StringReader sr = new StringReader(xmlModel);
+                Model modelContainer = null;
                 try {
-                    m = (Model) UtilsClass.unmarshal(Model.class, sr);
+                    modelContainer = (Model) UtilsClass.unmarshal(Model.class, sr);
                 } catch (Exception ex) {
                     MessagePane.showErrorMessage(
                             "Could not build model from samp message : \n", ex);
                     throw new SampException("Could not build model from samp message", ex);
                 }
-                fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
-                String targetIdent = f.getOitarget(0).getTarget();
-                Target target = sm.addTarget(targetIdent);
-                Model[] models = m.getModel();
-                for (int i = 0; i < models.length; i++) {
-                    Model model = models[i];
+
+                final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
+                final String targetIdent = f.getOitarget(0).getTarget();
+                final Target target = sm.addTarget(targetIdent);
+
+                for (Model model : modelContainer.getModel()) {
                     target.addModel(model);
                 }
-                gui.addSettings(sm);
+
+                // Refresh GUI :
+                SwingUtilities.invokeLater(new Runnable() {
+                    /**
+                     * Synchronized by EDT
+                     */
+                    public void run() {
+                        gui.addSettings(sm);
+
+                        // change focus :
+                        App.getFrame().toFront();
+                    }
+                });
             }
         };
     }
