@@ -6,7 +6,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Target;
-import fr.jmmc.oifits.OifitsFile;
+import fr.jmmc.oitools.model.OIFitsFile;
 import java.util.HashSet;
 
 /**
@@ -108,7 +108,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
 
         try {
-          OifitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+          OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
           String obs = "VIS2";
           if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
             set.add(obs);

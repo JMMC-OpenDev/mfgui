@@ -14,9 +14,9 @@ import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResponseItem;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Settings;
-import fr.jmmc.oifits.OifitsFile;
+import fr.jmmc.oitools.model.OIFitsFile;
+import fr.jmmc.oitools.model.OIFitsLoader;
 import java.awt.BorderLayout;
-import org.eso.fits.FitsException;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
@@ -48,6 +48,7 @@ import javax.swing.tree.TreePath;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import nom.tam.fits.FitsException;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
@@ -64,7 +65,7 @@ public class UtilsClass {
     static String className = "fr.jmmc.mf.gui.UtilsClass";
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    private static java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile> alreadyExpandedOifitsFiles = new java.util.Hashtable<fr.jmmc.mf.models.File, OifitsFile>();
+    private static java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile>();
 
     /** This method wal along the targets and check if no one of them are linked to the given file.
      * 
@@ -380,7 +381,7 @@ public class UtilsClass {
         return outputFile;
     }
 
-    public static OifitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile)
+    public static OIFitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile)
             throws IOException, FitsException {
         fr.jmmc.mf.models.File key = dataFile;
 
@@ -394,16 +395,16 @@ public class UtilsClass {
         }
 
         // Search if this file has already been loaded
-        OifitsFile oifitsFile = (OifitsFile) alreadyExpandedOifitsFiles.get(key);
+        OIFitsFile oifitsFile = (OIFitsFile) alreadyExpandedOifitsFiles.get(key);
 
         if (oifitsFile == null) {
             File outputFile = java.io.File.createTempFile(filename, fileExtension);
             saveBASE64ToFile(dataFile.getHref(), outputFile);
-            oifitsFile = new OifitsFile(outputFile);
+            oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
             alreadyExpandedOifitsFiles.put(key, oifitsFile);
-            logger.fine("expanding '" + key + "' into " + oifitsFile.getFile().getAbsolutePath());
+            logger.fine("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
         } else {
-            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getFile().getAbsolutePath());
+            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getAbsoluteFilePath());
         }
         return oifitsFile;
     }

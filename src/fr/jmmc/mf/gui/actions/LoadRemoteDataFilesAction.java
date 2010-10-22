@@ -3,19 +3,13 @@ package fr.jmmc.mf.gui.actions;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.oidata.RepositoryBrowser;
+//import fr.jmmc.oidata.RepositoryBrowser;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.channels.Channel;
-import java.nio.channels.FileChannel;
-import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JFrame;
@@ -42,7 +36,10 @@ public class LoadRemoteDataFilesAction extends RegisteredAction implements TreeS
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        RepositoryBrowser browser = new RepositoryBrowser(new JFrame(), true);
+
+         throw new UnsupportedOperationException("TODO");
+        /* TODO replace next part of code
+         RepositoryBrowser browser = new RepositoryBrowser(new JFrame(), true);
 
         int returnVal = browser.showBrowser();
 
@@ -81,6 +78,7 @@ public class LoadRemoteDataFilesAction extends RegisteredAction implements TreeS
                 logger.log(Level.WARNING, msg, ex);
             }
         }
+         */
 
     }
 
