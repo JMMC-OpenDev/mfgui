@@ -21,6 +21,7 @@ import fr.jmmc.mf.models.Results;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
+import fr.jmmc.oitools.model.OIFitsChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -1274,16 +1275,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // Populate the boundFile with oifits content
         fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
-        fits = OIFitsLoader.loadOIFits(filename);
+        OIFitsChecker checker = new OIFitsChecker();
+        fits = OIFitsLoader.loadOIFits(checker, filename);
 
-        // TODO replace new part of code
-        MessagePane.showErrorMessage("TODO: add validator back in SettingsModel.populate");
-        //GUIValidator val = new GUIValidator(null);
-        //val.checkFile(fits);
+        MessagePane.showMessage(checker.getCheckReport());
                 
         OITarget oiTarget = fits.getOiTarget();
         
-        System.out.println("oiTarget = " + oiTarget);
         oiTarget.getTarget();
         if (oiTarget==null){
           // throw new FitsException("Your file must contains one target / one OITARGET table");
