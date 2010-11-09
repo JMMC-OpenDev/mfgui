@@ -467,7 +467,7 @@ public class FilePanel extends javax.swing.JPanel {
                     String requestedColumn = requestedColumns[j];
                     String units="";
                     if(requestedColumn.contains("PHI")){
-                        units="(deg)";
+                        units="(rad)";
                     }
                     String label = table.getExtName()+"#"+
                             table.getExtNb()+":"+requestedColumn+ units;
