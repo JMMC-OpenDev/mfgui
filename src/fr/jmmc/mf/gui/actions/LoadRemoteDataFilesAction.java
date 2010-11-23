@@ -37,7 +37,7 @@ public class LoadRemoteDataFilesAction extends RegisteredAction implements TreeS
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
 
-         throw new UnsupportedOperationException("TODO");
+         throw new UnsupportedOperationException("This action will be back in the comming releases. Now you have to visit the http://jmmc.fr/oidata url and download manually the files.");
         /* TODO replace next part of code
          RepositoryBrowser browser = new RepositoryBrowser(new JFrame(), true);
 
