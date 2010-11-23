@@ -639,7 +639,7 @@ public class FilePanel extends javax.swing.JPanel {
                         }
                     }
                     ucoord = new RealMatrixImpl(us);
-                    vcoord = new RealMatrixImpl(us);
+                    vcoord = new RealMatrixImpl(vs);
                 }
                 if (ucoord != null && vcoord != null) {
                     // add symetrical part and request plot file building
