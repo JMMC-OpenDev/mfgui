@@ -2,6 +2,7 @@ package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.util.MimeType;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
@@ -38,6 +39,7 @@ public class SaveSettingsAction extends RegisteredAction {
             File file = new File(settingsModel.getAssociatedFilename());
             // Open a filechooser in previous save directory
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
             if (lastDir != null) {
                 fileChooser.setCurrentDirectory(new File(lastDir));
             }
