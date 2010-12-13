@@ -388,10 +388,13 @@ public class UtilsClass {
         String filename = "tmpOifile";
         String fileExtension = ".oifits";
         File tmp = new File(dataFile.getName());
+
         int dotPos = tmp.getName().lastIndexOf(".");
         if (dotPos > 1) {
             filename = tmp.getName().substring(0, dotPos);
-            fileExtension = tmp.getName().substring(dotPos);
+            if (tmp.getName().substring(dotPos).length()>1){
+                fileExtension = tmp.getName().substring(dotPos);
+            }
         }
 
         // Search if this file has already been loaded
