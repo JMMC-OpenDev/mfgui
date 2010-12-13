@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.8"/>
+    <program name="LITpro" version="1.0.9b1"/>
     <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -35,19 +35,17 @@
         </menu>
     </menubar>
     <releasenotes>
-        <release version="1.0.8">
-            <prerelease version="1.0.8b1">
-                <!-- 
+        <release version="1.0.9">
+            <prerelease version="1.0.9b1">
+                <!--
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
-                  Comments :
-Hi,
-That would be a simple a nice feature:
-1) When loading/writting a configuration file, the browser should
-filter the *.xml files.
-2) When loading an oifits file, the browser should filter the *.fits
-and *.oifits files.
-
                 -->
+                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
+                <change type="BUGFIX">Fix unit in the fit result panel for t3phi and visphi plots</change>
+            </prerelease>
+       </release>
+        <release version="1.0.8">
+            <prerelease version="1.0.8b1">                
                 <change type="BUGFIX">Fix UV coverage plots in the file panel for t3data</change>
             </prerelease>
        </release>
