@@ -3,6 +3,7 @@ package fr.jmmc.mf.gui.models;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.util.MimeType;
 
 import fr.jmmc.mcs.util.ObservableDelegate;
 import fr.jmmc.mf.models.File;
@@ -780,7 +781,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public String getAssociatedFilename() {
         logger.entering(className, "getAssociatedFilename");
         if (associatedFile == null) {
-            return "Untitled.xml";
+            return "Untitled."+MimeType.LITPRO_SETTINGS.getExtension();
         }
         return associatedFile.getName();
     }
