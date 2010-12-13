@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.logging.Level;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import fr.jmmc.mcs.util.MimeType;
 
 public class LoadModelAction extends RegisteredAction {
     /** Class name. This name is used to register to the ActionRegistrar */
@@ -16,20 +17,21 @@ public class LoadModelAction extends RegisteredAction {
     public final static String actionName = "loadModel";
 
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
     public String lastDir = System.getProperty("user.home");
-    MFGui mfgui;
+    MFGui mfgui;  
 
     public LoadModelAction(MFGui mfgui) {
         super(className, actionName);
-        this.mfgui = mfgui;
+        this.mfgui = mfgui;        
     }
 
     public void actionPerformed(ActionEvent e) {
         logger.entering("" + this.getClass(), "actionPerformed");
         //try {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
         // Set in previous load directory
         if (lastDir != null) {
             fileChooser.setCurrentDirectory(new File(lastDir));
