@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class SaveSettingsAction extends RegisteredAction {
     private final static String className="fr.jmmc.mf.gui.actions.SaveSettingsAction";
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
 
     private String lastDir = System.getProperty("user.home");
