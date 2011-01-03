@@ -231,7 +231,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 <xsl:variable name="m" select="exslt:node-set($modelElements)/*[position()=$i]"/>
                 <xsl:variable name="d" select="exslt:node-set($dataElements)/*[position()=$i]"/>
                 <xsl:variable name="w" select="exslt:node-set($weightElements)/*[position()=$i]"/>
-                <xsl:variable name="y" select="( $m - $d ) * $w"/>
+                <xsl:variable name="y" select="( $d - $m ) * $w"/>
                 <xsl:element name="p">
                     <xsl:attribute name="x">
                         <xsl:value-of select="$x"/>
