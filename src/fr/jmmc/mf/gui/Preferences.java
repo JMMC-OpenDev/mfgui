@@ -5,11 +5,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: Preferences.java,v 1.21 2010-09-02 09:55:49 mella Exp $"
+ * "@(#) $Id: Preferences.java,v 1.22 2011-01-04 10:40:38 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.21  2010/09/02 09:55:49  mella
+ * Use savePreferences and restoreDefaultPreferences actions of Preferences mother Class
+ *
  * Revision 1.20  2010/03/30 15:53:25  mella
  * fix detection handing of beta versions
  *
@@ -133,9 +136,13 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
         setDefaultPreference("yoga.local.home", "../ys");
         setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
         // our actual convention tells that a beta version ends with b1...bN
-        if (_version.contains("b"))
+        if (ModelFitting.isAlphaVersion())
         {
             setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproWebService/run.php");
+        }
+        else  if (ModelFitting.isBetaVersion())
+        {
+            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
         }
         else
         {
