@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.9b1"/>
+    <program name="LITpro" version="1.0.9b2"/>
     <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -36,10 +36,19 @@
     </menubar>
     <releasenotes>
         <release version="1.0.9">
-            <prerelease version="1.0.9b1">
                 <!--
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
                 -->
+            <prerelease version="1.0.9b2">
+                <change type="BUGFIX">Use new oifits library that fixes bug loading data tables with only one wavelength and using TDIM keywords (1)</change>
+                <change type="BUGFIX">Use new oifits library that fixes several bugs related to ASCII character encoding / decoding and ASCII_NULL support</change>                
+                <change type="BUGFIX">Fix residual sign while plotting residual. (M-D)/sigma was plotted instead of (D-M)/sigma.</change>
+                <change type="BUGFIX">Avoid error for radial plots data in T3 residuals cases</change>
+                <change type="CHANGE">Set 'weigthed residuals' instead of 'residuals' in some radial plot titles</change>
+                <change type="FEATURE">Three webservice urls are defined by preferences according Alpha Beta or Production versions</change>
+                <change type="FEATURE">Display version number in the application title bar for Alpha or Beta releases</change>
+            </prerelease>
+            <prerelease version="1.0.9b1">
                 <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
                 <change type="BUGFIX">Fix unit in the fit result panel for t3phi and visphi plots</change>
                 <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>
