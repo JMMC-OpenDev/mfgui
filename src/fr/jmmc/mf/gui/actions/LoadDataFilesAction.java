@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.mcs.util.MimeType;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -33,7 +34,7 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
         logger.entering(className, "actionPerformed");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
-
+        fileChooser.setFileFilter(MimeType.OIFITS.getFileFilter());
         // Set in previous load directory
         if (lastDir != null) {
             fileChooser.setCurrentDirectory(new java.io.File(lastDir));
