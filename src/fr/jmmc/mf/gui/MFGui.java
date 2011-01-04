@@ -115,7 +115,11 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 
-        setTitle(ModelFitting.getSharedApplicationDataModel().getProgramName());
+        String title=ModelFitting.getSharedApplicationDataModel().getProgramName();
+        if(ModelFitting.isAlphaVersion()||ModelFitting.isBetaVersion()){
+            title+=" "+ ModelFitting.getSharedApplicationDataModel().getProgramVersion();
+        }
+        setTitle(title);
 
         if (filenames.length >= 1)
         {
