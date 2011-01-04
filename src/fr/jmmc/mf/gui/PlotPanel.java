@@ -107,7 +107,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     if (residuals) {
       String args = observableType + " " + getGroupValue(targetsToPlot);
       plot("getModelResidualsPlot", args, observableType +
-              " residuals of targets " + getGroupValue(targetsToPlot));
+              " weighted residuals of targets " + getGroupValue(targetsToPlot));
     } else {
       if (overplotModel) {
         String args = observableType + " " + getGroupValue(targetsToPlot) +
