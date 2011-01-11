@@ -397,6 +397,11 @@ public class UtilsClass {
             }
         }
 
+        // Fix exception thrown by createTempFile that requires one suffixe
+        // longer than 3 chars.
+        if(filename.length()<3){
+            filename="___"+filename;
+        }
         // Search if this file has already been loaded
         OIFitsFile oifitsFile = (OIFitsFile) alreadyExpandedOifitsFiles.get(key);
 
