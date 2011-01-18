@@ -53,8 +53,7 @@
                 <change type="FEATURE">Display version number in the application title bar for Alpha or Beta releases</change>
             </prerelease>
             <prerelease version="1.0.9b1">
-                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
-                <change type="BUGFIX">Fix unit in the fit result panel for t3phi and visphi plots</change>
+                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>               
                 <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>                
             </prerelease>
        </release>
