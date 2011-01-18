@@ -467,7 +467,7 @@ public class FilePanel extends javax.swing.JPanel {
                     String requestedColumn = requestedColumns[j];
                     String units="";
                     if(requestedColumn.contains("PHI")){
-                        units="(rad)";
+                        units="(degrees)";
                     }
                     String label = table.getExtName()+"#"+
                             table.getExtNb()+":"+requestedColumn+ units;
@@ -484,11 +484,9 @@ public class FilePanel extends javax.swing.JPanel {
                             err = t.getT3AmpErr();                            
                         }
                         if (requestedColumn.equals("T3PHI"))
-                        {
-                            RealMatrixImpl m = new RealMatrixImpl(t.getT3Phi());
-                            data = m.scalarMultiply(Math.PI/180).getData();
-                            m = new RealMatrixImpl(t.getT3PhiErr());
-                            err = m.scalarMultiply(Math.PI/180).getData();
+                        {                           
+                            data = t.getT3Phi();
+                            err = t.getT3PhiErr();
                         }
                         dist = t.getSpacial();
                         flags = t.getFlag();
@@ -502,8 +500,7 @@ public class FilePanel extends javax.swing.JPanel {
                         }
                         if (requestedColumn.equals("VISPHI"))
                         {
-                            RealMatrixImpl m = new RealMatrixImpl(t.getVisPhi());
-                            data = m.scalarMultiply(Math.PI/180).getData();                            
+                            data = t.getVisPhi();
                             err = t.getVisPhiErr();
                         }
                         dist = t.getSpacialFreq();
