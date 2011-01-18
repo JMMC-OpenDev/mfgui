@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.9b2"/>
+    <program name="LITpro" version="1.0.9b3"/>
     <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -39,6 +39,10 @@
                 <!--
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
                 -->
+            <prerelease version="1.0.9b3">
+                <change type="CHANGE">Display T3phi and VISphi data in degrees</change>
+                <change type="DOC">Update documentation</change>
+            </prerelease>
             <prerelease version="1.0.9b2">
                 <change type="BUGFIX">Use new oifits library that fixes bug loading data tables with only one wavelength and using TDIM keywords (1)</change>
                 <change type="BUGFIX">Use new oifits library that fixes several bugs related to ASCII character encoding / decoding and ASCII_NULL support</change>                
