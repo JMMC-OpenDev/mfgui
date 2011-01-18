@@ -397,7 +397,7 @@ public class UtilsClass {
             }
         }
 
-        // Fix exception thrown by createTempFile that requires one suffixe
+        // Fix exception thrown by createTempFile that requires one prefix
         // longer than 3 chars.
         if(filename.length()<3){
             filename="___"+filename;
