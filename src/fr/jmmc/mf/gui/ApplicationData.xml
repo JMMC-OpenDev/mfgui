@@ -36,12 +36,12 @@
     </menubar>
     <releasenotes>
         <release version="1.0.9">
-                <!--
+            <!--
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
-                -->
+            -->
             <prerelease version="1.0.9b3">
                 <change type="CHANGE">Display T3phi and VISphi data in degrees</change>
-                <change type="DOC">Update documentation</change>
+                <!--<change type="DOC">Update documentation</change>-->
             </prerelease>
             <prerelease version="1.0.9b2">
                 <change type="BUGFIX">Use new oifits library that fixes bug loading data tables with only one wavelength and using TDIM keywords (1)</change>
