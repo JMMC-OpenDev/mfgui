@@ -80,6 +80,12 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
     
     <xsl:template name="plotRadial">
         <xsl:param name="plotName"/>
+        <xsl:param name="yfactor">
+          <xsl:choose>
+            <xsl:when test="contains($plotName,'phi')">57.29578</xsl:when>
+            <xsl:otherwise>1</xsl:otherwise>
+          </xsl:choose>
+        </xsl:param>
         <plot>
             <title>
                 <xsl:value-of select="concat('Plot ',$plotName,' versus spatial frequency')"/>
@@ -87,7 +93,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <xLabel>spatial frequency (1/rad)</xLabel>
             <yLabel>
                 <xsl:value-of select="$plotName"/>
-                <xsl:if test="contains($plotName,'phi')"> (rad)</xsl:if>
+                <xsl:if test="contains($plotName,'phi')"> (deg)</xsl:if>
             </yLabel>
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
                 <xsl:if test="./*[name()=$plotName or name()=concat($plotName,'data')]">
@@ -107,7 +113,9 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         </xsl:with-param>
                         <xsl:with-param name="name" select="concat($plotName, ' (data)')"/>
                         <xsl:with-param name="marks" select="'points'"/>
-                    </xsl:call-template>
+                        <!-- Convert internal values from radians to degrees -->                        
+                        <xsl:with-param name="yfactor" select="$yfactor"/>
+                </xsl:call-template>
                     <!-- plot model -->
                     <xsl:call-template name="ptPlotDataSet">
                         <xsl:with-param name="xElements">
@@ -121,6 +129,8 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         </xsl:with-param>
                         <xsl:with-param name="name" select="concat($plotName, ' (model)')"/>
                         <xsl:with-param name="marks" select="'dots'"/>
+                        <!-- Convert internal values from radians to degrees -->
+                        <xsl:with-param name="yfactor" select="$yfactor"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:for-each>
@@ -172,6 +182,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         <xsl:param name="errorBarElements" select='no'/>
         <xsl:param name="name" select="'missing name'"/>
         <xsl:param name="marks" select="'points'"/>
+        <xsl:param name="yfactor" select="1"/>
 
         <xsl:element name="dataset">
             <xsl:attribute name="name">
@@ -191,15 +202,15 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         <xsl:value-of select="$x"/>
                     </xsl:attribute>
                     <xsl:attribute name="y">
-                        <xsl:value-of select="$y"/>
+                        <xsl:value-of select="$y * $yfactor"/>
                     </xsl:attribute>
                     <xsl:if test="$errorBarElements!='no'">
                         <xsl:for-each select="exslt:node-set($errorBarElements)/*[position()=$i]">
                             <xsl:attribute name="lowErrorBar">
-                                <xsl:value-of select="$y - ."/>
+                                <xsl:value-of select="( $y - . ) * $yfactor"/>
                             </xsl:attribute>
                             <xsl:attribute name="highErrorBar">
-                                <xsl:value-of select="$y + ."/>
+                                <xsl:value-of select="( $y + . ) * $yfactor"/>
                             </xsl:attribute>
                         </xsl:for-each>
                     </xsl:if>
