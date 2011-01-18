@@ -55,8 +55,7 @@
             <prerelease version="1.0.9b1">
                 <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
                 <change type="BUGFIX">Fix unit in the fit result panel for t3phi and visphi plots</change>
-                <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>
-                <change type="BUGFIX">Fix 'Bug with fits strings that can contain some 0x00 Ascii values'</change>
+                <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>                
             </prerelease>
        </release>
         <release version="1.0.8">
