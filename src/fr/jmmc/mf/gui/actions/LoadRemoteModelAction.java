@@ -21,11 +21,8 @@ public class LoadRemoteModelAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         logger.entering("" + this.getClass(), "actionPerformed");
-        
-            String url = (String) JOptionPane.showInputDialog("Enter URL of remote setting:", lastURL);
-            if ((url != null) && (url.length() > 5)) {
-                lastURL = url;
-                mfgui.addSettings(new SettingsModel(url));
-            }       
+        String url = (String) JOptionPane.showInputDialog("Enter URL of remote setting:", lastURL);
+        mfgui.addSettings(new SettingsModel(url));
+        lastURL = url;
     }
 }
