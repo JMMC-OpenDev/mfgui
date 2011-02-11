@@ -2,6 +2,7 @@ package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.util.MimeType;
 import fr.jmmc.mcs.util.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -17,7 +18,6 @@ public class SaveSettingsAction extends RegisteredAction {
             className);
     private String lastDir = System.getProperty("user.home");
     MFGui mfgui;
-    protected static Preferences myPreferences = Preferences.getInstance();
 
     public SaveSettingsAction(MFGui mfgui, String actionName) {
         super(className, actionName);
@@ -27,7 +27,7 @@ public class SaveSettingsAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         logger.entering("" + this.getClass(), "actionPerformed");
-        boolean saveResults = myPreferences.getPreferenceAsBoolean("save.results");
+
         // @todo replace next coede part by enable and disabled event asociated to actions...
         SettingsModel settingsModel = mfgui.getSelectedSettings();
         if (settingsModel == null) {
@@ -42,9 +42,6 @@ public class SaveSettingsAction extends RegisteredAction {
         }
         fileChooser.setSelectedFile(file);
         String res = "";
-        if (saveResults) {
-            res = " with results";
-        }
         fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + res + "?");
         // Open filechooser
         int returnVal = fileChooser.showSaveDialog(null);
@@ -60,8 +57,9 @@ public class SaveSettingsAction extends RegisteredAction {
         lastDir = file.getParent();
         // Fix user associated file and save it with result
         settingsModel.setAssociatedFile(file);
-        settingsModel.saveSettingsFile(file, saveResults);
+        settingsModel.saveSettingsFile(file);
         /* ask to update title */
         mfgui.getSelectedSettings();
+        StatusBar.show("Settings stored into '" + file.getName() + "'");
     }
 }
