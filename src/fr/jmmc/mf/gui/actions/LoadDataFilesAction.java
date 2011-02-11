@@ -6,9 +6,7 @@ import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
-import java.util.logging.Level;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -16,9 +14,9 @@ import javax.swing.event.TreeSelectionListener;
 
 public class LoadDataFilesAction extends RegisteredAction implements TreeSelectionListener, ChangeListener {
 
-    public final static String className = "fr.jmmc.mf.gui.actions.LoadDataFileAction";
+    public final static String className = LoadDataFilesAction.class.getName();
     public final static String actionName = "loadDataFiles";
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
     String lastDir = System.getProperty("user.home");
     MFGui mfgui;
@@ -42,24 +40,13 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
 
         // Open file chooser
         int returnVal = fileChooser.showOpenDialog(null);
-
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             java.io.File[] files = fileChooser.getSelectedFiles();
-
             for (int i = 0; i < files.length; i++) {
-                try {
-                    settingsModel.addFile(files[i]);
-                } catch (Exception ex) {
-                    String msg = "Can't read oifits file '" + files[i].getName() + "'.\n\n(" +
-                            ex.getMessage() + ")";
-                    JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
-                    logger.log(Level.WARNING, msg, ex);
-                }
+                settingsModel.addFile(files[i]);
             }
-
             lastDir = files[0].getParent();
         }
-
     }
 
     /** Listen to the settings pane selection changes
