@@ -1,12 +1,12 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.gui.MessagePane;
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
-//OIVAL import fr.jmmc.oifits.*;
-//OIVAL import fr.jmmc.oifits.validator.GUIValidator;
 import fr.jmmc.oitools.model.*;
+import fr.nom.tam.fits.FitsException;
+import java.io.IOException;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -18,6 +18,9 @@ import org.apache.commons.math.linear.RealMatrixImpl;
  */
 public class FilePanel extends javax.swing.JPanel {
 
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            FilePanel.class.getName());
+    protected SettingsModel settingsModel;
     File current = null;
     OIFitsFile oifitsFile_ = null;
     static Action saveEmbeddedFileAction;
@@ -25,9 +28,6 @@ public class FilePanel extends javax.swing.JPanel {
     static Action showEmbeddedFileAction;
     MyListSelectionListener myListSelectionListener;
     ListModel hduListModel = new DefaultListModel();
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.FilePanel");
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton1;
     private javax.swing.JButton checkFileButton;
@@ -54,7 +54,6 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox visampCheckBox;
     private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
-    protected SettingsModel settingsModel;
 
     /** Creates new form FilePanel */
     public FilePanel() {
@@ -72,41 +71,46 @@ public class FilePanel extends javax.swing.JPanel {
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_Check_embedded_Bt"));
         helpButton2.setAction(new ShowHelpAction("_fits_fields_and_Show_selected_Bt"));
-    // next boutons are actually not usefull because they are linked onto the same page
-    //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
-    //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
-    //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
-    //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
+        // next boutons are actually not usefull because they are linked onto the same page
+        //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
+        //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
+        //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
+        //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
     }
 
-    public void show(File file, SettingsModel settingsModel) {
+    /**
+     *
+     *
+     * @param file
+     * @param settingsModel
+     * @throws IOException if an io exception occurs writing the file
+     * @throws FitsException
+     */
+    public void show(File file, SettingsModel settingsModel){
         this.settingsModel = settingsModel;
         // Try to load data file
         oifitsFile_ = null;
-        try {
-            current = file;
+        current = file;
 
-            oifitsFile_ = UtilsClass.saveBASE64ToFile(current);
-             
-            // update file info fields
-            nameTextField.setText(file.getName());
+        oifitsFile_ = UtilsClass.saveBASE64ToFile(current);
 
-            // update lists
-            hduList.setListData(oifitsFile_.getOiTables());
-            hduListModel = hduList.getModel();
-            showUVCoverageButton.setEnabled(false);
-            showVisButton.setEnabled(oifitsFile_.hasOiVis());
-            visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
-            visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
-            showVis2Button.setEnabled(oifitsFile_.hasOiVis2());
-            showT3Button.setEnabled(oifitsFile_.hasOiT3());
-            t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
-            t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
-            // update button state
-            hduList.setSelectedIndices(new int[]{});
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
-        }
+        // update file info fields
+        nameTextField.setText(file.getName());
+
+        // update lists
+        hduList.setListData(oifitsFile_.getOiTables());
+        hduListModel = hduList.getModel();
+        showUVCoverageButton.setEnabled(false);
+        showVisButton.setEnabled(oifitsFile_.hasOiVis());
+        visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
+        visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
+        showVis2Button.setEnabled(oifitsFile_.hasOiVis2());
+        showT3Button.setEnabled(oifitsFile_.hasOiT3());
+        t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
+        t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
+        // update button state
+        hduList.setSelectedIndices(new int[]{});
+
     }
 
     /** This method is called from within the constructor to
@@ -114,7 +118,6 @@ public class FilePanel extends javax.swing.JPanel {
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -412,9 +415,7 @@ public class FilePanel extends javax.swing.JPanel {
             plotName = plotName+requestedColumns[i]+" " ;
         }
         plotName = plotName+")" ;
-
-        try
-        {        
+           
             int retainedHdu = 0;
             // Select requested tables:
             // plot all reqeusted if nothing selected or selection does not contains requested
@@ -521,12 +522,7 @@ public class FilePanel extends javax.swing.JPanel {
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
             java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
-            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
-        }
-        catch (Exception exc)
-        {
-            new FeedbackReport(null, true, exc);
-        }
+            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));        
     }
     
     /*TO PUT ON ANOTHER PLACE*/
@@ -582,9 +578,7 @@ public class FilePanel extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-        String plotName=current.getName()+"(UVCoverage)";
-        try
-        {           
+        String plotName=current.getName()+"(UVCoverage)";                  
             StringBuffer sb   = new StringBuffer();
             sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
                 //+"<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\""
@@ -662,12 +656,7 @@ public class FilePanel extends javax.swing.JPanel {
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
             java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
             settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
-        }
-        catch (Exception exc)
-        {
-            logger.warning("Can't do graph");
-            new FeedbackReport(null, true, exc);
-        }
+        
                                                       
  
     }//GEN-LAST:event_showUVCoverageButtonActionPerformed
@@ -767,21 +756,13 @@ public class FilePanel extends javax.swing.JPanel {
         }
 
         public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-            try
-            {
+        {          
                 int[] indices = hduList.getSelectedIndices();
-
                 for (int i = 0; i < indices.length; i++)
                 {
                    String       filename = oifitsFile_.getName();
                     ModelFitting.startFitsViewer(filename + "#" + ((indices[i]) + 1));
-                }
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
+                }                       
         }
     }
 
@@ -806,39 +787,24 @@ public class FilePanel extends javax.swing.JPanel {
             }
 
             fileChooser.setSelectedFile(new java.io.File(current.getName()));
-            try
-            {
-                // Open filechooser
-                int returnVal = fileChooser.showSaveDialog(null);
+            // Open filechooser
+            int returnVal = fileChooser.showSaveDialog(null);
 
-                if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION)
-                {
-                    java.io.File file = fileChooser.getSelectedFile();
-                    lastDir = file.getParent();
-
-                    // Ask to overwrite
-                    if (file.exists())
-                    {
-                        String message = "File '" + file.getName() +
-                            "' already exists\nDo you want to overwrite this file?";
-
-                        // Modal dialog with yes/no button
-                        int answer = javax.swing.JOptionPane.showConfirmDialog(null, message);
-
-                        if (answer == javax.swing.JOptionPane.YES_OPTION)
-                        {
+            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                java.io.File file = fileChooser.getSelectedFile();
+                lastDir = file.getParent();
+                try {
+                    // Save if it does not exist or ask to overwrite
+                    if (file.exists()) {
+                        if ( MessagePane.showConfirmFileOverwrite(file.getName())) {
                             saveFile(file);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         saveFile(file);
                     }
+                } catch (IOException ioe) {
+                    MessagePane.showErrorMessage("Sorry, cannot save your file into "+file.getName(), ioe);
                 }
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
             }
         }
     }

@@ -4,7 +4,6 @@ JMMC
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.App;
-import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MessagePane;
 import fr.jmmc.mcs.gui.StatusBar;
 import fr.jmmc.mcs.interop.SampCapability;
@@ -17,12 +16,15 @@ import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
@@ -40,6 +42,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
+import uk.ac.starlink.table.TableFormatException;
 
 /**
  *
@@ -47,8 +50,9 @@ import org.astrogrid.samp.client.SampException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.38 2010-10-22 10:16:56 bourgesl Exp $";
-    final static Logger logger = Logger.getLogger("fr.jmmc.mf.gui.ModelFitting");
+    final static String rcsId = "$Id: ModelFitting.java,v 1.39 2011-02-14 08:07:01 mella Exp $";
+    final static String className=ModelFitting.class.getName();
+    final static Logger logger = Logger.getLogger(className);
     static Preferences myPreferences;
     static MFGui gui = null;
     static HttpClient client_ = null;
@@ -112,7 +116,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
     protected static void exit() {
         logger.info("Thank you for using this software!");
     }
-
+    
     /**
      * Main entry point.
      * @param args the command line arguments
@@ -130,7 +134,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
         // Change Swing defaults :
         changeSwingDefaults();
-
+       
         // Install exception handlers :
         MCSExceptionHandler.installSwingHandler();
 
@@ -157,8 +161,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile)
-            throws Exception {
+    public static Response execMethod(String methodName, java.io.File xmlFile){
         return execMethod(methodName, xmlFile, "");
     }
 
@@ -170,7 +173,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      *         no one is requested
      */
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
-            throws Exception {
+             {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
             xmlResult = doPost(methodName, xmlFile, methodArg);
@@ -181,6 +184,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
+            MessagePane.showErrorMessage(errors);
             JTextArea t = new JTextArea(errors, 20, 80);
             JScrollPane sp = new JScrollPane(t);
             javax.swing.JOptionPane.showMessageDialog(null, sp, "Error ",
@@ -204,42 +208,36 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      * @param methodArg optionnal arguments
      *
      * @return the output of the process
-     *
-     * @throws Exception exception tbd
      */
-    private static String doExec(String methodName, java.io.File xmlFile, String methodArg)
-            throws Exception {
-        String result = "";
-        String yogaProgram = myPreferences.getPreference("yoga.local.home")
-                + myPreferences.getPreference("yoga.local.progname");
-        String filename = null;
-
-        // Run main application waiting for end of cat process
-        fr.jmmc.mcs.util.ProcessHandler ph;
-
-        if (xmlFile != null) {
-            filename = xmlFile.getAbsolutePath();
+    private static String doExec(String methodName, java.io.File xmlFile, String methodArg){
+        try {
+            String result = "";
+            String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
+            String filename = null;
+            // Run main application waiting for end of cat process
+            fr.jmmc.mcs.util.ProcessHandler ph;
+            if (xmlFile != null) {
+                filename = xmlFile.getAbsolutePath();
+            }
+            if (xmlFile == null) {
+                ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
+                logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
+            } else {
+                ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename, methodArg});
+                logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
+            }
+            YogaExec pm = new YogaExec();
+            ph.setProcessManager(pm);
+            ph.start();
+            ph.waitFor();
+            result = pm.getContent();
+            logger.finest("exec result=\n" + result);
+            return result;
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't execute LITpro local service", ex);
+        } catch(InterruptedException ex){
+            throw new IllegalStateException("LITpro local service have been interrupted", ex);
         }
-
-        if (xmlFile == null) {
-            ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
-            logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " "
-                    + methodArg);
-        } else {
-            ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{
-                        yogaProgram, methodName, filename, methodArg
-                    });
-            logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " "
-                    + filename + " " + methodArg);
-        }
-
-        YogaExec pm = new YogaExec();
-        ph.setProcessManager(pm);
-        ph.start();
-        ph.waitFor();
-        result = pm.getContent();
-        logger.finest("exec result=\n" + result);
-        return result;
     }
 
     private static String doExec(String methodName, java.io.File xmlFile)
@@ -247,46 +245,50 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         return doExec(methodName, xmlFile, "");
     }
 
-    public static String doPost(String methodName, java.io.File xmlFile, String methodArg)
-            throws Exception {
+    public static String doPost(String methodName, java.io.File xmlFile, String methodArg) {
         String result = "";
-        String targetURL = myPreferences.getPreference("yoga.remote.url");
-        PostMethod myPost = new PostMethod(targetURL);
+
+        // Build parts of request
         Part[] parts;
         if (methodArg != null && methodArg.length() == 0) {
             methodArg = null;
         }
-
-        if ((xmlFile == null) && (methodArg == null)) {
-            parts = new Part[]{new StringPart("method", methodName)};
-        } else if ((xmlFile == null) && (methodArg != null)) {
-            parts = new Part[]{
-                        new StringPart("method", methodName), new StringPart("arg", methodArg)
-                    };
-        } else if ((xmlFile != null) && (methodArg == null)) {
-            parts = new Part[]{
-                        new StringPart("method", methodName),
-                        new FilePart("userfile", xmlFile.getName(), xmlFile)
-                    };
-        } else {
-            parts = new Part[]{
-                        new StringPart("method", methodName),
-                        new FilePart("userfile", xmlFile.getName(), xmlFile),
-                        new StringPart("arg", methodArg)
-                    };
+        try {
+            if ((xmlFile == null) && (methodArg == null)) {
+                parts = new Part[]{new StringPart("method", methodName)};
+            } else if ((xmlFile == null) && (methodArg != null)) {
+                parts = new Part[]{
+                            new StringPart("method", methodName), new StringPart("arg", methodArg)
+                        };
+            } else if ((xmlFile != null) && (methodArg == null)) {
+                parts = new Part[]{
+                            new StringPart("method", methodName),
+                            new FilePart("userfile", xmlFile.getName(), xmlFile)
+                        };
+            } else {
+                parts = new Part[]{
+                            new StringPart("method", methodName),
+                            new FilePart("userfile", xmlFile.getName(), xmlFile),
+                            new StringPart("arg", methodArg)
+                        };
+            }
+        } catch (FileNotFoundException fnfe) {
+            throw new IllegalStateException("Can't query LITpro remote webservice", fnfe);
         }
 
+        // Try to perform post operation
+        String targetURL = myPreferences.getPreference("yoga.remote.url");
+        PostMethod myPost = new PostMethod(targetURL);
         try {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
 
             if (client_ == null) {
                 client_ = Http.getHttpClient();
             }
-            // Since we can have long term exchanges
+            // Change timeout Since we can have long term exchanges
             client_.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 
             int status = client_.executeMethod(myPost);
-
             if (status == HttpStatus.SC_OK) {
                 StringBuffer sb = new StringBuffer();
                 Reader reader = new InputStreamReader(
@@ -302,13 +304,22 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                 logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
             } else {
                 logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
-                throw new Exception("Requets failed, response=" + HttpStatus.getStatusText(status));
+                throw new IllegalStateException(
+                        "Can't query LITpro remote webservice\nurl: '"
+                        + targetURL
+                        + "'\nHTTP status:"
+                        + HttpStatus.getStatusText(status));
             }
 
             myPost.releaseConnection();
-        } catch (Exception e) {
+        } catch (HttpException ex) {
             myPost.releaseConnection();
-            throw e;
+            throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
+                    + targetURL + "'", ex);
+        } catch (IOException ex) {
+            myPost.releaseConnection();
+            throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
+                    + targetURL + "'", ex);
         }
 
         logger.finest("post result=\n" + result);
@@ -329,12 +340,14 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         logger.fine("request fits viewer to show '" + filename + "'");
 
         uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();
-
         try {
             topcat.addTable(topcat.getTableFactory().makeStarTable(filename), filename, true);
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
+        } catch (TableFormatException ex) {
+            throw new IllegalStateException("Can't make topcat display file "+filename,ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't make topcat display file "+filename,ex);
         }
+        
     }
 
     private void declareInteroperability() {
@@ -367,25 +380,13 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                 sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
 
                 // Try to read file on disk as one oifits file
-                try {
-                    sm.addFile(new File(filename));
-                } catch (Exception ex) {
-                    MessagePane.showErrorMessage(
-                            "Could not build oifits from samp message : \n", ex);
-                    throw new SampException("Could not build oifits from samp message", ex);
-                }
+                sm.addFile(new File(filename));                
 
                 // Try to build one new model object from given string
                 final StringReader sr = new StringReader(xmlModel);
                 Model modelContainer = null;
-                try {
-                    modelContainer = (Model) UtilsClass.unmarshal(Model.class, sr);
-                } catch (Exception ex) {
-                    MessagePane.showErrorMessage(
-                            "Could not build model from samp message : \n", ex);
-                    throw new SampException("Could not build model from samp message", ex);
-                }
-
+                modelContainer = (Model) UtilsClass.unmarshal(Model.class, sr);
+                
                 final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
                 final String targetIdent = f.getOitarget(0).getTarget();
                 final Target target = sm.addTarget(targetIdent);

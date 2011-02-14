@@ -227,12 +227,8 @@ public class ModelPanel extends javax.swing.JPanel {
         Model m;
         // Clone selected Model (this code could have been moved into model???
         StringWriter writer = new StringWriter();
-        try {
-            UtilsClass.marshal(selectedModel, writer);
-        } catch (IOException ex) {
-            // GM : no io error sould occurs one stringwritters, does it ?
-            throw new IllegalStateException("Can't perform copy in memory",ex);
-        }
+        UtilsClass.marshal(selectedModel, writer);
+       
         StringReader reader = new StringReader(writer.toString());
         m = (Model) UtilsClass.unmarshal(Model.class, reader);
         settingsModel.replaceModel(current, m);          

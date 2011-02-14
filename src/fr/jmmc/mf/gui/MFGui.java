@@ -121,17 +121,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         }
         setTitle(title);
 
-        if (filenames.length >= 1)
-        {
-            try
-            {
-                java.io.File file = new java.io.File(filenames[0]);
-                addSettings(new SettingsModel(file));
-            }
-            catch (Exception exc)
-            {
-                new FeedbackReport(null, true, exc);
-            }
+        if (filenames.length >= 1) {
+            java.io.File file = new java.io.File(filenames[0]);
+            addSettings(new SettingsModel(file));
         }
 
         // handle frame icon

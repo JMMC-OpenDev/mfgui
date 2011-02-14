@@ -1,6 +1,5 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
@@ -17,154 +16,151 @@ import java.util.HashSet;
  */
 public class PlotModelPanel extends javax.swing.JPanel {
 
-  /** Class logger */
-  static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-          "fr.jmmc.mf.gui.PlotModelPanel");
-  public SettingsModel settingsModel = null;
-  private PlotPanel plotPanel;
-  private int startValue = 0;
-  private String lastObservable = null;
+    final static String className = PlotModelPanel.class.getName();
+    /** Class logger */
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            className);
+    public SettingsModel settingsModel = null;
+    private PlotPanel plotPanel;
+    private int startValue = 0;
+    private String lastObservable = null;
 
-  /** Creates new form PlotPanel */
-  public PlotModelPanel(PlotPanel plotPanel) {
-    this.plotPanel = plotPanel;
-    startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
-    initComponents();
-    // Set default value for angle
-    plotRadialAngleFormattedTextField1.setValue(0);
+    /** Creates new form PlotPanel */
+    public PlotModelPanel(PlotPanel plotPanel) {
+        this.plotPanel = plotPanel;
+        startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
+        initComponents();
+        // Set default value for angle
+        plotRadialAngleFormattedTextField1.setValue(0);
 
-    // build help button
-    //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
-    helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
-    helpButton2.setAction(new ShowHelpAction(("ENDtt_PlotUVmap_Bt")));
-    helpButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
-    helpButton4.setAction(new ShowHelpAction(("ENDtt_PlotSniffer_Bt")));
-  }
-
-  public void show(SettingsModel s, Target t) {
-    targetComboBox.setVisible(false);
-    targetLabel.setVisible(false);
-    show(s);
-    if (t != null) {
-      targetComboBox.setSelectedItem(t);
-    }
-    // update widget states
-    updateAvailableObservables();
-  }
-
-  public void show(SettingsModel s) {
-    settingsModel = s;
-    Object[] targets = s.getTargetListModel().toArray();
-    targetComboBox.removeAllItems();
-    for (int i = 0; i < targets.length; i++) {
-      Object object = targets[i];
-      targetComboBox.addItem(object);
-    }
-    // User can act only if settings is valid with a minimum of one target
-    boolean hasOneTarget = targetComboBox.getItemCount() != 0;
-    boolean valid = hasOneTarget && s.isValid();
-    plotImageButton.setEnabled(valid);
-    plotSnifferMapButton.setEnabled(valid);
-    plotUVMapButton.setEnabled(valid);
-    plotRadialButton.setEnabled(valid);
-    // update widget states
-    updateAvailableObservables();
-  }
-
-  // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel
-  private void updateAvailableObservables() {
-    // disable widget to flag automatic action into radialComboBoxActionPerformed
-    radialComboBox.setEnabled(false);
-
-    // check that there is at least one target to plot or return
-    radialComboBox.removeAllItems();
-    Object[] selectedTargets = targetComboBox.getSelectedObjects();
-    if (selectedTargets.length == 0) {
-      return;
+        // build help button
+        //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
+        helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
+        helpButton2.setAction(new ShowHelpAction(("ENDtt_PlotUVmap_Bt")));
+        helpButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
+        helpButton4.setAction(new ShowHelpAction(("ENDtt_PlotSniffer_Bt")));
     }
 
-    HashSet<String> set = new HashSet();
-    for (Object object : selectedTargets) {
-      Target target = (Target) object;
-
-      // First check that file observavbles are allowed to be plotted
-      HashSet<String> targetResidualsSet = new HashSet();
-      if (target.getResiduals() == null) {
-        targetResidualsSet.add("VIS2");
-        targetResidualsSet.add("VISamp");
-        targetResidualsSet.add("VISphi");
-        targetResidualsSet.add("T3amp");
-        targetResidualsSet.add("T3phi");
-      } else {
-        Residual[] residuals = target.getResiduals().getResidual();
-        for (int i = 0; i < residuals.length; i++) {
-          Residual residual = residuals[i];
-          targetResidualsSet.add(residual.getName());
+    public void show(SettingsModel s, Target t) {
+        targetComboBox.setVisible(false);
+        targetLabel.setVisible(false);
+        show(s);
+        if (t != null) {
+            targetComboBox.setSelectedItem(t);
         }
-      }
+        // update widget states
+        updateAvailableObservables();
+    }
 
-      FileLink[] filelinks = target.getFileLink();
-      for (FileLink fileLink : filelinks) {
-        fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
-
-        try {
-          OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
-          String obs = "VIS2";
-          if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
-            set.add(obs);
-          }
-          obs = "VISamp";
-          if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
-            set.add(obs);
-          }
-          obs = "VISphi";
-          if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
-            set.add(obs);
-          }
-          obs = "T3amp";
-          if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
-            set.add(obs);
-          }
-          obs = "T3phi";
-          if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
-            set.add(obs);
-          }
-        } catch (Exception ex) {
-          new FeedbackReport(null, true, ex);
+    public void show(SettingsModel s) {
+        settingsModel = s;
+        Object[] targets = s.getTargetListModel().toArray();
+        targetComboBox.removeAllItems();
+        for (int i = 0; i < targets.length; i++) {
+            Object object = targets[i];
+            targetComboBox.addItem(object);
         }
-      }
+        // User can act only if settings is valid with a minimum of one target
+        boolean hasOneTarget = targetComboBox.getItemCount() != 0;
+        boolean valid = hasOneTarget && s.isValid();
+        plotImageButton.setEnabled(valid);
+        plotSnifferMapButton.setEnabled(valid);
+        plotUVMapButton.setEnabled(valid);
+        plotRadialButton.setEnabled(valid);
+        // update widget states
+        updateAvailableObservables();
     }
 
-    // fill combobox
-    for (String string : set) {
-      radialComboBox.addItem(string);
+    // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel
+    private void updateAvailableObservables() {
+        // disable widget to flag automatic action into radialComboBoxActionPerformed
+        radialComboBox.setEnabled(false);
+
+        // check that there is at least one target to plot or return
+        radialComboBox.removeAllItems();
+        Object[] selectedTargets = targetComboBox.getSelectedObjects();
+        if (selectedTargets.length == 0) {
+            return;
+        }
+
+        HashSet<String> set = new HashSet();
+        for (Object object : selectedTargets) {
+            Target target = (Target) object;
+
+            // First check that file observavbles are allowed to be plotted
+            HashSet<String> targetResidualsSet = new HashSet();
+            if (target.getResiduals() == null) {
+                targetResidualsSet.add("VIS2");
+                targetResidualsSet.add("VISamp");
+                targetResidualsSet.add("VISphi");
+                targetResidualsSet.add("T3amp");
+                targetResidualsSet.add("T3phi");
+            } else {
+                Residual[] residuals = target.getResiduals().getResidual();
+                for (int i = 0; i < residuals.length; i++) {
+                    Residual residual = residuals[i];
+                    targetResidualsSet.add(residual.getName());
+                }
+            }
+
+            FileLink[] filelinks = target.getFileLink();
+            for (FileLink fileLink : filelinks) {
+                fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
+
+                OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+                String obs = "VIS2";
+                if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
+                    set.add(obs);
+                }
+                obs = "VISamp";
+                if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
+                    set.add(obs);
+                }
+                obs = "VISphi";
+                if (oifile.hasOiVis() && targetResidualsSet.contains(obs)) {
+                    set.add(obs);
+                }
+                obs = "T3amp";
+                if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
+                    set.add(obs);
+                }
+                obs = "T3phi";
+                if (oifile.hasOiT3() && targetResidualsSet.contains(obs)) {
+                    set.add(obs);
+                }
+            }
+        }
+
+        // fill combobox
+        for (String string : set) {
+            radialComboBox.addItem(string);
+        }
+
+        // make last selection active if possible
+        if (set.contains(lastObservable)) {
+            radialComboBox.setSelectedItem(lastObservable);
+        }
+
+        radialComboBox.setEnabled(true);
+
+        // Ensure that plot radial choices are consistent with selected observable
+        boolean canOverplotModelFlag;
+        if (radialComboBox.getSelectedIndex() == -1) {
+            canOverplotModelFlag = false;
+        } else {
+            String observableType = radialComboBox.getSelectedItem().toString();
+            canOverplotModelFlag = !(observableType.contains("T3") || residualsCheckBox.isSelected());
+        }
+        addModelCheckBox.setEnabled(canOverplotModelFlag);
+        plotRadialAngleFormattedTextField1.setEnabled(canOverplotModelFlag);
+
     }
 
-    // make last selection active if possible
-    if (set.contains(lastObservable)) {
-      radialComboBox.setSelectedItem(lastObservable);
-    }
-
-    radialComboBox.setEnabled(true);
-
-    // Ensure that plot radial choices are consistent with selected observable
-    boolean canOverplotModelFlag;
-    if(radialComboBox.getSelectedIndex()==-1){
-      canOverplotModelFlag=false;
-    }else{
-      String observableType = radialComboBox.getSelectedItem().toString();
-      canOverplotModelFlag = !(observableType.contains("T3") || residualsCheckBox.isSelected());
-    }
-    addModelCheckBox.setEnabled(canOverplotModelFlag);
-    plotRadialAngleFormattedTextField1.setEnabled(canOverplotModelFlag);
-
-  }
-
-  /** This method is called from within the constructor to
-   * initialize the form.
-   * WARNING: Do NOT modify this code. The content of this method is
-   * always regenerated by the Form Editor.
-   */
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -532,56 +528,56 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     private void plotImageButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotImageButtonActionPerformed
     {//GEN-HEADEREND:event_plotImageButtonActionPerformed
-      Target targetToPlot = (Target) targetComboBox.getSelectedItem();
-      plotPanel.plotModelImage(targetToPlot, xminFormattedTextField.getText(), xmaxFormattedTextField.getText(), yminFormattedTextField.getText(), ymaxFormattedTextField.getText(), pixscaleFormattedTextField.getText());
+        Target targetToPlot = (Target) targetComboBox.getSelectedItem();
+        plotPanel.plotModelImage(targetToPlot, xminFormattedTextField.getText(), xmaxFormattedTextField.getText(), yminFormattedTextField.getText(), ymaxFormattedTextField.getText(), pixscaleFormattedTextField.getText());
     }//GEN-LAST:event_plotImageButtonActionPerformed
 
     private void plotUVMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUVMapButtonActionPerformed
-      Target targetToPlot = (Target) targetComboBox.getSelectedItem();
-      plotPanel.plotModelUVMap(targetToPlot);
+        Target targetToPlot = (Target) targetComboBox.getSelectedItem();
+        plotPanel.plotModelUVMap(targetToPlot);
 }//GEN-LAST:event_plotUVMapButtonActionPerformed
 
     private void plotSnifferMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotSnifferMapButtonActionPerformed
-      plotPanel.plotModelSnifferMap((Target) targetComboBox.getSelectedItem(),
-              xminFormattedTextField1.getText(),
-              xmaxFormattedTextField1.getText(),
-              yminFormattedTextField1.getText(),
-              ymaxFormattedTextField1.getText(),
-              pixscaleFormattedTextField1.getText());
+        plotPanel.plotModelSnifferMap((Target) targetComboBox.getSelectedItem(),
+                xminFormattedTextField1.getText(),
+                xmaxFormattedTextField1.getText(),
+                yminFormattedTextField1.getText(),
+                ymaxFormattedTextField1.getText(),
+                pixscaleFormattedTextField1.getText());
 }//GEN-LAST:event_plotSnifferMapButtonActionPerformed
 
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
-      String observableType = radialComboBox.getSelectedItem().toString();
-      plotPanel.plotModelRadial((Target) targetComboBox.getSelectedItem(),
-              observableType, residualsCheckBox.isSelected(),
-              addModelCheckBox.isSelected()&& addModelCheckBox.isEnabled(),
-              plotRadialAngleFormattedTextField1.getText());
+        String observableType = radialComboBox.getSelectedItem().toString();
+        plotPanel.plotModelRadial((Target) targetComboBox.getSelectedItem(),
+                observableType, residualsCheckBox.isSelected(),
+                addModelCheckBox.isSelected() && addModelCheckBox.isEnabled(),
+                plotRadialAngleFormattedTextField1.getText());
 }//GEN-LAST:event_plotRadialButtonActionPerformed
 
     private void targetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetComboBoxActionPerformed
-      // We have to ensure that plot radial choices are consistent with fitter setup
-      radialComboBox.removeAllItems();
-      Target selectedTarget = (Target) targetComboBox.getSelectedItem();
-      if (selectedTarget == null) {
-        return;
-      }
-      // And finally check that we can request the overploted model
-      updateAvailableObservables();
+        // We have to ensure that plot radial choices are consistent with fitter setup
+        radialComboBox.removeAllItems();
+        Target selectedTarget = (Target) targetComboBox.getSelectedItem();
+        if (selectedTarget == null) {
+            return;
+        }
+        // And finally check that we can request the overploted model
+        updateAvailableObservables();
     }//GEN-LAST:event_targetComboBoxActionPerformed
 
     private void residualsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_residualsCheckBoxActionPerformed
-      updateAvailableObservables();
+        updateAvailableObservables();
     }//GEN-LAST:event_residualsCheckBoxActionPerformed
 
     private void addModelCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelCheckBoxActionPerformed
-      updateAvailableObservables();
+        updateAvailableObservables();
     }//GEN-LAST:event_addModelCheckBoxActionPerformed
 
     private void radialComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radialComboBoxActionPerformed
-      if (radialComboBox.getSelectedIndex() >= 0 && radialComboBox.isEnabled()) {
-        lastObservable = radialComboBox.getSelectedItem().toString();
-        updateAvailableObservables();
-      }
+        if (radialComboBox.getSelectedIndex() >= 0 && radialComboBox.isEnabled()) {
+            lastObservable = radialComboBox.getSelectedItem().toString();
+            updateAvailableObservables();
+        }
     }//GEN-LAST:event_radialComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox addModelCheckBox;

@@ -22,17 +22,16 @@ import javax.swing.tree.*;
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
         TreeModelListener, SettingsViewerInterface {
 
+    final static String className = SettingsPane.class.getName();
     /** Main logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.SettingsPane");
-
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            className);
     // Application actions
     public static RunFitAction runFitAction;
     public Action saveSettingsAction;
     public Action closeSettingsAction;
     /** Model reference */
     private SettingsModel rootSettingsModel = null;
-
     // List of viewer panel used to display sub components
     TargetsPanel targetsPanel;
     FilesPanel filesPanel;
@@ -48,7 +47,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     PlotPanel plotPanel;
     FramePanel framePanel;
     JTree settingsTree;
-
     // adjusted to true after user modification
     protected boolean modified;
 
@@ -66,7 +64,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void init(SettingsModel settingsModel) {
         // instanciate actions
         runFitAction = new RunFitAction(this);
-        
+
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
         rootSettingsModel = settingsModel;
@@ -75,7 +73,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument());
 
-        settingsTree = new JTree();        
+        settingsTree = new JTree();
         settingsTreeScrollPane.getViewport().add(settingsTree);
 
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
@@ -90,7 +88,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         parametersPanel = new ParametersPanel(this);
         resultsPanel = new ResultsPanel(this);
         resultPanel = new ResultPanel(this);
-        plotPanel = new PlotPanel(this,true);
+        plotPanel = new PlotPanel(this, true);
         targetPanel = new TargetPanel(this, plotPanel);
         framePanel = new FramePanel(this);
 
@@ -123,17 +121,17 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * in the right panel; 
      */
     public void valueChanged(TreeSelectionEvent e) {
-        logger.entering("" + this.getClass(), "valueChanged",e);
-        
+        logger.entering("" + this.getClass(), "valueChanged", e);
+
         Object o = e.getPath().getLastPathComponent();
         if (e.getNewLeadSelectionPath() != null) {
-            showElement(o);            
+            showElement(o);
         }
         checkValidSettings();
     }
 
     private void showElement(Object o) {
-        logger.entering("" + this.getClass(), "showElement",o);
+        logger.entering("" + this.getClass(), "showElement", o);
 
         if (o == null) {
             return;
@@ -144,15 +142,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         if (o instanceof ResultModel) {
             // ResultModel must not be dereferenced as it is a DefaultMutableNode
-            resultPanel.show((ResultModel)o, rootSettingsModel);
+            resultPanel.show((ResultModel) o, rootSettingsModel);
             modifierPanel.add(resultPanel);
         } else if (o instanceof FrameTreeNode) {
             // ResultModel must not be dereferenced as it is a DefaultMutableNode
-            framePanel.show((FrameTreeNode)o, rootSettingsModel);
+            framePanel.show((FrameTreeNode) o, rootSettingsModel);
             modifierPanel.add(framePanel);
         } else if (o instanceof DefaultMutableTreeNode) {
             // dereference object if it isa contained by a mutableTreeNode
-            showElement(((DefaultMutableTreeNode)o).getUserObject());
+            showElement(((DefaultMutableTreeNode) o).getUserObject());
         } else if (o instanceof PlotPanel) {
             plotPanel.show(rootSettingsModel);
             modifierPanel.add(plotPanel);
@@ -179,15 +177,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             filePanel.show((File) link.getFileRef(), rootSettingsModel);
             modifierPanel.add(filePanel);
         } else if (o instanceof Parameters) {
-            parametersPanel.show(rootSettingsModel,(Parameters) o);
+            parametersPanel.show(rootSettingsModel, (Parameters) o);
             modifierPanel.add(parametersPanel);
         } else if (o instanceof Results) {
-            resultsPanel.show((Results)o, rootSettingsModel);
+            resultsPanel.show((Results) o, rootSettingsModel);
             modifierPanel.add(resultsPanel);
         } else {
-            modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass() +
-                    "' objects "+o));
-            new Throwable("missing modifier panel for '" + o.getClass()+"'="+o).printStackTrace();
+            modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass()
+                    + "' objects " + o));
+            new Throwable("missing modifier panel for '" + o.getClass() + "'=" + o).printStackTrace();
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();
@@ -201,7 +199,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     public void treeStructureChanged(javax.swing.event.TreeModelEvent e) {
         logger.entering("" + this.getClass(), "treeStructureChanged");
         treeChanged(e);
-    //showElement(rootSettingsModel.getRoot());
+        //showElement(rootSettingsModel.getRoot());
     }
 
     /** Use to listen tree model elements that can indicate changes*/
@@ -218,10 +216,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         }
         // Traverse parent
         TreePath path = parent.getParentPath();
-        if (path!=null){
-           expandAll(tree, path, expand);
-        }            
-        
+        if (path != null) {
+            expandAll(tree, path, expand);
+        }
+
     }
 
     /** Use to listen tree model elements that can indicate changes*/
@@ -284,7 +282,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -423,6 +420,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             if (value.getClass().getName().startsWith("fr.jmmc.mf.models")) {
                 //setToolTipText("TBD");
                 // Next part try to get valide state of serialized xml objects
+                Exception e = null;
                 try {
                     String methodName = "validate";
                     Class[] c = new Class[0];
@@ -430,10 +428,19 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                     Object[] o = new Object[0];
                     m.invoke(value, o);
 
-                //logger.fine("method invoked using reflexion");
-                } catch (Exception e) {
+                } catch (NoSuchMethodException ex) {
+                    e = ex;
+                } catch (SecurityException ex) {
+                    e = ex;
+                } catch (IllegalAccessException ex) {
+                    e = ex;
+                } catch (IllegalArgumentException ex) {
+                    e = ex;
+                } catch (InvocationTargetException ex) {
+                    e = ex;
+                }
+                if (e != null) {
                     setForeground(Color.red);
-
                     if (e.getCause() != null) {
                         setToolTipText(e.getCause().getMessage());
                     } else {
@@ -441,11 +448,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                     }
                 }
             }
-
             return this;
         }
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox ITMaxCheckBox;
     private javax.swing.JFormattedTextField ITMaxTextField;
