@@ -1,6 +1,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.util.FileUtils;
 
 import fr.jmmc.mcs.util.Urls;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -17,6 +18,8 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
 import java.awt.BorderLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
@@ -62,8 +65,8 @@ import ptolemy.plot.plotml.PlotMLFrame;
  */
 public class UtilsClass {
 
-    static String className = "fr.jmmc.mf.gui.UtilsClass";
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final String className = UtilsClass.class.getName();
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
     private static java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile>();
 
@@ -89,51 +92,56 @@ public class UtilsClass {
         return false;
     }
 
-    public static PlotMLFrame getPlotMLFrame(String xmlStr, String plotName) throws Exception {
+    public static PlotMLFrame getPlotMLFrame(String xmlStr, String plotName) {
         PlotMLParser plotMLParser;
         // Construct plot and parse xml
         Plot plot = new Plot();
         plotMLParser = new PlotMLParser(plot);
         logger.finest("Trying to plot next document:\n" + xmlStr);
-        plotMLParser.parse(null, xmlStr);
+        try {
+            plotMLParser.parse(null, xmlStr);
+        } catch (Exception ex) { // only Exception are returned by ptolemy tool
+            throw new IllegalStateException("Cannot build plot", ex);
+        }
         // Show plot into frame
         return new PlotMLFrame("Plotting " + plotName, plot);
     }
 
     public static File getPlotMLTSVFile(String ptPlotStr) {
-        File f = null;
+        // Contruct xml document to plot            
+        String xmlStr = xsl(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl", null);
+
+        // Write content into a temporary file 
+        File f = FileUtils.getTempFile("tsvPlot", ".tsv");
         try {
-            //  . is mandatory in suffix if used by SaveFileAction
-            f = File.createTempFile("tsvPlot", ".tsv");
-            // Contruct xml document to plot            
-            String xmlStr = xsl(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl", null);
-            BufferedWriter out = new BufferedWriter(new FileWriter(f));
-            if (xmlStr != null || xmlStr.length() == 0) {
-                out.write(xmlStr);
-            } else {
-                out.write("error");
-            }
-            out.close();
-        } catch (IOException e) {
-            new FeedbackReport(e);
+            FileUtils.writeFile(f, xmlStr);
+        } catch (IOException ioe) {
+            throw new IllegalStateException("Can't store plot data into one tsv temporary file", ioe);
         }
         return f;
     }
 
-    /** Build a Jframe that displays the given png file.
+    /**
+     * Build a Jframe that displays the given png file.
      *
-     * @param pngFile
-     * @return
-     * @throws java.io.IOException
+     * @param pngFile image file
+     * @return a frame that contains the image
+     * @throws IllegalStateException
+     *      if image can't be read from file
      */
-    public static JFrame buildFrameFor(File pngFile) throws IOException {        
+    public static JFrame buildFrameFor(File pngFile) throws IllegalStateException {
         if (pngFile == null) {
             return null;
         }
         JFrame frame = new JFrame();
         JLabel label;
         JPanel p = new JPanel(new BorderLayout());
-        Image image = ImageIO.read(pngFile);
+        Image image = null;
+        try {
+            image = ImageIO.read(pngFile);
+        } catch (IOException ioe) {
+            throw new IllegalStateException("Can't read image data from " + pngFile, ioe);
+        }
         if (image == null) {
             return null;
         }
@@ -183,39 +191,94 @@ public class UtilsClass {
         expandAll(tree, new TreePath(root), expand);
     }
 
-    public static void marshal(Object objectToMarshal, Writer writer) throws IOException, MappingException, MarshalException, ValidationException {
+    /**
+     * Do the same job as marsghal(Object, Writer) but do not throw IO since
+     * it only work on memory.
+     * @param objectToMarshal
+     * @param stringwriter
+     * @throws IllegalStateException
+     *   if marshalling operation fails
+     *   if io occurs
+     */
+    public static void marshal(Object objectToMarshal, StringWriter stringwriter) throws IllegalStateException {
+        try {
+            marshal(objectToMarshal, (Writer) stringwriter);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't read input data to build one object properly",ex);
+        }
+    }
+    /**
+     *
+     * @param objectToMarshal
+     * @param writer
+     * @throws IOException
+     *   if object can't be serialized into given file for io reason.
+     * @throws IllegalStateException
+     *   if marshalling operation fails
+     */
+    public static void marshal(Object objectToMarshal, Writer writer) throws IOException, IllegalStateException {
         // Do marshalling
         URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
         logger.fine("Start of marshal using mapping file :" + mappingURL);
         Marshaller marshaller = new Marshaller(writer);
         // old simple code sometimes break xml elements order then use a mapping file
         Mapping mapping = new Mapping();
-        mapping.loadMapping(mappingURL);
-        synchronized (mapping) {
-            marshaller.setMapping(mapping);
+
+        try {
+            mapping.loadMapping(mappingURL);
+            synchronized (mapping) {
+                marshaller.setMapping(mapping);
+            }
+            //marshaller.setMapping(mapping);
+            marshaller.setValidation(false);
+            marshaller.marshal(objectToMarshal);
+            writer.flush();
+        } catch (MarshalException ex) {
+            throw new IllegalStateException("Can't read input data to build one object properly", ex);
+        } catch (ValidationException ex) {
+            throw new IllegalStateException("Can't read input data to build one object properly", ex);
+        } catch (MappingException ex) {
+            throw new IllegalStateException("Can't use mapping file" + mappingURL, ex);
         }
-        //marshaller.setMapping(mapping);
-        marshaller.setValidation(false);
-        marshaller.marshal(objectToMarshal);
-        writer.flush();
         logger.fine("End of marshal");
     }
 
-    public static Object unmarshal(Class c, Reader reader) throws IOException, MappingException, MarshalException, ValidationException {
-        // Do marshalling
+    /**
+     * Perfome the unmarsalling operation to transformed serialized object
+     * contained in reader into one new Object.
+     * @param c template object
+     * @param reader container of xml data
+     * @return
+     * @throws IllegalStateException
+     *           if unmarshaling can't be done (no marshalling file or invalid)
+     *           if input data are not well formed
+     */
+    public static Object unmarshal(Class c, Reader reader) throws IllegalStateException {
+        Object o = null;
         URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
-        logger.fine("Start of unmarshal using mapping file :" + mappingURL);
-        Unmarshaller unmarshaller = new Unmarshaller();
-        // old simple code sometimes break xml elements order then use a mapping file
-        Mapping mapping = new Mapping();
-        mapping.loadMapping(mappingURL);
-        synchronized (mapping) {
-            unmarshaller.setMapping(mapping);
+        try {
+            // Do marshalling            
+            logger.fine("Start of unmarshal using mapping file :" + mappingURL);
+            Unmarshaller unmarshaller = new Unmarshaller();
+            // old simple code sometimes break xml elements order then use a mapping file
+            Mapping mapping = new Mapping();
+            mapping.loadMapping(mappingURL);
+            synchronized (mapping) {
+                unmarshaller.setMapping(mapping);
+            }
+            //marshaller.setMapping(mapping);
+            unmarshaller.setValidation(false);
+            o = unmarshaller.unmarshal(c, reader);
+            logger.fine("End of unmarshal");
+        } catch (MarshalException ex) {
+            throw new IllegalStateException("Can't read input data properly", ex);
+        } catch (ValidationException ex) {
+            throw new IllegalStateException("Can't read input data properly", ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't find mapping file " + mappingURL, ex);
+        } catch (MappingException ex) {
+            throw new IllegalStateException("Can't use mapping file" + mappingURL, ex);
         }
-        //marshaller.setMapping(mapping);
-        unmarshaller.setValidation(false);
-        Object o = unmarshaller.unmarshal(c, reader);
-        logger.fine("End of unmarshal");
         return o;
     }
 
@@ -242,24 +305,38 @@ public class UtilsClass {
     public static final String IMAGE_PNG_DATATYPE = "image/png";
 
     /**
-     * Return base 64 href of given file with given datatype
-     * @param filenameToEncode
-     * @param dataType
+     * Read the given file and return one href containing base 64 encoded data.
+     * @param filenameToEncode name of file to encode in base64
+     * @param dataType mime type of given file to insert into href
      * @return the base64 buffer
-     * @throws java.io.IOException
+     * @throws IllegalStateException
+     *         if one io occurs or converter fails
      */
-    public static String getBase64Href(String filenameToEncode, String dataType) throws IOException {
+    public static String getBase64Href(String filenameToEncode, String dataType)
+            throws IllegalStateException {
         java.io.File fileToEncode = new java.io.File(filenameToEncode);
         return getBase64Href(fileToEncode, dataType);
     }
 
-    public static String getBase64Href(java.io.File fileToEncode, String dataType) throws IOException {
-        String base64DataType = "data:" + dataType + ";base64,";
-        // Create a read-only memory-mapped file
-        java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(fileToEncode, "r").getChannel();
-        java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY,
-                0, (int) roChannel.size());
-        return base64DataType + new sun.misc.BASE64Encoder().encode(roBuf);
+    /**
+     * Read the given file and return one href containing base 64 encoded data.
+     * @param fileToEncode file to encode in base64
+     * @param dataType mime type of given file to insert into href
+     * @return the base64 buffer
+     * @throws IllegalStateException
+     *         if one io occurs or converter fails
+     */
+    public static String getBase64Href(java.io.File fileToEncode, String dataType)
+            throws IllegalStateException {
+        try {
+            String base64DataType = "data:" + dataType + ";base64,";
+            // Create a read-only memory-mapped file
+            java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(fileToEncode, "r").getChannel();
+            java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY, 0, (int) roChannel.size());
+            return base64DataType + new sun.misc.BASE64Encoder().encode(roBuf);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't encode file '" + fileToEncode.getAbsolutePath() + "' in base64", ex);
+        }
     }
 
     /**
@@ -268,10 +345,10 @@ public class UtilsClass {
      * @param b64 the base64 encoded file     
      *
      * @return The original file content.
-     *
+     *  @ todo do cleanup with probably duplicated mime type constants...
      * @throws IOException
      */
-    public static String saveBASE64ToString(String b64) throws IOException {
+    public static String saveBASE64ToString(String b64) {
         String[] dataTypes = new String[]{
             IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
         };
@@ -290,24 +367,29 @@ public class UtilsClass {
                 while (st.hasMoreTokens()) {
                     sb.append(st.nextToken());
                 }
-                byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
                 ByteArrayOutputStream out = null;
-                if (base64DataType.contains("x-gzip")) {
-                    logger.fine("base64 file was gzipped, unzipping'" + base64DataType);
-                    GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
-                    out = new ByteArrayOutputStream();
-                    // Transfer bytes from the compressed file to the output file
-                    byte[] b = new byte[1024];
-                    int len;
-                    while ((len = gzipInputStream.read(b)) > 0) {
-                        out.write(b, 0, len);
+                try {
+                    byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                    if (base64DataType.contains("x-gzip")) {
+                        logger.fine("base64 file was gzipped, unzipping'" + base64DataType);
+                        GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
+                        out = new ByteArrayOutputStream();
+                        // Transfer bytes from the compressed file to the output file
+                        byte[] b = new byte[1024];
+                        int len;
+                        while ((len = gzipInputStream.read(b)) > 0) {
+                            out.write(b, 0, len);
+                        }
+                    } else {
+                        out.write(buf);
                     }
-                } else {
-                    out.write(buf);
-                }
 
-                out.flush();
-                out.close();
+                    out.flush();
+                    out.close();
+
+                } catch (IOException ioe) {
+                    throw new IllegalStateException("Can't manade base64 data in memory", ioe);
+                }
                 logger.fine("end of decoding '" + base64DataType);
                 logger.finest("decoded content is: '" + out + "'");
                 return out.toString();
@@ -326,10 +408,8 @@ public class UtilsClass {
      *
      * @return The given outputFile or null if nothing has been decoded.
      *
-     * @throws IOException
      */
-    public static File saveBASE64ToFile(String b64, File outputFile)
-            throws IOException {
+    public static File saveBASE64ToFile(String b64, File outputFile) {
         String[] dataTypes = new String[]{
             IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
         };
@@ -338,7 +418,7 @@ public class UtilsClass {
             if (i < dataTypes.length) {
                 base64DataType = "data:" + dataTypes[i] + ";base64,";
             } else {
-                base64DataType = "data:" + b64.substring(0, Math.min(100,b64.length())).substring(5, b64.indexOf(";base64,")) + ";base64,";
+                base64DataType = "data:" + b64.substring(0, Math.min(100, b64.length())).substring(5, b64.indexOf(";base64,")) + ";base64,";
             }
 
             if (b64.startsWith(base64DataType)) {
@@ -348,11 +428,16 @@ public class UtilsClass {
                 while (st.hasMoreTokens()) {
                     sb.append(st.nextToken());
                 }
-                byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
-                FileOutputStream out = new FileOutputStream(outputFile);
-                out.write(buf);
-                out.flush();
-                out.close();
+                // This should not occur because data should have been computed by software only
+                try {
+                    byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                    FileOutputStream out = new FileOutputStream(outputFile);
+                    out.write(buf);
+                    out.flush();
+                    out.close();
+                } catch (IOException ioe) {
+                    throw new IllegalArgumentException("Can't write data into following file '" + outputFile + "'", ioe);
+                }
                 logger.fine("end of decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
                 return outputFile;
             }
@@ -363,17 +448,16 @@ public class UtilsClass {
     }
 
     /**
-     * Extract file from given base64 encoded string.
+     * Decode base64 encoded string and store it into one temporary file.
      *
      * @param b64 base64 buffer
      * @param type extension
-     * @return the extracted file or null
+     * @return the temporary file with decoded data or null
      *
      * @throws IOException 
      */
-    public static File saveBASE64ToFile(String b64, String type)
-            throws IOException {
-        java.io.File outputFile = java.io.File.createTempFile("tmpB64File", "." + type);
+    public static File saveBASE64ToFile(String b64, String type) {
+        java.io.File outputFile = FileUtils.getTempFile("tmpB64File", "." + type);
         outputFile.deleteOnExit();
         if (saveBASE64ToFile(b64, outputFile) == null) {
             return null;
@@ -381,34 +465,41 @@ public class UtilsClass {
         return outputFile;
     }
 
-    public static OIFitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile)
-            throws IOException, FitsException {
+    /**
+     *
+     * @param dataFile
+     * @return one oifitsFile
+     * @throws IOException
+     * @throws FitsException
+     */
+    public static OIFitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile) {
         fr.jmmc.mf.models.File key = dataFile;
-
-        String filename = "tmpOifile";
-        String fileExtension = ".oifits";
-        File tmp = new File(dataFile.getName());
-
-        int dotPos = tmp.getName().lastIndexOf(".");
-        if (dotPos > 1) {
-            filename = tmp.getName().substring(0, dotPos);
-            if (tmp.getName().substring(dotPos).length()>1){
-                fileExtension = tmp.getName().substring(dotPos);
-            }
-        }
-
-        // Fix exception thrown by createTempFile that requires one prefix
-        // longer than 3 chars.
-        if(filename.length()<3){
-            filename="___"+filename;
-        }
         // Search if this file has already been loaded
         OIFitsFile oifitsFile = (OIFitsFile) alreadyExpandedOifitsFiles.get(key);
 
         if (oifitsFile == null) {
-            File outputFile = java.io.File.createTempFile(filename, fileExtension);
+            String filename = "tmpOifile";
+            String fileExtension = ".oifits";
+            File tmp = new File(dataFile.getName());
+
+            int dotPos = tmp.getName().lastIndexOf(".");
+            if (dotPos > 1) {
+                filename = tmp.getName().substring(0, dotPos);
+                if (tmp.getName().substring(dotPos).length() > 1) {
+                    fileExtension = tmp.getName().substring(dotPos);
+                }
+            }
+
+            File outputFile = FileUtils.getTempFile(filename, fileExtension);
             saveBASE64ToFile(dataFile.getHref(), outputFile);
-            oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
+            try {
+                oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
+            } catch (FitsException fe) {
+                throw new IllegalArgumentException("Can't extract fits file", fe);
+            } catch (IOException ioe) {
+                throw new IllegalArgumentException("Can't extract fits file", ioe);
+            }
+
             alreadyExpandedOifitsFiles.put(key, oifitsFile);
             logger.fine("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
         } else {
@@ -467,8 +558,7 @@ public class UtilsClass {
         }
         return true;
     }
-
-    private static TransformerFactory factory_=null;
+    private static TransformerFactory factory_ = null;
 
     private static TransformerFactory getTransformerFactoryInstance() throws TransformerConfigurationException {
         if (factory_ == null) {
@@ -477,9 +567,9 @@ public class UtilsClass {
 
             // @todo try to suppress this kind of workarround
             // Allow use of xslt with SECURE set to False in JNLP mode
-            try{
-                System.setSecurityManager( null );
-            }catch(SecurityException se){
+            try {
+                System.setSecurityManager(null);
+            } catch (SecurityException se) {
                 // This case occurs with java netx and
                 // OpenJDK Runtime Environment (IcedTea6 1.6) (rhel-1.13.b16.el5-x86_64)
                 logger.warning("Can't set security manager to null");
@@ -497,7 +587,7 @@ public class UtilsClass {
         URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
         xslURL = Urls.fixJarURL(xslURL);
         logger.fine("using next url for transformation" + xslURL);
-        try {            
+        try {
 
             // Use the factory to create a template containing the xsl file
             Templates template = getTransformerFactoryInstance().newTemplates(new StreamSource(xslURL.openStream()));
@@ -518,17 +608,16 @@ public class UtilsClass {
 
             // Apply the xsl file to the source file and write the result to the output file
             xformer.transform(source, result);
+            logger.fine("End of transformation ");
             return sw.toString();
-        } catch (TransformerConfigurationException exc) {
-            new FeedbackReport(null, true, exc);
-        } catch (TransformerException exc) {
-            new FeedbackReport(null, true, exc);
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't use xslt function", ex);
+        } catch (TransformerException ex) {
+            throw new IllegalStateException("Can't use xslt function", ex);
+        } finally {
+            logger.exiting(className, "xsl");
+
         }
-        logger.fine("End of transformation ");
-        logger.exiting(className, "xsl");
-        return null;
     }
 
     /**
@@ -553,15 +642,16 @@ public class UtilsClass {
      * @return the xslt output or null if one error occured
      */
     public static String xsl(java.io.File inFile, String filepath, String[] params) {
-        try {
             // Prepare the input and output files
-            Source source = new StreamSource(new FileInputStream(inFile));
-            return xsl(source, filepath, params);
-        } catch (Exception exc) {
-            new FeedbackReport(null, true, exc);
+            Source source=null;
+        try {
+            source = new StreamSource(new FileInputStream(inFile));
+        } catch (FileNotFoundException ex) {
+            throw new IllegalStateException(ex);
         }
+            
         logger.exiting(className, "xsl");
-        return null;
+        return xsl(source, filepath, params);
     }
 
     //
@@ -660,9 +750,9 @@ public class UtilsClass {
             ResponseItem responseItem = responseItems[i];
             Message m = responseItem.getMessage();
             if (m != null) {
-                if (m.getType() == null ||
-                        m.getType().equalsIgnoreCase("INFO") ||                        
-                        m.getType().equalsIgnoreCase("MESSAGE")) {
+                if (m.getType() == null
+                        || m.getType().equalsIgnoreCase("INFO")
+                        || m.getType().equalsIgnoreCase("MESSAGE")) {
                     str = str + "\n" + m.getContent();
                 }
             }
@@ -679,9 +769,9 @@ public class UtilsClass {
             Message m = responseItem.getMessage();
             if (m != null) {
                 if (m.getType() != null) {
-                    if ((m.getType().equalsIgnoreCase("ERROR")) ||
-                            m.getType().equalsIgnoreCase("USAGE") ||
-                            m.getType().equalsIgnoreCase("WARNING")) {
+                    if ((m.getType().equalsIgnoreCase("ERROR"))
+                            || m.getType().equalsIgnoreCase("USAGE")
+                            || m.getType().equalsIgnoreCase("WARNING")) {
                         str = str + "\n" + m.getContent();
                         logger.fine("getErrorMsg find a message of type: " + m.getType());
                     }

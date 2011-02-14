@@ -6,9 +6,9 @@ import java.awt.event.ActionEvent;
 
 public class ShowPrefAction extends RegisteredAction {
 
-    private final static String className = "fr.jmmc.mf.gui.actions.ShowPrefAction";
+    final static String className = ShowPrefAction.class.getName();
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
     /** Preferences view */
     PreferencesView preferencesView;
@@ -22,12 +22,7 @@ public class ShowPrefAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        try {
-            preferencesView.setVisible(true);
-            logger.fine("Showing preferences");
-        } catch (Exception exc) {
-            // @todo handle this error at user level
-            exc.printStackTrace();
-        }
+        preferencesView.setVisible(true);
+        logger.fine("Showing preferences");
     }
 }

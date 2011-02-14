@@ -8,10 +8,13 @@ import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Target;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JSeparator;
@@ -232,20 +235,28 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         // @todo ask quality software responsible to validate following code
         try {
             String getMethodName = "get" + columnNames[columnIndex];
-            Method get = Parameter.class.getMethod(getMethodName, new Class[0]);
+            Method get;
+
+            get = Parameter.class.getMethod(getMethodName, new Class[0]);
+
             String hasMethodName = "has" + columnNames[columnIndex];
-            try {
-                Method has = Parameter.class.getMethod(hasMethodName, new Class[0]);
-                if (has.invoke(p, new Object[0]).equals(new Boolean(false))) {
-                    return null;
-                }
-            } catch (NoSuchMethodException e) {
+
+            Method has = Parameter.class.getMethod(hasMethodName, new Class[0]);
+            if (has.invoke(p, new Object[0]).equals(new Boolean(false))) {
+                return null;
             }
+
             Object ret = get.invoke(p, new Object[0]);
             return ret;
-        } catch (Exception e) {
-            new FeedbackReport(null, true, e);
-            return "Error";
+
+        } catch (InvocationTargetException ex) {
+            throw new IllegalStateException("Can't get data from setting",ex);
+        } catch (NoSuchMethodException ex) {
+            throw new IllegalStateException("Can't get data from setting",ex);
+        } catch (SecurityException ex) {
+            throw new IllegalStateException("Can't get data from setting",ex);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalStateException("Can't get data from setting",ex);
         }
     }
 
@@ -314,8 +325,15 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     m.invoke(p);
                 }
                 logger.fine("method " + methodName + " invoked using reflexion");
-            } catch (Exception e) {
-                new FeedbackReport(null, true, e);
+
+            } catch (InvocationTargetException ex) {
+                throw new IllegalStateException("Can't set data onto setting", ex);
+            } catch (NoSuchMethodException ex) {
+                throw new IllegalStateException("Can't set data onto setting", ex);
+            } catch (SecurityException ex) {
+                throw new IllegalStateException("Can't set data onto setting", ex);
+            } catch (IllegalAccessException ex) {
+                throw new IllegalStateException("Can't set data onto setting", ex);
             }
         }
         // update the table for models that uses the same shared parameters more

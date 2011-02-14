@@ -3,6 +3,7 @@ package fr.jmmc.mf.gui.models;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.util.FileUtils;
 import fr.jmmc.mcs.util.MimeType;
 
 import fr.jmmc.mcs.util.ObservableDelegate;
@@ -23,6 +24,7 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import fr.jmmc.oitools.model.OIFitsChecker;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -42,6 +44,8 @@ import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
+import java.io.Reader;
+import java.net.URL;
 import org.exolab.castor.xml.ValidationException;
 
 /**
@@ -59,13 +63,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private static Hashtable supportedModels = new Hashtable();
     /** Combobox model of supported models */
     private static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
-    public final static String className = "fr.jmmc.mf.gui.models.SettingsModel";
+    public final static String className = SettingsModel.class.getName();
     /** Class logger */
     static Logger logger = Logger.getLogger(className);
     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
     private Settings rootSettings = null;
+    /** User preferences */
+    protected static Preferences myPreferences = Preferences.getInstance();
     /** Hashtable used to return a ListModel object for the selected files of a dedicated target */
     private Hashtable<String, ListModel> fileListModels = new Hashtable();
     public DefaultListModel allFilesListModel;
@@ -95,52 +101,79 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public SettingsModel() {
         logger.entering(className, "SettingsModel()");
-        init();
+        init(null);
     }
 
     /**
      * Creates a new empty SettingsModel object.
      */
-    public SettingsModel(java.io.File fileToLoad)
-            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException, ValidationException, IOException, MalformedURLException, FitsException {
+    public SettingsModel(java.io.File fileToLoad)  throws IllegalStateException {
         logger.entering(className, "SettingsModel", fileToLoad);
-        init();
-        final java.io.FileReader reader = new java.io.FileReader(fileToLoad);
-        Settings newModel;
         try {
-            newModel = (Settings) Settings.unmarshal(reader);
-        } catch (org.exolab.castor.xml.MarshalException exc1) {
-            try {
-                logger.log(Level.WARNING, "Can't unmarshal as Settings", exc1);
-                // try to extract settings from a response file as fallback
-                final java.io.FileReader reader2 = new java.io.FileReader(fileToLoad);
-                Response r = (Response) Response.unmarshal(reader2);
-                newModel = UtilsClass.getSettings(r);
-            } catch (org.exolab.castor.xml.MarshalException exc2) {
-                logger.log(Level.WARNING, "Can't unmarshal Settings from Response", exc2);
-                throw exc1;
-            }
+            init(new java.io.FileReader(fileToLoad));
+        } catch (FileNotFoundException ex) {
+            throw new IllegalStateException(ex);
         }
-        checkSettingsFormat(newModel);
-        setRootSettings(newModel);
-        setModified(false);
         associatedFile = fileToLoad;
     }
-
-    /**
-     * Creates a new empty SettingsModel object.
-     */
-    public SettingsModel(java.net.URL urlToLoad)
-            throws java.io.FileNotFoundException, org.exolab.castor.xml.MarshalException,
-            java.lang.Exception {
+    
+    public SettingsModel(java.net.URL urlToLoad) throws IllegalStateException {
         logger.entering(className, "SettingsModel", urlToLoad);
-        init();
-        java.io.InputStreamReader reader = new java.io.InputStreamReader(urlToLoad.openStream());
-        Settings newModel = (Settings) Settings.unmarshal(reader);
-        checkSettingsFormat(newModel);
-        setRootSettings(newModel);
-        setModified(false);
-        associatedFile = new java.io.File(urlToLoad.getFile());
+        try {
+            init(new java.io.InputStreamReader(urlToLoad.openStream()));
+            associatedFile = new java.io.File(urlToLoad.getFile());
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public SettingsModel(String url) throws IllegalStateException {
+        try {
+            URL urlToLoad = new URL(url);
+            init(new java.io.InputStreamReader(urlToLoad.openStream()));
+            associatedFile = new java.io.File(urlToLoad.getFile());
+        } catch (MalformedURLException ex) {
+            throw new IllegalStateException("Can't load url " + url, ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public final void init(Reader reader) {
+        logger.entering(className, "init");
+
+        observableDelegate = new ObservableDelegate(this);
+
+        // Init members
+        allFilesListModel = new DefaultListModel();
+        targetListModel = new DefaultListModel();
+        parameterListModel = new DefaultListModel();
+        targetComboBoxModel = new DefaultComboBoxModel();
+        parameterComboBoxModel = new DefaultComboBoxModel();
+        oiTargets = new DefaultComboBoxModel();
+
+        // Init children for a new settings
+        rootSettings = new Settings();
+        rootSettings.setFiles(new Files());
+        rootSettings.setTargets(new Targets());
+        rootSettings.setResults(new Results());
+        rootSettings.setParameters(new Parameters());
+        rootSettings.setFitter("standard");
+        setRootSettings(rootSettings);
+
+        if (reader != null) {
+            Settings newModel;
+            try {
+                newModel = (Settings) UtilsClass.unmarshal(Settings.class, reader);
+            } catch (IllegalStateException ilse) {
+                // try to extract settings from a response file as fallback
+                Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
+                newModel = UtilsClass.getSettings(r);
+            }
+            checkSettingsFormat(newModel);
+            setRootSettings(newModel);
+            setModified(false);
+        }
     }
 
     /**
@@ -151,23 +184,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public static DefaultComboBoxModel getSupportedModelsModel() {
         // Fill modelTypeComboBox model if empty
         if (supportedModelsModel.getSize() < 1) {
-            try {
-                Response r = ModelFitting.execMethod("getModelList", null);
-                // Search model into return result
-                Model newModel = UtilsClass.getModel(r);
-                // update list of supported models
-                supportedModels.clear();
-                // update MVC model of available models checkboxes
-                supportedModelsModel.removeAllElements();
-                Model[] models = newModel.getModel();
-                for (int i = 0; i < models.length; i++) {
-                    Model model = models[i];
-                    supportedModelsModel.addElement(model);
-                    logger.fine("Adding supported model:" + model.getType());
-                    supportedModels.put(model.getType(), model);
-                }
-            } catch (Exception exc) {
-                new FeedbackReport(exc);
+            Response r = ModelFitting.execMethod("getModelList", null);
+            // Search model into return result
+            Model newModel = UtilsClass.getModel(r);
+            // update list of supported models
+            supportedModels.clear();
+            // update MVC model of available models checkboxes
+            supportedModelsModel.removeAllElements();
+            Model[] models = newModel.getModel();
+            for (int i = 0; i < models.length; i++) {
+                Model model = models[i];
+                supportedModelsModel.addElement(model);
+                logger.fine("Adding supported model:" + model.getType());
+                supportedModels.put(model.getType(), model);
             }
         }
         return supportedModelsModel;
@@ -216,7 +245,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Notify the observers of this model.
      * As been put public to
      */
-    public void notifyObservers(){
+    public void notifyObservers() {
         observableDelegate.notifyObservers();
     }
 
@@ -413,7 +442,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // and change parameters name also
         Parameter[] params = newModel.getParameter();
         for (int i = 0; i < params.length; i++) {
-            Parameter p = params[i];            
+            Parameter p = params[i];
             // init some default parameters depending on first place
             if (firstModel) {
                 if (p.getName().equals("x") || p.getName().equals("y")) {
@@ -591,11 +620,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treePaths.length; i++) {
             TreePath treePath = treePaths[i];
             Object object = treePath.getLastPathComponent();
-            if (object instanceof ResultModel ||
-                    object instanceof Target ||
-                    object instanceof ResultModel ||
-                    object instanceof Model ||
-                    object instanceof FrameTreeNode) {
+            if (object instanceof ResultModel
+                    || object instanceof Target
+                    || object instanceof ResultModel
+                    || object instanceof Model
+                    || object instanceof FrameTreeNode) {
                 return true;
             }
             if (object instanceof File) {
@@ -660,29 +689,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
-    public void init() {
-        logger.entering(className, "init");
-
-        observableDelegate = new ObservableDelegate(this);
-
-        // Init members
-        allFilesListModel = new DefaultListModel();
-        targetListModel = new DefaultListModel();
-        parameterListModel = new DefaultListModel();
-        targetComboBoxModel = new DefaultComboBoxModel();
-        parameterComboBoxModel = new DefaultComboBoxModel();
-        oiTargets = new DefaultComboBoxModel();
-
-        // Init children for a new settings
-        rootSettings = new Settings();
-        rootSettings.setFiles(new Files());
-        rootSettings.setTargets(new Targets());
-        rootSettings.setResults(new Results());
-        rootSettings.setParameters(new Parameters());
-        rootSettings.setFitter("standard");
-        setRootSettings(rootSettings);
-    }
-
     /** Tell if the inner model is well filled */
     public boolean isValid() {
         logger.entering(className, "isValid");
@@ -700,7 +706,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             File file = files[i];
             ids.add(file.getId());
         }
-        return "fileId" + getNewId("fileId", ids,1);
+        return "fileId" + getNewId("fileId", ids, 1);
     }
 
     /** Returns a new id to build a new uniq Model Name by suffixing given prefix */
@@ -717,12 +723,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 ids.add(model.getName());
             }
         }
-        return getNewId(prefix, ids,1);
+        return getNewId(prefix, ids, 1);
     }
 
     /** Returns a new uniq param name with a preferenced suffixe idx*/
     public String getNewParamName(String prefix, int suffix) {
-        logger.entering(className, "getNewParamName", new Object[]{prefix,suffix});
+        logger.entering(className, "getNewParamName", new Object[]{prefix, suffix});
         Vector<String> ids = new Vector();
         Target[] targets = rootSettings.getTargets().getTarget();
         int nextId = 1;
@@ -741,7 +747,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        return prefix+getNewId(prefix, ids, suffix);
+        return prefix + getNewId(prefix, ids, suffix);
     }
 
     /** Returns a new uniq param name */
@@ -781,7 +787,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public String getAssociatedFilename() {
         logger.entering(className, "getAssociatedFilename");
         if (associatedFile == null) {
-            return "Untitled."+MimeType.LITPRO_SETTINGS.getExtension();
+            return "Untitled." + MimeType.LITPRO_SETTINGS.getExtension();
         }
         return associatedFile.getName();
     }
@@ -888,14 +894,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         isModified = flag;
     }
 
-    public java.io.File getTempFile(boolean keepResult)
-            throws Exception {
+    public java.io.File getTempFile(boolean keepResult){
         logger.entering(className, "getTempFile", keepResult);
-
         java.io.File tmpFile;
-        tmpFile = java.io.File.createTempFile("tmpSettings", ".xml");
-        // Delete temp file when program exits.
-        tmpFile.deleteOnExit();
+        tmpFile = FileUtils.getTempFile("tmpSettings", ".xml");
         saveSettingsFile(tmpFile, keepResult);
 
         return tmpFile;
@@ -973,23 +975,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
-    private void stampLastUserInfo(ResultModel r){
+    private void stampLastUserInfo(ResultModel r) {
         String info = rootSettings.getUserInfo();
-        String update = info.replaceAll("new fit occured","\n"+r+" occured");
+        String update = info.replaceAll("new fit occured", "\n" + r + " occured");
         rootSettings.setUserInfo(update);
     }
-
 
     // respond to ModifyAndSaveObject interface
     public void save() {
         logger.entering(className, "save");
 
         if (associatedFile != null) {
-            try {
-                saveSettingsFile(associatedFile, false);
-            } catch (Exception exc) {
-                new FeedbackReport(null, true, exc);
-            }
+            saveSettingsFile(associatedFile, false);            
         } else {
             // trigger saveSettingsAction
             MFGui.saveSettingsAction.actionPerformed(null);
@@ -1086,9 +1083,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         resultModelIndex = results.length;
 
 
-        String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount() +
-                " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ " +
-                rootSettings.getUserInfo() + " ]";
+        String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount()
+                + " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ "
+                + rootSettings.getUserInfo() + " ]";
         if (rootSettings.getResults() != null) {
             desc = desc + " with results section";
         }
@@ -1192,8 +1189,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.fine("adding file '" + file.getName() + "' to listmodel for '" + key + "'");
             lm.addElement(file);
         } else {
-            logger.fine("file " + file.getName() + " already registered to listmodel for '" + key +
-                    "'");
+            logger.fine("file " + file.getName() + " already registered to listmodel for '" + key
+                    + "'");
         }
     }
 
@@ -1206,7 +1203,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and make it much much simpler
-    public void addFile(java.io.File fileToAdd) throws IOException, MalformedURLException, FitsException {
+    public void addFile(java.io.File fileToAdd) {
         logger.entering(className, "addFile", fileToAdd);
         Files files = rootSettings.getFiles();
 
@@ -1233,7 +1230,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and refactor this CODE
-    public boolean checkFile(File boundFile) throws IOException, MalformedURLException, fr.nom.tam.fits.FitsException {
+    public boolean checkFile(File boundFile) {
         logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
@@ -1260,39 +1257,47 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return populate(boundFile, filename);
     }
 
-    /** 
-     * 
+    /**      
      * Show validation GUI, set href attribute and search oitarget in
      * io.File associated to filename.
      *
      * @param fileToPopulate
      * @param filename
+     * @throws IllegalStateException
+     *      if file can't be read to be integrated as part of the setting file
      * @return
      */
-    private boolean populate(File fileToPopulate, String filename) throws MalformedURLException, IOException, fr.nom.tam.fits.FitsException {
+    private boolean populate(File fileToPopulate, String filename) throws IllegalStateException {
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
-        System.out.println("filename = " + filename);
         OIFitsFile fits;
         // Populate the boundFile with oifits content
         fileToPopulate.clearOitarget();
         // file extension can be *fits or *fits.gz
         OIFitsChecker checker = new OIFitsChecker();
-        fits = OIFitsLoader.loadOIFits(checker, filename);
+        try {
+            fits = OIFitsLoader.loadOIFits(checker, filename);
+        } catch (MalformedURLException ex) {
+            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
+        } catch (FitsException ex) {
+            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
+        }
 
         MessagePane.showMessage(checker.getCheckReport());
-                
+
         OITarget oiTarget = fits.getOiTarget();
-        
+
         oiTarget.getTarget();
-        if (oiTarget==null){
-          // throw new FitsException("Your file must contains one target / one OITARGET table");
-          return false;
+        if (oiTarget == null) {
+            // throw new FitsException("Your file must contains one target / one OITARGET table");
+            return false;
         }
         String[] targetNames;
         targetNames = oiTarget.getTarget();
-        
+
         //generate and store base64 href
-        fileToPopulate.setHref(UtilsClass.getBase64Href(fits.getName(), UtilsClass.IMAGE_FITS_DATATYPE));
+        fileToPopulate.setHref(UtilsClass.getBase64Href(filename, UtilsClass.IMAGE_FITS_DATATYPE));
 
         // search oitargets
         for (int i = 0; i < targetNames.length; i++) {
@@ -1306,7 +1311,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     // @todo think to move this method into fr.jmmc.mf.util
-    public void checkSettingsFormat(Settings s) throws IOException, MalformedURLException, FitsException {
+    public void checkSettingsFormat(Settings s) {
         logger.entering(className, "checkSettingsFormat", s);
 
         // try to locate files
@@ -1327,9 +1332,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // assert that one userInfo section is present to allow traces
         if (s.getUserInfo() == null) {
             logger.fine("no userInfo section, -> new one created");
-            s.setUserInfo("UserInfo added on " + new java.util.Date() +
-                    " by ModelFitting GUI rev. " +
-                    ModelFitting.getSharedApplicationDataModel().getProgramVersion());
+            s.setUserInfo("UserInfo added on " + new java.util.Date()
+                    + " by ModelFitting GUI rev. "
+                    + ModelFitting.getSharedApplicationDataModel().getProgramVersion());
             setModified(true);
         }
 
@@ -1344,13 +1349,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
+     * Save settings into given file.
+     * result are included in file depending on the user preference value.
+     * @todo place this method into fr.jmmc.mf.util
+     */
+    public void saveSettingsFile(java.io.File fileToSave)
+            throws IllegalStateException {
+        boolean saveResults = myPreferences.getPreferenceAsBoolean("save.results");
+        saveSettingsFile(fileToSave, saveResults);
+    }
+
+    /**
      * Write serialisation into given file.
      * @todo place this method into fr.jmmc.mf.util
      * @param keepResult indicates that this file will not get result section. It is used in the runFit action for example.
      */
     public void saveSettingsFile(java.io.File fileToSave, boolean keepResult)
-            throws java.io.IOException, org.exolab.castor.xml.MarshalException,
-            org.exolab.castor.xml.ValidationException, org.exolab.castor.mapping.MappingException {
+            throws IllegalStateException {
         logger.entering(className, "saveSettingsFile", new Object[]{fileToSave, keepResult});
         Results oldResults = rootSettings.getResults();
         /* replace old result section by a new empty one according keepResult parameter
@@ -1360,17 +1375,25 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         // Write settings into a File
-        java.io.FileWriter writer = new java.io.FileWriter(fileToSave);
         logger.fine("start setting file writting");
-        UtilsClass.marshal(rootSettings, writer);
+        java.io.Writer writer = null;
+        try {
+            writer = FileUtils.openFile(fileToSave);
+            UtilsClass.marshal(rootSettings, writer);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't write settings file into " + fileToSave.getAbsolutePath(), ex);
+        } finally {
+            FileUtils.closeFile(writer);
+            if (keepResult == false) {
+                rootSettings.setResults(oldResults);
+            }
+        }
         logger.fine("finish file writting into " + fileToSave);
 
         if (fileToSave.equals(associatedFile)) {
             setModified(false);
         }
-        if (keepResult == false) {
-            rootSettings.setResults(oldResults);
-        }
+
         if (rootSettings.getResults() == null) {
             rootSettings.setResults(new Results());
         }
@@ -1600,8 +1623,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return -1;
         } else if (parent == rootSettings.getFiles()) {
             File[] elements = rootSettings.getFiles().getFile();
-            for (int i = 0; i <
-                    elements.length; i++) {
+            for (int i = 0; i
+                    < elements.length; i++) {
                 File element = elements[i];
                 if (element == child) {
                     return i;
@@ -1611,8 +1634,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return -1;
         } else if (parent == rootSettings.getTargets()) {
             Object[] elements = rootSettings.getTargets().getTarget();
-            for (int i = 0; i <
-                    elements.length; i++) {
+            for (int i = 0; i
+                    < elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
@@ -1621,8 +1644,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return -1;
         } else if (parent == rootSettings.getParameters()) {
             Object[] elements = rootSettings.getParameters().getParameter();
-            for (int i = 0; i <
-                    elements.length; i++) {
+            for (int i = 0; i
+                    < elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
@@ -1635,8 +1658,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             // search for Result or ResultModel children
             // we must search resultModel according ordered list of Result
             // because tha hastable is not ordered!!
-            for (int i = 0; i <
-                    elements.length; i++) {
+            for (int i = 0; i
+                    < elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
@@ -1649,8 +1672,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         } else {
             // Search for fileLinks or models children into Target
             Target[] targets = rootSettings.getTargets().getTarget();
-            for (int i = 0; i <
-                    targets.length; i++) {
+            for (int i = 0; i
+                    < targets.length; i++) {
                 Target target = targets[i];
                 if (parent == target) {
 
@@ -1661,8 +1684,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                             target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
-                    for (int j = 0; j <
-                            all.length; j++) {
+                    for (int j = 0; j
+                            < all.length; j++) {
                         if (child == all[j]) {
                             return j;
                         }
@@ -1693,8 +1716,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         if (node instanceof TreeNode) {
             return ((TreeNode) node).isLeaf();
-        } else if ((node instanceof Settings) || (node instanceof Files) || (node instanceof Targets) ||
-                (node instanceof Target) || (node instanceof Results)) {
+        } else if ((node instanceof Settings) || (node instanceof Files) || (node instanceof Targets)
+                || (node instanceof Target) || (node instanceof Results)) {
             return false;
         } else {
             return true;
@@ -1716,7 +1739,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void valueForPathChanged(TreePath path, Object newValue) {
         logger.entering(className, "valueForPathChanged", new Object[]{path, newValue});
         Object modifiedObject = path.getLastPathComponent();
-        new FeedbackReport();
+        throw new IllegalStateException("This code should not be reached, what user interaction can go there?");
         //fireTreeNodesChanged(path,modifiedObject);
     }
 
@@ -1726,7 +1749,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /** Marshal the settings and return it as a String */
-    public String toXml() throws Exception {
+    public String toXml(){
         logger.entering(className, "toXml");
         logger.fine("Start of marshalling");
         java.io.StringWriter writer = new java.io.StringWriter();
@@ -1740,12 +1763,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public String toLITproDesc() {
         logger.entering(className, "toLITproDesc");
-        try {
-            return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
-                    new String[]{});
-        } catch (Exception e) {
-            new FeedbackReport(e);
-            return null;
-        }
+        return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
+                    new String[]{});        
     }
 }

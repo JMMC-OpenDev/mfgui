@@ -35,47 +35,28 @@ public class ResultModel extends DefaultMutableTreeNode {
         this.result = result;
         this.index = index;
 
-        try {
-            String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
+        String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
 
-            // use content or href to get the result element
-            if (result.getHref() == null) {
-                logger.fine("Start result section write into stringbuffer");
-                StringWriter xmlResultSw = new StringWriter();
-                UtilsClass.marshal(result, xmlResultSw);
-                logger.fine("End result section write into stringbuffer");
-                xmlResult = xmlResultSw.toString();
-                logger.fine("Start html generation");
-                htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
-                logger.fine("End html generation");
-            } else {
-                xmlResult = "<result>" +
-                        UtilsClass.saveBASE64ToString(result.getHref()) +
-                        "</result>";
-                logger.fine("Start html generation");
-                htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
-                logger.fine("End html generation");
-            }
+        // use content or href to get the result element
+        if (result.getHref() == null) {
+            logger.fine("Start result section write into stringbuffer");
+            StringWriter xmlResultSw = new StringWriter();
+            UtilsClass.marshal(result, xmlResultSw);
+            logger.fine("End result section write into stringbuffer");
+            xmlResult = xmlResultSw.toString();
+            logger.fine("Start html generation");
+            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            logger.fine("End html generation");
+        } else {
+            xmlResult = "<result>"
+                    + UtilsClass.saveBASE64ToString(result.getHref())
+                    + "</result>";
+            logger.fine("Start html generation");
+            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            logger.fine("End html generation");
+        }
 
-            //genPlots(UtilsClass.getResultFiles(response));
-            genPlots();
-        } catch (Exception exc) {
-            htmlReport = "<html>Error during report generation.</html>";
-            new FeedbackReport(null, true, exc);
-        }
-        /*
-        java.net.URL url = this.getClass().getClassLoader().getResource("fr/jmmc/mf/gui/yogaToVoTable.xsl");
-        try {
-        java.io.File file = java.io.File.createTempFile("model", "vot");
-        file.deleteOnExit();
-        BufferedWriter out = new BufferedWriter(new FileWriter(file));
-        out.write(UtilsClass.xsl(xmlResult, url, null));
-        out.close();
-        ModelFitting.startFitsViewer(file.getAbsolutePath());
-        } catch (Exception exc) {
-        new FeedbackReport(null, true, exc);
-        }
-         */
+        genPlots();
         this.setUserObject(result);
     }
 
@@ -123,31 +104,27 @@ public class ResultModel extends DefaultMutableTreeNode {
     void genPlots(ResultFile[] resultFiles) {
         // try to locate the corresponding pdf of each png file
         for (int i = 0; i < resultFiles.length; i++) {
-            try {
-                ResultFile r = resultFiles[i];
+            ResultFile r = resultFiles[i];
 
-                String b64file;
-                File file = null;
-                JFrame f = null;
-                Vector<File> filesToExport = new Vector();
-                if (r.getHref().substring(1, 30).contains("png")) {
-                    for (int j = 0; j < resultFiles.length; j++) {
-                        ResultFile r2 = resultFiles[j];
-                        String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
-                        if (r.getName().startsWith(filenameWOExt + ".") && r2.getName().endsWith("pdf")) {
-                            b64file = r2.getHref();
-                            File pdfFile = UtilsClass.saveBASE64ToFile(b64file, "pdf");
-                            filesToExport.add(pdfFile);
-                        }
+            String b64file;
+            File file = null;
+            JFrame f = null;
+            Vector<File> filesToExport = new Vector();
+            if (r.getHref().substring(1, 30).contains("png")) {
+                for (int j = 0; j < resultFiles.length; j++) {
+                    ResultFile r2 = resultFiles[j];
+                    String filenameWOExt = r2.getName().substring(0, r2.getName().lastIndexOf('.'));
+                    if (r.getName().startsWith(filenameWOExt + ".") && r2.getName().endsWith("pdf")) {
+                        b64file = r2.getHref();
+                        File pdfFile = UtilsClass.saveBASE64ToFile(b64file, "pdf");
+                        filesToExport.add(pdfFile);
                     }
-                    b64file = r.getHref();
-                    File pngFile = UtilsClass.saveBASE64ToFile(b64file, "png");
-                    filesToExport.add(pngFile);
-                    f = UtilsClass.buildFrameFor(pngFile);
-                    this.add(new FrameTreeNode(f, r.getName(), filesToExport.toArray(new File[0])));
                 }
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, null, ex);
+                b64file = r.getHref();
+                File pngFile = UtilsClass.saveBASE64ToFile(b64file, "png");
+                filesToExport.add(pngFile);
+                f = UtilsClass.buildFrameFor(pngFile);
+                this.add(new FrameTreeNode(f, r.getName(), filesToExport.toArray(new File[0])));
             }
         }
     }
@@ -156,29 +133,26 @@ public class ResultModel extends DefaultMutableTreeNode {
     protected void ptplot(String plotName, boolean residuals) {
         logger.entering("" + this.getClass(), "ptplot", plotName);
         String xmlStr = null;
-        try {
-            logger.fine("Start plot generation:" + plotName + "(residuals=" + residuals + ")");
-            // Contruct xml document to plot
-            String[] args = new String[]{"plotName", plotName};
-            if (residuals) {
-                args = new String[]{"plotName", plotName, "residuals", "" + residuals};
-                plotName = plotName + " residuals";
-            }
-            xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",
-                    args);
 
-            // generate frame and tsv file
-            PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
-            logger.fine("End plot generation:" + plotName);
-            logger.fine("Start tsv generation:" + plotName);
-            File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
-            logger.fine("End tsv generation:" + plotName);
-
-            // add on frameTreeNode as child
-            this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));
-        } catch (Exception exc) {
-            new FeedbackReport(new Exception("Plot generation failed for " + plotName, exc));
+        logger.fine("Start plot generation:" + plotName + "(residuals=" + residuals + ")");
+        // Construct xml document to plot
+        String[] args = new String[]{"plotName", plotName};
+        if (residuals) {
+            args = new String[]{"plotName", plotName, "residuals", "" + residuals};
+            plotName = plotName + " residuals";
         }
+        xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",
+                args);
+
+        // generate frame and tsv file
+        PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
+        logger.fine("End plot generation:" + plotName);
+        logger.fine("Start tsv generation:" + plotName);
+        File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
+        logger.fine("End tsv generation:" + plotName);
+
+        // add on frameTreeNode as child
+        this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));
     }
 
     public int getIndex() {

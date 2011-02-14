@@ -1,6 +1,10 @@
 package fr.jmmc.mcs;
 
 import fr.jmmc.mf.gui.UtilsClass;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 import org.w3c.dom.*;
@@ -14,6 +18,7 @@ import java.awt.image.*;
 
 import java.util.Observable;
 import java.util.Observer;
+import org.xml.sax.SAXException;
 
 /*
    import nom.tam.fits.*;
@@ -352,35 +357,40 @@ public class ImageCanvas extends Canvas implements MouseMotionListener
     /** Init image shown set width and height to fits naxis values.
      * Only first table is used to init pixel values.
      * Table is supporsed to be rectangular because dimension is obtained
-     * getting number of rows and number of columns in the first row. */
-    public void xmlInit(String xmlStr)throws Exception
+     * getting number of rows and number of columns in the first row.
+     * @throws IllegalStateException
+     */
+    public void xmlInit(String xmlStr)throws IllegalStateException
     {
-        logger.entering("" + this.getClass(), "xmlInit");
-
-        Document doc = UtilsClass.parseXmlString(xmlStr, false);
-        NodeList list = doc.getElementsByTagName("table");
-        Element tableElement = (Element) list.item(0);
-        NodeList trList = tableElement.getElementsByTagName("tr");
-        Element tr = (Element) trList.item(0);
-        NodeList tdList = tr.getElementsByTagName("td");
-        int h = trList.getLength();
-        int w = tdList.getLength();
-        logger.fine("xmlInit: found " + w + "x" + h + " array");
-
-        float[] array = new float[h * w];
-
-        // init array content
-        for (int i = 0; i < h; i++) {
-            tr = (Element) trList.item(i);
-            tdList = tr.getElementsByTagName("td");
-
-            for (int j = 0; j < w; j++) {
-                Element td = (Element) tdList.item(j);
-                array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
+        try {
+            logger.entering("" + this.getClass(), "xmlInit");
+            Document doc = UtilsClass.parseXmlString(xmlStr, false);
+            NodeList list = doc.getElementsByTagName("table");
+            Element tableElement = (Element) list.item(0);
+            NodeList trList = tableElement.getElementsByTagName("tr");
+            Element tr = (Element) trList.item(0);
+            NodeList tdList = tr.getElementsByTagName("td");
+            int h = trList.getLength();
+            int w = tdList.getLength();
+            logger.fine("xmlInit: found " + w + "x" + h + " array");
+            float[] array = new float[h * w];
+            // init array content
+            for (int i = 0; i < h; i++) {
+                tr = (Element) trList.item(i);
+                tdList = tr.getElementsByTagName("td");
+                for (int j = 0; j < w; j++) {
+                    Element td = (Element) tdList.item(j);
+                    array[i + ((w - j - 1) * h)] = Float.parseFloat(td.getTextContent());
+                }
             }
+            initImage(w, h, array);
+        } catch (ParserConfigurationException ex) {
+            throw new IllegalStateException("Can't init image with given xml",ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't init image with given xml",ex);
+        } catch (SAXException ex) {
+            throw new IllegalStateException("Can't init image with given xml",ex);
         }
-
-        initImage(w, h, array);
     }
 
     /**

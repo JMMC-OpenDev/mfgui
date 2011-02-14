@@ -71,11 +71,6 @@ public class LoadRemoteDataFilesAction extends RegisteredAction implements TreeS
                 }
                 in.close();
                 settingsModel.addFile(tmpFile);
-            } catch (Exception ex) {
-                String msg = "Can't read remote file '" + browserUrl + "'.\n\n(" +
-                        ex.getMessage() + ")";
-                JOptionPane.showMessageDialog(null, msg, "Error ", JOptionPane.ERROR_MESSAGE);
-                logger.log(Level.WARNING, msg, ex);
             }
         }
          */
