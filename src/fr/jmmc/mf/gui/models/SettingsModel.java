@@ -466,8 +466,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public void removeModel(Target parentTarget, Model oldModel) {
         logger.entering(className, "removeModel", new Object[]{parentTarget, oldModel});
-        setModified(true);
+        if(parentTarget==null){
+            logger.warning("Something strange appears while trying to remove one model without associated target");
+            return;
+        }
         Model[] models = parentTarget.getModel();
+        setModified(true);
         for (int i = 0; i < models.length; i++) {
             Model model = models[i];
             if (model == oldModel) {
