@@ -241,11 +241,15 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
             String hasMethodName = "has" + columnNames[columnIndex];
 
-            Method has = Parameter.class.getMethod(hasMethodName, new Class[0]);
-            if (has.invoke(p, new Object[0]).equals(new Boolean(false))) {
-                return null;
+            try {
+                Method has = Parameter.class.getMethod(hasMethodName, new Class[0]);
+                if (has.invoke(p, new Object[0]).equals(Boolean.FALSE)) {
+                    return null;
+                }
+            } catch (NoSuchMethodException e) {
+                // not illegal because most parameters haven't some attributes
             }
-
+            
             Object ret = get.invoke(p, new Object[0]);
             return ret;
 
