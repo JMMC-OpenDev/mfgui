@@ -5,7 +5,13 @@
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>
-        <package name="TOPCAT" description="This software uses the VO table browser which is one of the starlink projects." link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
+        <package name="TOPCAT"
+        description="This software uses the VO table browser which is one of the starlink projects."
+        link="http://www.star.bris.ac.uk/~mbt/topcat/"/>
+        <package name="ptolemy plots"
+        description="2D plots"
+        link="http://ptolemy.eecs.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/index.htm"
+        jars="ptplot5.6.jar"/>
     </dependences>
     <menubar>
         <menu label="File">
