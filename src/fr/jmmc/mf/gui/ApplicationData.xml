@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.10a1"/>
+    <program name="LITpro" version="1.0.10"/>
     <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -46,9 +46,12 @@
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
             -->
             <prerelease version="1.0.10a1">
-                <change type="TODO">Handle webservice url preference reset during major version update</change>
+                <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
+                <change type="BUGFIX">If one empty value is given for the value of one parameter, no more exception is thrown but the parameter get not modified.</change>
                 <change type="CHANGE">Use new error handling mecanisms</change>
+                <change type="CHANGE">Use new feedback report (which saves your email adress in a preference file)</change>
+
             </prerelease>
         </release>
         <release version="1.0.9">
