@@ -9,13 +9,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
 
 public class AttachDetachFrameAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
 
-    private final static String className = "fr.jmmc.mf.gui.actions.AttachDetachFrameAction";
+    final static String className = AttachDetachFrameAction.class.getName();
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
 
     MFGui mfgui;
