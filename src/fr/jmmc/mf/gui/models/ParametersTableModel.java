@@ -256,7 +256,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         } catch (InvocationTargetException ex) {
             throw new IllegalStateException("Can't get data from setting",ex);
         } catch (NoSuchMethodException ex) {
-            throw new IllegalStateException("Can't get data from setting",ex);
+            //throw new IllegalStateException("Can't get data from setting",ex);
+          logger.log(Level.WARNING, "Can't get data from setting",ex);
+          return null;
         } catch (SecurityException ex) {
             throw new IllegalStateException("Can't get data from setting",ex);
         } catch (IllegalAccessException ex) {
@@ -278,7 +280,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         } else {
             p = (Parameter) o;
         }
-
+                 
         if (aValue != null) {
             logger.fine("parameter[row="+rowIndex+", hashcode="+p.hashCode()+"] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
         } else {
@@ -287,9 +289,11 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
         // and most of parameter ones accept double only :(
-        if (columnNames[columnIndex].equals("Value")) {
-            Double v = (Double) aValue;
-            p.setValue(v);
+        if (columnNames[columnIndex].equals("Value")) {          
+            if (aValue != null) {
+                Double v = (Double) aValue;
+                p.setValue(v);
+            }
         } else if (columnNames[columnIndex].equals("MinValue")) {
             if (aValue == null) {
                 p.deleteMinValue();
