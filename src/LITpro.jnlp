@@ -23,6 +23,7 @@
     <jar href="jar/mfgui-doc.jar" />
     <jar href="jar/Jmcs.jar" />
     <jar href="jar/oitools.jar" />
+    <jar href="jar/ptplot5.6.jar" />
 
     <!-- Astrogrid topcat -->
     <extension href="topcat-parts.jnlp">
