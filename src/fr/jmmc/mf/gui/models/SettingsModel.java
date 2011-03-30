@@ -1128,7 +1128,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 logger.warning("Models are:" + model);
             }
         }
-        new Throwable("Can't find parent of :" + child).printStackTrace();
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+
         return null;
     }
 
@@ -1149,8 +1150,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.warning("Can't find parent of :" + child);
-        //new Throwable("Can't find parent of :" + child).printStackTrace();
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+
         return null;
     }
 
@@ -1171,8 +1172,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.warning("Can't find parent of :" + child);
-        new Throwable("Can't find parent of :" + child).printStackTrace();
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+
         return null;
     }
 
