@@ -50,7 +50,7 @@ import uk.ac.starlink.table.TableFormatException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.39 2011-02-14 08:07:01 mella Exp $";
+    final static String rcsId = "$Id: ModelFitting.java,v 1.40 2011-03-30 09:51:56 bourgesl Exp $";
     final static String className=ModelFitting.class.getName();
     final static Logger logger = Logger.getLogger(className);
     static Preferences myPreferences;
@@ -278,22 +278,21 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
-        PostMethod myPost = new PostMethod(targetURL);
+        
+        final PostMethod myPost = new PostMethod(targetURL);
         try {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
 
             if (client_ == null) {
                 client_ = Http.getHttpClient();
             }
-            // Change timeout Since we can have long term exchanges
-            client_.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 
             int status = client_.executeMethod(myPost);
             if (status == HttpStatus.SC_OK) {
-                StringBuffer sb = new StringBuffer();
-                Reader reader = new InputStreamReader(
-                        myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
-                StringWriter sw = new StringWriter();
+                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
+
+                // TODO : define initialSize correctly (get http content length ?) :
+                final StringWriter sw = new StringWriter(65535);
                 char cbuf[] = new char[1024];
                 int len = reader.read(cbuf);
                 while (len > 0) {
@@ -301,9 +300,17 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                     len = reader.read(cbuf);
                 }
                 result = sw.toString();
-                logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
+
+                if (logger.isLoggable(Level.FINE)) {
+                  logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
+              }
+
             } else {
-                logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
+
+                if (logger.isLoggable(Level.FINE)) {
+                  logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
+                }
+
                 throw new IllegalStateException(
                         "Can't query LITpro remote webservice\nurl: '"
                         + targetURL
@@ -311,18 +318,20 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                         + HttpStatus.getStatusText(status));
             }
 
-            myPost.releaseConnection();
         } catch (HttpException ex) {
-            myPost.releaseConnection();
             throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
                     + targetURL + "'", ex);
         } catch (IOException ex) {
-            myPost.releaseConnection();
             throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
                     + targetURL + "'", ex);
+        } finally {
+            // Release the connection.
+            myPost.releaseConnection();
         }
 
-        logger.finest("post result=\n" + result);
+        if (logger.isLoggable(Level.FINEST)) {
+          logger.finest("post result=\n" + result);
+        }
         return result;
     }
 
@@ -420,24 +429,23 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         }
 
         public void processStarted() {
-            logger.entering("" + this.getClass(), "processStarted");
+            logger.entering(this.getClass().getName(), "processStarted");
         }
 
         public void processStoped() {
-            logger.entering("" + this.getClass(), "processStoped");
+            logger.entering(this.getClass().getName(), "processStoped");
         }
 
         public void processTerminated(int returnedValue) {
-            logger.entering("" + this.getClass(), "processTerminated");
+            logger.entering(this.getClass().getName(), "processTerminated");
         }
 
-        public void errorOccured(Exception exception) {
-            logger.entering("" + this.getClass(), "errorOccured");
-            exception.printStackTrace();
+        public void errorOccured(Exception e) {
+            logger.log(Level.SEVERE, this.getClass().getName() + " errorOccured", e);
         }
 
         public void outputOccured(String line) {
-            logger.entering("" + this.getClass(), "outputOccured");
+            logger.entering(this.getClass().getName(), "outputOccured");
             sb.append(line);
             logger.finest("occured line:" + line);
         }

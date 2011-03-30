@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Component;
 
 import java.lang.reflect.*;
+import java.util.logging.Level;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -185,7 +186,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass()
                     + "' objects " + o));
-            new Throwable("missing modifier panel for '" + o.getClass() + "'=" + o).printStackTrace();
+
+            logger.log(Level.WARNING, "missing modifier panel for '" + o.getClass() + "'=" + o, new Throwable());
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();
