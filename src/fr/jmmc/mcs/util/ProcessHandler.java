@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: ProcessHandler.java,v 1.2 2008-10-17 10:11:26 mella Exp $"
+ * "@(#) $Id: ProcessHandler.java,v 1.3 2011-04-04 13:59:22 bourgesl Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2008/10/17 10:11:26  mella
+ * Jalopization of major refactoring mimicking searchcal template
+ *
  * Revision 1.1  2007/03/28 07:38:35  mella
  *  Added temporary into mfgui module until mcs requires java 1.5
  *
@@ -234,7 +237,7 @@ public class ProcessHandler
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "failure : ", e);
         }
     }
 
