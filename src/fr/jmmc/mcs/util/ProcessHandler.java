@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: ProcessHandler.java,v 1.3 2011-04-04 13:59:22 bourgesl Exp $"
+ * "@(#) $Id: ProcessHandler.java,v 1.4 2011-04-04 15:28:44 bourgesl Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2011/04/04 13:59:22  bourgesl
+ * avoid print stack trace
+ *
  * Revision 1.2  2008/10/17 10:11:26  mella
  * Jalopization of major refactoring mimicking searchcal template
  *
@@ -22,9 +25,14 @@
  ******************************************************************************/
 package fr.jmmc.mcs.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.logging.*;
 
 
 /**
@@ -37,7 +45,7 @@ public class ProcessHandler
     /**
      * DOCUMENT ME!
      */
-    static Logger logger = Logger.getLogger("fr.jmmc.mcs.util.ProcessHandler");
+    private final static Logger logger = Logger.getLogger("fr.jmmc.mcs.util.ProcessHandler");
 
     /**
      * DOCUMENT ME!
@@ -251,12 +259,12 @@ public class ProcessHandler
         {
             logger.finest("listening process output started");
 
-            BufferedReader in   = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader reader   = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String         line;
 
             try
             {
-                while ((line = in.readLine()) != null)
+                while ((line = reader.readLine()) != null)
                 {
                     if (manager != null)
                     {
@@ -275,6 +283,8 @@ public class ProcessHandler
                 {
                     manager.errorOccured(e);
                 }
+            } finally {
+                FileUtils.closeFile(reader);
             }
 
             logger.finest("listening process output ended");
