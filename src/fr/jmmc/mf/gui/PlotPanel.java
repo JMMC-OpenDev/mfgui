@@ -84,8 +84,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     /** Return the syntax used by yorick code to describe a list of targets */
-    private int getGroupValue(Target target) {
-        return settingsModel.getTargetListModel().indexOf(target) + 1;
+    private String getGroupValue(Target target) {
+        return Integer.toString( settingsModel.getTargetListModel().indexOf(target) + 1 );
     }
 
     private String getGroupValue(Object[] targets) {
@@ -136,7 +136,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
     public void plotModelSnifferMap(Target targetToPlot, String xmin, String xmax,
             String ymin, String ymax, String pixscale) {
-        String args = "" + getGroupValue(targetToPlot) + " " + xmin
+        String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
                 + " " + ymax
@@ -145,13 +145,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     void plotModelUVMap(Target targetToPlot) {
-        String args = "" + getGroupValue(targetToPlot);
+        String args = getGroupValue(targetToPlot);
         plot("getModelUVMap", args, "UV map of " + targetToPlot.getIdent());
     }
 
     void plotModelImage(Target targetToPlot, String xmin, String xmax,
             String ymin, String ymax, String pixscale) {
-        String args = "" + getGroupValue(targetToPlot) + " " + xmin
+        String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
                 + " " + ymax

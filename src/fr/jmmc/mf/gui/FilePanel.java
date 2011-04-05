@@ -7,6 +7,7 @@ import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
 import fr.nom.tam.fits.FitsException;
 import java.io.IOException;
+import java.util.logging.Level;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -18,16 +19,16 @@ import org.apache.commons.math.linear.RealMatrixImpl;
  */
 public class FilePanel extends javax.swing.JPanel {
 
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            FilePanel.class.getName());
-    protected SettingsModel settingsModel;
-    File current = null;
-    OIFitsFile oifitsFile_ = null;
-    static Action saveEmbeddedFileAction;
-    static Action checkEmbeddedFileAction;
-    static Action showEmbeddedFileAction;
-    MyListSelectionListener myListSelectionListener;
-    ListModel hduListModel = new DefaultListModel();
+  final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+          FilePanel.class.getName());
+  protected SettingsModel settingsModel;
+  File current = null;
+  OIFitsFile oifitsFile_ = null;
+  static Action saveEmbeddedFileAction;
+  static Action checkEmbeddedFileAction;
+  static Action showEmbeddedFileAction;
+  MyListSelectionListener myListSelectionListener;
+  ListModel hduListModel = new DefaultListModel();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton1;
     private javax.swing.JButton checkFileButton;
@@ -55,69 +56,69 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
 
-    /** Creates new form FilePanel */
-    public FilePanel() {
-        // Prepare action before gui construction
-        saveEmbeddedFileAction = new SaveEmbeddedFileAction();
-        showEmbeddedFileAction = new ShowEmbeddedFileAction();
-        checkEmbeddedFileAction = new CheckEmbeddedFileAction();
-        initComponents();
+  /** Creates new form FilePanel */
+  public FilePanel() {
+    // Prepare action before gui construction
+    saveEmbeddedFileAction = new SaveEmbeddedFileAction();
+    showEmbeddedFileAction = new ShowEmbeddedFileAction();
+    checkEmbeddedFileAction = new CheckEmbeddedFileAction();
+    initComponents();
 
-        myListSelectionListener = new MyListSelectionListener();
-        hduList.addListSelectionListener(myListSelectionListener);
-        //fix default state
-        myListSelectionListener.valueChanged(null);
+    myListSelectionListener = new MyListSelectionListener();
+    hduList.addListSelectionListener(myListSelectionListener);
+    //fix default state
+    myListSelectionListener.valueChanged(null);
 
-        // set help buttons
-        helpButton1.setAction(new ShowHelpAction("_Check_embedded_Bt"));
-        helpButton2.setAction(new ShowHelpAction("_fits_fields_and_Show_selected_Bt"));
-        // next boutons are actually not usefull because they are linked onto the same page
-        //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
-        //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
-        //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
-        //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
-    }
+    // set help buttons
+    helpButton1.setAction(new ShowHelpAction("_Check_embedded_Bt"));
+    helpButton2.setAction(new ShowHelpAction("_fits_fields_and_Show_selected_Bt"));
+    // next boutons are actually not usefull because they are linked onto the same page
+    //helpButton3.setAction(new ShowHelpAction("_Show_UV_Bt"));
+    //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
+    //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
+    //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
+  }
 
-    /**
-     *
-     *
-     * @param file
-     * @param settingsModel
-     * @throws IOException if an io exception occurs writing the file
-     * @throws FitsException
-     */
-    public void show(File file, SettingsModel settingsModel){
-        this.settingsModel = settingsModel;
-        // Try to load data file
-        oifitsFile_ = null;
-        current = file;
+  /**
+   *
+   *
+   * @param file
+   * @param settingsModel
+   * @throws IOException if an io exception occurs writing the file
+   * @throws FitsException
+   */
+  public void show(File file, SettingsModel settingsModel) {
+    this.settingsModel = settingsModel;
+    // Try to load data file
+    oifitsFile_ = null;
+    current = file;
 
-        oifitsFile_ = UtilsClass.saveBASE64ToFile(current);
+    oifitsFile_ = UtilsClass.saveBASE64ToFile(current);
 
-        // update file info fields
-        nameTextField.setText(file.getName());
+    // update file info fields
+    nameTextField.setText(file.getName());
 
-        // update lists
-        hduList.setListData(oifitsFile_.getOiTables());
-        hduListModel = hduList.getModel();
-        showUVCoverageButton.setEnabled(false);
-        showVisButton.setEnabled(oifitsFile_.hasOiVis());
-        visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
-        visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
-        showVis2Button.setEnabled(oifitsFile_.hasOiVis2());
-        showT3Button.setEnabled(oifitsFile_.hasOiT3());
-        t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
-        t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
-        // update button state
-        hduList.setSelectedIndices(new int[]{});
+    // update lists
+    hduList.setListData(oifitsFile_.getOiTables());
+    hduListModel = hduList.getModel();
+    showUVCoverageButton.setEnabled(false);
+    showVisButton.setEnabled(oifitsFile_.hasOiVis());
+    visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
+    visphiCheckBox.setEnabled(oifitsFile_.hasOiVis());
+    showVis2Button.setEnabled(oifitsFile_.hasOiVis2());
+    showT3Button.setEnabled(oifitsFile_.hasOiT3());
+    t3ampCheckBox.setEnabled(oifitsFile_.hasOiT3());
+    t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
+    // update button state
+    hduList.setSelectedIndices(new int[]{});
 
-    }
+  }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
+  /** This method is called from within the constructor to
+   * initialize the form.
+   * WARNING: Do NOT modify this code. The content of this method is
+   * always regenerated by the Form Editor.
+   */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -333,7 +334,6 @@ public class FilePanel extends javax.swing.JPanel {
 
     private void hduListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMouseClicked
-        logger.entering("" + this.getClass(), "hduListMouseClicked");
         // launch viewer if double click
         if (evt.getClickCount() == 2)
         {
@@ -344,28 +344,30 @@ public class FilePanel extends javax.swing.JPanel {
     /*TO PUT ON ANOTHER PLACE*/
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[] x, double[] y,
-        double[] errorBar, boolean[] flags)
-    {
-        StringBuffer sb = new StringBuffer();
-        if(errorBar!=null){
-            logger.fine("x,y,err dimensions :"+x.length+","+y.length+","+errorBar.length);
-        }   else{
-            logger.fine("x,y dimensions :"+x.length+","+y.length);
-        }
-            
-        sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
+          double[] errorBar, boolean[] flags) {
+    StringBuffer sb = new StringBuffer();
+
+    if (logger.isLoggable(Level.FINE)) {
+      if (errorBar != null) {
+        logger.fine("x,y,err dimensions :" + x.length + "," + y.length + "," + errorBar.length);
+      } else {
+        logger.fine("x,y dimensions :" + x.length + "," + y.length);
+      }
+    }
+
+    sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
         for (int i = 0; i < x.length; i++)
         {
             // Output only if flags are given and are false
             if (flags==null || !flags[i])
             {
-                sb.append("<m x=\"" + x[i] + "\" y=\"" + y[i] + "\"");
+                sb.append("<m x=\"").append(x[i]).append("\" y=\"").append(y[i]).append("\"");
                 if (errorBar != null)
                 {
                     double lowEB = y[i] - errorBar[i];
                     double highEB = y[i] + errorBar[i];
-                    sb.append(" lowErrorBar=\"" + lowEB + "\"");
-                    sb.append(" highErrorBar=\"" + highEB + "\"");
+                    sb.append(" lowErrorBar=\"").append(lowEB).append("\"");
+                    sb.append(" highErrorBar=\"").append(highEB).append("\"");
                 }
                 sb.append("/>\n");
             }
@@ -381,9 +383,9 @@ public class FilePanel extends javax.swing.JPanel {
         if(errorBar!=null){
             logger.fine("x,y,err dimensions :"+x.length+","+y.length+","+errorBar.length);
         }   else{
-            logger.fine("x,y dimensions :"+x.length+","+y.length);
+            logger.log(Level.FINE, "x,y dimensions :{0},{1}", new Object[]{x.length, y.length});
         }
-        sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"" + datasetName + "\">\n");
+        sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
         for (int i = 0; i < x.length; i++)
         {
             for (int j = 0; j < x[0].length; j++)
@@ -391,13 +393,13 @@ public class FilePanel extends javax.swing.JPanel {
                 // Output only if flags are given and are false
                 if (flags==null || !flags[i][j])
                 {
-                    sb.append("<m x=\"" + x[i][j] + "\" y=\"" + y[i][j] + "\"");
+                    sb.append("<m x=\"").append(x[i][j]).append("\" y=\"").append(y[i][j]).append("\"");
                     if (errorBar != null)
                     {
                         double lowEB = y[i][j] - errorBar[i][j];
                         double highEB = y[i][j] + errorBar[i][j];
-                        sb.append(" lowErrorBar=\"" + lowEB + "\"");
-                        sb.append(" highErrorBar=\"" + highEB + "\"");
+                        sb.append(" lowErrorBar=\"").append(lowEB).append("\"");
+                        sb.append(" highErrorBar=\"").append(highEB).append("\"");
                     }
                     sb.append("/>\n");
                 }
@@ -450,14 +452,8 @@ public class FilePanel extends javax.swing.JPanel {
 
             /* Start plotting loop on retained HDU*/
             StringBuffer sb = new StringBuffer();
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
-                    //+ "<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\"" +
-                    //" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
-                    + "<plot>" +
-                    "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
-                    "<title>data versus spatial frequency</title>" +
-                    "<xLabel>spatial frequency (1/rad)</xLabel>" + "<yLabel>" + 
-                    requestedTables + "</yLabel>");
+            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?><plot><!-- Ptolemy plot, version 5.6 , PlotML format. --><title>data versus spatial frequency</title><xLabel>spatial frequency (1/rad)</xLabel><yLabel>");
+            sb.append(requestedTables).append("</yLabel>");
 
             for (int i = 0; i < retainedHdu; i++)
             {

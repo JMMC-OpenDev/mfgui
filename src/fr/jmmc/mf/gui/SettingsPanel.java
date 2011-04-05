@@ -13,8 +13,8 @@ import fr.jmmc.mf.models.Settings;
 public class SettingsPanel extends javax.swing.JPanel
 {
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.SettingsPanel");
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            SettingsPanel.class.getName());
    
     private FilesPanel filesPanel = null;
     private TargetsPanel targetsPanel = null;
@@ -38,8 +38,7 @@ public class SettingsPanel extends javax.swing.JPanel
      * @param sm the assocaited settings model
      */
     public void show(Settings s, SettingsModel sm)
-    {
-        logger.entering("" + this.getClass(), "show");
+    {        
         current = s;
 
         // @todo check why next lines are required

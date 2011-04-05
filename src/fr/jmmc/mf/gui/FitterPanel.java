@@ -11,8 +11,8 @@ public class FitterPanel extends javax.swing.JPanel {
     /**
      * Main logger.
      */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.FitterPanel");
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            FitterPanel.class.getName());
     Settings current = null;
     SettingsViewerInterface settingsViewer = null;
 
@@ -22,8 +22,7 @@ public class FitterPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void show(Settings s) {
-        logger.entering("" + this.getClass(), "show");
+    public void show(Settings s) {        
         current = s;
 
         if (s.getFitter() != null) {
@@ -59,7 +58,6 @@ public class FitterPanel extends javax.swing.JPanel {
 
     private void fitterComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_fitterComboBoxActionPerformed
-        logger.entering("" + this.getClass(), "fitterComboBoxActionPerformed");
         current.setFitter((String) fitterComboBox.getSelectedItem());
     }//GEN-LAST:event_fitterComboBoxActionPerformed
 

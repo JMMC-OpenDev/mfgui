@@ -20,7 +20,7 @@ public class NewModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
         mfgui.addSettings(new SettingsModel());
         fr.jmmc.mcs.gui.StatusBar.show("New model ready for modifications");
     }

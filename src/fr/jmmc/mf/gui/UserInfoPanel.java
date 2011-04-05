@@ -9,11 +9,10 @@ import fr.jmmc.mf.models.Settings;
  */
 public class UserInfoPanel extends javax.swing.JPanel
 {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.UserInfoPanel");
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            UserInfoPanel.class.getName());
     Settings current = null;
     SettingsViewerInterface settingsViewer = null;
-
    
     /** Creates new form UserInfoPanel */
     public UserInfoPanel(SettingsViewerInterface viewer)
@@ -26,8 +25,7 @@ public class UserInfoPanel extends javax.swing.JPanel
     }
 
     public void show(Settings s)
-    {
-        logger.entering("" + this.getClass(), "show");
+    {        
         current = s;
 
         if (s.getUserInfo() != null)

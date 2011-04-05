@@ -52,7 +52,7 @@ public class SaveFileAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
         // Open a filechooser in previous save directory
         JFileChooser fileChooser = new JFileChooser();
         if (lastDir != null) {

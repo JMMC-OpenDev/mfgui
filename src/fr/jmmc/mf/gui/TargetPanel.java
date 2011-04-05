@@ -80,7 +80,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
      * @param settingsModel its associated settingsModel
      */
     public void show(Target t, SettingsModel settingsModel) {
-        logger.entering("" + this.getClass(), "show");
+        logger.entering(className, "show");
 
         current = t;
         this.rootSettingsModel = settingsModel;
@@ -152,7 +152,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
     /* receive event on file list */
     public void valueChanged(ListSelectionEvent e) {
-        logger.entering("" + this.getClass(), "valueChanged");
+        logger.entering(className, "valueChanged");
 
         if (!listenToFileSelection || e.getValueIsAdjusting()) {
             return;
@@ -588,7 +588,7 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
 
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_removeModelButtonActionPerformed
-        logger.entering("" + this.getClass(), "removeModelButtonActionPerformed");
+        logger.entering(className, "removeModelButtonActionPerformed");
         Object[] values = modelList.getSelectedValues();
         for (int i = 0; i < values.length; i++) {
             Object object = values[i];
@@ -616,7 +616,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_addModelButtonActionPerformed
-        logger.entering("" + this.getClass(), "addModelButtonActionPerformed");
+        logger.entering(className, "addModelButtonActionPerformed");
         // Construct a new copy
         Model selectedModel = (Model) modelTypeComboBox.getSelectedItem();
         Model m;

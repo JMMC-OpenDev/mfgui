@@ -50,7 +50,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     Object[] params;
 
     params = s.getParameterListModel().toArray();
-    
+
     // we want to listen model change events
     if (!knownSettingsModels.contains(settingsModel)) {
       settingsModel.addObserver(this);
@@ -89,22 +89,22 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     yComboBoxActionPerformed(null);
   }
 
-  private void plotChi2(boolean log){
-     // Build command line arguments according to the widget states
-        String args="";
-        String type="Chi2";
-        if(log){
-            args+= "-o 'log_chi2=1' ";
-            type="log(Chi2)";
-        }
-        args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
-        if (jRadioButton1D.isSelected()) {
-            plotPanel.plot("getChi2Map", args, "1D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
-        } else {
-            args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
-            plotPanel.plot("getChi2Map", args, "2D "+type+" Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
-        }
-}
+  private void plotChi2(boolean log) {
+    // Build command line arguments according to the widget states
+    String args = "";
+    String type = "Chi2";
+    if (log) {
+      args += "-o 'log_chi2=1' ";
+      type = "log(Chi2)";
+    }
+    args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
+    if (jRadioButton1D.isSelected()) {
+      plotPanel.plot("getChi2Map", args, "1D " + type + " Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
+    } else {
+      args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
+      plotPanel.plot("getChi2Map", args, "2D " + type + " Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
+    }
+  }
 
   /** This method is called from within the constructor to
    * initialize the form.
@@ -333,12 +333,12 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
-        plotChi2(false);
+      plotChi2(false);
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 
-    private void updateTable() {
-        boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
-        boolean enabled = hasParam && settingsModel.isValid();
+  private void updateTable() {
+    boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
+    boolean enabled = hasParam && settingsModel.isValid();
     plotChi2Button.setEnabled(enabled);
     plotLogChi2Button.setEnabled(enabled);
     if (hasParam) {
@@ -362,10 +362,10 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         updateTable();
         oldYParam = yParam;
         if (yParam.hasMinValue()) {
-          yminFormattedTextField.setText("" + yParam.getMinValue());
+          yminFormattedTextField.setText(Double.toString(yParam.getMinValue()));
         }
         if (yParam.hasMaxValue()) {
-          ymaxFormattedTextField.setText("" + yParam.getMaxValue());
+          ymaxFormattedTextField.setText(Double.toString(yParam.getMaxValue()));
         }
       }
 }//GEN-LAST:event_yComboBoxActionPerformed
@@ -381,29 +381,28 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         updateTable();
         oldXParam = xParam;
         if (xParam.hasMinValue()) {
-          xminFormattedTextField.setText("" + xParam.getMinValue());
+          xminFormattedTextField.setText(Double.toString(xParam.getMinValue()));
         }
         if (xParam.hasMaxValue()) {
-          xmaxFormattedTextField.setText("" + xParam.getMaxValue());
+          xmaxFormattedTextField.setText(Double.toString(xParam.getMaxValue()));
         }
       }
     }//GEN-LAST:event_xComboBoxActionPerformed
 
     private void jRadioButton1DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1DActionPerformed
-        boolean flag = jRadioButton2D.isSelected();
-        yComboBox.setEnabled(flag);
-        ySamplingFormattedTextField.setEnabled(flag);
-        ymaxFormattedTextField.setEnabled(flag);
-        yminFormattedTextField.setEnabled(flag);
-        jLabel10.setEnabled(flag);
-        jLabel8.setEnabled(flag);
-        jLabel7.setEnabled(flag);
+      boolean flag = jRadioButton2D.isSelected();
+      yComboBox.setEnabled(flag);
+      ySamplingFormattedTextField.setEnabled(flag);
+      ymaxFormattedTextField.setEnabled(flag);
+      yminFormattedTextField.setEnabled(flag);
+      jLabel10.setEnabled(flag);
+      jLabel8.setEnabled(flag);
+      jLabel7.setEnabled(flag);
     }//GEN-LAST:event_jRadioButton1DActionPerformed
 
     private void plotLogChi2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotLogChi2ButtonActionPerformed
-        plotChi2(true);
+      plotChi2(true);
     }//GEN-LAST:event_plotLogChi2ButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton helpButton1;
