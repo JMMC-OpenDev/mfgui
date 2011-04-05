@@ -122,7 +122,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * in the right panel; 
      */
     public void valueChanged(TreeSelectionEvent e) {
-        logger.entering("" + this.getClass(), "valueChanged", e);
+        logger.entering(className, "valueChanged", e);
 
         Object o = e.getPath().getLastPathComponent();
         if (e.getNewLeadSelectionPath() != null) {
@@ -132,7 +132,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     private void showElement(Object o) {
-        logger.entering("" + this.getClass(), "showElement", o);
+        logger.entering(className, "showElement", o);
 
         if (o == null) {
             return;
@@ -199,7 +199,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * Responds to tree structure changes
      */
     public void treeStructureChanged(javax.swing.event.TreeModelEvent e) {
-        logger.entering("" + this.getClass(), "treeStructureChanged");
+        logger.entering(className, "treeStructureChanged");
         treeChanged(e);
         //showElement(rootSettingsModel.getRoot());
     }

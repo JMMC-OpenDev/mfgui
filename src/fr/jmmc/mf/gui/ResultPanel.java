@@ -25,7 +25,6 @@ public class ResultPanel extends javax.swing.JPanel {
     }
 
     public void show(ResultModel r, SettingsModel s) {
-        logger.entering("" + this.getClass(), "show");
         current = r;
         settingsModel = s;
         resultEditorPane.setContentType("text/html");

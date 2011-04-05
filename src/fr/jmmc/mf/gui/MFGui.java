@@ -200,13 +200,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      */
     public void initMenuBar()
     {
-        logger.entering("" + this.getClass(), "initMenuBar");
-    
-        // Add Advanced
-        JMenu advancedMenu = new JMenu();
-        advancedMenu.setText("Advanced");
-        //jMenuBar.add(advancedMenu);
-
         // Second level menus
         JMenuItem                 menuItem;
         Action                    action;

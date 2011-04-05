@@ -23,7 +23,7 @@ public class LoadDemoModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
         mfgui.addSettings(new SettingsModel(demoURL_));
     }
 }

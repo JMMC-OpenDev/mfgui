@@ -45,7 +45,7 @@ public class TabbedPanel extends javax.swing.JPanel
     {
         initComponents();
         resultPane.setText(result);
-        dateTextField.setText("" + new java.util.Date());
+        dateTextField.setText(new java.util.Date().toString());
     }
 
     /**

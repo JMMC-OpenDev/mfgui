@@ -1,6 +1,5 @@
 package fr.jmmc.mf.gui.models;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Residual;
@@ -12,7 +11,6 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
 import javax.swing.JFrame;
 import ptolemy.plot.plotml.PlotMLFrame;
 
@@ -23,7 +21,7 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     public final static String className = "fr.jmmc.mf.gui.models.SettingsModel";
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
     private SettingsModel settingsModel;
     private String htmlReport = null;
     private String xmlResult = null;
@@ -65,12 +63,12 @@ public class ResultModel extends DefaultMutableTreeNode {
     }
 
     public String getHtmlReport() {
-        logger.entering("" + this.getClass(), "getHtmlReport");
+        logger.entering(className, "getHtmlReport");
         return htmlReport;
     }
 
     public void genPlots() {
-        logger.entering("" + this.getClass(), "genPlots");
+        logger.entering(className, "genPlots");
         Hashtable<String, String> plotTobuild = new Hashtable();
         Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
@@ -131,14 +129,14 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     /** Plots using ptplot widgets */
     protected void ptplot(String plotName, boolean residuals) {
-        logger.entering("" + this.getClass(), "ptplot", plotName);
+        logger.entering(className, "ptplot", plotName);
         String xmlStr = null;
 
         logger.fine("Start plot generation:" + plotName + "(residuals=" + residuals + ")");
         // Construct xml document to plot
         String[] args = new String[]{"plotName", plotName};
         if (residuals) {
-            args = new String[]{"plotName", plotName, "residuals", "" + residuals};
+            args = new String[]{"plotName", plotName, "residuals", Boolean.toString(residuals)};
             plotName = plotName + " residuals";
         }
         xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",

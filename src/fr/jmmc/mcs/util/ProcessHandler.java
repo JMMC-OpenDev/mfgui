@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: ProcessHandler.java,v 1.4 2011-04-04 15:28:44 bourgesl Exp $"
+ * "@(#) $Id: ProcessHandler.java,v 1.5 2011-04-05 08:42:17 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2011/04/04 15:28:44  bourgesl
+ * close reader
+ *
  * Revision 1.3  2011/04/04 13:59:22  bourgesl
  * avoid print stack trace
  *
@@ -45,7 +48,7 @@ public class ProcessHandler
     /**
      * DOCUMENT ME!
      */
-    private final static Logger logger = Logger.getLogger("fr.jmmc.mcs.util.ProcessHandler");
+    static final Logger logger = Logger.getLogger(ProcessHandler.class.getName());
 
     /**
      * DOCUMENT ME!
@@ -100,9 +103,7 @@ public class ProcessHandler
      */
     public void start() throws IOException
     {
-        logger.entering("" + this.getClass(), "start");
-
-        if (process != null)
+      if (process != null)
         {
             logger.warning("process already started");
         }
@@ -130,7 +131,6 @@ public class ProcessHandler
      */
     public int waitFor() throws InterruptedException, java.io.IOException
     {
-        logger.entering("" + this.getClass(), "waitFor");
         logger.info("waiting for process");
 
         int retValue = process.waitFor();
@@ -157,8 +157,6 @@ public class ProcessHandler
      */
     public void stop()
     {
-        logger.entering("" + this.getClass(), "stop");
-
         if (process != null)
         {
             // try to determine if process has terminated
@@ -197,8 +195,6 @@ public class ProcessHandler
      */
     public void sendToStdin(String data) throws IOException
     {
-        logger.entering("" + this.getClass(), "sendToStdIn");
-
         if (process != null)
         {
             OutputStream out = process.getOutputStream();

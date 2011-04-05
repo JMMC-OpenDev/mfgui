@@ -26,7 +26,7 @@ public class SaveSettingsAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
 
         // @todo replace next coede part by enable and disabled event asociated to actions...
         SettingsModel settingsModel = mfgui.getSelectedSettings();

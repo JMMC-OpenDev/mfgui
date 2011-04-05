@@ -26,7 +26,7 @@ public class LoadModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
         //try {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());

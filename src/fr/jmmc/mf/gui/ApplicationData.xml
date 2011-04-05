@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.10"/>
+    <program name="LITpro" version="1.0.11a"/>
     <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
@@ -41,10 +41,17 @@
         </menu>
     </menubar>
     <releasenotes>
+       <release version="1.0.11">
+            <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
+            <prerelease version="1.0.11a1">
+                <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
+                <!--<change type="DOC">Update documentation</change>-->
+                <change type="CHANGE"></change>
+
+            </prerelease>
+        </release>
         <release version="1.0.10">
-            <!--
-                  <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
-            -->
+            <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
             <prerelease version="1.0.10a1">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->

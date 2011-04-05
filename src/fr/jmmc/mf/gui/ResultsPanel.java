@@ -5,26 +5,26 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Results;
 
 public class ResultsPanel extends javax.swing.JPanel {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.ResultsPanel");
-    Results current;
-    SettingsViewerInterface viewer = null;
-    SettingsModel settingsModel = null;
- 
-    /** Creates new form ResultPanel */
-    public ResultsPanel(SettingsViewerInterface viewer) {
-        this.viewer = viewer;
-        initComponents();
 
-        // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
-    }
+  static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+          ResultsPanel.class.getName());
+  Results current;
+  SettingsViewerInterface viewer = null;
+  SettingsModel settingsModel = null;
 
-    public void show(Results r, SettingsModel s) {
-        logger.entering("" + this.getClass(), "show");
-        current = r;
-        settingsModel = s;
-    }
+  /** Creates new form ResultPanel */
+  public ResultsPanel(SettingsViewerInterface viewer) {
+    this.viewer = viewer;
+    initComponents();
+
+    // build help button
+    helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
+  }
+
+  public void show(Results r, SettingsModel s) {
+    current = r;
+    settingsModel = s;
+  }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -50,7 +50,6 @@ public class ResultsPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton helpButton1;
     private javax.swing.JPanel jPanel1;

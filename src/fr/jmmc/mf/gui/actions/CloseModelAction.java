@@ -18,7 +18,7 @@ public class CloseModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering("" + this.getClass(), "actionPerformed");
+        logger.entering(className, "actionPerformed");
         mfgui.closeSettings();
     }
 }
