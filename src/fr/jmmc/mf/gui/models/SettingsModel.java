@@ -1,12 +1,12 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.gui.FeedbackReport;
 import fr.jmmc.mcs.gui.MessagePane;
 import fr.jmmc.mcs.util.FileUtils;
 import fr.jmmc.mcs.util.MimeType;
 
 import fr.jmmc.mcs.util.ObservableDelegate;
+import fr.jmmc.mcs.util.Urls;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
@@ -46,7 +46,6 @@ import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
 import java.io.Reader;
 import java.net.URL;
-import org.exolab.castor.xml.ValidationException;
 
 /**
  * This class manages the castor generated classes to bring
@@ -129,11 +128,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public SettingsModel(String url) throws IllegalStateException {
         try {
-            URL urlToLoad = new URL(url);
+            URL urlToLoad = Urls.parseURL(url);
+            
             init(new java.io.InputStreamReader(urlToLoad.openStream()));
+
             associatedFile = new java.io.File(urlToLoad.getFile());
-        } catch (MalformedURLException ex) {
-            throw new IllegalStateException("Can't load url " + url, ex);
+
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
