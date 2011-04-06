@@ -1,11 +1,14 @@
 /*******************************************************************************
  * JMMC project
  *
- * "@(#) $Id: LITproDocJUnitTest.java,v 1.1 2011-04-05 08:34:31 mella Exp $"
+ * "@(#) $Id: LITproDocJUnitTest.java,v 1.2 2011-04-06 14:11:38 mella Exp $"
  *
  * History
  * -------
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2011/04/05 08:34:31  mella
+ * First implementatio of basic tests
+ *
  *
  * Copied from AsproDocJUnitTest/bourges
  */
@@ -58,12 +61,12 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
   }
 
   /**
-   * Test if the application started correctly
+   * Test if the application can Load first demo settings
    */
   @Test
   @GUITest
-  public void shouldStart() {
-    window.menuItemWithPath("File", "Open demo settings","Tuturial example 1: Angular diameter of a single star").click();
+  public void shouldLoadDemo() {
+    window.menuItemWithPath("File", "Open demo settings","Tutorial example 1: angular diameter of a single star").click();
   }
   
   /**
@@ -82,7 +85,7 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
       frame.requireVisible();
       frame.moveToFront();
 
-      saveScreenshot(frame, "Aspro2-prefs.png");
+      saveScreenshot(frame, "LITpro-prefs.png");
 
       // close frame :
       frame.close();
