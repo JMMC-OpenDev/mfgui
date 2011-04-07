@@ -16,7 +16,6 @@
   </security>
   <resources>
     <j2se version="1.5+" initial-heap-size="256m" max-heap-size="1024m"/>
-    <property name="apple.laf.useScreenMenuBar" value="true"/>
 
     <!-- JMMC modules -->
     <jar href="jar/mfgui.jar" />
