@@ -6,6 +6,7 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mcs.gui.App;
 import fr.jmmc.mcs.gui.MessagePane;
 import fr.jmmc.mcs.gui.StatusBar;
+import fr.jmmc.mcs.gui.SwingSettings;
 import fr.jmmc.mcs.interop.SampCapability;
 import fr.jmmc.mcs.interop.SampMessageHandler;
 
@@ -50,8 +51,8 @@ import uk.ac.starlink.table.TableFormatException;
  */
 public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.40 2011-03-30 09:51:56 bourgesl Exp $";
-    final static String className=ModelFitting.class.getName();
+    final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
+    final static String className = ModelFitting.class.getName();
     final static Logger logger = Logger.getLogger(className);
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -116,42 +117,16 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
     protected static void exit() {
         logger.info("Thank you for using this software!");
     }
-    
+
     /**
      * Main entry point.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // Set the default locale to en-US locale (for Numerical Fields "." ",")
-        Locale locale = Locale.US;
-        Locale.setDefault(locale);
-        System.setProperty("user.language", "us");
-        logger.info("Setting locale to:" + locale);
-
-
-        // Set the default timezone to GMT to handle properly the date in UTC :
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-
-        // Change Swing defaults :
-        changeSwingDefaults();
-       
-        // Install exception handlers :
-        MCSExceptionHandler.installSwingHandler();
+        // init swing application for science
+        SwingSettings.setup();
 
         ModelFitting mf = new ModelFitting(args);
-    }
-
-    /**
-     * Change several default values for Swing rendering.
-     */
-    private static void changeSwingDefaults() {
-
-        // Force Locale for Swing Components :
-        JComponent.setDefaultLocale(Locale.US);
-
-        // Let the tooltip stay longer (60s) :
-        ToolTipManager.sharedInstance().setInitialDelay(250);
-        ToolTipManager.sharedInstance().setDismissDelay(60000);
     }
 
     /** This is the main wrappers method to execute yoga actions.
@@ -161,7 +136,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile){
+    public static Response execMethod(String methodName, java.io.File xmlFile) {
         return execMethod(methodName, xmlFile, "");
     }
 
@@ -172,8 +147,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg)
-             {
+    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
             xmlResult = doPost(methodName, xmlFile, methodArg);
@@ -209,7 +183,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
      *
      * @return the output of the process
      */
-    private static String doExec(String methodName, java.io.File xmlFile, String methodArg){
+    private static String doExec(String methodName, java.io.File xmlFile, String methodArg) {
         try {
             String result = "";
             String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
@@ -235,7 +209,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
             return result;
         } catch (IOException ex) {
             throw new IllegalStateException("Can't execute LITpro local service", ex);
-        } catch(InterruptedException ex){
+        } catch (InterruptedException ex) {
             throw new IllegalStateException("LITpro local service have been interrupted", ex);
         }
     }
@@ -278,7 +252,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
-        
+
         final PostMethod myPost = new PostMethod(targetURL);
         try {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
@@ -302,13 +276,13 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                 result = sw.toString();
 
                 if (logger.isLoggable(Level.FINE)) {
-                  logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
-              }
+                    logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
+                }
 
             } else {
 
                 if (logger.isLoggable(Level.FINE)) {
-                  logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
+                    logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
                 }
 
                 throw new IllegalStateException(
@@ -330,7 +304,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         }
 
         if (logger.isLoggable(Level.FINEST)) {
-          logger.finest("post result=\n" + result);
+            logger.finest("post result=\n" + result);
         }
         return result;
     }
@@ -352,11 +326,11 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         try {
             topcat.addTable(topcat.getTableFactory().makeStarTable(filename), filename, true);
         } catch (TableFormatException ex) {
-            throw new IllegalStateException("Can't make topcat display file "+filename,ex);
+            throw new IllegalStateException("Can't make topcat display file " + filename, ex);
         } catch (IOException ex) {
-            throw new IllegalStateException("Can't make topcat display file "+filename,ex);
+            throw new IllegalStateException("Can't make topcat display file " + filename, ex);
         }
-        
+
     }
 
     private void declareInteroperability() {
@@ -373,8 +347,8 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
              */
             protected void processMessage(final String senderId, final Message message) throws SampException {
 
-                final String xmlModel = (String)message.getParam("model");
-                final String filename = (String)message.getParam("filename");
+                final String xmlModel = (String) message.getParam("model");
+                final String filename = (String) message.getParam("filename");
 
                 if (filename == null) {
                     throw new SampException("Missing parameter 'filename'");
@@ -389,13 +363,13 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                 sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
 
                 // Try to read file on disk as one oifits file
-                sm.addFile(new File(filename));                
+                sm.addFile(new File(filename));
 
                 // Try to build one new model object from given string
                 final StringReader sr = new StringReader(xmlModel);
                 Model modelContainer = null;
                 modelContainer = (Model) UtilsClass.unmarshal(Model.class, sr);
-                
+
                 final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
                 final String targetIdent = f.getOitarget(0).getTarget();
                 final Target target = sm.addTarget(targetIdent);
@@ -406,6 +380,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
                 // Refresh GUI :
                 SwingUtilities.invokeLater(new Runnable() {
+
                     /**
                      * Synchronized by EDT
                      */
@@ -437,7 +412,9 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         }
 
         public void processTerminated(int returnedValue) {
-            logger.entering(this.getClass().getName(), "processTerminated");
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.FINE, "processTerminated");
+            }
         }
 
         public void errorOccured(Exception e) {
@@ -445,9 +422,10 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         }
 
         public void outputOccured(String line) {
-            logger.entering(this.getClass().getName(), "outputOccured");
             sb.append(line);
-            logger.finest("occured line:" + line);
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("occured line:" + line);
+            }
         }
 
         public String getContent() {
