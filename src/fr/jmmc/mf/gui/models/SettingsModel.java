@@ -1292,10 +1292,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         MessagePane.showMessage(checker.getCheckReport());
 
         OITarget oiTarget = fits.getOiTarget();
-
-        oiTarget.getTarget();
+        
         if (oiTarget == null) {
             // throw new FitsException("Your file must contains one target / one OITARGET table");
+            MessagePane.showErrorMessage("Your file '"+filename+"' was not loaded because it does not contain one OI_TARGET table.");
             return false;
         }
         String[] targetNames;
