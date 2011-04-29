@@ -40,6 +40,7 @@ public class LoadModelAction extends RegisteredAction {
             File file = fileChooser.getSelectedFile();
             lastDir = file.getParent();
             mfgui.addSettings(new SettingsModel(file));
+            logger.info("Loading '"+file.getName()+"' setting file");
         }
     }
 }
