@@ -99,15 +99,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Creates a new empty SettingsModel object.
      */
     public SettingsModel() {
-        logger.entering(className, "SettingsModel()");
+        logger.info("Creating one new Settings");
         init(null);
     }
 
     /**
      * Creates a new empty SettingsModel object.
      */
-    public SettingsModel(java.io.File fileToLoad)  throws IllegalStateException {
-        logger.entering(className, "SettingsModel", fileToLoad);
+    public SettingsModel(java.io.File fileToLoad) throws IllegalStateException {
+        logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
         try {
             init(new java.io.FileReader(fileToLoad));
         } catch (FileNotFoundException ex) {
@@ -115,9 +115,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         associatedFile = fileToLoad;
     }
-    
+
     public SettingsModel(java.net.URL urlToLoad) throws IllegalStateException {
-        logger.entering(className, "SettingsModel", urlToLoad);
+        logger.info("Loading new Settings from url " + urlToLoad.toString());
         try {
             init(new java.io.InputStreamReader(urlToLoad.openStream()));
             associatedFile = new java.io.File(urlToLoad.getFile());
@@ -127,9 +127,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public SettingsModel(String url) throws IllegalStateException {
+        logger.info("Loading new Settings from : " + url);
         try {
             URL urlToLoad = Urls.parseURL(url);
-            
+
             init(new java.io.InputStreamReader(urlToLoad.openStream()));
 
             associatedFile = new java.io.File(urlToLoad.getFile());
@@ -466,7 +467,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public void removeModel(Target parentTarget, Model oldModel) {
         logger.entering(className, "removeModel", new Object[]{parentTarget, oldModel});
-        if(parentTarget==null){
+        if (parentTarget == null) {
             logger.warning("Something strange appears while trying to remove one model without associated target");
             return;
         }
@@ -898,7 +899,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         isModified = flag;
     }
 
-    public java.io.File getTempFile(boolean keepResult){
+    public java.io.File getTempFile(boolean keepResult) {
         logger.entering(className, "getTempFile", keepResult);
         java.io.File tmpFile;
         tmpFile = FileUtils.getTempFile("tmpSettings", ".xml");
@@ -990,7 +991,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "save");
 
         if (associatedFile != null) {
-            saveSettingsFile(associatedFile, false);            
+            saveSettingsFile(associatedFile, false);
         } else {
             // trigger saveSettingsAction
             MFGui.saveSettingsAction.actionPerformed(null);
@@ -1292,10 +1293,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         MessagePane.showMessage(checker.getCheckReport());
 
         OITarget oiTarget = fits.getOiTarget();
-        
+
         if (oiTarget == null) {
             // throw new FitsException("Your file must contains one target / one OITARGET table");
-            MessagePane.showErrorMessage("Your file '"+filename+"' was not loaded because it does not contain one OI_TARGET table.");
+            MessagePane.showErrorMessage("Your file '" + filename + "' was not loaded because it does not contain one OI_TARGET table.");
             return false;
         }
         String[] targetNames;
@@ -1393,7 +1394,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 rootSettings.setResults(oldResults);
             }
         }
-        logger.fine("finish file writting into " + fileToSave);
+        logger.info("Settings saved to file " + fileToSave.getAbsolutePath());
 
         if (fileToSave.equals(associatedFile)) {
             setModified(false);
@@ -1624,7 +1625,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (child == plotContainerNode) {
                 return idx;
             }
-            logger.warning("parent:" + parent + " does not seem to contain:" + child);
+            // TODO fix that point!
+            logger.finest("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getFiles()) {
             File[] elements = rootSettings.getFiles().getFile();
@@ -1635,7 +1637,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     return i;
                 }
             }
-            logger.warning("parent:" + parent + " does not seem to contain:" + child);
+            // TODO fix that point!
+            logger.fine("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getTargets()) {
             Object[] elements = rootSettings.getTargets().getTarget();
@@ -1645,7 +1648,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     return i;
                 }
             }
-            logger.warning("parent:" + parent + " does not seem to contain:" + child);
+            // TODO fix that point!
+            logger.fine("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getParameters()) {
             Object[] elements = rootSettings.getParameters().getParameter();
@@ -1656,7 +1660,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
 
             }
-            logger.warning("parent:" + parent + " does not seem to contain:" + child);
+            // TODO fix that point!
+            logger.fine("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getResults()) {
             Object[] elements = rootSettings.getResults().getResult();
@@ -1672,7 +1677,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     return i;
                 }
             }
-            logger.warning("parent:" + parent + " does not seem to contain:" + child);
+            // TODO fix that point!
+            logger.fine("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else {
             // Search for fileLinks or models children into Target
@@ -1695,12 +1701,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                             return j;
                         }
                     }
-                    logger.warning("parent:" + parent + " does not seem to contain:" + child);
+                    // TODO fix that point!
+                    logger.fine("parent:" + parent + " does not seem to contain:" + child);
                     return -1;
                 }
             }
         }
-        logger.warning("missing code for parent=" + parent + " and child=" + child);
+        // TODO fix that point!
+        logger.fine("missing code for parent=" + parent + " and child=" + child);
         return 0;
     }
 
@@ -1754,7 +1762,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /** Marshal the settings and return it as a String */
-    public String toXml(){
+    public String toXml() {
         logger.entering(className, "toXml");
         logger.fine("Start of marshalling");
         java.io.StringWriter writer = new java.io.StringWriter();
@@ -1769,6 +1777,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public String toLITproDesc() {
         logger.entering(className, "toLITproDesc");
         return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
-                    new String[]{});        
+                new String[]{});
     }
 }
