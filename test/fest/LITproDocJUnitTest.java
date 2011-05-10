@@ -52,10 +52,11 @@ import org.junit.Test;
  */
 public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
 
+    /** queries to perform */
+    private static final int QUERY_ITERATIONS = 20;
+
     /** 60s timeout */
-    private static final Timeout LONG_TIMEOUT = Timeout.timeout(60 * 1000l);
-    /** queries to perform (500) */
-    private static final int QUERY_ITERATIONS = 30;
+    private static final Timeout LONG_TIMEOUT = Timeout.timeout(60 * 1000l);    
     /** time to wait between queries (ms) */
     private static final long QUERY_PAUSE = 1 * 200l;
 
@@ -90,10 +91,40 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
     /**
      * Test if the application can make N queries correctly
      *
-     * Timer [SearchCal (ms) - ms] [500] (threshold = 5000.0 ms) {
-     *   Low  : Timer [SearchCal (ms) - ms] [494] {num = 494 : min = 1057.43562, avg = 3775.94762, max = 4905.56433, acc = 1865318.12799, std = 227.17308 [490] std low  = 246.11642 [139] std high = 222.81639 [351] }
-     *   High : Timer [SearchCal (ms) - ms] [6] {num = 6 : min = 5130.75824, avg = 7191.16121, max = 10874.424, acc = 43146.96727, std = 0.0 [2] std low  = 0.0 [2] std high = 0.0 [0] }
+     * Sans compression de fichier cote client
+     * LABO
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+     *  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1479.47662, avg = 1749.61253, max = 3491.18581, acc = 34992.2506, std = 280.24085 [16] std low  = 395.698 [13] std high = 0.0 [3] }
+     *  High : Timer [LITpro (ms) - ms] [0]
      * }
+     * ADSL2:
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2352.07077, avg = 2610.93381, max = 4081.17988, acc = 52218.67628, std = 202.38237 [16] std low  = 305.54489 [12] std high = 0.0 [4] }
+  High : Timer [LITpro (ms) - ms] [0]
+}
+     * ADSL2 et reponse serveur gzippee:
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2293.26749, avg = 2648.40666, max = 4076.51545, acc = 52968.1333, std = 329.80932 [16] std low  = 301.387 [12] std high = 0.0 [4] }
+  High : Timer [LITpro (ms) - ms] [0]
+}
+}
+     *
+     * Avec compression de fichier
+     * LABO
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+     *  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1478.70491, avg = 1735.373, max = 3291.45839, acc = 34707.46006, std = 225.31403 [16] std low  = 340.36363 [12] std high = 0.0 [4] }
+     *  High : Timer [LITpro (ms) - ms] [0]
+     *}
+     * ADSL2
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1730.28448, avg = 1972.07167, max = 3535.25745, acc = 39441.43348, std = 222.11101 [16] std low  = 310.72906 [13] std high = 0.0 [3] }
+  High : Timer [LITpro (ms) - ms] [0]
+}
+     * ADSL2  et reponse serveur gzippee:
+     * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
+  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1684.15672, avg = 2033.1817, max = 3558.05825, acc = 40663.63419, std = 470.95373 [16] std low  = 378.57893 [10] std high = 0.0 [6] }
+  High : Timer [LITpro (ms) - ms] [0]
+}
      */
     @Test
     @GUITest
