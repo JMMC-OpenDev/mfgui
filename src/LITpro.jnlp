@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<jnlp spec="1.0+" codebase="REPLACECODEBASE" href="REPLACEHREF">
+<jnlp spec="1.0+" codebase="@GENERATED@" href="@GENERATED@">
   <information>
     <title>LITpro</title>
     <vendor>JMMC</vendor>
@@ -18,15 +18,18 @@
     <j2se version="1.5+" initial-heap-size="256m" max-heap-size="1024m"/>
 
     <!-- JMMC modules -->
+    <jar href="jar/jmcs.jar" />
     <jar href="jar/mfgui.jar" />
     <jar href="jar/mfgui-doc.jar" />
-    <jar href="jar/Jmcs.jar" />
     <jar href="jar/oitools.jar" />
+    
+    <!-- JMCS libs -->
+    <extension href="../JmcsLibs/JmcsLibs.jnlp"/>
+
     <jar href="jar/ptplot5.6.jar" />
 
     <!-- Astrogrid topcat -->
-    <extension href="topcat-parts.jnlp">
-    </extension>
+    <extension href="topcat-parts.jnlp"/>
   </resources>
   <application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>
 </jnlp>
