@@ -11,7 +11,6 @@ import fr.jmmc.mcs.interop.SampCapability;
 import fr.jmmc.mcs.interop.SampMessageHandler;
 
 import fr.jmmc.mcs.util.Http;
-import fr.jmmc.mcs.util.MCSExceptionHandler;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
@@ -33,14 +32,11 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 
-import java.util.*;
 import java.util.logging.*;
 
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
 import uk.ac.starlink.table.TableFormatException;
@@ -385,10 +381,10 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
                      * Synchronized by EDT
                      */
                     public void run() {
-                        gui.addSettings(sm);
+                        // bring this application to front :
+                        App.showFrameToFront();
 
-                        // change focus :
-                        App.getFrame().toFront();
+                        gui.addSettings(sm);
                     }
                 });
             }
