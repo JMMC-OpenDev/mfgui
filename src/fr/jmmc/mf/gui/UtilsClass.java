@@ -1,6 +1,7 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.mcs.gui.MessagePane;
+import fr.jmmc.mcs.gui.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.mcs.util.FileUtils;
 
 import fr.jmmc.mcs.util.Urls;
@@ -18,8 +19,6 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
 import java.awt.BorderLayout;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
@@ -521,29 +520,32 @@ public class UtilsClass {
    */
   public static boolean askToSaveUserModification(ModifyAndSaveObject object) {
     logger.entering(className, "askToSaveUserModification");
-    if (object == null) {
-      return true;
-    }
-    if (object.isModified()) {
-      // Ask the user if he wants to save modifications
-      Object[] options = {"Save", "Cancel", "Don't Save"};
-      int result = JOptionPane.showOptionDialog(object.getComponent(),
-              "Do you want to save changes to this document before closing ?\nIf you don't save, your changes will be lost.\n\n",
-              null, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options,
-              options[0]);
 
-      // If the User clicked the "Save" button, save
-      if (result == 0) {
-        object.save();
-        // assert that file has been saved
-        if (object.isModified()) {
-          //ask again
-          return askToSaveUserModification(object);
-        }
-      }
-      // If the user clicked the "Cancel" button, return true
-      if (result == 1) {
-        return false;
+    if (object != null && object.isModified()) {
+
+      // Ask the user if he wants to save modifications
+      final ConfirmSaveChanges result = MessagePane.showConfirmSaveChangesBeforeClosing();
+
+      // Handle user choice
+      switch (result) {
+        // If the user clicked the "Save" button, save and exit
+        case Save:
+          object.save();
+          // assert that file has been saved
+          if (object.isModified()) {
+            //ask again
+            return askToSaveUserModification(object);
+          }
+          break;
+
+        // If the user clicked the "Don't Save" button, exit
+        case Ignore:
+          break;
+
+        // If the user clicked the "Cancel" button or pressed 'esc' key, don't exit
+        case Cancel:
+        default: // Any other case
+          return false;
       }
     }
     return true;
