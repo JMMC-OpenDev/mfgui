@@ -46,7 +46,7 @@
             <prerelease version="1.0.11a1">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
-                <change type="CHANGE"></change>
+                <change type="CHANGE">Use Samp to display fits tables (require previous startup of topcat)</change>
 
             </prerelease>
         </release>
