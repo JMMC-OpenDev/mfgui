@@ -1,6 +1,6 @@
-/*
-JMMC
- */
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mcs.gui.App;
@@ -39,7 +39,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
-import uk.ac.starlink.table.TableFormatException;
 
 /**
  *
@@ -310,25 +309,6 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         return doPost(methodName, xmlFile, null);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param filename DOCUMENT ME!
-     */
-    public static void startFitsViewer(String filename) {
-        logger.fine("request fits viewer to show '" + filename + "'");
-
-        uk.ac.starlink.topcat.ControlWindow topcat = uk.ac.starlink.topcat.ControlWindow.getInstance();
-        try {
-            topcat.addTable(topcat.getTableFactory().makeStarTable(filename), filename, true);
-        } catch (TableFormatException ex) {
-            throw new IllegalStateException("Can't make topcat display file " + filename, ex);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Can't make topcat display file " + filename, ex);
-        }
-
-    }
-
     private void declareInteroperability() {
         // Add handler to load one new setting given oifits and model description
 
@@ -427,5 +407,5 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
         public String getContent() {
             return sb.toString();
         }
-    }
+    }  
 }
