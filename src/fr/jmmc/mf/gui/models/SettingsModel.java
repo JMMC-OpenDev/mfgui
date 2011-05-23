@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.gui.*;
@@ -1119,17 +1122,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.warning("Can't find parent of :" + child);
-        logger.warning("Models are:");
+        logger.fine("Can't find parent of :" + child);
+        logger.fine("Models are:");
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
             Model[] models = target.getModel();
             for (int j = 0; j < models.length; j++) {
                 Model model = models[j];
-                logger.warning("Models are:" + model);
+                logger.fine("Models are:" + model);
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
@@ -1151,7 +1154,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
@@ -1173,7 +1176,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
