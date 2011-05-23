@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -10,9 +13,9 @@ import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
-import java.util.logging.Level;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -85,7 +88,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
     /** Return the syntax used by yorick code to describe a list of targets */
     private String getGroupValue(Target target) {
-        return Integer.toString( settingsModel.getTargetListModel().indexOf(target) + 1 );
+        return Integer.toString(settingsModel.getTargetListModel().indexOf(target) + 1);
     }
 
     private String getGroupValue(Object[] targets) {
@@ -206,11 +209,28 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
          */
     }
 
+    /**
+     * Return the list of valid targets to plot
+     * @return one array with valid targets
+     */
     private Object[] getTargetsToPlot() {
+        Object[] inputTargets;
+
         if (useAllTargetsCheckBox.isSelected()) {
-            return settingsModel.getRootSettings().getTargets().getTarget();
+            inputTargets = settingsModel.getRootSettings().getTargets().getTarget();
+        } else {
+            inputTargets = targetList.getSelectedValues();
         }
-        return targetList.getSelectedValues();
+
+        ArrayList<Target> l = new ArrayList();
+        for (int i = 0; i < inputTargets.length; i++) {
+            Target t = (Target) inputTargets[i];
+            if (t.isValid()) {
+                l.add(t);
+            }
+        }
+
+        return l.toArray();
     }
 
     /** This method is called from within the constructor to
@@ -463,10 +483,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         // disable widget to flag automatic action into radialComboBoxActionPerformed
         radialComboBox.setEnabled(false);
         // Check if any target is selected
-        boolean someSelection = targetList.getSelectedIndex() >= 0;
-        boolean oneOrMoreTarget = targetList.getModel().getSize() > 0;
-        boolean somethingToPlot = someSelection
-                || (oneOrMoreTarget && useAllTargetsCheckBox.isSelected());
+        Object[] targetsToPlot = getTargetsToPlot();
+        boolean somethingToPlot = targetsToPlot.length >= 1;
         plotBaselinesButton.setEnabled(somethingToPlot);
         plotRadialButton.setEnabled(somethingToPlot);
         plotUvCoverageButton.setEnabled(somethingToPlot);
