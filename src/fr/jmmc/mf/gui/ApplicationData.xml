@@ -47,7 +47,7 @@
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
                 <change type="CHANGE">Use Samp to display fits tables (require previous startup of topcat)</change>
-
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
             </prerelease>
         </release>
         <release version="1.0.10">
