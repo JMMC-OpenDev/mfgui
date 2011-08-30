@@ -137,7 +137,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
 
         yogaPanel.setLayout(new java.awt.GridBagLayout());
 
-        jCheckBox1.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "yoga.remote.use"));
+        jCheckBox1.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "yoga.remote.use"));
         jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -153,7 +153,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel1, gridBagConstraints);
 
-        jTextField1.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(myPreferences,"yoga.remote.url"));
+        jTextField1.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.remote.url"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -167,7 +167,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel2, gridBagConstraints);
 
-        jTextField2.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(myPreferences,"yoga.local.home"));
+        jTextField2.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.local.home"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -197,7 +197,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel6, gridBagConstraints);
 
-        toolbarCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "show.toolbar"));
+        toolbarCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "show.toolbar"));
         toolbarCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -214,7 +214,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel7, gridBagConstraints);
 
-        saveResultCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "save.results"));
+        saveResultCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "save.results"));
         saveResultCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -223,7 +223,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.weightx = 1.0;
         yogaPanel.add(saveResultCheckBox, gridBagConstraints);
 
-        jTextField3.setDocument(fr.jmmc.mcs.util.PreferencedDocument.getInstance(myPreferences,"user.fov"));
+        jTextField3.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"user.fov"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -241,7 +241,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        tooltipsCheckBox.setModel(fr.jmmc.mcs.util.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
+        tooltipsCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
         tooltipsCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

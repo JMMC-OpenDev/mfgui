@@ -4,12 +4,12 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.gui.MessagePane;
-import fr.jmmc.mcs.util.FileUtils;
-import fr.jmmc.mcs.util.MimeType;
+import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.util.MimeType;
 
-import fr.jmmc.mcs.util.ObservableDelegate;
-import fr.jmmc.mcs.util.Urls;
+import fr.jmmc.jmcs.util.ObservableDelegate;
+import fr.jmmc.jmcs.util.Urls;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;

@@ -71,6 +71,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.data.preference.PreferencesException;
 import fr.jmmc.mcs.util.*;
 
 
@@ -78,7 +79,7 @@ import fr.jmmc.mcs.util.*;
 /**
  * This is a preference dedicated to the java Model Fitting Client.
  */
-public class Preferences extends fr.jmmc.mcs.util.Preferences
+public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
 {    
 
     /** Singleton instance */
@@ -87,10 +88,9 @@ public class Preferences extends fr.jmmc.mcs.util.Preferences
     /** Class Name */
     private final static String className_= "fr.jmmc.mf.gui.Preferences";
     /** Logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className_);
 
-    
     private static String _version = ModelFitting.getSharedApplicationDataModel().getProgramVersion();
     /**
      * Privatized constructor that must be empty.

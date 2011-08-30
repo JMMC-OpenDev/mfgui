@@ -1,12 +1,12 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
-import fr.jmmc.mcs.util.MimeType;
+import fr.jmmc.jmcs.util.MimeType;
 
 public class LoadModelAction extends RegisteredAction {
 

@@ -1,10 +1,10 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.MessagePane;
-import fr.jmmc.mcs.gui.MessagePane.ConfirmSaveChanges;
-import fr.jmmc.mcs.util.FileUtils;
+import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.MessagePane.ConfirmSaveChanges;
+import fr.jmmc.jmcs.util.FileUtils;
 
-import fr.jmmc.mcs.util.Urls;
+import fr.jmmc.jmcs.util.Urls;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Message;

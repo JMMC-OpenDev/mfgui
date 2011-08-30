@@ -28,6 +28,7 @@
  ******************************************************************************/
 package fr.jmmc.mcs.util;
 
+import fr.jmmc.jmcs.util.FileUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

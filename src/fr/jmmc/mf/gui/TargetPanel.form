@@ -46,7 +46,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.mcs.gui.NumericJTable()"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.jmcs.gui.NumericJTable()"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -120,7 +120,7 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileListMouseClicked"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.mcs.gui.CheckBoxJList();"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.jmcs.gui.CheckBoxJList();"/>
                 <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="TargetPanel_fileList"/>
               </AuxValues>
             </Component>

@@ -1,7 +1,7 @@
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.mcs.util.MimeType;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
