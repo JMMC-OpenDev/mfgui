@@ -5,7 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Model;
@@ -93,7 +93,7 @@ public class ModelPanel extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        parametersTable = new fr.jmmc.mcs.gui.NumericJTable();
+        parametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
         jPanel3 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));

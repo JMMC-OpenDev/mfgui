@@ -1,6 +1,6 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
@@ -106,7 +106,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         jTree1 = new javax.swing.JTree();
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
-        sharedParametersTable = new fr.jmmc.mcs.gui.NumericJTable();
+        sharedParametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
         helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Parameter list"));

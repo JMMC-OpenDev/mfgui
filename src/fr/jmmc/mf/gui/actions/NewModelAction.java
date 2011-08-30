@@ -1,7 +1,7 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 
@@ -23,6 +23,6 @@ public class NewModelAction extends RegisteredAction {
         logger.entering(className, "actionPerformed");
         mfgui.addSettings(new SettingsModel());
         logger.info("New settings created and loaded into the GUI");
-        fr.jmmc.mcs.gui.StatusBar.show("New model ready for modifications");
+        fr.jmmc.jmcs.gui.StatusBar.show("New model ready for modifications");
     }
 }

@@ -3,8 +3,8 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.MessagePane;
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.SampSendFits;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
@@ -735,7 +735,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-     protected class CheckEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction
+     protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
     {
         public CheckEmbeddedFileAction()
         {
@@ -751,7 +751,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
      
-    protected class ShowEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction
+    protected class ShowEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
     {
         public ShowEmbeddedFileAction()
         {
@@ -777,7 +777,7 @@ public class FilePanel extends javax.swing.JPanel {
     }
 
 
-    protected class SaveEmbeddedFileAction extends fr.jmmc.mcs.util.MCSAction
+    protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
     {
         public String lastDir = System.getProperty("user.home");
 

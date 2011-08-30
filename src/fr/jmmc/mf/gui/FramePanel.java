@@ -1,6 +1,6 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.SaveFileAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;

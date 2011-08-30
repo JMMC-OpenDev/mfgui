@@ -1,7 +1,7 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.File;
@@ -99,7 +99,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         listenToFileSelection = false;
         // a new empty chekbox list is created each time, because the selection can't be reset
-        fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
+        fileList = new fr.jmmc.jmcs.gui.CheckBoxJList();
         jScrollPane1.setViewportView(fileList);
         fileList.addListSelectionListener(this);
 
@@ -278,12 +278,12 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel5 = new javax.swing.JPanel();
-        parametersTable = new fr.jmmc.mcs.gui.NumericJTable();
+        parametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        fileList = new fr.jmmc.mcs.gui.CheckBoxJList();
+        fileList = new fr.jmmc.jmcs.gui.CheckBoxJList();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         modelList = new javax.swing.JList();

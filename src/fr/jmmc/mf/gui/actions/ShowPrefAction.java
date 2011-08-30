@@ -1,7 +1,7 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import java.awt.event.ActionEvent;
 
 public class ShowPrefAction extends RegisteredAction {

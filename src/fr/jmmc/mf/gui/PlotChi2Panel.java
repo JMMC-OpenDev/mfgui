@@ -1,6 +1,6 @@
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Parameter;
@@ -132,7 +132,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         xComboBox = new javax.swing.JComboBox();
         yComboBox = new javax.swing.JComboBox();
         tablePanel = new javax.swing.JPanel();
-        jTable1 = new fr.jmmc.mcs.gui.NumericJTable();
+        jTable1 = new fr.jmmc.jmcs.gui.NumericJTable();
         jPanel1 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jRadioButton1D = new javax.swing.JRadioButton();

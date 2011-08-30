@@ -3,8 +3,8 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.mcs.interop.SampCapability;
-import fr.jmmc.mcs.interop.SampCapabilityAction;
+import fr.jmmc.jmcs.network.interop.SampCapability;
+import fr.jmmc.jmcs.network.interop.SampCapabilityAction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;

@@ -5,6 +5,8 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.util.Urls;
+import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.SaveSettingsAction;
 import fr.jmmc.mf.gui.actions.ShowPrefAction;
 import fr.jmmc.mf.gui.actions.LoadDemoModelAction;
@@ -14,9 +16,7 @@ import fr.jmmc.mf.gui.actions.LoadRemoteModelAction;
 import fr.jmmc.mf.gui.actions.CloseModelAction;
 import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mcs.util.*;
+import fr.jmmc.jmcs.gui.StatusBar;
 
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
@@ -59,6 +59,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
     private static MFGui instance = null;
     
     private static javax.swing.JTabbedPane tabbedPane_;
+    private static final long serialVersionUID = 1L;
 
     /** Creates new form MFGui */
     public MFGui(String[] filenames)
@@ -127,10 +128,10 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         }
 
         // handle frame icon
-        this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/mcs/gui/favicon.png"))).getImage());
+        this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
 
         pack();
-        fr.jmmc.mcs.gui.StatusBar.show("Application inited");
+        fr.jmmc.jmcs.gui.StatusBar.show("Application inited");
     }
 
     public static void showToolbar(boolean visible){
@@ -154,7 +155,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         SettingsPane p = new SettingsPane(settingsModel);
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
-        fr.jmmc.mcs.gui.StatusBar.show("Settings loaded");
+        fr.jmmc.jmcs.gui.StatusBar.show("Settings loaded");
     }
    
    public void closeSettings(){
@@ -231,6 +232,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         final String[] fargs = args;
         java.awt.EventQueue.invokeLater(new Runnable()
             {
+            @Override
                 public void run()
                 {
                     new MFGui(fargs).setVisible(true);
@@ -242,6 +244,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowOpened(WindowEvent e)
     {
     }
@@ -250,6 +253,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowClosing(WindowEvent e)
     {
         ModelFitting.quitAction().actionPerformed(null);
@@ -259,6 +263,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowClosed(WindowEvent e)
     {
     }
@@ -267,6 +272,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowIconified(WindowEvent e)
     {
     }
@@ -275,6 +281,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowDeiconified(WindowEvent e)
     {
     }
@@ -283,6 +290,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowActivated(WindowEvent e)
     {
     }
@@ -291,6 +299,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      * Listen window event.
      * @param e window event.
      */
+    @Override
     public void windowDeactivated(WindowEvent e)
     {
     }
@@ -309,5 +318,4 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         }
         return UtilsClass.checkUserModificationToQuit(objs);
     }
-
-    }
+}

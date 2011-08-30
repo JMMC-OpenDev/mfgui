@@ -2,9 +2,9 @@ package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.gui.FeedbackReport;
-import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mcs.util.MCSAction;
+import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.StatusBar;
+import fr.jmmc.jmcs.gui.action.MCSAction;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Settings;
 import java.awt.event.ActionEvent;

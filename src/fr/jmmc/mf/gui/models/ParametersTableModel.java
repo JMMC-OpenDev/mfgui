@@ -1,6 +1,6 @@
 package fr.jmmc.mf.gui.models;
 
-import fr.jmmc.mcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;

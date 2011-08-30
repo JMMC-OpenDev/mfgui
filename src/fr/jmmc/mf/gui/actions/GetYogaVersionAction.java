@@ -1,7 +1,7 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import java.awt.event.ActionEvent;
 
 public class GetYogaVersionAction extends RegisteredAction {
@@ -22,6 +22,6 @@ public class GetYogaVersionAction extends RegisteredAction {
         logger.fine("Requesting yoga \'" + methodName + "\' call");        
             String v;
             v = UtilsClass.getOutputMsg(ModelFitting.execMethod(methodName, null));
-            fr.jmmc.mcs.gui.StatusBar.show("Yoga version is \'" + v.trim() + "\'");        
+            fr.jmmc.jmcs.gui.StatusBar.show("Yoga version is \'" + v.trim() + "\'");        
     }
 }

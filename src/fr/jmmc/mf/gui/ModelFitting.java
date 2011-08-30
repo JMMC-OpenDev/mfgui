@@ -3,14 +3,14 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.mcs.gui.App;
-import fr.jmmc.mcs.gui.MessagePane;
-import fr.jmmc.mcs.gui.StatusBar;
-import fr.jmmc.mcs.gui.SwingSettings;
-import fr.jmmc.mcs.interop.SampCapability;
-import fr.jmmc.mcs.interop.SampMessageHandler;
+import fr.jmmc.jmcs.App;
+import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.StatusBar;
+import fr.jmmc.jmcs.gui.SwingSettings;
+import fr.jmmc.jmcs.network.interop.SampCapability;
+import fr.jmmc.jmcs.network.interop.SampMessageHandler;
 
-import fr.jmmc.mcs.util.Http;
+import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
@@ -44,7 +44,7 @@ import org.astrogrid.samp.client.SampException;
  *
  * @author mella
  */
-public class ModelFitting extends fr.jmmc.mcs.gui.App {
+public class ModelFitting extends fr.jmmc.jmcs.App {
 
     final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
     final static String className = ModelFitting.class.getName();
@@ -64,7 +64,7 @@ public class ModelFitting extends fr.jmmc.mcs.gui.App {
 
     protected void init(String[] args) {
         // Set default resource for application
-        fr.jmmc.mcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
+        fr.jmmc.jmcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
         myPreferences = Preferences.getInstance();
 
         try {

@@ -1,8 +1,8 @@
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.mcs.gui.MessagePane;
-import fr.jmmc.mcs.util.FileUtils;
-import fr.jmmc.mcs.util.RegisteredAction;
+import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,7 +83,7 @@ public class SaveFileAction extends RegisteredAction {
         lastDir = newFile.getParent();
         fileName = newFile.getName();
         this.putValue(SaveFileAction.NAME, originalActionName + " " + fileName);
-        fr.jmmc.mcs.gui.StatusBar.show("File saved");
+        fr.jmmc.jmcs.gui.StatusBar.show("File saved");
 
     }
 }

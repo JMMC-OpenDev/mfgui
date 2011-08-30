@@ -4,8 +4,8 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mcs.gui.ShowHelpAction;
-import fr.jmmc.mcs.gui.StatusBar;
+import fr.jmmc.jmcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.StatusBar;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Target;
@@ -50,7 +50,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         }
 
         // Change widget for target list
-        targetList = new fr.jmmc.mcs.gui.CheckBoxJList();
+        targetList = new fr.jmmc.jmcs.gui.CheckBoxJList();
         jScrollPane1.setViewportView(targetList);
         targetList.addListSelectionListener(this);
 
