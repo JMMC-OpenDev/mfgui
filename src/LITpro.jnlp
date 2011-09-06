@@ -29,5 +29,5 @@
     <jar href="jar/ptplot5.6.jar" />
 
   </resources>
-  <application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>
+  <application-desc main-class="fr.jmmc.mf.ModelFitting"/>
 </jnlp>
