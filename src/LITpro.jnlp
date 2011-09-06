@@ -28,8 +28,6 @@
 
     <jar href="jar/ptplot5.6.jar" />
 
-    <!-- Astrogrid topcat -->
-    <extension href="topcat-parts.jnlp"/>
   </resources>
   <application-desc main-class="fr.jmmc.mf.gui.ModelFitting"/>
 </jnlp>
