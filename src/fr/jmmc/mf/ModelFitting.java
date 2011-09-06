@@ -1,7 +1,7 @@
 /*******************************************************************************
  * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
  ******************************************************************************/
-package fr.jmmc.mf.gui;
+package fr.jmmc.mf;
 
 import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.gui.MessagePane;
@@ -11,6 +11,9 @@ import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
 
 import fr.jmmc.jmcs.network.Http;
+import fr.jmmc.mf.gui.MFGui;
+import fr.jmmc.mf.gui.Preferences;
+import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
