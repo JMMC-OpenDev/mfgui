@@ -67,7 +67,7 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
         // disable dev LAF menu :
         System.setProperty("jmcs.laf.menu", "false");
 
-        JmcsApplicationSetup.define(fr.jmmc.mf.gui.ModelFitting.class);
+        JmcsApplicationSetup.define(fr.jmmc.mf.ModelFitting.class);
 
         // define robot delays :
         defineRobotDelayBetweenEvents(SHORT_DELAY);
