@@ -1,5 +1,6 @@
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import java.awt.event.ActionEvent;
