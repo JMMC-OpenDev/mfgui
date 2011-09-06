@@ -104,6 +104,7 @@ JAVA_JAR =
 # <brief description of mfgui jar files>
 mfgui_DIRS     = fr 
 mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
+                 fr/jmmc/mf/ressource/*.* \
                  fr/jmmc/mf/gui/*.html \
                  fr/jmmc/mf/gui/*.xml \
                  fr/jmmc/mf/gui/*.xsl \
