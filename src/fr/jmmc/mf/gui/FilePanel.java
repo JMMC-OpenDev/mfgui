@@ -492,7 +492,7 @@ public class FilePanel extends javax.swing.JPanel {
                             data = t.getT3Phi();
                             err = t.getT3PhiErr();
                         }
-                        dist = t.getSpatial();
+                        dist = t.getSpacial();
                         flags = t.getFlag();
                     } else if (table instanceof OIVis)
                     {
@@ -507,14 +507,14 @@ public class FilePanel extends javax.swing.JPanel {
                             data = t.getVisPhi();
                             err = t.getVisPhiErr();
                         }
-                        dist = t.getSpatialFreq();
+                        dist = t.getSpacialFreq();
                         flags = t.getFlag();
                     } else
                     {
                         OIVis2 t = (OIVis2) table;
                         data = t.getVis2Data();
                         err = t.getVis2Err();
-                        dist = t.getSpatialFreq();
+                        dist = t.getSpacialFreq();
                         flags = t.getFlag();
                     }
                     sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
@@ -602,23 +602,23 @@ public class FilePanel extends javax.swing.JPanel {
                 if (table instanceof OIVis )
                 {
                     OIVis t=(OIVis)table;
-                    ucoord = new RealMatrixImpl(t.getSpatialUCoord());
-                    vcoord = new RealMatrixImpl(t.getSpatialVCoord());
+                    ucoord = new RealMatrixImpl(t.getSpacialUCoord());
+                    vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
                 if (table instanceof OIVis2 )
                 {
                     OIVis2 t=(OIVis2)table;
-                    ucoord = new RealMatrixImpl(t.getSpatialUCoord());
-                    vcoord = new RealMatrixImpl(t.getSpatialVCoord());
+                    ucoord = new RealMatrixImpl(t.getSpacialUCoord());
+                    vcoord = new RealMatrixImpl(t.getSpacialVCoord());
                 }
                 if (table instanceof OIT3 )
                 {
                     OIT3 t=(OIT3)table;
-                    double [][] u1s = t.getSpatialU1Coord();
-                    double [][] u2s = t.getSpatialU2Coord();
+                    double [][] u1s = t.getSpacialU1Coord();
+                    double [][] u2s = t.getSpacialU2Coord();
                     double [][] us = new double[(u1s.length)*2][u1s[0].length] ;
-                    double [][] v1s = t.getSpatialV1Coord();
-                    double [][] v2s = t.getSpatialV2Coord();
+                    double [][] v1s = t.getSpacialV1Coord();
+                    double [][] v2s = t.getSpacialV2Coord();
                     double [][] vs = new double[(v1s.length)*2][v1s[0].length] ;
                     for (int j = 0; j < u1s.length; j++) {
                         double[] u1 = u1s[j];

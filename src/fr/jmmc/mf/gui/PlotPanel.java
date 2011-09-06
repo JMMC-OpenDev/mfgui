@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.jmcs.gui.StatusBar;
@@ -215,7 +216,16 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      */
     private Object[] getTargetsToPlot() {
         Object[] inputTargets;
-
+        
+        
+        // Display all targets in the target list with at list one selection
+        targets = settingsModel.getTargetListModel();
+        if (targets.getSize()!= targetList.getModel().getSize()){
+            targetList.setModel(targets);
+            System.out.println("CHANGE IN MODELS!!!");
+        }
+        
+        
         if (useAllTargetsCheckBox.isSelected()) {
             inputTargets = settingsModel.getRootSettings().getTargets().getTarget();
         } else {

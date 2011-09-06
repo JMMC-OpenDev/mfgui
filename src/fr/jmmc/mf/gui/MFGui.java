@@ -5,6 +5,7 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.jmcs.util.Urls;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.SaveSettingsAction;
@@ -309,7 +310,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
      *
      * @return true if App can quit or false.
      */
-    protected boolean finish()
+    public boolean finish()
     {
         java.awt.Component[] components = tabbedPane_.getComponents();
         ModifyAndSaveObject[] objs = new ModifyAndSaveObject[components.length];

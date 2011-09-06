@@ -5,6 +5,7 @@
 package fr.jmmc.mf.gui;
 
 
+import fr.jmmc.mf.ModelFitting;
 import java.io.File;
 
 import java.util.Observable;
@@ -59,7 +60,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         update(null, null);
     }
 
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {        
         // Adjust view and behaviour according preferences entries        
         // Keep eye on help.tooltips.show                        
         boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");

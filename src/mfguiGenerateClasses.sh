@@ -1,66 +1,6 @@
 #!/bin/bash
 #*******************************************************************************
-# JMMC project
-#
-# "@(#) $Id: mfguiGenerateClasses.sh,v 1.19 2009-07-15 14:59:05 mella Exp $"
-#
-# History
-# -------
-# $Log: not supported by cvs2svn $
-# Revision 1.18  2009/03/21 08:47:38  mella
-# fix castor source generation option
-#
-# Revision 1.17  2009/03/20 09:43:46  mella
-# update for castor 1.3
-#
-# Revision 1.16  2009/03/20 06:30:29  mella
-# Change due to castor 1.3
-#
-# Revision 1.15  2009/03/12 09:29:05  mella
-# add all xsl of fr.jmmc.mf dir
-#
-# Revision 1.14  2009/02/24 13:00:11  mella
-# typo
-#
-# Revision 1.13  2009/02/24 12:57:54  mella
-# Change label for shared Params
-#
-# Revision 1.12  2009/01/14 09:36:26  mella
-# change xsd path
-#
-# Revision 1.11  2009/01/13 15:47:16  mella
-# move xsd file under java source area
-#
-# Revision 1.10  2009/01/07 16:13:13  mella
-# change Model string representation
-#
-# Revision 1.9  2008/11/20 12:48:01  mella
-# use mkfGenerateJavaClassPath
-#
-# Revision 1.8  2008/02/20 18:30:23  mella
-# Jalopization on 1.0.7beta
-#
-# Revision 1.7  2007/02/14 17:05:39  mella
-# make it run on macos
-#
-# Revision 1.6  2007/02/14 09:29:52  mella
-# Moved jmmc.* into fr.jmmc.*
-#
-# Revision 1.5  2007/02/12 14:14:15  mella
-# Add message for every class
-#
-# Revision 1.4  2006/11/22 14:51:13  mella
-# Add toString() to File and Target
-#
-# Revision 1.3  2006/09/28 09:41:36  mella
-# add engine param list generation
-#
-# Revision 1.2  2006/09/26 12:44:59  mella
-# Search model.xsd using miscLocateFile
-#
-# Revision 1.1  2006/09/26 12:13:07  mella
-# First revision
-#
+# JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
 #*******************************************************************************
 
 #/**
