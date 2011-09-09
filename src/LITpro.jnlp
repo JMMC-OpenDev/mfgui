@@ -27,6 +27,7 @@
     
     <!-- JMCS libs -->
     <extension href="../JmcsLibs/JmcsLibs.jnlp"/>
+    <extension href="../JmalLibs/JmalLibs.jnlp"/>
 
     <jar href="jar/ptplot5.6.jar" />
 
