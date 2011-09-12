@@ -7,6 +7,10 @@
     <description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
     <icon href="LITpro.png"/>
     <offline-allowed/>
+    <association mime-type="application/x-litpro+xml" extensions="litprox">
+      <icon href="LITpro.png"/>
+      <description>LITpro settings files</description>
+    </association>
     <shortcut>
       <desktop/>
     </shortcut>
