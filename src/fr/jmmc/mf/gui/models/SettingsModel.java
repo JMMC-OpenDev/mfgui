@@ -115,7 +115,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         try {
             init(new java.io.FileReader(fileToLoad));
         } catch (FileNotFoundException ex) {
-            throw new IllegalStateException(ex);
+            MessagePane.showErrorMessage("Could not load settings from the file : " + fileToLoad.getAbsolutePath(), ex);
         }
         associatedFile = fileToLoad;
     }
@@ -126,7 +126,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             init(new java.io.InputStreamReader(urlToLoad.openStream()));
             associatedFile = new java.io.File(urlToLoad.getFile());
         } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+            MessagePane.showErrorMessage("Could not load settings from the url : " + urlToLoad.toString(), ex);
         }
     }
 
@@ -140,7 +140,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             associatedFile = new java.io.File(urlToLoad.getFile());
 
         } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+            MessagePane.showErrorMessage("Could not load settings from the url : " + url, ex);
         }
     }
 
@@ -1391,7 +1391,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             writer = FileUtils.openFile(fileToSave);
             UtilsClass.marshal(rootSettings, writer);
         } catch (IOException ex) {
-            throw new IllegalStateException("Can't write settings file into " + fileToSave.getAbsolutePath(), ex);
+            MessagePane.showErrorMessage("Can not save settings  to file : " + fileToSave.getAbsolutePath(), ex);
         } finally {
             FileUtils.closeFile(writer);
             if (keepResult == false) {
