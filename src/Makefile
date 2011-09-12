@@ -142,7 +142,7 @@ MAN8 =
 #
 # other files to be installed
 #----------------------------
-INSTALL_FILES = ../lib/topcat-full.jar
+INSTALL_FILES = 
 																
 
 #
