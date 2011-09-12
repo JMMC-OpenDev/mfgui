@@ -45,6 +45,7 @@
                 <!--<change type="DOC">Update documentation</change>-->
                 <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require previous startup of topcat or any fits viewer compatible compliant with samp)</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/196">File given to application is now properly loaded on startup</change>
             </prerelease>
         </release>
         <release version="1.0.10">
