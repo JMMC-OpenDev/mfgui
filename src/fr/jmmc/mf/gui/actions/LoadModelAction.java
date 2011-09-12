@@ -1,5 +1,10 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
+
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -23,24 +28,41 @@ public class LoadModelAction extends RegisteredAction {
     public LoadModelAction(MFGui mfgui) {
         super(className, actionName);
         this.mfgui = mfgui;
+        // register as default open action and remove text to keep small icons in the toolbar
+        flagAsOpenAction();
+        putValue(LoadModelAction.NAME, null);
     }
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        //try {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
-        // Set in previous load directory
-        if (lastDir != null) {
-            fileChooser.setCurrentDirectory(new File(lastDir));
+
+        // Retrieve file given by App startup or open a filechooser 
+        File file = null;
+
+        // If the action was automatically triggered from App launch
+        if (e.getSource() == ActionRegistrar.getInstance()) {
+            // Open given file
+            file = new File(e.getActionCommand());
+        } else // User clicked the menu item
+        {
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
+            // Set in previous load directory
+            if (lastDir != null) {
+                fileChooser.setCurrentDirectory(new File(lastDir));
+            }
+            // Open file chooser
+            int returnVal = fileChooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                file = fileChooser.getSelectedFile();
+            }
         }
-        // Open file chooser
-        int returnVal = fileChooser.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+
+        if (file != null) {
             lastDir = file.getParent();
             mfgui.addSettings(new SettingsModel(file));
-            logger.info("Loading '"+file.getName()+"' setting file");
+            logger.info("Loading '" + file.getName() + "' setting file");
         }
     }
 }
