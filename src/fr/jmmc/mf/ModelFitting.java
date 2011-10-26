@@ -5,12 +5,13 @@ package fr.jmmc.mf;
 
 import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.gui.MessagePane;
+
 import fr.jmmc.jmcs.gui.StatusBar;
 import fr.jmmc.jmcs.gui.SwingSettings;
+import fr.jmmc.jmcs.gui.SwingUtils;
+import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
-
-import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -25,8 +26,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.httpclient.HttpClient;
+
+import java.util.logging.*;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -34,12 +39,6 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-
-import java.util.logging.*;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
 
@@ -59,61 +58,90 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
     /**
      * Creates a new ModelFitting object.
      *
-     * @param args DOCUMENT ME!
+     * @param args command-line options.
      */
-    public ModelFitting(String[] args) {
+    public ModelFitting(final String[] args) {
         super(args);
     }
 
-    protected void init(String[] args) {
+    /**
+     * Initialize application objects
+     * @param args ignored arguments
+     *
+     * @throws RuntimeException if the AppLauncher initialisation failed
+     */
+    @Override
+    protected void init(final String[] args) {
         // Set default resource for application
         fr.jmmc.jmcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
+        
         myPreferences = Preferences.getInstance();
 
-        try {
-            // Using invokeAndWait to be in sync with the main thread :
-            SwingUtilities.invokeAndWait(new Runnable() {
+        // Using invokeAndWait to be in sync with this thread :
+        // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
+        SwingUtils.invokeAndWaitEDT(new Runnable() {
 
-                /**
-                 * Initializes the swing components with their actions in EDT
-                 */
-                public void run() {
-                    // there is a conflict if one option is given
-                    // the app take it as argument!!##"!!
-                    // gui = new MFGui(args);
-                    // workaround make no more argument support
-                    gui = new MFGui(new String[]{});
+            /**
+             * Initializes the swing components with their actions in EDT
+             */
+            @Override
+            public void run() {
+                // there is a conflict if one option is given
+                // the app take it as argument!!##"!!
+                // gui = new MFGui(args);
+                // workaround make no more argument support
+                gui = new MFGui(new String[]{});
 
-                    // define the application frame
-                    // TODO should be refactored so that Gui uses the App.getFrame()
-                    App.setFrame(gui);
-                }
-            });
-
-        } catch (InterruptedException ie) {
-            // propagate the exception :
-            throw new RuntimeException("ModelFitting.init : interrupted", ie);
-        } catch (InvocationTargetException ite) {
-            // propagate the internal exception :
-            throw new RuntimeException("ModelFitting.init : exception", ite.getCause());
-        }
+                // define the application frame
+                // TODO should be refactored so that Gui uses the App.getFrame()
+                App.setFrame(gui);
+            }
+        });
 
         // declare as one VO app
         declareInteroperability();
     }
 
+    /**
+     * Execute application body = make the application frame visible
+     */
     @Override
     protected void execute() {
-        gui.setVisible(true);
+        SwingUtils.invokeLaterEDT(new Runnable() {
+
+            /**
+             * Show the application frame using EDT
+             */
+            @Override
+            public void run() {
+                logger.fine("ModelFitting.ready : handler called.");
+
+                getFrame().setVisible(true);
+            }
+        });
     }
 
+    /**
+     * Hook to handle operations before closing application.
+     *
+     * @return should return true if the application can exit, false otherwise
+     * to cancel exit.
+     */
     @Override
     protected boolean finish() {
         return gui.finish();
     }
 
-    protected static void exit() {
+    /**
+     * Hook to handle operations when exiting application.
+     * @see App#exit(int)
+     */
+    @Override
+    public void onFinish() {
+
         logger.info("Thank you for using this software!");
+
+        super.onFinish();
     }
 
     /**
@@ -358,7 +386,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                 }
 
                 // Refresh GUI :
-                SwingUtilities.invokeLater(new Runnable() {
+                SwingUtils.invokeLaterEDT(new Runnable() {
 
                     /**
                      * Synchronized by EDT

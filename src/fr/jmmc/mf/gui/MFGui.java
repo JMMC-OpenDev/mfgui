@@ -131,7 +131,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
         // handle frame icon
         this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
 
-        pack();
         fr.jmmc.jmcs.gui.StatusBar.show("Application inited");
     }
 
@@ -222,23 +221,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener
             action = new LoadDemoModelAction("demoModel"+i, demo.get(title), title,this);            
             i++;                 
         }            
-    }
-
-    /** 
-     * Main entry point.
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-        final String[] fargs = args;
-        java.awt.EventQueue.invokeLater(new Runnable()
-            {
-            @Override
-                public void run()
-                {
-                    new MFGui(fargs).setVisible(true);
-                }
-            });
     }
 
     /**
