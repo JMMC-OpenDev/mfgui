@@ -1,5 +1,9 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -37,7 +41,7 @@ public class LoadRemoteDataFilesAction extends RegisteredAction implements TreeS
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
 
-         throw new UnsupportedOperationException("This action will be back in the comming releases. Now you have to visit the http://jmmc.fr/oidata url and download manually the files.");
+         MessagePane.showMessage("This action will be back in the comming releases.\nNow you have to visit the http://jmmc.fr/oidata url and download manually the files.");
         /* TODO replace next part of code
          RepositoryBrowser browser = new RepositoryBrowser(new JFrame(), true);
 

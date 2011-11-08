@@ -271,7 +271,7 @@ public class UtilsClass {
       }
       //marshaller.setMapping(mapping);
       unmarshaller.setValidation(false);
-      o = unmarshaller.unmarshal(c, reader);
+      o = Unmarshaller.unmarshal(c, reader);
       logger.fine("End of unmarshal");
     } catch (MarshalException ex) {
       throw new IllegalStateException("Can't read input data properly", ex);

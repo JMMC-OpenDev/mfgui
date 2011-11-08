@@ -1,9 +1,16 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
 
 public class LoadDemoModelAction extends RegisteredAction {
@@ -24,6 +31,16 @@ public class LoadDemoModelAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        mfgui.addSettings(new SettingsModel(demoURL_));
+
+        try {
+            mfgui.addSettings(new SettingsModel(demoURL_));
+        } catch (IOException ex) {
+            MessagePane.showErrorMessage("Could not load url : " + demoURL_, ex);
+        } catch (ExecutionException ex) {
+            MessagePane.showErrorMessage("Could not load url : " + demoURL_, ex);
+        } catch (FitsException ex) {
+            MessagePane.showErrorMessage("Could not read fits file from remote setting: " + demoURL_, ex);
+        }
+
     }
 }

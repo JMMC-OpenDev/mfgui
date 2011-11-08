@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.jmcs.gui.ShowHelpAction;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -174,8 +176,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         logger.fine("Requesting yoga '" + methodName + "' call");
 
         Response response = null;
-        response = ModelFitting.execMethod(methodName,
-                settingsModel.getTempFile(false), methodArgs);
+        try {
+            response = ModelFitting.execMethod(methodName,
+                    settingsModel.getTempFile(false), methodArgs);
+        } catch (ExecutionException ex) {
+            MessagePane.showErrorMessage("Can't plot data", ex);
+            return;
+        }
         ResultFile[] resultFiles = UtilsClass.getResultFiles(response);
         if (resultFiles.length == 0) {
             throw new IllegalStateException("No data returned (this problem is probably data related)");

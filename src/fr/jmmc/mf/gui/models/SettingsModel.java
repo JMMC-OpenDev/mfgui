@@ -28,7 +28,6 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import fr.jmmc.oitools.model.OIFitsChecker;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -50,6 +49,7 @@ import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
 import java.io.Reader;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class manages the castor generated classes to bring
@@ -102,51 +102,34 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Creates a new empty SettingsModel object.
      */
-    public SettingsModel() {
+    public SettingsModel() throws ExecutionException{
         logger.info("Creating one new Settings");
-        init(null);
+        init();
     }
 
     /**
      * Creates a new empty SettingsModel object.
      */
-    public SettingsModel(java.io.File fileToLoad) throws IllegalStateException {
+    public SettingsModel(java.io.File fileToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
-        try {
-            init(new java.io.FileReader(fileToLoad));
-        } catch (FileNotFoundException ex) {
-            MessagePane.showErrorMessage("Could not load settings from the file : " + fileToLoad.getAbsolutePath(), ex);
-        }
+        init(new java.io.FileReader(fileToLoad));
         associatedFile = fileToLoad;
     }
 
-    public SettingsModel(java.net.URL urlToLoad) throws IllegalStateException {
+    public SettingsModel(java.net.URL urlToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from url " + urlToLoad.toString());
-        try {
-            init(new java.io.InputStreamReader(urlToLoad.openStream()));
-            associatedFile = new java.io.File(urlToLoad.getFile());
-        } catch (IOException ex) {
-            MessagePane.showErrorMessage("Could not load settings from the url : " + urlToLoad.toString(), ex);
-        }
+        init(new java.io.InputStreamReader(urlToLoad.openStream()));
+        associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
-    public SettingsModel(String url) throws IllegalStateException {
+    public SettingsModel(String url) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from : " + url);
-        try {
-            URL urlToLoad = Urls.parseURL(url);
-
-            init(new java.io.InputStreamReader(urlToLoad.openStream()));
-
-            associatedFile = new java.io.File(urlToLoad.getFile());
-
-        } catch (IOException ex) {
-            MessagePane.showErrorMessage("Could not load settings from the url : " + url, ex);
-        }
+        URL urlToLoad = Urls.parseURL(url);
+        init(new java.io.InputStreamReader(urlToLoad.openStream()));
+        associatedFile = new java.io.File(urlToLoad.getFile());
     }
 
-    public final void init(Reader reader) {
-        logger.entering(className, "init");
-
+    public final void init() throws ExecutionException {
         observableDelegate = new ObservableDelegate(this);
 
         // Init members
@@ -166,19 +149,29 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.setFitter("standard");
         setRootSettings(rootSettings);
 
-        if (reader != null) {
-            Settings newModel;
-            try {
-                newModel = (Settings) UtilsClass.unmarshal(Settings.class, reader);
-            } catch (IllegalStateException ilse) {
-                // try to extract settings from a response file as fallback
-                Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
-                newModel = UtilsClass.getSettings(r);
-            }
-            checkSettingsFormat(newModel);
-            setRootSettings(newModel);
-            setModified(false);
+        //assert that list has been inited
+        initSupportedModelsModel();        
+    }
+
+    public final void init(Reader reader) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
+        logger.entering(className, "init");
+
+        // perform default init 
+        init();
+
+        // and load from given reader
+
+        Settings newModel;
+        try {
+            newModel = (Settings) UtilsClass.unmarshal(Settings.class, reader);
+        } catch (IllegalStateException ilse) {
+            // try to extract settings from a response file as fallback
+            Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
+            newModel = UtilsClass.getSettings(r);
         }
+        checkSettingsFormat(newModel);
+        setRootSettings(newModel);
+        setModified(false);
     }
 
     /**
@@ -186,10 +179,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * list if the current list is empty.
      * @return the supportedModelsModel
      */
-    public static DefaultComboBoxModel getSupportedModelsModel() {
+    public static DefaultComboBoxModel initSupportedModelsModel() throws ExecutionException {
         // Fill modelTypeComboBox model if empty
         if (supportedModelsModel.getSize() < 1) {
-            Response r = ModelFitting.execMethod("getModelList", null);
+            Response r;
+            try {
+                r = ModelFitting.execMethod("getModelList", null);
+            } catch (IllegalStateException ex) {                
+                throw new IllegalStateException("Can't get list of supported models", ex);                
+            } catch (ExecutionException ex) {                
+                throw new ExecutionException("Can't get list of supported models", ex);                
+            }
             // Search model into return result
             Model newModel = UtilsClass.getModel(r);
             // update list of supported models
@@ -204,6 +204,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 supportedModels.put(model.getType(), model);
             }
         }
+        return supportedModelsModel;
+    }
+
+    
+    /**
+     * Return the supported models. This method autoatically make a request to get server
+     * list if the current list is empty.
+     * @return the supportedModelsModel
+     */
+    public static DefaultComboBoxModel getSupportedModelsModel(){
         return supportedModelsModel;
     }
 
@@ -1211,9 +1221,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return (ListModel) fileListModels.get(key);
     }
 
-    // @todo place this method into fr.jmmc.mf.util
-    // and make it much much simpler
-    public void addFile(java.io.File fileToAdd) {
+    /**
+     * 
+     * @todo place this method into fr.jmmc.mf.util and make it much much simpler
+     * @param fileToAdd
+     * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
+     * @throws IllegalStateException if fits exception occurs
+     * @throws FitsException if file io errors occurs
+     */
+    public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
         logger.entering(className, "addFile", fileToAdd);
         Files files = rootSettings.getFiles();
 
@@ -1240,7 +1256,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // @todo place this method into fr.jmmc.mf.util
     // and refactor this CODE
-    public boolean checkFile(File boundFile) {
+    /**
+     * 
+     * @param boundFile
+     * @return
+     * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
+     * @throws IllegalStateException if fits exception occurs
+     * @throws FitsException if file io errors occurs
+     */
+    public boolean checkFile(File boundFile) throws IllegalArgumentException, IOException, FitsException {
         logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
@@ -1272,12 +1296,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * io.File associated to filename.
      *
      * @param fileToPopulate
-     * @param filename
-     * @throws IllegalStateException
-     *      if file can't be read to be integrated as part of the setting file
-     * @return
+     * @param filename           
+     * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
+     * @throws IllegalStateException if fits exception occurs
+     * @throws FitsException if file io errors occurs
      */
-    private boolean populate(File fileToPopulate, String filename) throws IllegalStateException {
+    private boolean populate(File fileToPopulate, String filename) throws IllegalArgumentException, IOException, FitsException {
         logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OIFitsFile fits;
         // Populate the boundFile with oifits content
@@ -1287,11 +1311,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         try {
             fits = OIFitsLoader.loadOIFits(checker, filename);
         } catch (MalformedURLException ex) {
-            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
+            throw new IllegalArgumentException("Can't add fits file '" + filename + "' to this setting ", ex);
         } catch (IOException ex) {
-            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
-        } catch (FitsException ex) {
-            throw new IllegalStateException("Can't add fits file '" + filename + "' to this setting ", ex);
+            throw new IOException("Can't add fits file '" + filename + "' to this setting ", ex);
         }
 
         MessagePane.showMessage(checker.getCheckReport());
@@ -1321,7 +1343,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     // @todo think to move this method into fr.jmmc.mf.util
-    public void checkSettingsFormat(Settings s) {
+    /**
+     * 
+     * @param s 
+     * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
+     * @throws IllegalStateException if fits exception occurs
+     * @throws FitsException if file io errors occurs
+     */
+    public void checkSettingsFormat(Settings s) throws IllegalArgumentException, IOException, FitsException {
         logger.entering(className, "checkSettingsFormat", s);
 
         // try to locate files
@@ -1392,6 +1421,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             UtilsClass.marshal(rootSettings, writer);
         } catch (IOException ex) {
             MessagePane.showErrorMessage("Can not save settings  to file : " + fileToSave.getAbsolutePath(), ex);
+            return;
         } finally {
             FileUtils.closeFile(writer);
             if (keepResult == false) {
@@ -1418,8 +1448,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public Model getSupportedModel(String type) {
         logger.entering(className, "getSupportedModel", type);
-        //assert that list has been inited
-        getSupportedModelsModel();
         return (Model) supportedModels.get(type);
     }
 

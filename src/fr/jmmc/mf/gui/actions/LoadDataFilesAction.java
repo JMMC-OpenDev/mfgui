@@ -1,11 +1,19 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -43,7 +51,14 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             java.io.File[] files = fileChooser.getSelectedFiles();
             for (int i = 0; i < files.length; i++) {
-                settingsModel.addFile(files[i]);
+                java.io.File file = files[i];
+                try {
+                    settingsModel.addFile(file);
+                } catch (IOException ex) {
+                    MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+                } catch (FitsException ex) {
+                    MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+                }
             }
             lastDir = files[0].getParent();
         }

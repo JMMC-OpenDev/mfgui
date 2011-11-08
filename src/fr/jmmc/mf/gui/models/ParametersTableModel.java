@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.gui.UtilsClass;

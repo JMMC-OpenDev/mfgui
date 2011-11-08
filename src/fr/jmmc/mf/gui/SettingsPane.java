@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.ShowHelpAction;
@@ -12,6 +15,7 @@ import java.awt.Color;
 import java.awt.Component;
 
 import java.lang.reflect.*;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 import javax.swing.*;
@@ -58,7 +62,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     /** Creates new form SettingsPane */
-    public SettingsPane() {
+    public SettingsPane() throws ExecutionException {
         init(new SettingsModel());
     }
 
