@@ -19,6 +19,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
+import fr.nom.tam.fits.FitsException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
 
 import java.util.logging.*;
@@ -161,8 +163,10 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
      *  @param methodName name of method to wrap
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
+     *  @throws ExecutionException thrown if local execution fails
+     *  @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile) {
+    public static Response execMethod(String methodName, java.io.File xmlFile) throws ExecutionException {
         return execMethod(methodName, xmlFile, "");
     }
 
@@ -172,14 +176,21 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
      *  @param methodName name of method to wrap
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
+     *  @throws ExecutionException if the local execution fails
+     *  @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) {
+    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws ExecutionException {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
-            xmlResult = doPost(methodName, xmlFile, methodArg);
+            try {
+                xmlResult = doPost(methodName, xmlFile, methodArg);
+            } catch (IOException ex) {
+                throw new ExecutionException(ex);
+            }
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
-        }
+        }                
+        
         java.io.StringReader reader = new java.io.StringReader(xmlResult);
         Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
         String errors = UtilsClass.getErrorMsg(r);
@@ -205,11 +216,13 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
      *
      * @param methodName name of method to call
      * @param xmlFile setting file
-     * @param methodArg optionnal arguments
+     * @param methodArg optional arguments
      *
      * @return the output of the process
+     * @throws ExecutionException thrown if process launching fails
+     * @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    private static String doExec(String methodName, java.io.File xmlFile, String methodArg) {
+    private static String doExec(String methodName, java.io.File xmlFile, String methodArg) throws ExecutionException {
         try {
             String result = "";
             String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
@@ -234,18 +247,28 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             logger.finest("exec result=\n" + result);
             return result;
         } catch (IOException ex) {
-            throw new IllegalStateException("Can't execute LITpro local service", ex);
+            throw new ExecutionException("Can't execute LITpro local service", ex);
         } catch (InterruptedException ex) {
-            throw new IllegalStateException("LITpro local service have been interrupted", ex);
+            throw new ExecutionException("LITpro local service have been interrupted", ex);
         }
     }
 
+    /**
+     * Execute given command on local machine.
+     *
+     * @param methodName name of method to call
+     * @param xmlFile setting file
+     *
+     * @return the output of the process
+     * @throws ExecutionException thrown if process launching fails
+     * @throws IllegalStateException if one unexpected (bad) things occurs 
+     */
     private static String doExec(String methodName, java.io.File xmlFile)
-            throws Exception {
+            throws ExecutionException {
         return doExec(methodName, xmlFile, "");
     }
 
-    public static String doPost(String methodName, java.io.File xmlFile, String methodArg) {
+    public static String doPost(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String result = "";
 
         // Build parts of request
@@ -321,9 +344,6 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         } catch (HttpException ex) {
             throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
                     + targetURL + "'", ex);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
-                    + targetURL + "'", ex);
         } finally {
             // Release the connection.
             myPost.releaseConnection();
@@ -366,11 +386,20 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
                 StatusBar.show("Samp message received : building new model");
 
-                final SettingsModel sm = new SettingsModel();
-                sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
-
-                // Try to read file on disk as one oifits file
-                sm.addFile(new File(filename));
+                SettingsModel sm = null;
+                try {
+                    sm = new SettingsModel();
+                    sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
+                
+                    // Try to read file on disk as one oifits file
+                    sm.addFile(new File(filename));
+                } catch (IOException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                } catch (ExecutionException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                } catch (FitsException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                }
 
                 // Try to build one new model object from given string
                 final StringReader sr = new StringReader(xmlModel);
@@ -385,6 +414,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                     target.addModel(model);
                 }
 
+                final SettingsModel fsm = sm;
                 // Refresh GUI :
                 SwingUtils.invokeLaterEDT(new Runnable() {
 
@@ -395,7 +425,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                         // bring this application to front :
                         App.showFrameToFront();
 
-                        gui.addSettings(sm);
+                        gui.addSettings(fsm);
                     }
                 });
             }

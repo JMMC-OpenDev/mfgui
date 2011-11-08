@@ -1,17 +1,20 @@
 /*******************************************************************************
  * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
  ******************************************************************************/
-
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import fr.jmmc.jmcs.util.MimeType;
+import java.util.concurrent.ExecutionException;
 
 public class LoadModelAction extends RegisteredAction {
 
@@ -59,10 +62,20 @@ public class LoadModelAction extends RegisteredAction {
             }
         }
 
+        // Finally try to load file
         if (file != null) {
             lastDir = file.getParent();
-            mfgui.addSettings(new SettingsModel(file));
-            logger.info("Loading '" + file.getName() + "' setting file");
+            try {
+                logger.info("Loading '" + file.getName() + "' setting file");
+                mfgui.addSettings(new SettingsModel(file));
+            } catch (IOException ex) {
+                MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+            } catch (ExecutionException ex) {
+                MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+            } catch (FitsException ex) {
+                MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+            }
         }
+        
     }
 }

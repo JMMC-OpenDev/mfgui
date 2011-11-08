@@ -1,9 +1,14 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.ExecutionException;
 
 public class NewModelAction extends RegisteredAction {
 
@@ -21,7 +26,14 @@ public class NewModelAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        mfgui.addSettings(new SettingsModel());
+        try {
+            mfgui.addSettings(new SettingsModel());
+        } catch (IllegalStateException ex) {                
+                throw new IllegalStateException("Can't build a new model", ex);                
+        } catch (ExecutionException ex) {
+           MessagePane.showErrorMessage("Can't build a new model", ex);
+           return;
+        }
         logger.info("New settings created and loaded into the GUI");
         fr.jmmc.jmcs.gui.StatusBar.show("New model ready for modifications");
     }

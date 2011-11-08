@@ -1,27 +1,29 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.StatusBar;
 import fr.jmmc.jmcs.gui.action.MCSAction;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Settings;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
+import java.util.concurrent.ExecutionException;
 import javax.swing.ButtonModel;
-import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 public class RunFitAction extends MCSAction {
-
+    
     /** Main logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.actions.RunFitAction");
+            RunFitAction.class.getName());
+    
     String methodName = "runFit";
     ButtonModel iTMaxButtonModel = null;
     Document iTMaxDocument = null;
@@ -51,7 +53,19 @@ public class RunFitAction extends MCSAction {
         //@todo remettre le curseur setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         File tmpFile = settingsModel.getTempFile(false);
         StatusBar.show("Running fitting process");
-        Response r = ModelFitting.execMethod(methodName, tmpFile, args);
+        
+        
+        Response r;
+        try {
+            r = ModelFitting.execMethod(methodName, tmpFile, args);
+        } catch (IllegalStateException ise) {
+            MessagePane.showErrorMessage("Can't perform operation for " + methodName,ise);
+            return;
+        } catch (ExecutionException ex) {
+            MessagePane.showErrorMessage("Can't perform operation for " + methodName,ex);
+            return;
+        }
+        
         Settings newModel = UtilsClass.getSettings(r);
         StatusBar.show("Fitting response received, creating result node...");
         if (newModel == null) {
