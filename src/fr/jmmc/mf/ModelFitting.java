@@ -99,9 +99,6 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                 App.setFrame(gui);
             }
         });
-
-        // declare as one VO app
-        declareInteroperability();
     }
 
     /**
@@ -359,8 +356,12 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             throws Exception {
         return doPost(methodName, xmlFile, null);
     }
-
-    private void declareInteroperability() {
+    
+      /**
+       * Create SAMP Message handlers
+       */
+      @Override
+      protected void declareInteroperability() {
         // Add handler to load one new setting given oifits and model description
 
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
