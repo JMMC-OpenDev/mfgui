@@ -260,11 +260,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <title>Baselines plot</title>
             <xLabel>Ucoord (meters)</xLabel>
             <yLabel>Vcoord (meters)</yLabel>
-
-            <!-- we should follow crlst list according yorick code ->
-            //_modeler/dataset//crlst
-            -->
-            <xsl:for-each select="//_modeler/dataset//CR1">
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ucoord" select="ucoord"/>
@@ -299,11 +295,8 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         <plot>
             <title>UV coverage plot</title>
             <xLabel>Ucoord (1/rad)</xLabel>
-            <yLabel>Vcoord (1/rad)</yLabel>
-            <!-- we should follow crlst list according yorick code ->
-            //_modeler/dataset//crlst
-            -->           
-            <xsl:for-each select="//_modeler/dataset//CR1">
+            <yLabel>Vcoord (1/rad)</yLabel>                     
+            <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="pair">
