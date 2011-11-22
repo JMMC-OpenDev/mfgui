@@ -6,11 +6,11 @@ package fr.jmmc.mf.gui.models;
 import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
 
 import fr.jmmc.jmcs.util.ObservableDelegate;
-import fr.jmmc.jmcs.util.Urls;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
@@ -30,6 +30,7 @@ import fr.jmmc.mf.models.Targets;
 import fr.jmmc.oitools.model.OIFitsChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -47,8 +48,7 @@ import java.util.Enumeration;
 import java.util.Observer;
 import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
-import java.io.Reader;
-import java.net.URL;
+import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -102,31 +102,40 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Creates a new empty SettingsModel object.
      */
-    public SettingsModel() throws ExecutionException{
+    public SettingsModel() throws ExecutionException {
         logger.info("Creating one new Settings");
         init();
     }
 
     /**
-     * Creates a new empty SettingsModel object.
+     * Creates a new empty SettingsModel object from given xml file.
+     * @param fileToLoad file serialization to be used for model initialisation
      */
     public SettingsModel(java.io.File fileToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
-        init(new java.io.FileReader(fileToLoad));
+        init(FileUtils.readFile(fileToLoad));
         associatedFile = fileToLoad;
     }
 
-    public SettingsModel(java.net.URL urlToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
-        logger.info("Loading new Settings from url " + urlToLoad.toString());
-        init(new java.io.InputStreamReader(urlToLoad.openStream()));
-        associatedFile = new java.io.File(urlToLoad.getFile());
-    }
-
+    /**
+     * Creates a new empty SettingsModel object from given url file.
+     * @param url remote file serialization to be used for model initialisation
+     */
     public SettingsModel(String url) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from : " + url);
-        URL urlToLoad = Urls.parseURL(url);
-        init(new java.io.InputStreamReader(urlToLoad.openStream()));
-        associatedFile = new java.io.File(urlToLoad.getFile());
+        URI uriToLoad;
+        try {
+            uriToLoad = new URI(url);
+        } catch (URISyntaxException ex) {
+            logger.log(Level.WARNING, "Error in uri syntax for " + url, ex);
+            throw new IOException("Error in uri syntax for " + url, ex);
+        }
+        associatedFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));        
+        if (Http.download(uriToLoad, associatedFile, false)) {
+            init(FileUtils.readFile(associatedFile));
+        } else {
+            throw new IOException("Can't download " + url);
+        }
     }
 
     public final void init() throws ExecutionException {
@@ -150,28 +159,29 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setRootSettings(rootSettings);
 
         //assert that list has been inited
-        initSupportedModelsModel();        
+        initSupportedModelsModel();
     }
 
-    public final void init(Reader reader) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
+    public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
         logger.entering(className, "init");
 
+        try {
         // perform default init 
         init();
-
-        // and load from given reader
-
-        Settings newModel;
-        try {
-            newModel = (Settings) UtilsClass.unmarshal(Settings.class, reader);
-        } catch (IllegalStateException ilse) {
-            // try to extract settings from a response file as fallback
-            Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
-            newModel = UtilsClass.getSettings(r);
-        }
+        
+        // and load new model from given string
+        Settings newModel = (Settings) UtilsClass.unmarshal(Settings.class, modelInXml);
+        
         checkSettingsFormat(newModel);
+        
         setRootSettings(newModel);
+        
         setModified(false);
+        }catch(ExecutionException e){
+            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.",e);            
+        }catch(IllegalArgumentException e){
+            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.",e);            
+        }
     }
 
     /**
@@ -185,10 +195,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Response r;
             try {
                 r = ModelFitting.execMethod("getModelList", null);
-            } catch (IllegalStateException ex) {                
-                throw new IllegalStateException("Can't get list of supported models", ex);                
-            } catch (ExecutionException ex) {                
-                throw new ExecutionException("Can't get list of supported models", ex);                
+            } catch (IllegalStateException ex) {
+                throw new IllegalStateException("Can't get list of supported models", ex);
+            } catch (ExecutionException ex) {
+                throw new ExecutionException("Can't get list of supported models", ex);
             }
             // Search model into return result
             Model newModel = UtilsClass.getModel(r);
@@ -207,13 +217,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return supportedModelsModel;
     }
 
-    
     /**
      * Return the supported models. This method autoatically make a request to get server
      * list if the current list is empty.
      * @return the supportedModelsModel
      */
-    public static DefaultComboBoxModel getSupportedModelsModel(){
+    public static DefaultComboBoxModel getSupportedModelsModel() {
         return supportedModelsModel;
     }
 
@@ -1350,15 +1359,22 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws IllegalStateException if fits exception occurs
      * @throws FitsException if file io errors occurs
      */
-    public void checkSettingsFormat(Settings s) throws IllegalArgumentException, IOException, FitsException {
+    public void checkSettingsFormat(Settings s) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
         logger.entering(className, "checkSettingsFormat", s);
 
+        if (s == null) {
+            throw new ExecutionException("Settings file invalid format", new Throwable("no valid root"));
+        }
         // try to locate files
-        File[] files = s.getFiles().getFile();
+        Files files = s.getFiles();
+        if (files == null) {
+            throw new ExecutionException("Settings file invalid format", new Throwable(" missing Files)"));
+        }
 
-        for (int i = 0; i < files.length; i++) {
+        File[] fileList = files.getFile();
+        for (int i = 0; i < fileList.length; i++) {
             // Check file
-            checkFile(files[i]);
+            checkFile(fileList[i]);
         }
 
         // assert that one parameters section is present to allow param sharing
