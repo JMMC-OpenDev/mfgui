@@ -51,7 +51,7 @@
                 <!--<change type="DOC">Update documentation</change>-->
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages more easy to understand</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
-                <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require previous startup of topcat or any fits viewer compatible compliant with samp)</change>
+                <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require for previous startup of topcat or any fits viewer compatible compliant with samp until AppLauncher becomes released )</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/196">File given to application is now properly loaded on startup</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only in the settings get all requested parts (data+model)</change>
