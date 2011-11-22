@@ -187,16 +187,11 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }                
-        
-        java.io.StringReader reader = new java.io.StringReader(xmlResult);
-        Response r = (Response) UtilsClass.unmarshal(Response.class, reader);
+                
+        Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
-            MessagePane.showErrorMessage(errors);
-            JTextArea t = new JTextArea(errors, 20, 80);
-            JScrollPane sp = new JScrollPane(t);
-            javax.swing.JOptionPane.showMessageDialog(null, sp, "Error ",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            MessagePane.showErrorMessage(errors);            
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
@@ -403,9 +398,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                 }
 
                 // Try to build one new model object from given string
-                final StringReader sr = new StringReader(xmlModel);
-                Model modelContainer = null;
-                modelContainer = (Model) UtilsClass.unmarshal(Model.class, sr);
+                Model modelContainer = (Model) UtilsClass.unmarshal(Model.class, xmlModel);
 
                 final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
                 final String targetIdent = f.getOitarget(0).getTarget();
