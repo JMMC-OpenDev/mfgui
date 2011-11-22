@@ -3,7 +3,6 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
@@ -17,8 +16,6 @@ import fr.jmmc.mf.models.Target;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.*;
@@ -622,16 +619,11 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         logger.entering(className, "addModelButtonActionPerformed");
         // Construct a new copy
         Model selectedModel = (Model) modelTypeComboBox.getSelectedItem();
-        Model m;
-        // Clone selected Model (this code could have been moved into model???
-        StringWriter writer = new StringWriter();
-        UtilsClass.marshal(selectedModel, writer);
-        StringReader reader = new StringReader(writer.toString());
-        m = (Model)UtilsClass.unmarshal(Model.class,reader);
+        Model m = (Model)UtilsClass.clone(selectedModel);
         rootSettingsModel.addModel(current, m);
         updateModels();
         plotModelImagePanel.show(rootSettingsModel, current);
-        plotChi2Panel.show(rootSettingsModel);
+        plotChi2Panel.show(rootSettingsModel);        
     }//GEN-LAST:event_addModelButtonActionPerformed
 
             private void targetFitterParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetFitterParamActionPerformed
