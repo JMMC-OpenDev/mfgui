@@ -1,11 +1,6 @@
 /*******************************************************************************
  * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
  ******************************************************************************/
-/*
- * ModelPanel.java
- *
- * Created on 27 février 2008, 08:57
- */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.ShowHelpAction;
@@ -15,9 +10,6 @@ import fr.jmmc.mf.models.Model;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Vector;
 
 public class ModelPanel extends javax.swing.JPanel {
@@ -226,13 +218,7 @@ public class ModelPanel extends javax.swing.JPanel {
         if(selectedModel == null){
             return;
         }
-        Model m;
-        // Clone selected Model (this code could have been moved into model???
-        StringWriter writer = new StringWriter();
-        UtilsClass.marshal(selectedModel, writer);
-       
-        StringReader reader = new StringReader(writer.toString());
-        m = (Model) UtilsClass.unmarshal(Model.class, reader);
+        Model m = (Model) UtilsClass.clone(selectedModel);        
         settingsModel.replaceModel(current, m);          
     }//GEN-LAST:event_typeComboBoxActionPerformed
 
