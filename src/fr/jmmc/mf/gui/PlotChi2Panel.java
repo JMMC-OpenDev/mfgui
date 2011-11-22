@@ -16,104 +16,120 @@ import javax.swing.DefaultCellEditor;
 
 public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
-  /** Class logger */
-  static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-          "fr.jmmc.mf.gui.PlotChi2Panel");
-  public SettingsModel settingsModel = null;
-  private PlotPanel plotPanel;
-  private ParametersTableModel param1TableModel;
-  private Parameter oldXParam = null;
-  private Parameter oldYParam = null;
-  private Vector<SettingsModel> knownSettingsModels = new Vector();
-  private int startValue = 0;
-  /** this variable is true during init method and false else */
-  private boolean isIniting;
+    /** Class logger */
+    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+            "fr.jmmc.mf.gui.PlotChi2Panel");
+    public SettingsModel settingsModel = null;
+    private PlotPanel plotPanel;
+    private ParametersTableModel param1TableModel;
+    private Parameter oldXParam = null;
+    private Parameter oldYParam = null;
+    private Vector<SettingsModel> knownSettingsModels = new Vector();
+    private int startValue = 0;
+    /** this variable is true during init method and false else */
+    private boolean isIniting;
 
-  /** Creates new form PlotPanel */
-  public PlotChi2Panel(PlotPanel plotPanel) {
-    this.plotPanel = plotPanel;
-    param1TableModel = new ParametersTableModel();
-    startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
-    initComponents();
-    // build help button
-    helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-    tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+    /** Creates new form PlotPanel */
+    public PlotChi2Panel(PlotPanel plotPanel) {
+        this.plotPanel = plotPanel;
+        param1TableModel = new ParametersTableModel();
+        startValue = Preferences.getInstance().getPreferenceAsInt("user.fov");
+        initComponents();
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
+        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
 
-    // set one click edition on following table and show all decimals of numerical values
-    ((DefaultCellEditor) jTable1.getDefaultEditor(String.class)).setClickCountToStart(1);
-    jTable1.setDefaultEditor(Double.class, (DefaultCellEditor) jTable1.getDefaultEditor(String.class));
-    jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
-  }
-
-  public void show(SettingsModel s) {
-    settingsModel = s;
-
-    isIniting = true;
-
-    Object[] params;
-
-    params = s.getParameterListModel().toArray();
-
-    // we want to listen model change events
-    if (!knownSettingsModels.contains(settingsModel)) {
-      settingsModel.addObserver(this);
-      knownSettingsModels.add(settingsModel);
+        // set one click edition on following table and show all decimals of numerical values
+        ((DefaultCellEditor) jTable1.getDefaultEditor(String.class)).setClickCountToStart(1);
+        jTable1.setDefaultEditor(Double.class, (DefaultCellEditor) jTable1.getDefaultEditor(String.class));
+        jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
     }
 
-    // Store old references
-    Parameter tmpX = oldXParam;
-    Parameter tmpY = oldYParam;
+    public void show(SettingsModel s) {
+        settingsModel = s;
 
-    // Populates combo with given params & Call old user entries back
-    xComboBox.removeAllItems();
-    yComboBox.removeAllItems();
-    logger.fine("Searching " + params.length + " parameters to use in chi2 slice");
-    for (int i = 0; i < params.length; i++) {
-      Parameter p = (Parameter) params[i];
-      if (!p.getHasFixedValue()) {
-        logger.fine(p.getName() + " added to the comboboxes");
-        xComboBox.addItem(p);
-        yComboBox.addItem(p);
-        if (tmpX != null && tmpX.getName().equals(p.getName())) {
-          xComboBox.setSelectedItem(p);
+        isIniting = true;
+
+        Object[] params;
+
+        params = s.getParameterListModel().toArray();
+
+        // we want to listen model change events
+        if (!knownSettingsModels.contains(settingsModel)) {
+            settingsModel.addObserver(this);
+            knownSettingsModels.add(settingsModel);
         }
-        if (tmpY != null && tmpY.getName().equals(p.getName())) {
-          yComboBox.setSelectedItem(p);
+
+        // Store old references
+        Parameter tmpX = oldXParam;
+        Parameter tmpY = oldYParam;
+
+        // Populates combo with given params & Call old user entries back
+        xComboBox.removeAllItems();
+        yComboBox.removeAllItems();
+        logger.fine("Searching " + params.length + " parameters to use in chi2 slice");
+        for (int i = 0; i < params.length; i++) {
+            Parameter p = (Parameter) params[i];
+            if (!p.getHasFixedValue()) {
+                logger.fine(p.getName() + " added to the comboboxes");
+                xComboBox.addItem(p);
+                yComboBox.addItem(p);
+                if (tmpX != null && tmpX.getName().equals(p.getName())) {
+                    xComboBox.setSelectedItem(p);
+                }
+                if (tmpY != null && tmpY.getName().equals(p.getName())) {
+                    yComboBox.setSelectedItem(p);
+                }
+            }
         }
-      }
+
+        // update table with
+        updateTable();
+
+        isIniting = false;
+        // fix bounds
+        xComboBoxActionPerformed(null);
+        yComboBoxActionPerformed(null);
     }
 
-    // update table with
-    updateTable();
+    private void plotChi2(boolean log, boolean reduced) {
+        // Build command line arguments according to the widget states
+        StringBuilder args = new StringBuilder("-o '");
+        StringBuilder type = new StringBuilder();
+        if (reduced) {
+            type.append("Reduced ");
+            args.append("reduced_chi2=1,");
+        }
+        if (log) {
+            type.append("log(Chi2)");
+            args.append("log_chi2=1");
+        } else {
+            type.append("Chi2");
+            args.append("log_chi2=0");
+        }
+        args.append("' ");
+        final String xParamName = ((Parameter) xComboBox.getSelectedItem()).getName();
+        args.append(xParamName).append(" ");
+        args.append(xminFormattedTextField.getText()).append(" ");
+        args.append(xmaxFormattedTextField.getText()).append(" ");
+        args.append(xSamplingFormattedTextField.getText());
 
-    isIniting = false;
-    // fix bounds
-    xComboBoxActionPerformed(null);
-    yComboBoxActionPerformed(null);
-  }
-
-  private void plotChi2(boolean log) {
-    // Build command line arguments according to the widget states
-    String args = "";
-    String type = "Chi2";
-    if (log) {
-      args += "-o 'log_chi2=1' ";
-      type = "log(Chi2)";
+        if (jRadioButton1D.isSelected()) {
+            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " Slice on " + xParamName);
+        } else {
+            final String yParamName = ((Parameter) yComboBox.getSelectedItem()).getName();
+            args.append(" '").append(yParamName).append("' ").append(yminFormattedTextField.getText()).append(" ");
+            args.append(ymaxFormattedTextField.getText()).append(" ").append(ySamplingFormattedTextField.getText());
+            plotPanel.plot("getChi2Map", args.toString(),
+                    "2D " + type + " Slice on " + xParamName + " and " + yParamName);
+        }
     }
-    args += ((Parameter) xComboBox.getSelectedItem()).getName() + " " + xminFormattedTextField.getText() + " " + xmaxFormattedTextField.getText() + " " + xSamplingFormattedTextField.getText();
-    if (jRadioButton1D.isSelected()) {
-      plotPanel.plot("getChi2Map", args, "1D " + type + " Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName());
-    } else {
-      args += " '" + ((Parameter) yComboBox.getSelectedItem()).getName() + "' " + yminFormattedTextField.getText() + " " + ymaxFormattedTextField.getText() + " " + ySamplingFormattedTextField.getText();
-      plotPanel.plot("getChi2Map", args, "2D " + type + " Slice on " + ((Parameter) xComboBox.getSelectedItem()).getName() + " and " + ((Parameter) yComboBox.getSelectedItem()).getName());
-    }
-  }
 
-  /** This method is called from within the constructor to
-   * initialize the form.
-   * WARNING: Do NOT modify this code. The content of this method is
-   * always regenerated by the Form Editor.
-   */
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -140,33 +156,34 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         helpButton1 = new javax.swing.JButton();
         jRadioButton1D = new javax.swing.JRadioButton();
         jRadioButton2D = new javax.swing.JRadioButton();
-        plotLogChi2Button = new javax.swing.JButton();
+        logChi2CheckBox = new javax.swing.JCheckBox();
+        reducedChi2CheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Cuts in the chi2 space panel"));
         setLayout(new java.awt.GridBagLayout());
 
         jLabel3.setText("max");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 1;
         add(jLabel3, gridBagConstraints);
 
         jLabel5.setText("sampling");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 1;
         add(jLabel5, gridBagConstraints);
 
         jLabel6.setText("min");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         add(jLabel6, gridBagConstraints);
 
         xminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         xminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -175,7 +192,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         xmaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         xmaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -184,7 +201,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         xSamplingFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         xSamplingFormattedTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -199,13 +216,14 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(plotChi2Button, gridBagConstraints);
 
         ySamplingFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         ySamplingFormattedTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -213,14 +231,14 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
         jLabel7.setText("sampling");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 2;
         add(jLabel7, gridBagConstraints);
 
         yminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         yminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -228,20 +246,20 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
         jLabel8.setText("max");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 2;
         add(jLabel8, gridBagConstraints);
 
         jLabel10.setText("min");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 2;
         add(jLabel10, gridBagConstraints);
 
         ymaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         ymaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -253,7 +271,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         add(xComboBox, gridBagConstraints);
 
@@ -263,7 +281,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         add(yComboBox, gridBagConstraints);
 
@@ -273,9 +291,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         tablePanel.add(jTable1, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(tablePanel, gridBagConstraints);
 
@@ -290,7 +308,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jPanel1.add(helpButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridx = 11;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -304,7 +322,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         add(jRadioButton1D, gridBagConstraints);
 
@@ -317,95 +335,92 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
         add(jRadioButton2D, gridBagConstraints);
 
-        plotLogChi2Button.setText("Plot log(Chi2)");
-        plotLogChi2Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                plotLogChi2ButtonActionPerformed(evt);
-            }
-        });
+        logChi2CheckBox.setSelected(true);
+        logChi2CheckBox.setText("log");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(plotLogChi2Button, gridBagConstraints);
+        add(logChi2CheckBox, gridBagConstraints);
+
+        reducedChi2CheckBox.setSelected(true);
+        reducedChi2CheckBox.setText("reduced");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        add(reducedChi2CheckBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
-      plotChi2(false);
+        plotChi2(logChi2CheckBox.isSelected(), reducedChi2CheckBox.isSelected());
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 
-  private void updateTable() {
-    boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
-    boolean enabled = hasParam && settingsModel.isValid();
-    plotChi2Button.setEnabled(enabled);
-    plotLogChi2Button.setEnabled(enabled);
-    if (hasParam) {
-      Parameter[] parameters = new Parameter[2];
-      parameters[0] = (Parameter) xComboBox.getSelectedItem();
-      parameters[1] = (Parameter) yComboBox.getSelectedItem();
-      param1TableModel.setModel(settingsModel, parameters, true);
-    } else {
-      logger.fine("No parameter to use for chi2map");
+    private void updateTable() {
+        boolean hasParam = (xComboBox.getSelectedItem() != null) && (yComboBox.getSelectedItem() != null);
+        boolean enabled = hasParam && settingsModel.isValid();
+        plotChi2Button.setEnabled(enabled);
+        if (hasParam) {
+            Parameter[] parameters = new Parameter[2];
+            parameters[0] = (Parameter) xComboBox.getSelectedItem();
+            parameters[1] = (Parameter) yComboBox.getSelectedItem();
+            param1TableModel.setModel(settingsModel, parameters, true);
+        } else {
+            logger.fine("No parameter to use for chi2map");
+        }
+        UtilsClass.initColumnSizes(jTable1, 400);
     }
-    UtilsClass.initColumnSizes(jTable1, 400);
-  }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
-      /* Do not update during init method */
-      if (!isIniting) {
-        Parameter yParam = (Parameter) yComboBox.getSelectedItem();
-        if (yParam == null) {
-          return;
+        /* Do not update during init method */
+        if (!isIniting) {
+            Parameter yParam = (Parameter) yComboBox.getSelectedItem();
+            if (yParam == null) {
+                return;
+            }
+            updateTable();
+            oldYParam = yParam;
+            if (yParam.hasMinValue()) {
+                yminFormattedTextField.setText(Double.toString(yParam.getMinValue()));
+            }
+            if (yParam.hasMaxValue()) {
+                ymaxFormattedTextField.setText(Double.toString(yParam.getMaxValue()));
+            }
         }
-        updateTable();
-        oldYParam = yParam;
-        if (yParam.hasMinValue()) {
-          yminFormattedTextField.setText(Double.toString(yParam.getMinValue()));
-        }
-        if (yParam.hasMaxValue()) {
-          ymaxFormattedTextField.setText(Double.toString(yParam.getMaxValue()));
-        }
-      }
 }//GEN-LAST:event_yComboBoxActionPerformed
 
     private void xComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xComboBoxActionPerformed
-      /* Do not update during init method */
-      if (!isIniting) {
-        Parameter xParam = (Parameter) xComboBox.getSelectedItem();
+        /* Do not update during init method */
+        if (!isIniting) {
+            Parameter xParam = (Parameter) xComboBox.getSelectedItem();
 
-        if (xParam == null) {
-          return;
+            if (xParam == null) {
+                return;
+            }
+            updateTable();
+            oldXParam = xParam;
+            if (xParam.hasMinValue()) {
+                xminFormattedTextField.setText(Double.toString(xParam.getMinValue()));
+            }
+            if (xParam.hasMaxValue()) {
+                xmaxFormattedTextField.setText(Double.toString(xParam.getMaxValue()));
+            }
         }
-        updateTable();
-        oldXParam = xParam;
-        if (xParam.hasMinValue()) {
-          xminFormattedTextField.setText(Double.toString(xParam.getMinValue()));
-        }
-        if (xParam.hasMaxValue()) {
-          xmaxFormattedTextField.setText(Double.toString(xParam.getMaxValue()));
-        }
-      }
     }//GEN-LAST:event_xComboBoxActionPerformed
 
     private void jRadioButton1DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1DActionPerformed
-      boolean flag = jRadioButton2D.isSelected();
-      yComboBox.setEnabled(flag);
-      ySamplingFormattedTextField.setEnabled(flag);
-      ymaxFormattedTextField.setEnabled(flag);
-      yminFormattedTextField.setEnabled(flag);
-      jLabel10.setEnabled(flag);
-      jLabel8.setEnabled(flag);
-      jLabel7.setEnabled(flag);
+        boolean flag = jRadioButton2D.isSelected();
+        yComboBox.setEnabled(flag);
+        ySamplingFormattedTextField.setEnabled(flag);
+        ymaxFormattedTextField.setEnabled(flag);
+        yminFormattedTextField.setEnabled(flag);
+        jLabel10.setEnabled(flag);
+        jLabel8.setEnabled(flag);
+        jLabel7.setEnabled(flag);
     }//GEN-LAST:event_jRadioButton1DActionPerformed
-
-    private void plotLogChi2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotLogChi2ButtonActionPerformed
-      plotChi2(true);
-    }//GEN-LAST:event_plotLogChi2ButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton helpButton1;
@@ -419,8 +434,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private javax.swing.JRadioButton jRadioButton1D;
     private javax.swing.JRadioButton jRadioButton2D;
     private javax.swing.JTable jTable1;
+    private javax.swing.JCheckBox logChi2CheckBox;
     private javax.swing.JButton plotChi2Button;
-    private javax.swing.JButton plotLogChi2Button;
+    private javax.swing.JCheckBox reducedChi2CheckBox;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JComboBox xComboBox;
     private javax.swing.JFormattedTextField xSamplingFormattedTextField;
@@ -432,7 +448,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private javax.swing.JFormattedTextField yminFormattedTextField;
     // End of variables declaration//GEN-END:variables
 
-  public void update(Observable o, Object arg) {
-    show(settingsModel);
-  }
+    public void update(Observable o, Object arg) {
+        show(settingsModel);
+    }
 }
