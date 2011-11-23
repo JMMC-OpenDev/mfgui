@@ -3,15 +3,14 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeModelEvent;
@@ -21,7 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 
 public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeModelListener, TreeSelectionListener, ChangeListener{
 
-    public final static String className = "fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction";
+    public final static String className = ShowLitproSettingsFileAction.class.getName();
     public final static String actionName = "showLitproSettingsFile";
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
@@ -38,13 +37,16 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
     }
 
     public void actionPerformed(ActionEvent e) {
-        try{
-            JTextArea msg = new JTextArea(settingsModel.toLITproDesc(),40,60);
-            JScrollPane pane = new JScrollPane(msg);
-            JOptionPane.showMessageDialog(null, pane, "LITpro settings file", JOptionPane.INFORMATION_MESSAGE);
-        } catch(Exception ex){
-            FeedbackReport.openDialog(ex);
-        }
+        // Get yorick code
+        final StringBuffer yorickSettings = new StringBuffer(settingsModel.toLITproDesc());
+        
+        // Copy it into the clipboard
+        StringSelection ss = new StringSelection(yorickSettings.toString());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+        
+        // and display into one message pane
+        yorickSettings.append("---\nPrevious content has been copied into your clipboard");
+        MessagePane.showMessage(yorickSettings.toString(), "LITpro settings file");
     }
 
     /** Listen to the settings pane selection changes
