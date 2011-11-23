@@ -6,7 +6,7 @@
  -->
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    <program name="LITpro" version="1.0.11a"/>
+    <program name="LITpro" version="1.0.11b1"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
