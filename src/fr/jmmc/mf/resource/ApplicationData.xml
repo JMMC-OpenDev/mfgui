@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     <program name="LITpro" version="1.0.11a"/>
-    <compilation date="09/11/2010" compiler="JDK 1.5.0_16"/>
+    <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     <text></text>
     <!--<copyright>Copyrights JMMC 2008</copyright>-->
     <dependences>        
@@ -49,12 +49,13 @@
             <prerelease version="1.0.11a1">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages more easy to understand</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
                 <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require for previous startup of topcat or any fits viewer compatible compliant with samp until AppLauncher becomes released )</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/196">File given to application is now properly loaded on startup</change>
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only in the settings get all requested parts (data+model)</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only if the current settings get all requested parts (data+model)</change>
             </prerelease>
         </release>
         <release version="1.0.10">
