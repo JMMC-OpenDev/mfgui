@@ -192,13 +192,11 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
             MessagePane.showErrorMessage(errors);            
+            logger.warning("Error occurs after following call to LITpro server : "+methodName+" "+methodArg);
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
-            JTextArea t = new JTextArea(info, 20, 80);
-            JScrollPane sp = new JScrollPane(t);
-            javax.swing.JOptionPane.showMessageDialog(null, sp, "Info ",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            MessagePane.showMessage(info);
         }
         return r;
     }
@@ -304,7 +302,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
             int status = client_.executeMethod(myPost);
             if (status == HttpStatus.SC_OK) {
-                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
+                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());                
 
                 // TODO : define initialSize correctly (get http content length ?) :
                 final StringWriter sw = new StringWriter(65535);
