@@ -6,16 +6,194 @@
  -->
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
+    
     <program name="LITpro" version="1.0.11b1"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
+    
     <text></text>
-    <!--<copyright>Copyrights JMMC 2008</copyright>-->
-    <dependences>        
-        <package name="ptolemy plots"
-        description="2D plots"
-        link="http://ptolemy.eecs.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/index.htm"
-        jars="ptplot5.6.jar"/>
+
+    <dependences>      
+
+        <!-- JMMC -->
+
+        <!-- Java Mariotti Common Software -->
+        <package name="jMCS"
+            description="jMCS (JMMC GUI Homogeneity Framework) is the JMMC toolkit to provide better user interface and platform integration across Mac, Linux and Windows"
+            link="https://www.jmmc.fr/dev/jmcs/"
+            jars="jmcs.jar"
+            license="CECILL-B ???"/>     
+
+        <!-- Java Mariotti Astronomical library -->
+        <package name="jMAL"
+            description="jMAL (JMMC Astronomical library) is the JMMC library to provide common astronomical computations (coordinate conversion, simbad star resolver and analytical object models in interferometry)"
+            link="https://www.jmmc.fr/dev/jmal/"
+            jars="jmal.jar"
+            license="CECILL-B ???"/>     
+
+        <!-- Java Mariotti OITools -->
+        <package name="OITools"
+            description="OITools is the JMMC library dedicated to OIFits manipulation (load, save and validation)"
+            link="https://www.jmmc.fr/dev/oitools/"
+            jars="oitools.jar"
+            license="CECILL-B ???"/>     
+
+
+        <!-- 1. Science / VO libraries (always on top for better visibility) -->
+
+        <!-- OITools dependencies -->
+
+        <package name="nom.tam.fits"
+            description="The Java FITS library (nom.tam.fits) has been developed which provides efficient I/O for FITS images and binary tables. Made by Dr Thomas A. McGlynn, HEASARC"
+            link="http://heasarc.gsfc.nasa.gov/docs/heasarc/fits/java/v1.0/"
+            license="Copyright: Thomas McGlynn 1997-1999." />
+            <!--
+              Copyright: Thomas McGlynn 1997-1999.
+              This code may be used for any purpose, non-commercial
+              or commercial so long as this copyright notice is retained
+              in the source code or included in or referred to in any
+              derived software.
+            -->
+
+        <!-- jMCS dependencies -->
+
+        <!-- VO interoperability -->
+        <package name="JSAMP"
+          description="JSAMP is a Java toolkit for use with the Simple Applications Messaging Protocol. Made by Mark Taylor, working in the Astrophysics Group at Bristol University."
+          link="http://software.astrogrid.org/doc/jsamp/"
+          jars="jsamp-1.3.jar"
+          license="(at least) the Academic Free Licence and the BSD License."/>
+
+        <!-- jMAL dependencies -->
+
+        <!-- CDS Used by ld2ud computation (fr.jmmc.mcs.astro) -->
+        <package name="CDS_SpType"
+            description="Get information from spectral type of stellar objects. Provided by CDS"
+            link="nc"
+            jars="sptype.jar"/>
+
+        <!-- Model computations -->
+        <package name="commons-math"
+            description="Commons Math is a library of lightweight, self-contained mathematics and statistics components addressing the most common problems not available in the Java programming language or Commons Lang."
+            link="http://commons.apache.org/math/"
+            jars="commons-math-2.0.jar"
+            license="APACHE_V2"/>
+
+        <!-- Model computations (bessel functions) -->
+        <package name="CERN colt"
+            description="provides a set of Open Source Libraries for High Performance Scientific and Technical Computing in Java"
+            link="http://acs.lbl.gov/software/colt/"
+            jars="colt.jar"
+            license="Copyright (c) 1999 CERN - European Organization for Nuclear Research"/>
+            <!--
+              Copyright (c) 1999 CERN - European Organization for Nuclear Research.
+              Permission to use, copy, modify, distribute and sell this software and its documentation for any purpose is
+              hereby granted without fee, provided that the above copyright notice appear in all copies and that both that
+              copyright notice and this permission notice appear in supporting documentation. CERN makes no representations
+              about the suitability of this software for any purpose. It is provided "as is" without expressed or implied warranty.
+            -->
+
+
+        <!-- 2. Swing -->
+        
+        <!-- LITpro dependencies -->
+
+        <package name="Ptolemy plots"
+            description="2D plots"
+            link="http://ptolemy.eecs.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/index.htm"
+            jars="ptplot5.6.jar"/>
+
+        <!-- jMCS dependencies -->
+
+        <!-- Mac OS X Desktop integration -->
+        <package name="AppleJavaExtensions"
+          description="Adapt menus for Mac OS X"
+          link="http://developer.apple.com/samplecode/AppleJavaExtensions/index.html"
+          jars="AppleJavaExtensions.jar"/>
+
+        <!-- Launch one desktop browser -->
+        <package name="BrowserLauncher2"
+          description="Permit to use the default web browser"
+          link="http://browserlaunch2.sourceforge.net/"
+          jars="BrowserLauncher2-1_3.jar"/>
+
+        <!-- Documentation reader -->
+        <package name="jhall"
+          description="Show a help window from JavaHelp Jar file "
+          link="http://java.sun.com/javase/technologies/desktop/javahelp/"
+          jars="jhall.jar "/>
+        
+        <!-- Swing Task management -->
+        <package name="SwingWorker"
+          description="backport of SwingWorker included into Java 1.6"
+          link="https://swingworker.dev.java.net/"
+          jars="swing-worker-1.2.jar"
+          license="LGPL"/>     
+
+
+        <!-- 3. Tools -->
+        
+        <!-- LITpro dependencies -->
+
+        <!--  Xml binding (castor) -->
+        <package name="castor"
+            description="Create Java classes from XSD schema"
+            link="http://www.castor.org/"
+            jars="castor.jar"/>
+            
+        <!-- castor dependency -->
+        <package name="xercesImpl"
+            description="XML validation"
+            link="http://xerces.apache.org/"
+            jars="xercesImpl.jar xmlParserAPIs.jar"/>
+
+        <!-- jMCS dependencies -->
+
+        <!-- Xml binding (ApplicationData, targetModel and aspro2) -->
+        <package name="JAXB"
+          description="Java Architecture for XML Binding (JAXB) allows Java developers to map Java classes to XML representations"
+          link="https://jaxb.dev.java.net/"
+          jars="activation.jar jaxb-api.jar jaxb-impl.jar jsr173_1.0_api.jar"
+          license="CDDL/GPL" />
+
+        <!-- HTTP client (feedback report and LITpro) (see fr.jmmc.mcs.util.Http wrapper) -->
+        <package name="commons-httpclient"
+          description="HTTP Client (used to send HTTP POST requests)"
+          link="http://hc.apache.org/httpclient-3.x/"
+          jars="commons-httpclient-3.1.jar "/>
+
+        <!-- HttpClient dependency -->
+        <package name="commons-codec"
+          description="Commons Codec provides implementations of common encoders and decoders such as Base64, Hex, Phonetic and URLs. "
+          link="http://commons.apache.org/codec/"
+          jars="commons-codec-1.3.jar"/>
+
+        <!-- Logging common interface (HttpClient, Axis dependencies at least) -->
+        <package name="commons-logging"
+          description="Ultra-thin bridge between different logging implementations"
+          link="http://commons.apache.org/logging/"
+          jars="commons-logging-1.1.1.jar"/>
+
+        <!-- Graphical logging utility (-loggui option) -->
+        <package name="loggui"
+          description="Adjust logging facilities"
+          link="http://www.informatrix.ch/loggui/index.html"
+          jars="loggui.jar"/>
+        
+        <!-- Parse command line arguments -->
+        <package name="java-getopt"
+          description="Interpret command line arguments"
+          link="http://www.urbanophile.com/arenn/hacking/download.html"
+          jars="java-getopt-1.0.13.jar"/>
+
+        <!-- Only used to detect the platform -->
+        <package name="commons-lang"
+          description="Provide much needed additions to the standard JDK's java.lang package"
+          link="http://commons.apache.org/lang/"
+          jars="commons-lang-2.6.jar"
+          license="APACHE_V2"/>
+
     </dependences>
+    
     <menubar>
         <menu label="File">
             <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
@@ -43,6 +221,7 @@
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
     </menubar>
+
     <releasenotes>
        <release version="1.0.11">
             <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
@@ -552,6 +731,7 @@ feature is set to true.
         </release>
         -->
     </releasenotes>
+
     <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{LITpro} service
     co-developped by CRAL, LAOG and FIZEAU.
 \footnote{LITpro software available at http://www.jmmc.fr/litpro}
