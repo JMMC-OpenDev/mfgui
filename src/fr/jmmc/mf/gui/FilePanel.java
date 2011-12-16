@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import org.apache.commons.math.linear.RealMatrixImpl;
 
 /**
  *
@@ -558,22 +557,22 @@ public class FilePanel extends javax.swing.JPanel {
 
     private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showT3ButtonActionPerformed
-        final String [] ampAndPhi=new String[]{"T3AMP", "T3PHI"};
-        final String [] amp=new String[]{"T3AMP"};
-        final String [] phi=new String[]{"T3PHI"};
-        final String [] nothing = new String[]{};
-        
-        if(t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()){
-            showData("OI_T3", ampAndPhi);    
+        final String[] ampAndPhi = new String[]{"T3AMP", "T3PHI"};
+        final String[] amp = new String[]{"T3AMP"};
+        final String[] phi = new String[]{"T3PHI"};
+        final String[] nothing = new String[]{};
+
+        if (t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()) {
+            showData("OI_T3", ampAndPhi);
         }
-        if(t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()){
-            showData("OI_T3", amp);    
+        if (t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()) {
+            showData("OI_T3", amp);
         }
-        if(!t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()){
-            showData("OI_T3", phi);    
+        if (!t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()) {
+            showData("OI_T3", phi);
         }
-        if(!t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()){
-            showData("OI_T3", nothing);    
+        if (!t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()) {
+            showData("OI_T3", nothing);
         }
     }//GEN-LAST:event_showT3ButtonActionPerformed
 
@@ -581,152 +580,149 @@ public class FilePanel extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_showUVCoverageButtonActionPerformed
         // Iterate all selected items
         showUVCoverageButton.setEnabled(false);
-        String plotName=current.getName()+"(UVCoverage)";                  
-            StringBuffer sb   = new StringBuffer();
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>" 
+        String plotName = current.getName() + "(UVCoverage)";
+        StringBuffer sb = new StringBuffer();
+        sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>"
                 //+"<!DOCTYPE plot PUBLIC \"-//UC Berkeley//DTD PlotML 1//EN\""
                 //+ " \"http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd\">"
-                + "<plot>" +
-                "<!-- Ptolemy plot, version 5.6 , PlotML format. -->" +
-                "<title>UV coverage</title>" + "<xLabel>UCOORD [1/rad] </xLabel>" +
-                "<yLabel>VCOORD [1/rad]</yLabel>");
+                + "<plot>"
+                + "<!-- Ptolemy plot, version 5.6 , PlotML format. -->"
+                + "<title>UV coverage</title>" + "<xLabel>UCOORD [1/rad] </xLabel>"
+                + "<yLabel>VCOORD [1/rad]</yLabel>");
+
+        Object selected[] = hduList.getSelectedValues();
+
+        for (int i = 0; i < selected.length; i++) {
+            OITable table = (OITable) selected[i];
+            String label = table.getExtName() + "#" + table.getExtNb();
             
-            Object selected[] = hduList.getSelectedValues();
-            for (int i = 0; i < selected.length; i++)
-            {
-                OITable table  = (OITable)selected[i];
-                String label = table.getExtName()+"#"+table.getExtNb();
-                RealMatrixImpl ucoord=null;
-                RealMatrixImpl vcoord=null;
+            double[][] ucoord = null;
+            double[][] vcoord = null;
 
-                if (table instanceof OIVis )
-                {
-                    OIVis t=(OIVis)table;
-                    ucoord = new RealMatrixImpl(t.getSpatialUCoord());
-                    vcoord = new RealMatrixImpl(t.getSpatialVCoord());
-                }
-                if (table instanceof OIVis2 )
-                {
-                    OIVis2 t=(OIVis2)table;
-                    ucoord = new RealMatrixImpl(t.getSpatialUCoord());
-                    vcoord = new RealMatrixImpl(t.getSpatialVCoord());
-                }
-                if (table instanceof OIT3 )
-                {
-                    OIT3 t=(OIT3)table;
-                    double [][] u1s = t.getSpatialU1Coord();
-                    double [][] u2s = t.getSpatialU2Coord();
-                    double [][] us = new double[(u1s.length)*2][u1s[0].length] ;
-                    double [][] v1s = t.getSpatialV1Coord();
-                    double [][] v2s = t.getSpatialV2Coord();
-                    double [][] vs = new double[(v1s.length)*2][v1s[0].length] ;
-                    for (int j = 0; j < u1s.length; j++) {
-                        double[] u1 = u1s[j];
-                        double[] u2 = u2s[j];
-                        double[] v1 = v1s[j];
-                        double[] v2 = v2s[j];
-                        for (int k = 0; k < u1.length; k++) {
-                            us[j][k]=u1[k];
-                            us[j+u1s.length][k]=u2[k];
-                            vs[j][k]=v1[k];
-                            vs[j+v1s.length][k]=v2[k];
-                        }
+            if (table instanceof OIVis) {
+                final OIVis t = (OIVis) table;
+                
+                ucoord = t.getSpatialUCoord();
+                vcoord = t.getSpatialVCoord();
+            } else if (table instanceof OIVis2) {
+                final OIVis2 t = (OIVis2) table;
+                
+                ucoord = t.getSpatialUCoord();
+                vcoord = t.getSpatialVCoord();
+            } else if (table instanceof OIT3) {
+                final OIT3 t = (OIT3) table;
+                
+                final int uvLen = t.getNbRows();
+                final int wLen = t.getNWave();
+                
+                final double[][] u1s = t.getSpatialU1Coord();
+                final double[][] u2s = t.getSpatialU2Coord();
+                final double[][] v1s = t.getSpatialV1Coord();
+                final double[][] v2s = t.getSpatialV2Coord();
+                
+                final double[][] us = new double[2 * uvLen][wLen];
+                final double[][] vs = new double[2 * uvLen][wLen];
+                
+                for (int j = 0; j < uvLen; j++) {
+                    final double[] u1 = u1s[j];
+                    final double[] u2 = u2s[j];
+                    final double[] v1 = v1s[j];
+                    final double[] v2 = v2s[j];
+                    
+                    for (int k = 0; k < wLen; k++) {
+                        us[j][k] = u1[k];
+                        us[j + uvLen][k] = u2[k];
+                        vs[j][k] = v1[k];
+                        vs[j + uvLen][k] = v2[k];
                     }
-                    ucoord = new RealMatrixImpl(us);
-                    vcoord = new RealMatrixImpl(vs);
                 }
-                if (ucoord != null && vcoord != null) {
-                    // add symetrical part and request plot file building
-                    double[][] us = ucoord.getData();
-                    double[][] mus = new double[(us.length) * 2][us[0].length];
-                    double[][] vs = vcoord.getData();
-                    double[][] mvs = new double[(us.length) * 2][us[0].length];
-                    for (int j = 0; j < us.length; j++) {
-                        double[] u = us[j];
-                        double[] v = vs[j];
-                        for (int k = 0; k < u.length; k++) {
-                            mus[j][k] = u[k];
-                            mvs[j][k] = v[k];
-                            mus[j+us.length][k]=-u[k];
-                            mvs[j+vs.length][k]=-v[k];
-                        }
-                    }
-                    sb.append(buildXmlPtPlotDataSet(label, mus, mvs, null, null));
-                }
+                ucoord = us;
+                vcoord = vs;
             }
-            sb.append("</plot>");
+            if (ucoord != null && vcoord != null) {
+                // add symetrical part and request plot file building
+                
+                final int uvLen = ucoord.length;
+                final int wLen = ucoord[0].length;
+                
+                final double[][] mus = new double[2 * uvLen][wLen];
+                final double[][] mvs = new double[2 * uvLen][wLen];
+                
+                for (int j = 0; j < uvLen; j++) {
+                    final double[] u = ucoord[j];
+                    final double[] v = vcoord[j];
+                    
+                    for (int k = 0; k < wLen; k++) {
+                        mus[j][k] = u[k];
+                        mvs[j][k] = v[k];
+                        mus[j + uvLen][k] = -u[k];
+                        mvs[j + uvLen][k] = -v[k];
+                    }
+                }
+                sb.append(buildXmlPtPlotDataSet(label, mus, mvs, null, null));
+            }
+        }
+        sb.append("</plot>");
 
-            PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-            java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
-            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));
-        
-                                                      
- 
+        PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
+        java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
+        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName, tsv));
+
+
+
     }//GEN-LAST:event_showUVCoverageButtonActionPerformed
 
     // End of variables declaration                   
     public void saveFile(java.io.File targetFile)
-        throws java.io.IOException, java.io.FileNotFoundException
-    {
+            throws java.io.IOException, java.io.FileNotFoundException {
         UtilsClass.saveBASE64ToFile(current.getHref(), targetFile);
     }
 
     // THIS CLASS handles button states according to the table selection
-    class MyListSelectionListener implements ListSelectionListener
-    {
-        public void valueChanged(ListSelectionEvent evt)
-        {
+    class MyListSelectionListener implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent evt) {
             // Iterate all selected items                
             showUVCoverageButton.setEnabled(false);
             showVisButton.setText("Plot data of all OI_VIS");
             showVis2Button.setText("Plot VIS2DATA of all OI_VIS2");
             showT3Button.setText("Plot data of all OI_T3");
 
-            if (evt == null)
-            {
+            if (evt == null) {
                 return;
-            }            
-            
+            }
+
             // When the user release the mouse button and completes the selection,
             // getValueIsAdjusting() becomes false
-            if (! evt.getValueIsAdjusting())
-            {                
-                if (! (evt.getSource() instanceof JList))
-                {
+            if (!evt.getValueIsAdjusting()) {
+                if (!(evt.getSource() instanceof JList)) {
                     return;
                 }
-                         
-                if (hduList.getSelectedIndex() >= 0)
-                {
+
+                if (hduList.getSelectedIndex() >= 0) {
                     loadViewerButton.setEnabled(true);
-                } else
-                {
+                } else {
                     loadViewerButton.setEnabled(false);
                 }
-                
+
                 // Get all selected items
-                Object[] selected=hduList.getSelectedValues();                
-         
-                for (int i = 0; i < selected.length; i++)
-                {
+                Object[] selected = hduList.getSelectedValues();
+
+                for (int i = 0; i < selected.length; i++) {
                     OITable t = (OITable) selected[i];
 
-                    if (t instanceof OIData)
-                    {
+                    if (t instanceof OIData) {
                         showUVCoverageButton.setEnabled(true);
                     }
-                    if (t instanceof OIVis)
-                    {
+                    if (t instanceof OIVis) {
                         showVisButton.setText("Plot data of selected OI_VIS");
                     }
 
-                    if (t instanceof OIVis2)
-                    {
+                    if (t instanceof OIVis2) {
                         showVis2Button.setText("Plot VIS2DATA of selected OI_VIS2");
                     }
 
-                    if (t instanceof OIT3)
-                    {
+                    if (t instanceof OIT3) {
                         showT3Button.setText("Plot data of selected OI_T3");
                     }
 
@@ -735,65 +731,57 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-     protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
-    {
-        public CheckEmbeddedFileAction()
-        {
+    protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
+
+        public CheckEmbeddedFileAction() {
             super("checkEmbeddedFile");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
-          throw new UnsupportedOperationException("TODO");
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            throw new UnsupportedOperationException("TODO");
             // TODO replace next lines of code!
             // GUIValidator val = new GUIValidator(null);
             // val.checkFile(oifitsFile_);
         }
     }
-     
-    protected class ShowEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
-    {
-        public ShowEmbeddedFileAction()
-        {
+
+    protected class ShowEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
+
+        public ShowEmbeddedFileAction() {
             super("showEmbeddedFile");
         }
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
             int[] indices = hduList.getSelectedIndices();
             for (int i = 0; i < indices.length; i++) {
-                String filename = "file://"+oifitsFile_.getAbsoluteFilePath()+ "#" + ((indices[i]) + 1);
+                String filename = "file://" + oifitsFile_.getAbsoluteFilePath() + "#" + ((indices[i]) + 1);
                 //java.io.File file = new java.io.File( filename + "#" + ((indices[i]) + 1));
-                
+
                 // TODO find a better way to send this url with a simpler manner
                 // and also find a way to send this file to one listener only...
                 //sampSendFits.setUri(file.toURI().toString());
                 sampSendFits.setUri(filename);
                 // commmand must be All Applications to broadcast!!
-                sampSendFits.actionPerformed(                 
+                sampSendFits.actionPerformed(
                         new ActionEvent(e.getSource(), e.getID(), "All Applications"));
             }
         }
-
     }
 
+    protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
 
-    protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction
-    {
         public String lastDir = System.getProperty("user.home");
 
-        public SaveEmbeddedFileAction()
-        {
+        public SaveEmbeddedFileAction() {
             super("saveEmbeddedFile");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e)
-        {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             //logger.entering(""+this.getClass(), "actionPerformed");
             javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
 
             // Set in previous save directory
-            if (lastDir != null)
-            {
+            if (lastDir != null) {
                 fileChooser.setCurrentDirectory(new java.io.File(lastDir));
             }
 
@@ -807,16 +795,16 @@ public class FilePanel extends javax.swing.JPanel {
                 try {
                     // Save if it does not exist or ask to overwrite
                     if (file.exists()) {
-                        if ( MessagePane.showConfirmFileOverwrite(file.getName())) {
+                        if (MessagePane.showConfirmFileOverwrite(file.getName())) {
                             saveFile(file);
                         }
                     } else {
                         saveFile(file);
                     }
                 } catch (IOException ioe) {
-                    MessagePane.showErrorMessage("Sorry, cannot save your file into "+file.getName(), ioe);
+                    MessagePane.showErrorMessage("Sorry, cannot save your file into " + file.getName(), ioe);
                 }
             }
         }
     }
-    }
+}
