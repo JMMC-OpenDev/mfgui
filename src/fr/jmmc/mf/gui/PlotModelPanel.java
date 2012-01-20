@@ -110,7 +110,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
             for (FileLink fileLink : filelinks) {
                 fr.jmmc.mf.models.File selectedFile = (fr.jmmc.mf.models.File) fileLink.getFileRef();
 
-                OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+                OIFitsFile oifile = settingsModel.getOIFitsFromFile(selectedFile);
                 String obs = "VIS2";
                 if (oifile.hasOiVis2() && targetResidualsSet.contains(obs)) {
                     set.add(obs);

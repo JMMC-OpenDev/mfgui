@@ -49,6 +49,7 @@ import java.util.Observer;
 import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -88,6 +89,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** Store a reference over the associated local file */
     public java.io.File associatedFile = null;
     private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
+    private static java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile>();
+    private HashMap<OIFitsFile, OIFitsChecker> oiFitsFileToOIFitsChecker = new HashMap<OIFitsFile, OIFitsChecker>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
 
         public String toString() {
@@ -130,7 +133,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.log(Level.WARNING, "Error in uri syntax for " + url, ex);
             throw new IOException("Error in uri syntax for " + url, ex);
         }
-        associatedFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));        
+        associatedFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
         if (Http.download(uriToLoad, associatedFile, false)) {
             init(FileUtils.readFile(associatedFile));
         } else {
@@ -166,21 +169,21 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         logger.entering(className, "init");
 
         try {
-        // perform default init 
-        init();
-        
-        // and load new model from given string
-        Settings newModel = (Settings) UtilsClass.unmarshal(Settings.class, modelInXml);
-        
-        checkSettingsFormat(newModel);
-        
-        setRootSettings(newModel);
-        
-        setModified(false);
-        }catch(ExecutionException e){
-            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.",e);            
-        }catch(IllegalArgumentException e){
-            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.",e);            
+            // perform default init 
+            init();
+
+            // and load new model from given string
+            Settings newModel = (Settings) UtilsClass.unmarshal(Settings.class, modelInXml);
+
+            checkSettingsFormat(newModel);
+
+            setRootSettings(newModel);
+
+            setModified(false);
+        } catch (ExecutionException e) {
+            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ExecutionException("Can't initialize properly one new setting.\nYou should provide one valid xml data file.", e);
         }
     }
 
@@ -1291,7 +1294,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (boundFile.getOitargetCount() < 1) {
                 logger.warning("No oitarget found");
                 // restore file from base64 and try to continue
-                filename = UtilsClass.saveBASE64ToFile(boundFile).getAbsoluteFilePath();
+                OIFitsFile f = getOIFitsFromFile(boundFile);
+                filename = f.getAbsoluteFilePath();
             } else {
                 return true;
             }
@@ -1327,6 +1331,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         MessagePane.showMessage(checker.getCheckReport());
 
+        // store association between check and oifits object
+        setCheckerOfOiFitsFile(fits, checker);
+
         OITarget oiTarget = fits.getOiTarget();
 
         if (oiTarget == null) {
@@ -1349,6 +1356,79 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         return true;
+    }
+
+    public static OIFitsFile getOIFitsFromFile(fr.jmmc.mf.models.File dataFile) {
+        fr.jmmc.mf.models.File key = dataFile;
+        // Search if this file has already been loaded
+        OIFitsFile oifitsFile = (OIFitsFile) alreadyExpandedOifitsFiles.get(key);
+
+        if (oifitsFile == null) {
+            String filename = "tmpOifile";
+            String fileExtension = ".oifits";
+            java.io.File tmp = new java.io.File(dataFile.getName());
+
+            int dotPos = tmp.getName().lastIndexOf(".");
+            if (dotPos > 1) {
+                filename = tmp.getName().substring(0, dotPos);
+                if (tmp.getName().substring(dotPos).length() > 1) {
+                    fileExtension = tmp.getName().substring(dotPos);
+                }
+            }
+
+            java.io.File outputFile = FileUtils.getTempFile(filename, fileExtension);
+            UtilsClass.saveBASE64ToFile(dataFile.getHref(), outputFile);
+            try {
+                oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
+            } catch (FitsException fe) {
+                throw new IllegalArgumentException("Can't extract fits file", fe);
+            } catch (IOException ioe) {
+                throw new IllegalArgumentException("Can't extract fits file", ioe);
+            }
+
+            alreadyExpandedOifitsFiles.put(key, oifitsFile);
+            logger.fine("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
+        } else {
+            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getAbsoluteFilePath());
+        }
+        return oifitsFile;
+    }
+
+    /**
+     *  Get the checker initialized during file loading
+     * @param oifile oifits file to search checker for
+     * @return the checker initialized during loading step
+     */
+    public OIFitsChecker getOiFitsFileChecker(OIFitsFile oifile) {
+        OIFitsChecker checker = oiFitsFileToOIFitsChecker.get(oifile);
+
+        if (checker == null) {
+            // This case occurs when a settings file is open.
+
+            String filename = oifile.getAbsoluteFilePath();
+            checker = new OIFitsChecker();
+            try {
+                OIFitsFile fits = OIFitsLoader.loadOIFits(checker, filename);
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException("Can't load fits file '" + filename + "' to this setting to get checker result", ex);
+            } catch (IOException ex) {
+                throw new IllegalStateException("Can't load fits file '" + filename + "' to this setting to get checker result", ex);
+            } catch (FitsException ex) {
+                throw new IllegalStateException("Can't load fits file '" + filename + "' to this setting to get checker result", ex);
+            }
+            setCheckerOfOiFitsFile(oifile, checker);
+        }
+
+        return checker;
+    }
+
+    /**
+     *  Link the checker onto the oifits file
+     * @param oifile oifits file associated to the checker
+     * @param checker checker associated to the oifits file
+     */
+    public void setCheckerOfOiFitsFile(OIFitsFile oifile, OIFitsChecker checker) {
+        oiFitsFileToOIFitsChecker.put(oifile, checker);
     }
 
     // @todo think to move this method into fr.jmmc.mf.util

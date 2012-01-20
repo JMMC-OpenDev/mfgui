@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b1"/>
+    <program name="LITpro" version="1.0.11b2"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -220,9 +220,14 @@
     <releasenotes>
        <release version="1.0.11">
             <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <prerelease version="1.0.11a1">
+            <prerelease version="1.0.11a2">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
+                <change type="BUGFIX">Fix Null Pointer Exception setting the proper state of the 'Add new Target' button in the Targets Panel</change>
+                <change type="BUGFIX">Improve error handling on the LITpro server side</change>                
+            </prerelease>
+            <prerelease version="1.0.11a1">                
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages more easy to understand</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
@@ -240,7 +245,6 @@
                 <change type="BUGFIX">If one empty value is given for the value of one parameter, no more exception is thrown but the parameter get not modified.</change>
                 <change type="CHANGE">Use new error handling mecanisms</change>
                 <change type="CHANGE">Use new feedback report (which saves your email adress in a preference file)</change>
-
             </prerelease>
         </release>
         <release version="1.0.9">

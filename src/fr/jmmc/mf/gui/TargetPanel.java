@@ -216,7 +216,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         for (int j = 0; j
                 < selectedFiles.length; j++) {
             File selectedFile = (File) selectedFiles[j];
-            OIFitsFile oifile = UtilsClass.saveBASE64ToFile(selectedFile);
+            OIFitsFile oifile = SettingsModel.getOIFitsFromFile(selectedFile);
             if (oifile.hasOiVis2()) {
                 vis2CheckBox.setEnabled(true);
                 if (residuals == null) {
