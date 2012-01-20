@@ -25,15 +25,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
 
 import java.util.logging.*;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -48,7 +45,7 @@ import org.astrogrid.samp.client.SampException;
  *
  * @author mella
  */
-public class ModelFitting extends fr.jmmc.jmcs.App {
+public class ModelFitting extends fr.jmmc.jmcs.App {    
 
     final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
     final static String className = ModelFitting.class.getName();
@@ -56,6 +53,8 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
     static Preferences myPreferences;
     static MFGui gui = null;
     static HttpClient client_ = null;
+    /** Title of message pane shown after reception of message/error from the remote service */
+    protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
 
     /**
      * Creates a new ModelFitting object.
@@ -187,16 +186,20 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }                
-                
+        
+        if (logger.isLoggable(Level.FINE)){
+            logger.fine(xmlResult);
+        }
+        
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
-            MessagePane.showErrorMessage(errors);            
+            MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);            
             logger.warning("Error occurs after following call to LITpro server : "+methodName+" "+methodArg);
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
-            MessagePane.showMessage(info);
+            MessagePane.showMessage(info, LITPRO_SERVER_MESSAGE_TITLE);
         }
         return r;
     }
@@ -291,7 +294,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
-
+ 
         final PostMethod myPost = new PostMethod(targetURL);
         try {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
