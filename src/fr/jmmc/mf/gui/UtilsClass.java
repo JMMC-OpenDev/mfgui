@@ -20,7 +20,6 @@ import fr.jmmc.mf.models.ResponseItem;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.oitools.model.OIFitsFile;
-import fr.jmmc.oitools.model.OIFitsLoader;
 import java.awt.BorderLayout;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
@@ -53,7 +52,6 @@ import javax.swing.tree.TreePath;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
-import fr.nom.tam.fits.FitsException;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
@@ -69,8 +67,7 @@ public class UtilsClass {
 
     static final String className = UtilsClass.class.getName();
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
-    private static java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.Hashtable<fr.jmmc.mf.models.File, OIFitsFile>();
+            className);   
     /** Mapping obect used by unmarshalling operations (inited into getMapping()) */
     private static Mapping mapping = null;
     /** Number of first displayed chars if one unmarshalling operation fails */
@@ -296,8 +293,10 @@ public class UtilsClass {
             o = Unmarshaller.unmarshal(c, reader);
             logger.fine("End of unmarshal");
         } catch (MarshalException ex) {
+            logger.warning(xml);
             throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
         } catch (ValidationException ex) {
+            logger.warning(xml);
             throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
         } catch (MappingException ex) {
             throw new IllegalStateException("Can't use mapping object", ex);
@@ -502,50 +501,7 @@ public class UtilsClass {
         }
         return outputFile;
     }
-
-    /**
-     *
-     * @param dataFile
-     * @return one oifitsFile
-     * @throws IOException
-     * @throws FitsException
-     */
-    public static OIFitsFile saveBASE64ToFile(fr.jmmc.mf.models.File dataFile) {
-        fr.jmmc.mf.models.File key = dataFile;
-        // Search if this file has already been loaded
-        OIFitsFile oifitsFile = (OIFitsFile) alreadyExpandedOifitsFiles.get(key);
-
-        if (oifitsFile == null) {
-            String filename = "tmpOifile";
-            String fileExtension = ".oifits";
-            File tmp = new File(dataFile.getName());
-
-            int dotPos = tmp.getName().lastIndexOf(".");
-            if (dotPos > 1) {
-                filename = tmp.getName().substring(0, dotPos);
-                if (tmp.getName().substring(dotPos).length() > 1) {
-                    fileExtension = tmp.getName().substring(dotPos);
-                }
-            }
-
-            File outputFile = FileUtils.getTempFile(filename, fileExtension);
-            saveBASE64ToFile(dataFile.getHref(), outputFile);
-            try {
-                oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
-            } catch (FitsException fe) {
-                throw new IllegalArgumentException("Can't extract fits file", fe);
-            } catch (IOException ioe) {
-                throw new IllegalArgumentException("Can't extract fits file", ioe);
-            }
-
-            alreadyExpandedOifitsFiles.put(key, oifitsFile);
-            logger.fine("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
-        } else {
-            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getAbsoluteFilePath());
-        }
-        return oifitsFile;
-    }
-
+    
     //
     // General application methods
     //

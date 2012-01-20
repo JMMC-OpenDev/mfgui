@@ -99,7 +99,7 @@ public class FilePanel extends javax.swing.JPanel {
         oifitsFile_ = null;
         current = file;
 
-        oifitsFile_ = UtilsClass.saveBASE64ToFile(current);
+        oifitsFile_ = settingsModel.getOIFitsFromFile(current);
 
         // update file info fields
         nameTextField.setText(file.getName());
@@ -737,11 +737,10 @@ public class FilePanel extends javax.swing.JPanel {
             super("checkEmbeddedFile");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            throw new UnsupportedOperationException("TODO");
-            // TODO replace next lines of code!
-            // GUIValidator val = new GUIValidator(null);
-            // val.checkFile(oifitsFile_);
+        public void actionPerformed(java.awt.event.ActionEvent e) {            
+            // file extension can be *fits or *fits.gz
+            OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
+            MessagePane.showMessage(checker.getCheckReport());                        
         }
     }
 
