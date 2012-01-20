@@ -30,7 +30,11 @@ public class TargetsPanel extends javax.swing.JPanel {
         current = t;
         rootSettingsModel = s;
         targetList.setModel(settingsViewer.getSettingsModel().getTargetListModel());
-        targetNameComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
+        targetNameComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);        
+        
+        // update UI
+        targetNameComboBoxActionPerformed(null);
+        targetListValueChanged(null);        
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
