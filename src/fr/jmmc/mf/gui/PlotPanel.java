@@ -229,7 +229,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         targets = settingsModel.getTargetListModel();
         if (targets.getSize()!= targetList.getModel().getSize()){
             targetList.setModel(targets);
-            System.out.println("CHANGE IN MODELS!!!");
+            logger.severe("Trying to work on a non consistent model!!");
         }
         
         
