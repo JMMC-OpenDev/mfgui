@@ -76,6 +76,13 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel
     private void updateAvailableObservables() {
+
+        // Perform update only if widgets are visible
+        if (!isVisible()) {
+            return;
+        }
+
+
         // disable widget to flag automatic action into radialComboBoxActionPerformed
         radialComboBox.setEnabled(false);
 
