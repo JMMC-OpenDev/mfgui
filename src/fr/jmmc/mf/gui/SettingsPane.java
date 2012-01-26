@@ -15,6 +15,8 @@ import java.awt.Color;
 import java.awt.Component;
 
 import java.lang.reflect.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
@@ -25,7 +27,7 @@ import javax.swing.tree.*;
 /**
  */
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
-        TreeModelListener, SettingsViewerInterface {
+        TreeModelListener, SettingsViewerInterface, Observer {
 
     final static String className = SettingsPane.class.getName();
     /** Main logger */
@@ -108,8 +110,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
-        // register as treeModelListener
+        // register as treeModelListener and observer
         rootSettingsModel.addTreeModelListener(this);
+        rootSettingsModel.addObserver(this);
         // finaly ask to show top level element
         showElement(rootSettingsModel.getRootSettings());
 
@@ -135,6 +138,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         checkValidSettings();
     }
 
+    public void update(Observable o, Object arg) {
+        checkValidSettings();
+    }
+    
     private void showElement(Object o) {
         logger.entering(className, "showElement", o);
 
@@ -261,7 +268,34 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      */
     protected void checkValidSettings() {
         boolean validSettingsModel = rootSettingsModel.isValid();
-        runFitAction.setEnabled(validSettingsModel);
+        boolean hasOneFreeParam = false;
+        
+        // TODO do we have to move following code into the settingModel or utilClass ?
+        // walk throug every parameters and set hasOneFreeParam to true on first free one
+        Parameter params[] = rootSettingsModel.getSharedParameters();
+        for (int i = 0; i < params.length && !hasOneFreeParam ; i++) {
+            Parameter parameter = params[i];
+            if (!parameter.getHasFixedValue()) {
+                hasOneFreeParam = true;
+            }
+        }
+        Target targets[] = rootSettingsModel.getRootSettings().getTargets().getTarget();
+        for (int i = 0; i < targets.length && !hasOneFreeParam ; i++) {
+            Target target = targets[i];
+            Model models[] = target.getModel();
+            for (int j = 0; j < models.length && !hasOneFreeParam ; j++) {
+                Model model = models[j];
+                params = model.getParameter();
+                for (int k = 0; k < params.length && !hasOneFreeParam ; k++) {
+                    Parameter parameter = params[k];
+                    if (!parameter.getHasFixedValue()) {
+                        hasOneFreeParam = true;
+                    }
+                }
+            }
+        }
+        
+        runFitAction.setEnabled(validSettingsModel && hasOneFreeParam);
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
@@ -411,7 +445,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.weighty = 1.0;
         add(jSplitPane1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
+    
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
     protected class MyCellRenderer extends DefaultTreeCellRenderer {
