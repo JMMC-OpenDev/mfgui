@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b2"/>
+    <program name="LITpro" version="1.0.11b3"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -220,9 +220,12 @@
     <releasenotes>
        <release version="1.0.11">
             <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <prerelease version="1.0.11a2">
+            <prerelease version="1.0.11a3">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
+            </prerelease>
+            <prerelease version="1.0.11a2">
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
                 <change type="BUGFIX">Fix Null Pointer Exception setting the proper state of the 'Add new Target' button in the Targets Panel</change>
                 <change type="BUGFIX">Improve error handling on the LITpro server side</change>                
