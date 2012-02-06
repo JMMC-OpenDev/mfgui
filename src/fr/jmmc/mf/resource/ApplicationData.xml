@@ -224,6 +224,7 @@
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>                
             </prerelease>
             <prerelease version="1.0.11a2">
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
