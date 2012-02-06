@@ -163,7 +163,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         logger.fine("Adding " + nbOfParams + " normal params and " + nbOfSharedParams + " shared parameters for " + model);
         // Create with initial data
         for (int i = 0; i < nbOfSharedParams; i++) {
-            ParameterLink link = paramLinks[i];            
+            ParameterLink link = paramLinks[i];
             paramContainer.add(link);
             modelContainer.add(model);
         }
@@ -203,9 +203,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             return null;
         }
         Parameter p;
-        ParameterLink pl=null;
+        ParameterLink pl = null;
         if (isParameterLink(o)) {
-            pl=(ParameterLink) o;
+            pl = (ParameterLink) o;
             p = (Parameter) ((ParameterLink) o).getParameterRef();
         } else {
             p = (Parameter) o;
@@ -228,8 +228,8 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 return p.getName();
             }
         } else if (columnIndex == 1) {
-            if (isParameterLink(o)) {                
-                    return pl.getType();
+            if (isParameterLink(o)) {
+                return pl.getType();
             }
             return p.getType();
         }
@@ -250,20 +250,20 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             } catch (NoSuchMethodException e) {
                 // not illegal because most parameters haven't some attributes
             }
-            
+
             Object ret = get.invoke(p, new Object[0]);
             return ret;
 
         } catch (InvocationTargetException ex) {
-            throw new IllegalStateException("Can't get data from setting",ex);
+            throw new IllegalStateException("Can't get data from setting", ex);
         } catch (NoSuchMethodException ex) {
             //throw new IllegalStateException("Can't get data from setting",ex);
-          logger.log(Level.WARNING, "Can't get data from setting",ex);
-          return null;
+            logger.log(Level.WARNING, "Can't get data from setting", ex);
+            return null;
         } catch (SecurityException ex) {
-            throw new IllegalStateException("Can't get data from setting",ex);
+            throw new IllegalStateException("Can't get data from setting", ex);
         } catch (IllegalAccessException ex) {
-            throw new IllegalStateException("Can't get data from setting",ex);
+            throw new IllegalStateException("Can't get data from setting", ex);
         }
     }
 
@@ -281,16 +281,16 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         } else {
             p = (Parameter) o;
         }
-                 
+
         if (aValue != null) {
-            logger.fine("parameter[row="+rowIndex+", hashcode="+p.hashCode()+"] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
+            logger.fine("parameter[row=" + rowIndex + ", hashcode=" + p.hashCode() + "] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(" + aValue.getClass() + ")");
         } else {
-            logger.fine("parameter[row="+rowIndex+", hashcode="+p.hashCode()+"] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
+            logger.fine("parameter[row=" + rowIndex + ", hashcode=" + p.hashCode() + "] " + p.getName() + " old:" + getValueAt(rowIndex, columnIndex) + " new:" + aValue + "(ie EMPTY CELL)");
         }
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
         // and most of parameter ones accept double only :(
-        if (columnNames[columnIndex].equals("Value")) {          
+        if (columnNames[columnIndex].equals("Value")) {
             if (aValue != null) {
                 Double v = (Double) aValue;
                 p.setValue(v);
@@ -347,7 +347,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         }
         // update the table for models that uses the same shared parameters more
         // than once
-        if(isParameterLink(o)){
+        if (isParameterLink(o)) {
             update(null, null);
         }
         // Notify a model change
@@ -373,16 +373,16 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             parametersTable.getSelectionModel().setSelectionInterval(rowIdx, rowIdx);
 
             // Build menu
-            Object o = parametersOrParameterLinksToPresent[rowIdx];
+            final Object o = parametersOrParameterLinksToPresent[rowIdx];
             final Parameter p;
             if (isParameterLink(o)) {
                 p = (Parameter) ((ParameterLink) o).getParameterRef();
             } else {
                 p = (Parameter) o;
             }
-            
-            JMenuItem menuItem = new JMenuItem("Manage parameter " + p.getName() +
-                    " of type " + p.getType());
+
+            JMenuItem menuItem = new JMenuItem("Manage parameter " + p.getName()
+                    + " of type " + p.getType());
             menuItem.setEnabled(false);
             parameterPopupMenu.add(menuItem);
             parameterPopupMenu.add(new JSeparator());
@@ -413,7 +413,11 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 menuItem.addActionListener(new java.awt.event.ActionListener() {
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        settingsModel.linkParameter(p, sp);
+                        if (isParameterLink(o)) {
+                            settingsModel.linkSharedParameter((ParameterLink) o, sp);
+                        } else {
+                            settingsModel.linkParameter(p, sp);
+                        }
                         // notify observers
                         fireTableDataChanged();
                     }
@@ -433,6 +437,13 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
                 menuItem.setEnabled(false);
                 parameterPopupMenu.add(menuItem);
+            } else {
+                m = settingsModel.getParent((ParameterLink) o);
+                if (m != null) {
+                    menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
+                    menuItem.setEnabled(false);
+                    parameterPopupMenu.add(menuItem);
+                }
             }
 
             parameterPopupMenu.validate();

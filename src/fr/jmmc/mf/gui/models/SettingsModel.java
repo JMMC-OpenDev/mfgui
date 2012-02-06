@@ -858,6 +858,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return false;
     }
 
+    /**
+     * Replace the parameterToLink parameter by a link onto the given sharedParameter.
+     * @param parameterToLink param to replace by a link
+     * @param sharedParameter parameter to be linked to
+     */
     void linkParameter(Parameter parameterToLink, Parameter sharedParameter) {
         logger.entering(className, "linkParameter", new Object[]{parameterToLink, sharedParameter});
 
@@ -869,6 +874,27 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         parameterComboBoxModel.removeElement(parameterToLink);
         parameterListModel.removeElement(parameterToLink);
         parentModel.removeParameter(parameterToLink);
+        parentModel.addParameterLink(newLink);
+
+        Target parentTarget = getParent(parentModel);
+        fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
+                getIndexOfChild(parentTarget, parentModel), parentModel);
+    }
+    
+    /**
+     * Replace the sharedParameterToLink parameter by a link onto the given sharedParameter.
+     * @param sharedParameterToLink shared param to replace by a new link
+     * @param sharedParameter parameter to be linked to
+     */
+    void linkSharedParameter(ParameterLink sharedParameterToLink, Parameter sharedParameter) {
+        logger.entering(className, "linkParameter", new Object[]{sharedParameterToLink, sharedParameter});
+
+        ParameterLink newLink = new ParameterLink();
+        newLink.setParameterRef(sharedParameter);
+        newLink.setType(sharedParameterToLink.getType());
+
+        Model parentModel = getParent(sharedParameterToLink);
+        parentModel.removeParameterLink(sharedParameterToLink);
         parentModel.addParameterLink(newLink);
 
         Target parentTarget = getParent(parentModel);
@@ -957,9 +983,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             parameterListModel.addElement(sharedParams[i]);
             parameterComboBoxModel.addElement(sharedParams[i]);
         }
-        fireTreeNodesChanged(new Object[]{rootSettings},
+        /*fireTreeNodesChanged(new Object[]{rootSettings},
                 getIndexOfChild(rootSettings, params), params);
-
+*/
         // update parameters and parameterLinks of every targets
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
@@ -979,8 +1005,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 Model model = models[j];
                 model.setParameter(newParameters);
                 model.setParameterLink(newModel.getParameterLink());
-                fireTreeNodesChanged(new Object[]{rootSettings, target},
-                        getIndexOfChild(target, model), model);
+                /*fireTreeNodesChanged(new Object[]{rootSettings, target},
+                        getIndexOfChild(target, model), model);*/
             }
         }
 
@@ -996,14 +1022,20 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 ResultModel r = getModel(newResult);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
-                fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
+                /*fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1,
                         r);
-                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));*/
             } else {
                 logger.warning("found null result while updating with new settings");
             }
         }
+
+        // fire general change event
+        fireTreeStructureChanged(rootSettings);
+        // and select last result    
+        ResultModel r = getModel(rootSettings.getResults().getResult(rootSettings.getResults().getResultCount()));
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
     }
 
     private void stampLastUserInfo(ResultModel r) {
