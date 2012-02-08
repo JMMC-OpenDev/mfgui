@@ -137,7 +137,12 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     if (isParameterLink(o)) {
                         modelOfParameters[i] = settingsModel.getParent((ParameterLink) o);
                     } else {
-                        modelOfParameters[i] = settingsModel.getParent((Parameter) o);
+                        Parameter p = (Parameter) o;     
+                        if(settingsModel.isSharedParameter(p)){
+                            modelOfParameters[i] = null;
+                        }else{
+                            modelOfParameters[i] = settingsModel.getParent(p);
+                        }
                     }
                 }
             }
@@ -221,7 +226,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 } else if (model != null) {
                     return model.getName() + "." + p.getName();
                 } else {
-                    logger.warning("Can't find model for parameter " + rowIndex);
+                    // there is no parent: it is probably a shared parameter
                     return "???." + p.getName();
                 }
             } else {
@@ -432,18 +437,19 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
             // Add model information into the
             parameterPopupMenu.add(new JSeparator());
-            Model m = settingsModel.getParent(p);
-            if (m != null) {
-                menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
-                menuItem.setEnabled(false);
-                parameterPopupMenu.add(menuItem);
-            } else {
-                m = settingsModel.getParent((ParameterLink) o);
+
+            if (isParameterLink(o)) {
+                Model m = settingsModel.getParent((ParameterLink) o);
                 if (m != null) {
                     menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
                     menuItem.setEnabled(false);
                     parameterPopupMenu.add(menuItem);
                 }
+            } else {
+                Model m = settingsModel.getParent(p);
+                menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
+                menuItem.setEnabled(false);
+                parameterPopupMenu.add(menuItem);
             }
 
             parameterPopupMenu.validate();
