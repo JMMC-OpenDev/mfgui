@@ -7,7 +7,6 @@ import fr.jmmc.jmcs.gui.ShowHelpAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.models.Parameter;
-import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
@@ -45,7 +44,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
     }
 
-    public void show(SettingsModel s) {
+    public void show(SettingsModel s) {       
         settingsModel = s;
 
         isIniting = true;
@@ -291,9 +290,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         tablePanel.add(jTable1, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 12;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(tablePanel, gridBagConstraints);
 
