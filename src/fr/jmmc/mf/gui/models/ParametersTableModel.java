@@ -12,15 +12,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
-import javax.swing.event.TreeModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -31,10 +28,10 @@ import javax.swing.table.AbstractTableModel;
  * @todo: check if model container should be vectors instead of arrays
  *
  */
-public class ParametersTableModel extends AbstractTableModel implements MouseListener, Observer {
+public class ParametersTableModel extends AbstractTableModel implements MouseListener {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.models.ParametersTableModel");
+            ParametersTableModel.class.getName());
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
@@ -47,7 +44,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     private Target targetToPresent;
     private Model modelToPresent;
     private Object[] parametersOrParameterLinksToPresent;
-    private Vector<SettingsModel> knownSettingsModels = new Vector();
 
     public ParametersTableModel() {
         super();
@@ -59,6 +55,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
      * Tells to the table model to show the parameters of the given target.
      */
     public void setModel(SettingsModel settingsModel, Target targetToPresent, boolean recursive) {
+        logger.log(Level.FINE, "Updating model for one given target");
         refreshModel(settingsModel, targetToPresent, null, null, recursive);
     }
 
@@ -66,6 +63,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
      * Tells to the table model to show the parameters of the given model.
      */
     public void setModel(SettingsModel settingsModel, Model modelToPresent, boolean recursive) {
+        logger.log(Level.FINE, "Updating model for one given model");
         refreshModel(settingsModel, null, modelToPresent, null, recursive);
     }
 
@@ -73,6 +71,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
      * Tells to the table model to show the given parameters.
      */
     public void setModel(SettingsModel settingsModel, Parameter[] parametersToPresent, boolean recursive) {
+        logger.log(Level.FINE, "Updating model for one given parameter list");
         refreshModel(settingsModel, null, null, parametersToPresent, recursive);
     }
 
@@ -82,13 +81,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         this.modelToPresent = model;
         this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
         this.recursive = recursive;
-
-        // we want to listen model change events
-        if (!knownSettingsModels.contains(settingsModel)) {
-            settingsModel.addObserver(this);
-            knownSettingsModels.add(settingsModel);
-            logger.fine("Observing one new SettingsModel:" + settingsModel);
-        }
 
         if (targetToPresent != null) {
             parametersOrParameterLinksToPresent = new Parameter[]{};
@@ -106,12 +98,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 parametersOrParameterLinksToPresent[i] = params.elementAt(i);
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
-            // notify observers
-            fireTableDataChanged();
-            return;
-        }
-
-        if (modelToPresent != null) {
+        } else if (modelToPresent != null) {
             parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
             Vector params = new Vector();
@@ -123,12 +110,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 parametersOrParameterLinksToPresent[i] = params.elementAt(i);
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
-            // notify observers
-            fireTableDataChanged();
-            return;
-        }
-
-        if (parametersOrParameterLinksToPresent != null) {
+        } else if (parametersOrParameterLinksToPresent != null) {
             this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
             modelOfParameters = new Model[this.parametersOrParameterLinksToPresent.length];
             if (recursive) {
@@ -137,19 +119,20 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     if (isParameterLink(o)) {
                         modelOfParameters[i] = settingsModel.getParent((ParameterLink) o);
                     } else {
-                        Parameter p = (Parameter) o;     
-                        if(settingsModel.isSharedParameter(p)){
+                        Parameter p = (Parameter) o;
+                        if (settingsModel.isSharedParameter(p)) {
                             modelOfParameters[i] = null;
-                        }else{
+                        } else {
                             modelOfParameters[i] = settingsModel.getParent(p);
                         }
                     }
                 }
             }
-            // notify observers
-            fireTableDataChanged();
-            return;
         }
+
+        // notify observers
+        fireTableDataChanged();
+        return;
     }
 
     protected void addParamsFor(Model model, Vector paramContainer, Vector<Model> modelContainer, boolean recursive) {
@@ -350,12 +333,8 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 throw new IllegalStateException("Can't set data onto setting", ex);
             }
         }
-        // update the table for models that uses the same shared parameters more
-        // than once
-        if (isParameterLink(o)) {
-            update(null, null);
-        }
-        // Notify a model change
+
+        // Notify a model change        
         settingsModel.notifyObservers();
     }
 
@@ -399,8 +378,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         settingsModel.shareParameter(p);
-                        // notify observers
-                        fireTableDataChanged();
+                        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
                     }
                 });
                 parameterPopupMenu.add(menuItem);
@@ -423,8 +401,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                         } else {
                             settingsModel.linkParameter(p, sp);
                         }
-                        // notify observers
-                        fireTableDataChanged();
+                        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
                     }
                 });
                 /* we previously shared parameters with same types
@@ -475,28 +452,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     public void mouseExited(MouseEvent e) {
         checkPopupMenu(e);
-    }
-
-    public void treeNodesChanged(TreeModelEvent e) {
-        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
-    }
-
-    public void treeNodesInserted(TreeModelEvent e) {
-        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
-
-    }
-
-    public void treeNodesRemoved(TreeModelEvent e) {
-        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
-
-    }
-
-    public void treeStructureChanged(TreeModelEvent e) {
-        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
-    }
-
-    public void update(Observable o, Object arg) {
-        refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
     }
 
     private boolean isParameterLink(Object parameterOrParameterLink) {
