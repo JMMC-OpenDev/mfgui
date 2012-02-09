@@ -13,15 +13,17 @@ import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Parameters;
 
 import java.awt.BorderLayout;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class ParametersPanel extends javax.swing.JPanel implements Observer{
+/**
+ * Panel used to show the shared parameters and relation with associated models.
+ * @author mella
+ */
+public class ParametersPanel extends javax.swing.JPanel {
+
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.ModelPanel");
+            ParametersPanel.class.getName());
     Parameters current;
     SettingsModel settingsModel;
     DefaultListModel parameterListModel;
@@ -35,7 +37,6 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables
     private ParametersTableModel sharedTableModel;
-    private Vector<SettingsModel> knownSettingsModels = new Vector();
 
     /** Creates new form ParametersPanel */
     public ParametersPanel(SettingsViewerInterface viewer) {
@@ -57,16 +58,9 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         tablePanel.add(sharedParametersTable.getTableHeader(), BorderLayout.NORTH);
 
         // set one click edition on following table and show all decimals in numerical values        
-        ((DefaultCellEditor)sharedParametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
-        sharedParametersTable.setDefaultEditor(Double.class, (DefaultCellEditor)sharedParametersTable.getDefaultEditor(String.class));
+        ((DefaultCellEditor) sharedParametersTable.getDefaultEditor(String.class)).setClickCountToStart(1);
+        sharedParametersTable.setDefaultEditor(Double.class, (DefaultCellEditor) sharedParametersTable.getDefaultEditor(String.class));
         sharedParametersTable.setDefaultRenderer(Double.class, sharedParametersTable.getDefaultRenderer(String.class));
-
-
-        // we want to listen model change events
-        if (!knownSettingsModels.contains(settingsModel)) {
-            settingsModel.addObserver(this);
-            knownSettingsModels.add(settingsModel);
-        }
 
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Here comes the list of models that get one or more shared parameters");
         for (int spIndex = 0; spIndex < params.length; spIndex++) {
@@ -83,7 +77,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
                     for (int k = 0; k < paramLinks.length; k++) {
                         ParameterLink paramLink = paramLinks[k];
                         if (paramLink.getParameterRef() == sharedParameter) {
-                            DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(""+target+"/"+model+"/"+paramLink.getType());
+                            DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode("" + target + "/" + model + "/" + paramLink.getType());
                             sharedParameterNode.add(parameterNode);
                         }
                     }
@@ -91,7 +85,7 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
             }
         }
 
-        if (params.length==0){
+        if (params.length == 0) {
             top = new DefaultMutableTreeNode("There is no shared parameter yet");
         }
 
@@ -168,10 +162,4 @@ public class ParametersPanel extends javax.swing.JPanel implements Observer{
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(helpButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-    public void update(Observable o, Object arg) {        
-        if(isShowing()){
-            show(settingsModel, current);
-        }
-    }
 }
