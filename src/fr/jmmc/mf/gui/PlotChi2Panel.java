@@ -167,7 +167,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.gridy = 1;
         add(jLabel3, gridBagConstraints);
 
-        jLabel5.setText("sampling");
+        jLabel5.setText("#samples");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 1;
@@ -228,7 +228,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.weightx = 1.0;
         add(ySamplingFormattedTextField, gridBagConstraints);
 
-        jLabel7.setText("sampling");
+        jLabel7.setText("#samples");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 2;
