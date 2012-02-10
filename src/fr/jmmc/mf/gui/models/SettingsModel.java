@@ -86,6 +86,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private DefaultComboBoxModel parameterComboBoxModel;
     /** flag used to respond for the ModifyAndSaveObject interface */
     private boolean isModified = false;
+    /** flag used to tell that the model is self consistent (not the case during update) */
+    private boolean isSelfConsistent = true;
     /** Store a reference over the associated local file */
     public java.io.File associatedFile = null;
     private Hashtable<Result, ResultModel> resultToModel = new Hashtable<Result, ResultModel>();
@@ -270,10 +272,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /**
      * Notify the observers of this model.
-     * As been put public to
+     * 
+     * This method as been put public to so that panel can throw notification after modifications.
+     * Notification is delivered if the state of the settings is not consistent.
      */
     public void notifyObservers() {
-        observableDelegate.notifyObservers();
+        if (isSelfConsistent) {
+            observableDelegate.notifyObservers();
+        }
     }
 
     public void setNormalize(Target target, boolean flag) {
@@ -497,10 +503,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.warning("Something strange appears while trying to remove one model without associated target");
             return;
         }
-        Model[] models = parentTarget.getModel();
+        final Model[] models = parentTarget.getModel();
         setModified(true);
         for (int i = 0; i < models.length; i++) {
-            Model model = models[i];
+            final Model model = models[i];
             if (model == oldModel) {
                 Parameter[] params = model.getParameter();
                 for (int j = 0; j < params.length; j++) {
@@ -511,8 +517,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
                 ParameterLink[] paramLinks = model.getParameterLink();
                 for (int j = 0; j < paramLinks.length; j++) {
-                    ParameterLink parameterLink = paramLinks[j];
-                    Model[] ms = UtilsClass.getSharedParameterOwners(this, (Parameter) parameterLink.getParameterRef());
+                    final ParameterLink parameterLink = paramLinks[j];
+                    final Model[] ms = UtilsClass.getSharedParameterOwners(this, (Parameter) parameterLink.getParameterRef());
                     if (ms.length <= 1) {
                         parameterComboBoxModel.removeElement(parameterLink.getParameterRef());
                         parameterListModel.removeElement(parameterLink.getParameterRef());
@@ -522,14 +528,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
 
                 int idx = getIndexOfChild(parentTarget, model);
+                parentTarget.removeModel(model);
                 fireTreeNodesRemoved(this,
                         new Object[]{rootSettings, rootSettings.getTargets(), parentTarget},
                         idx,
-                        oldModel);
-                parentTarget.removeModel(models[i]);
-                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
+                        model);
             }
         }
+        // force intermediate selection to guarantee the update of leef when they are updated more than once.
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets()}));
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}));
+        notifyObservers();
     }
 
     public void removeModel(Model oldModel) {
@@ -698,7 +707,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 logger.warning("No code implemented to remove : " + lastPathComponent.getClass());
             }
         }
-
     }
 
     public void toggleSelectedFrames() {
@@ -720,12 +728,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
-    /** Tell if the inner model is well filled */
+    /** Tell if the inner model is well filled and consistent */
     public boolean isValid() {
         logger.entering(className, "isValid");
         boolean isValid = rootSettings.isValid();
         logger.finest("isValid=" + isValid);
-        return isValid;
+        return isValid && isSelfConsistent;
     }
 
     /** Returns a new uniq file Id */
@@ -880,7 +888,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         fireTreeNodesChanged(new Object[]{rootSettings, parentTarget},
                 getIndexOfChild(parentTarget, parentModel), parentModel);
     }
-    
+
     /**
      * Replace the sharedParameterToLink parameter by a link onto the given sharedParameter.
      * @param sharedParameterToLink shared param to replace by a new link
@@ -920,9 +928,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // add shared parameter
         rootSettings.getParameters().addParameter(parameterToShare);
+
+        // fire node changes
         fireTreeNodesChanged(new Object[]{rootSettings},
                 getIndexOfChild(rootSettings, rootSettings.getParameters()),
                 rootSettings.getParameters());
+        notifyObservers();
     }
 
     /**
@@ -967,6 +978,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void updateWithNewSettings(Response newResponse) {
         logger.entering(className, "updateWithNewSettings", newResponse);
+
+        isSelfConsistent = false;
+
         Settings newSettings = UtilsClass.getSettings(newResponse);
         // we can ignore all but:
         //  parameters, result
@@ -984,8 +998,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             parameterComboBoxModel.addElement(sharedParams[i]);
         }
         /*fireTreeNodesChanged(new Object[]{rootSettings},
-                getIndexOfChild(rootSettings, params), params);
-*/
+        getIndexOfChild(rootSettings, params), params);
+         */
         // update parameters and parameterLinks of every targets
         Target[] newTargets = newSettings.getTargets().getTarget();
         Target[] targets = rootSettings.getTargets().getTarget();
@@ -1005,13 +1019,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 Model model = models[j];
                 model.setParameter(newParameters);
                 model.setParameterLink(newModel.getParameterLink());
-                /*fireTreeNodesChanged(new Object[]{rootSettings, target},
-                        getIndexOfChild(target, model), model);*/
+                fireTreeNodesChanged(new Object[]{rootSettings, target},
+                        getIndexOfChild(target, model), model);
             }
         }
 
         // update userinfo
         rootSettings.setUserInfo(newSettings.getUserInfo());
+
+        // tree branches to be updated are now all done
+        isSelfConsistent = true;
 
         Result[] newResults = newSettings.getResults().getResult();
         // update settings results  with newResults
@@ -1022,20 +1039,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 ResultModel r = getModel(newResult);
                 r.genPlots(UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
-                /*fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
+                fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1,
                         r);
-                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));*/
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
             } else {
                 logger.warning("found null result while updating with new settings");
             }
         }
 
-        // fire general change event
-        fireTreeStructureChanged(rootSettings);
-        // and select last result    
-        ResultModel r = getModel(rootSettings.getResults().getResult(rootSettings.getResults().getResultCount()));
-        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
     }
 
     private void stampLastUserInfo(ResultModel r) {
@@ -1187,7 +1199,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 logger.fine("Models are:" + model);
             }
         }
-        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
@@ -1209,7 +1221,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
@@ -1231,7 +1243,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.FINE, "Can't find parent of : " + child, new Throwable());
+        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
 
         return null;
     }
@@ -1619,7 +1631,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeStructureChanged(e);
         }
-        observableDelegate.notifyObservers();
+        notifyObservers();
     }
 
     /**
@@ -1634,7 +1646,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesInserted(e);
         }
-        observableDelegate.notifyObservers();
+        notifyObservers();
     }
 
     /**
@@ -1649,7 +1661,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesRemoved(e);
         }
-        observableDelegate.notifyObservers();
+        notifyObservers();
     }
 
     /**
@@ -1664,7 +1676,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < treeModelListeners.size(); i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeNodesChanged(e);
         }
-        observableDelegate.notifyObservers();
+        notifyObservers();
     }
 
     //////////////// TreeModel interface implementation ///////////////////////
