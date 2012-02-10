@@ -39,6 +39,7 @@ import java.net.URL;
 import java.util.Enumeration;
 
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -106,8 +107,18 @@ public class UtilsClass {
         } catch (Exception ex) { // only Exception are returned by ptolemy tool
             throw new IllegalStateException("Cannot build plot", ex);
         }
-        // Show plot into frame
-        return new PlotMLFrame("Plotting " + plotName, plot);
+        
+        // Save laf to restore it after ptolemy stuff which change it
+        LookAndFeel laf = UIManager.getLookAndFeel();        
+        
+        // Show plot into frame        
+        final PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
+        try {
+            UIManager.setLookAndFeel(laf);
+        } catch (UnsupportedLookAndFeelException ex) {
+            logger.log(Level.WARNING, null, ex);
+        }
+        return plotMLFrame;
     }
 
     public static File getPlotMLTSVFile(String ptPlotStr) {
