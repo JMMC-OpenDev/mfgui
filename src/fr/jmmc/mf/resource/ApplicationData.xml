@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b5"/>
+    <program name="LITpro" version="1.0.11b6"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -128,9 +128,12 @@
     <releasenotes>
        <release version="1.0.11">
             <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <prerelease version="1.0.11a3">
+            <prerelease version="1.0.11b6">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
                 <!--<change type="DOC">Update documentation</change>-->
+                <change type="BUGFIX">Fix java look and feel on some platforms</change>                
+            </prerelease>
+            <prerelease version="1.0.11a3">                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>                
                 <change type="BUGFIX">Enhancement for multiple removals in the left settings tree</change>
