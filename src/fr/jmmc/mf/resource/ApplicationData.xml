@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b4"/>
+    <program name="LITpro" version="1.0.11b5"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -226,6 +226,8 @@
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>                
                 <change type="BUGFIX">Enhancement for multiple removals in the left settings tree</change>
+                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>                
+                
             </prerelease>
             <prerelease version="1.0.11a2">
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
