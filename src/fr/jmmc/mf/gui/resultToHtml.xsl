@@ -256,6 +256,9 @@ Generate Html view of given xml settings files .
                     </pre>
                 </div>
             </xsl:for-each>
+            <!-- Copy new report -->
+            <pre><xsl:copy-of select=".//gui_info"/></pre>
+            <!-- and keep code which find data from old LITpro structure -->
             <xsl:for-each select=".//_fitter">
                 <xsl:variable name="fitter" select="."/>
                 <h1>Iterations</h1>
