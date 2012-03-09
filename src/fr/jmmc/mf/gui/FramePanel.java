@@ -3,16 +3,19 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.ShowHelpAction;
-import fr.jmmc.mf.gui.actions.SaveFileAction;
+import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JFrame;
-import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
@@ -24,6 +27,11 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     SettingsViewerInterface viewer = null;
     JFrame frame;
     Container contentPane;
+    String lastDir=null;
+     /** File stack */
+    File[] files;
+    /** File names stack */
+    String[] filenames;
 
     /** Creates new form PlotPanel */
     public FramePanel(SettingsViewerInterface viewer) {
@@ -42,17 +50,12 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             frame.addWindowListener(this);
         }
 
-        titleLabel.setText(frameTreeNode.getTitle());
-
-        // Update buttonsPanel content
-        buttonsPanel.removeAll();
-        buttonsPanel.add(attachDetachButton);
-        File[] files = frameTreeNode.getFilesToExport();        
-        for (int i = 0; i < files.length; i++) {
-            JButton button = new JButton(new SaveFileAction(files[i]));
-            buttonsPanel.add(button);            
-        }
-        buttonsPanel.add(helpButton1);
+        titleLabel.setText(frameTreeNode.getTitle());     
+        
+        files = frameTreeNode.getFilesToExport();        
+        filenames = frameTreeNode.getFilenamesToExport();
+        
+        updateFileCombo();
 
         contentPane = frame.getContentPane();
         blankPanel.removeAll();
@@ -94,54 +97,113 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        buttonsPanel = new javax.swing.JPanel();
         attachDetachButton = new javax.swing.JButton();
         helpButton1 = new javax.swing.JButton();
-        titlePanel = new javax.swing.JPanel();
+        filenamesComboBox = new javax.swing.JComboBox();
+        exportButton = new javax.swing.JButton();
         titleLabel = new javax.swing.JLabel();
         blankPanel = new javax.swing.JPanel();
-        fillerPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
-
-        buttonsPanel.setLayout(new javax.swing.BoxLayout(buttonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+        setLayout(new java.awt.GridBagLayout());
 
         attachDetachButton.setAlignmentX(0.5F);
-        buttonsPanel.add(attachDetachButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        add(attachDetachButton, gridBagConstraints);
 
         helpButton1.setText("jButton1");
-        buttonsPanel.add(helpButton1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        add(helpButton1, gridBagConstraints);
 
-        add(buttonsPanel);
+        filenamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        add(filenamesComboBox, gridBagConstraints);
 
-        titlePanel.setAlignmentX(1.0F);
-        titlePanel.setMaximumSize(new java.awt.Dimension(32767, 20));
-        titlePanel.setPreferredSize(new java.awt.Dimension(10, 20));
-        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.LINE_AXIS));
+        exportButton.setText("Save as ...");
+        exportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        add(exportButton, gridBagConstraints);
 
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setText("jLabel1");
         titleLabel.setAlignmentX(12.0F);
         titleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        titlePanel.add(titleLabel);
-
-        add(titlePanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        add(titleLabel, gridBagConstraints);
 
         blankPanel.setLayout(new javax.swing.BoxLayout(blankPanel, javax.swing.BoxLayout.LINE_AXIS));
-        add(blankPanel);
-        add(fillerPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(blankPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
+       
+        int fileIndex = filenamesComboBox.getSelectedIndex();
+        String fileName = filenames[fileIndex];
+        File fileToSave = files[fileIndex];
+        // Open a filechooser in previous save directory
+        JFileChooser fileChooser = new JFileChooser();
+        if (lastDir != null) {
+            fileChooser.setSelectedFile(new File(lastDir, fileName));
+        } else if (fileToSave != null) {
+            fileChooser.setSelectedFile(new File(fileName));
+        }
+        fileChooser.setDialogTitle("Export as " + fileName + "?");
+        // Open filechooser
+        int returnVal = fileChooser.showSaveDialog(null);
+        File newFile = fileChooser.getSelectedFile();
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        if (newFile.exists()) {
+            if (!MessagePane.showConfirmFileOverwrite(newFile.getAbsolutePath())) {
+                return;
+            }
+        }
+        try {
+            FileUtils.copy(fileToSave, newFile);
+        } catch (FileNotFoundException ex) {
+            throw new IllegalStateException("Can't export data into " + newFile.getAbsolutePath(), ex);
+        } catch (IOException ex) {
+            MessagePane.showErrorMessage("Can't export data into " + newFile.getAbsolutePath(), ex);
+            return;
+        }
+        lastDir = newFile.getParent();
+        filenames[fileIndex] = newFile.getName();        
+        updateFileCombo();
+    }//GEN-LAST:event_exportButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton attachDetachButton;
     private javax.swing.JPanel blankPanel;
-    private javax.swing.JPanel buttonsPanel;
-    private javax.swing.JPanel fillerPanel;
+    private javax.swing.JButton exportButton;
+    private javax.swing.JComboBox filenamesComboBox;
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel titleLabel;
-    private javax.swing.JPanel titlePanel;
     // End of variables declaration//GEN-END:variables
     
     public void windowOpened(WindowEvent e) {
@@ -166,5 +228,15 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     }
 
     public void windowDeactivated(WindowEvent e) {
+    }
+
+    /**
+     * Update the filenames combobox with file names found in given array.
+     */
+    private void updateFileCombo() {
+        filenamesComboBox.removeAllItems();
+        for (int i = 0; i < filenames.length; i++) {
+            filenamesComboBox.addItem(filenames[i]);
+        }        
     }
 }
