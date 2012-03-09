@@ -41,7 +41,7 @@
 
         <!-- create one .b64 file per hrefed data file or plot
         <xsl:for-each select="//files/file[@href]">
-            <xsl:document href="{./@id}.b64" method="text"
+            <xsl:document href="{./@name}.b64" method="text"
                 xml:space="preserve"><xsl:value-of select="substring-after(./@href,'base64,')"/></xsl:document>
         </xsl:for-each>
         <xsl:for-each select="//resultFile[@href]">
@@ -74,23 +74,13 @@
             <xsl:for-each select=".//fileLink">
                 <xsl:value-of select="'&quot;'"/>
                 <xsl:variable name="fileRef"><xsl:value-of select="./@fileRef"/></xsl:variable>
-                <xsl:value-of select="//file[./@id=$fileRef]/@id"/>
+                <xsl:value-of select="//file[./@id=$fileRef]/@name"/>
                 <xsl:value-of select="'&quot;'"/>
                 <xsl:if test="not(position() = last())">
                     <xsl:value-of select="','"/>
                 </xsl:if>
             </xsl:for-each>
             <xsl:value-of select="'],&#10;'"/>
-            <xsl:value-of select="'    /* Indicates files corresponding to given ids &#10;'"/>
-            <xsl:for-each select=".//fileLink">
-                <xsl:variable name="fileRef"><xsl:value-of select="./@fileRef"/></xsl:variable>
-                <xsl:value-of select="'     * - '"/>
-                <xsl:value-of select="//file[./@id=$fileRef]/@id"/> 
-                <xsl:value-of select="' file is '"/>
-                <xsl:value-of select="//file[./@id=$fileRef]/@name"/> 
-                <xsl:value-of select="'&#10;'"/>
-            </xsl:for-each>
-            <xsl:value-of select="'     */&#10;'"/>
             <!-- object definition -->
             <xsl:for-each select=".//model">
                 <xsl:variable name="modelPosition" select="position()"/>
