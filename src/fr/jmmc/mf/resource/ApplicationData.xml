@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b7"/>
+    <program name="LITpro" version="1.0.11b8"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -127,9 +127,15 @@
 
     <releasenotes>
        <release version="1.0.11">
-            <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
-            <!--<change type="DOC">Update documentation</change>-->
+            <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
+            <!-- <change type="TODO">Handle webservice url preference reset during major version update</change>-->
+            <!-- <change type="DOC">Update documentation</change>-->  
+            <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
+            <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
+            <prerelease version="1.0.11b8">               
+                <change type="FEATURE">Model UV maps are now displayed as an animation of images to highlight differences between the model and data</change>                
+                
+            </prerelease>
             <prerelease version="1.0.11b7">               
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/272">Fix error values in tsv export of some plots (with format change)</change>                
             </prerelease>
@@ -140,8 +146,7 @@
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>                
                 <change type="BUGFIX">Enhancement for multiple removals in the left settings tree</change>
-                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>                
-                
+                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>                                
             </prerelease>
             <prerelease version="1.0.11a2">
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>

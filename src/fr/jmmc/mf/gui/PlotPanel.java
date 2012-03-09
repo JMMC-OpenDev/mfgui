@@ -191,18 +191,26 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         String b64file;
         File file = null;
         JFrame f = null;
-        Vector<File> filesToExport = new Vector();
+        ArrayList<File> filesToExport = new ArrayList();
+        ArrayList<String> filenamesToExport = new ArrayList();
+        ArrayList<File> filesToDisplay = new ArrayList<File>();
+        ArrayList<String> filenamesToDisplay = new ArrayList<String>();
+        
         for (int i = 0; i < resultFiles.length; i++) {
             ResultFile r = resultFiles[i];
             b64file = r.getHref();
             file = UtilsClass.saveBASE64ToFile(b64file, r.getName().substring(r.getName().indexOf(".")));
             filesToExport.add(file);
+            filenamesToExport.add(r.getName());
             if (r.getName().endsWith("png")) {
-                f = UtilsClass.buildFrameFor(file);
+                filesToDisplay.add(file);
+                filenamesToDisplay.add(r.getName());
             }
         }
+        f = UtilsClass.buildFrameFor(filesToDisplay.toArray(new File[0]),filenamesToDisplay.toArray(new String[0]));
+        
         if (f != null) {
-            FrameTreeNode ftn = new FrameTreeNode(f, title, filesToExport.toArray(new File[0]));
+            FrameTreeNode ftn = new FrameTreeNode(f, title, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
             settingsModel.addPlot(ftn);
         }
 

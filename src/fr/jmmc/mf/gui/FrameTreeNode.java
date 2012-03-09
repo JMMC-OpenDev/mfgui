@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.util.FileUtils;
 import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -12,27 +13,36 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class FrameTreeNode extends DefaultMutableTreeNode{
     private String title;
     private File[] filesToExport;
+    private String[] filenamesToExport;
     private JFrame frame;
     
     public FrameTreeNode(JFrame frame, String title){
-        init(frame,title,null);
+        init(frame,title,null,null);
     }
 
     public FrameTreeNode(JFrame frame, String title, File fileToExport){
-        init(frame,title, new File[]{fileToExport});
+        init(frame,title, new File[]{fileToExport}, new String[]{"Untitled."+FileUtils.getExtension(fileToExport)});
+    }
+    
+    public FrameTreeNode(JFrame frame, String title, File fileToExport, String filenameToExport){
+        init(frame,title, new File[]{fileToExport}, new String[]{filenameToExport});
     }
 
-    public FrameTreeNode(JFrame frame, String title, File[] filesToExport){
-        init(frame,title, filesToExport);
+    public FrameTreeNode(JFrame frame, String title, File[] filesToExport, String[] filenamesToExport){
+        init(frame,title, filesToExport, filenamesToExport);
     }
 
-    private void init(JFrame frame, String title, File[] filesToExport){
+    private void init(JFrame frame, String title, File[] filesToExport, String[] filenamesToExport){
         this.title = title;
         this.frame=frame;
         if (filesToExport==null){
             filesToExport=new File[0];
         }
+        if (filenamesToExport==null){
+            filenamesToExport=new String[0];
+        }
         this.filesToExport=filesToExport;
+        this.filenamesToExport=filenamesToExport;
         frame.setTitle(title);
         setUserObject(frame);
     }
@@ -43,6 +53,10 @@ public class FrameTreeNode extends DefaultMutableTreeNode{
 
     public File[] getFilesToExport(){
         return filesToExport;
+    }
+    
+    public String[] getFilenamesToExport(){
+        return filenamesToExport;
     }
 
     @Override

@@ -595,40 +595,40 @@ public class FilePanel extends javax.swing.JPanel {
         for (int i = 0; i < selected.length; i++) {
             OITable table = (OITable) selected[i];
             String label = table.getExtName() + "#" + table.getExtNb();
-            
+
             double[][] ucoord = null;
             double[][] vcoord = null;
 
             if (table instanceof OIVis) {
                 final OIVis t = (OIVis) table;
-                
+
                 ucoord = t.getSpatialUCoord();
                 vcoord = t.getSpatialVCoord();
             } else if (table instanceof OIVis2) {
                 final OIVis2 t = (OIVis2) table;
-                
+
                 ucoord = t.getSpatialUCoord();
                 vcoord = t.getSpatialVCoord();
             } else if (table instanceof OIT3) {
                 final OIT3 t = (OIT3) table;
-                
+
                 final int uvLen = t.getNbRows();
                 final int wLen = t.getNWave();
-                
+
                 final double[][] u1s = t.getSpatialU1Coord();
                 final double[][] u2s = t.getSpatialU2Coord();
                 final double[][] v1s = t.getSpatialV1Coord();
                 final double[][] v2s = t.getSpatialV2Coord();
-                
+
                 final double[][] us = new double[2 * uvLen][wLen];
                 final double[][] vs = new double[2 * uvLen][wLen];
-                
+
                 for (int j = 0; j < uvLen; j++) {
                     final double[] u1 = u1s[j];
                     final double[] u2 = u2s[j];
                     final double[] v1 = v1s[j];
                     final double[] v2 = v2s[j];
-                    
+
                     for (int k = 0; k < wLen; k++) {
                         us[j][k] = u1[k];
                         us[j + uvLen][k] = u2[k];
@@ -641,17 +641,17 @@ public class FilePanel extends javax.swing.JPanel {
             }
             if (ucoord != null && vcoord != null) {
                 // add symetrical part and request plot file building
-                
+
                 final int uvLen = ucoord.length;
                 final int wLen = ucoord[0].length;
-                
+
                 final double[][] mus = new double[2 * uvLen][wLen];
                 final double[][] mvs = new double[2 * uvLen][wLen];
-                
+
                 for (int j = 0; j < uvLen; j++) {
                     final double[] u = ucoord[j];
                     final double[] v = vcoord[j];
-                    
+
                     for (int k = 0; k < wLen; k++) {
                         mus[j][k] = u[k];
                         mvs[j][k] = v[k];
@@ -737,10 +737,10 @@ public class FilePanel extends javax.swing.JPanel {
             super("checkEmbeddedFile");
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent e) {            
+        public void actionPerformed(java.awt.event.ActionEvent e) {
             // file extension can be *fits or *fits.gz
             OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
-            MessagePane.showMessage(checker.getCheckReport());                        
+            MessagePane.showMessage(checker.getCheckReport());
         }
     }
 

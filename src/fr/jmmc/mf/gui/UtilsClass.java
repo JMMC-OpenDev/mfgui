@@ -68,7 +68,7 @@ public class UtilsClass {
 
     static final String className = UtilsClass.class.getName();
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);   
+            className);
     /** Mapping obect used by unmarshalling operations (inited into getMapping()) */
     private static Mapping mapping = null;
     /** Number of first displayed chars if one unmarshalling operation fails */
@@ -107,10 +107,10 @@ public class UtilsClass {
         } catch (Exception ex) { // only Exception are returned by ptolemy tool
             throw new IllegalStateException("Cannot build plot", ex);
         }
-        
+
         // Save laf to restore it after ptolemy stuff which change it
-        LookAndFeel laf = UIManager.getLookAndFeel();        
-        
+        LookAndFeel laf = UIManager.getLookAndFeel();
+
         // Show plot into frame        
         final PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
         try {
@@ -136,35 +136,57 @@ public class UtilsClass {
     }
 
     /**
-     * Build a Jframe that displays the given png file.
+     * Build a Jframe that displays the given png file(s).
      *
      * @param pngFile image file
+     * @param filenames initial file names (may replace temporary file names of given files)
      * @return a frame that contains the image
      * @throws IllegalStateException
      *      if image can't be read from file
      */
-    public static JFrame buildFrameFor(File pngFile) throws IllegalStateException {
-        if (pngFile == null) {
+    public static JFrame buildFrameFor(File[] pngFiles, String[] filenames) throws IllegalStateException {
+        if (pngFiles == null || pngFiles.length == 0) {
             return null;
         }
-        JFrame frame = new JFrame();
-        JLabel label;
-        JPanel p = new JPanel(new BorderLayout());
+
+        JPanel p;
+
+        if (pngFiles.length == 1) {
+            p = new JPanel(new BorderLayout());
+            
+            JLabel label;
+
+            Image image = getImage(pngFiles[0]);
+            if (image == null) {
+                return null;
+            }
+            // Use a label to display the image
+            label = new JLabel(new ImageIcon(image));
+            p.add(label, BorderLayout.CENTER);
+        }else{
+            p = new AnimationPanel(pngFiles, filenames);
+        }
+
+        JFrame frame = frame = new JFrame();
+        frame.getContentPane().add(p);
+        frame.pack();
+        return frame;
+    }  
+
+    /**
+     * Load and return one swing image for given file
+     * @param pngFile file to load
+     * @return the associated image or null if problem occurs
+     * @throws IllegalStateException if image can't be read from file
+     */
+    public static Image getImage(File pngFile) throws IllegalStateException {
         Image image = null;
         try {
             image = ImageIO.read(pngFile);
         } catch (IOException ioe) {
             throw new IllegalStateException("Can't read image data from " + pngFile, ioe);
         }
-        if (image == null) {
-            return null;
-        }
-        // Use a label to display the image
-        label = new JLabel(new ImageIcon(image));
-        p.add(label, BorderLayout.CENTER);
-        frame.getContentPane().add(p);
-        frame.pack();
-        return frame;
+        return image;
     }
 
     /**
@@ -512,7 +534,7 @@ public class UtilsClass {
         }
         return outputFile;
     }
-    
+
     //
     // General application methods
     //
