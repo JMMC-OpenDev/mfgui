@@ -12,8 +12,8 @@ import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Target;
 import java.io.File;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
 import javax.swing.JFrame;
 import ptolemy.plot.plotml.PlotMLFrame;
 
@@ -106,11 +106,12 @@ public class ResultModel extends DefaultMutableTreeNode {
         // try to locate the corresponding pdf of each png file
         for (int i = 0; i < resultFiles.length; i++) {
             ResultFile r = resultFiles[i];
-
+            
             String b64file;
             File file = null;
             JFrame f = null;
-            Vector<File> filesToExport = new Vector();
+            ArrayList<File> filesToExport = new ArrayList<File>();
+            ArrayList<String> filenamesToExport = new ArrayList<String>();
             if (r.getHref().substring(1, 30).contains("png")) {
                 for (int j = 0; j < resultFiles.length; j++) {
                     ResultFile r2 = resultFiles[j];
@@ -119,13 +120,14 @@ public class ResultModel extends DefaultMutableTreeNode {
                         b64file = r2.getHref();
                         File pdfFile = UtilsClass.saveBASE64ToFile(b64file, "pdf");
                         filesToExport.add(pdfFile);
+                        filenamesToExport.add(r.getName());
                     }
                 }
                 b64file = r.getHref();
                 File pngFile = UtilsClass.saveBASE64ToFile(b64file, "png");
                 filesToExport.add(pngFile);
-                f = UtilsClass.buildFrameFor(pngFile);
-                this.add(new FrameTreeNode(f, r.getName(), filesToExport.toArray(new File[0])));
+                f = UtilsClass.buildFrameFor(new File[]{pngFile}, new String[]{r.getName()});
+                this.add(new FrameTreeNode(f, r.getName(), filesToExport.toArray(new File[0]),filenamesToExport.toArray(new String[0]) ));
             }
         }
     }
