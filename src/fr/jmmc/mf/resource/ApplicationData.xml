@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b8"/>
+    <program name="LITpro" version="1.0.11b9"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -132,9 +132,11 @@
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
+            <prerelease version="1.0.11b9">               
+                <!-- add a combobox to select fits viewer application in filePanel --> 
+            </prerelease>            
             <prerelease version="1.0.11b8">               
                 <change type="FEATURE">Model UV maps are now displayed as an animation of images to highlight differences between the model and data</change>                
-                
             </prerelease>
             <prerelease version="1.0.11b7">               
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/272">Fix error values in tsv export of some plots (with format change)</change>                
