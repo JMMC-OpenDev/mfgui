@@ -3,19 +3,24 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.MessagePane;
 import fr.jmmc.jmcs.gui.ShowHelpAction;
-import fr.jmmc.mf.gui.actions.SampSendFits;
+import fr.jmmc.jmcs.network.interop.SampCapability;
+import fr.jmmc.jmcs.network.interop.SampManager;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
 import fr.nom.tam.fits.FitsException;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
+import org.astrogrid.samp.client.SampException;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import org.astrogrid.samp.Client;
 
 /**
  *
@@ -30,14 +35,14 @@ public class FilePanel extends javax.swing.JPanel {
     OIFitsFile oifitsFile_ = null;
     static Action saveEmbeddedFileAction;
     static Action checkEmbeddedFileAction;
-    static Action showEmbeddedFileAction;
-    static SampSendFits sampSendFits;
+    static Action showEmbeddedFileAction;    
     MyListSelectionListener myListSelectionListener;
     ListModel hduListModel = new DefaultListModel();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton1;
     private javax.swing.JButton checkFileButton;
     private javax.swing.JPopupMenu fileListPopupMenu;
+    private javax.swing.JComboBox fitsViewerComboBox;
     private javax.swing.JList hduList;
     private javax.swing.JButton helpButton1;
     private javax.swing.JButton helpButton2;
@@ -66,8 +71,7 @@ public class FilePanel extends javax.swing.JPanel {
         // Prepare action before gui construction
         saveEmbeddedFileAction = new SaveEmbeddedFileAction();
         showEmbeddedFileAction = new ShowEmbeddedFileAction();
-        checkEmbeddedFileAction = new CheckEmbeddedFileAction();
-        sampSendFits = new SampSendFits();
+        checkEmbeddedFileAction = new CheckEmbeddedFileAction();        
         initComponents();
 
         myListSelectionListener = new MyListSelectionListener();
@@ -83,6 +87,9 @@ public class FilePanel extends javax.swing.JPanel {
         //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
         //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
         //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
+        
+        // sync content with current set of fits viewer samp clients
+        fitsViewerComboBox.setModel(new SampSubscriptionsComboBoxModel(SampCapability.LOAD_FITS_TABLE));
     }
 
     /**
@@ -151,6 +158,7 @@ public class FilePanel extends javax.swing.JPanel {
         visampCheckBox = new javax.swing.JCheckBox();
         visphiCheckBox = new javax.swing.JCheckBox();
         helpButton2 = new javax.swing.JButton();
+        fitsViewerComboBox = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         addFileButton1 = new javax.swing.JButton();
 
@@ -201,7 +209,7 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(loadViewerButton, gridBagConstraints);
@@ -312,6 +320,12 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
         jPanel1.add(helpButton2, gridBagConstraints);
+
+        fitsViewerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        jPanel1.add(fitsViewerComboBox, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -751,18 +765,26 @@ public class FilePanel extends javax.swing.JPanel {
         }
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            int[] indices = hduList.getSelectedIndices();
-            for (int i = 0; i < indices.length; i++) {
-                String filename = "file://" + oifitsFile_.getAbsoluteFilePath() + "#" + ((indices[i]) + 1);
-                //java.io.File file = new java.io.File( filename + "#" + ((indices[i]) + 1));
 
-                // TODO find a better way to send this url with a simpler manner
-                // and also find a way to send this file to one listener only...
-                //sampSendFits.setUri(file.toURI().toString());
-                sampSendFits.setUri(filename);
-                // commmand must be All Applications to broadcast!!
-                sampSendFits.actionPerformed(
-                        new ActionEvent(e.getSource(), e.getID(), "All Applications"));
+            if (fitsViewerComboBox.getModel().getSize() > 0) {
+                Client dest = (Client) (fitsViewerComboBox.getSelectedItem());
+
+                int[] indices = hduList.getSelectedIndices();
+                for (int i = 0; i < indices.length; i++) {
+
+                    final Map<String, String> parameters = new HashMap<String, String>();
+                    String filenameUri = "file://" + oifitsFile_.getAbsoluteFilePath() + "#" + ((indices[i]) + 1);
+
+                    logger.fine("transmitting fits file using : uri = " + filenameUri);
+                    parameters.put("url", filenameUri);
+                    try {
+                        SampManager.sendMessageTo(SampCapability.LOAD_FITS_TABLE.mType(), dest.getId(), parameters);
+                    } catch (SampException ex) {
+                        throw new IllegalStateException("Can't perform samp action", ex);
+                    }
+                }
+            }else {
+                MessagePane.showMessage("Please Launch Topcat (http://www.star.bris.ac.uk/~mbt/topcat/) or any fits viewer before");
             }
         }
     }
