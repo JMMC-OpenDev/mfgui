@@ -4,7 +4,7 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;

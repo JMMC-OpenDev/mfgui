@@ -5,7 +5,7 @@ package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;

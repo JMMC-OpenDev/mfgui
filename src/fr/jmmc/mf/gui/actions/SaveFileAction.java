@@ -3,7 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import java.awt.event.ActionEvent;
