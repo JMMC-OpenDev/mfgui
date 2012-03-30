@@ -150,7 +150,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         xComboBox = new javax.swing.JComboBox();
         yComboBox = new javax.swing.JComboBox();
         tablePanel = new javax.swing.JPanel();
-        jTable1 = new fr.jmmc.jmcs.gui.NumericJTable();
+        jTable1 = new fr.jmmc.jmcs.gui.component.NumericJTable();
         jPanel1 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jRadioButton1D = new javax.swing.JRadioButton();

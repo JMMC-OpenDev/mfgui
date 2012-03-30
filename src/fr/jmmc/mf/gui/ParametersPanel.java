@@ -103,7 +103,7 @@ public class ParametersPanel extends javax.swing.JPanel {
         jTree1 = new javax.swing.JTree();
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
-        sharedParametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
+        sharedParametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
         helpButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Parameter list"));
