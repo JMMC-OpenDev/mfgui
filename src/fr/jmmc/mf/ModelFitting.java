@@ -7,7 +7,7 @@ import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.gui.MessagePane;
 
 import fr.jmmc.jmcs.gui.StatusBar;
-import fr.jmmc.jmcs.gui.SwingSettings;
+import fr.jmmc.jmcs.gui.util.SwingSettings;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
