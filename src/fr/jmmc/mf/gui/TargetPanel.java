@@ -99,7 +99,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         listenToFileSelection = false;
         // a new empty chekbox list is created each time, because the selection can't be reset
-        fileList = new fr.jmmc.jmcs.gui.CheckBoxJList();
+        fileList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
         jScrollPane1.setViewportView(fileList);
         fileList.addListSelectionListener(this);
 
@@ -283,7 +283,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        fileList = new fr.jmmc.jmcs.gui.CheckBoxJList();
+        fileList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         modelList = new javax.swing.JList();
