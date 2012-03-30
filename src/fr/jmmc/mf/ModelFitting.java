@@ -4,7 +4,7 @@
 package fr.jmmc.mf;
 
 import fr.jmmc.jmcs.App;
-import fr.jmmc.jmcs.gui.MessagePane;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.util.SwingSettings;
