@@ -74,7 +74,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
     @Override
     protected void init(final String[] args) {
         // Set default resource for application
-        fr.jmmc.jmcs.util.Resources.setResourceName("fr/jmmc/mf/gui/Resources");
+        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
         
         myPreferences = Preferences.getInstance();
 
