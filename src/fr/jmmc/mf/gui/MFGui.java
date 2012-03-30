@@ -5,7 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.ModelFitting;
-import fr.jmmc.jmcs.util.Urls;
+import fr.jmmc.jmcs.util.UrlUtils;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.SaveSettingsAction;
 import fr.jmmc.mf.gui.actions.ShowPrefAction;
@@ -132,7 +132,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         }
 
         // handle frame icon
-        this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
+        this.setIconImage(new ImageIcon(UrlUtils.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
 
         fr.jmmc.jmcs.gui.component.StatusBar.show("Application inited");
     }

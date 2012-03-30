@@ -7,7 +7,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.util.FileUtils;
 
-import fr.jmmc.jmcs.util.Urls;
+import fr.jmmc.jmcs.util.UrlUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Message;
@@ -615,7 +615,7 @@ public class UtilsClass {
     private static String xsl(Source source, String filepath, String[] params) {
         logger.entering(className, "xsl");
         URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
-        xslURL = Urls.fixJarURL(xslURL);
+        xslURL = UrlUtils.fixJarURL(xslURL);
         logger.fine("using next url for transformation" + xslURL);
         try {
 
