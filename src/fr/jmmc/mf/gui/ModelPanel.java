@@ -88,7 +88,7 @@ public class ModelPanel extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         helpButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        parametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
+        parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
         jPanel3 = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));

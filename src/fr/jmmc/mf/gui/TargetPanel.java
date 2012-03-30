@@ -278,7 +278,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel5 = new javax.swing.JPanel();
-        parametersTable = new fr.jmmc.jmcs.gui.NumericJTable();
+        parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
