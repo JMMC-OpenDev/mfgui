@@ -5,7 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.MessagePane;
-import fr.jmmc.jmcs.gui.ShowHelpAction;
+import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
 import fr.jmmc.mf.gui.models.SettingsModel;
