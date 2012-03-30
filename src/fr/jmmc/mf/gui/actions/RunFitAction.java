@@ -7,7 +7,7 @@ import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.MessagePane;
-import fr.jmmc.jmcs.gui.StatusBar;
+import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.action.MCSAction;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Settings;

@@ -86,7 +86,7 @@ public class SaveFileAction extends RegisteredAction {
         lastDir = newFile.getParent();
         fileName = newFile.getName();
         this.putValue(SaveFileAction.NAME, originalActionName + " " + fileName);
-        fr.jmmc.jmcs.gui.StatusBar.show("File saved");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("File saved");
 
     }
 }
