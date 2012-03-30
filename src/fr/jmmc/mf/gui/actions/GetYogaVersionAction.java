@@ -33,6 +33,6 @@ public class GetYogaVersionAction extends RegisteredAction {
             MessagePane.showErrorMessage("Can't get yoga version", ex);
             return;
         }
-        fr.jmmc.jmcs.gui.StatusBar.show("Yoga version is \'" + v.trim() + "\'");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("Yoga version is \'" + v.trim() + "\'");
     }
 }

@@ -16,7 +16,7 @@ import fr.jmmc.mf.gui.actions.LoadRemoteModelAction;
 import fr.jmmc.mf.gui.actions.CloseModelAction;
 import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.jmcs.gui.StatusBar;
+import fr.jmmc.jmcs.gui.component.StatusBar;
 
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
@@ -134,7 +134,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         // handle frame icon
         this.setIconImage(new ImageIcon(Urls.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
 
-        fr.jmmc.jmcs.gui.StatusBar.show("Application inited");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("Application inited");
     }
 
     public static void showToolbar(boolean visible) {
@@ -157,7 +157,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         SettingsPane p = new SettingsPane(settingsModel);
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
-        fr.jmmc.jmcs.gui.StatusBar.show("Settings loaded");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("Settings loaded");
     }
 
     public void closeSettings() {
