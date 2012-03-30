@@ -120,7 +120,7 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileListMouseClicked"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.jmcs.gui.CheckBoxJList();"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new fr.jmmc.jmcs.gui.component.CheckBoxJList();"/>
                 <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="TargetPanel_fileList"/>
               </AuxValues>
             </Component>

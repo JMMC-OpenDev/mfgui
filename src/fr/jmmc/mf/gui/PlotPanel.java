@@ -53,7 +53,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         }
 
         // Change widget for target list
-        targetList = new fr.jmmc.jmcs.gui.CheckBoxJList();
+        targetList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
         jScrollPane1.setViewportView(targetList);
         targetList.addListSelectionListener(this);
 
