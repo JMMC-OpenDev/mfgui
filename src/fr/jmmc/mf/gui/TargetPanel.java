@@ -3,23 +3,21 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
-import fr.jmmc.mf.models.File;
-import fr.jmmc.mf.models.FileLink;
-import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Residuals;
-import fr.jmmc.mf.models.Residual;
-import fr.jmmc.mf.models.Settings;
-import fr.jmmc.mf.models.Target;
+import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.ListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
 /** Display GUI for Target elements */
@@ -34,6 +32,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     ListModel targetFiles;
     boolean listenToFileSelection;
     DefaultListModel models = new DefaultListModel();
+    private CheckBoxList fileList = null;
     SettingsViewerInterface settingsViewer;
     public Settings rootSettings = null;
     public SettingsModel rootSettingsModel = null;
@@ -99,30 +98,31 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         listenToFileSelection = false;
         // a new empty chekbox list is created each time, because the selection can't be reset
-        fileList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
-        jScrollPane1.setViewportView(fileList);
-        fileList.addListSelectionListener(this);
-
+        // TODO fix this very nasty leaking code
+        fileList = new CheckBoxList();
+        fileListScrollPane.setViewportView(fileList);
+        fileList.getCheckBoxListSelectionModel().addListSelectionListener(this);
+        
+        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fileListMouseClicked(evt);
+            }
+        });
+      
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
 
         fileList.setModel(targetFiles);
+        
         if (targetFiles != null) {
-            fileList.setModel(targetFiles);
-            // next line doesn't work
-            // @todo fix it
             fileList.clearSelection();
-            // define selected files reading fileLinks
-            //      File[] files   = rootSettings.getFiles().getFile();
+            // define selected files reading fileLinks of current target            
             for (int i = 0; i < targetFiles.getSize(); i++) {
                 Object file = targetFiles.getElementAt(i);
                 FileLink[] links = current.getFileLink();
                 for (int j = 0; j < links.length; j++) {
                     FileLink fileLink = links[j];
                     if (fileLink.getFileRef() == file) {
-                        // modify dirrectly the widget instead of its model
-                        // because jmcs.gui.CheckBoxJList does not handle properly
-                        fileList.setSelectedIndex(i);
-                        //selectedFiles.addSelectionInterval(i, i);
+                        fileList.addCheckBoxListSelectedIndex(i);                        
                     }
                 }
             }
@@ -173,7 +173,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
 
             boolean isInSelection = false;
-            Object[] selectedOnes = fileList.getSelectedValues();
+            Object[] selectedOnes = fileList.getCheckBoxListSelectedValues();
             for (int j = 0; j < selectedOnes.length; j++) {
                 Object selectedOne = selectedOnes[j];
                 if (selectedOne == file) {
@@ -212,7 +212,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         Residuals residuals = current.getResiduals();
 
-        Object[] selectedFiles = fileList.getSelectedValues();
+        Object[] selectedFiles = fileList.getCheckBoxListSelectedValues();
         for (int j = 0; j
                 < selectedFiles.length; j++) {
             File selectedFile = (File) selectedFiles[j];
@@ -282,8 +282,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        fileList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
+        fileListScrollPane = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         modelList = new javax.swing.JList();
@@ -340,18 +339,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
-
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(22, 82));
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(259, 82));
-
-        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fileListMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(fileList);
-
-        jPanel2.add(jScrollPane1);
+        jPanel2.add(fileListScrollPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -571,9 +559,9 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
                 modelList.getSelectedValue() } ));
         }
     }//GEN-LAST:event_modelListMouseClicked
-
+    
     private void fileListMouseClicked(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_fileListMouseClicked
+    {                                      
         if (evt.getClickCount() == 2)
         {
             rootSettingsModel.setSelectionPath(
@@ -581,10 +569,10 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
                 rootSettingsModel,
                 rootSettingsModel.getRootSettings().getTargets(),
                 current,
-                fileList.getSelectedValue() } ));
+                fileList.getCheckBoxListSelectedValue() } ));
         }
 
-    }//GEN-LAST:event_fileListMouseClicked
+    }                                     
 
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_removeModelButtonActionPerformed
@@ -619,47 +607,46 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         logger.entering(className, "addModelButtonActionPerformed");
         // Construct a new copy
         Model selectedModel = (Model) modelTypeComboBox.getSelectedItem();
-        Model m = (Model)UtilsClass.clone(selectedModel);
+        Model m = (Model) UtilsClass.clone(selectedModel);
         rootSettingsModel.addModel(current, m);
         updateModels();
         plotModelImagePanel.show(rootSettingsModel, current);
-        plotChi2Panel.show(rootSettingsModel);        
+        plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_addModelButtonActionPerformed
 
             private void targetFitterParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetFitterParamActionPerformed
-        
-        rootSettingsModel.setNormalize(current, normalizeCheckBox.isSelected());
 
-        String visAmp=null;
-        String visPhi=null;
-        String vis2=null;
-        String t3Amp = null;
-        String t3Phi = null;
+                rootSettingsModel.setNormalize(current, normalizeCheckBox.isSelected());
+
+                String visAmp = null;
+                String visPhi = null;
+                String vis2 = null;
+                String t3Amp = null;
+                String t3Phi = null;
 
                 if (visAmpCheckBox.isSelected()) {
                     visAmp = "default";
                 }
-if (visPhiCheckBox.isSelected()) {
+                if (visPhiCheckBox.isSelected()) {
                     visPhi = "default";
                 }
-if (vis2CheckBox.isSelected()) {
+                if (vis2CheckBox.isSelected()) {
                     vis2 = "default";
                 }
-if (t3phiCheckBox.isSelected()) {
+                if (t3phiCheckBox.isSelected()) {
                     t3Phi = "default";
                 }
-if (t3ampCheckBox.isSelected()) {
+                if (t3ampCheckBox.isSelected()) {
                     t3Amp = "default";
                 }
-rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
+                rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
 
-        // refresh modelpanel to get updated list of residual plots
-        plotModelImagePanel.show(rootSettingsModel, current);
+                // refresh modelpanel to get updated list of residual plots
+                plotModelImagePanel.show(rootSettingsModel, current);
 }//GEN-LAST:event_targetFitterParamActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
-    private javax.swing.JList fileList;
+    private javax.swing.JScrollPane fileListScrollPane;
     private javax.swing.JComboBox identComboBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -672,7 +659,6 @@ rootSettingsModel.setResiduals(current, visAmp, visPhi, vis2, t3Amp, t3Phi);
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;

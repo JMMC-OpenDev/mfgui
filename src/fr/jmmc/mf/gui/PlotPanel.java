@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -38,6 +39,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private ListModel targets = null;
     private boolean showChi2AndModelPanels;
     private String lastObservable = null;
+    private CheckBoxList targetList = null;
 
     /** Creates new form PlotPanel */
     public PlotPanel(SettingsViewerInterface viewer, boolean showChi2AndModelPanels) {
@@ -52,10 +54,12 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
             chi2Panel.add(plotChi2Panel);
         }
 
-        // Change widget for target list
-        targetList = new fr.jmmc.jmcs.gui.component.CheckBoxJList();
-        jScrollPane1.setViewportView(targetList);
-        targetList.addListSelectionListener(this);
+        // Use jide CheckboxList widget for target list
+        targetList = new CheckBoxList();
+        targetListScrollPane.setViewportView(targetList);
+        //targetList.addListSelectionListener(this);
+        targetList.getCheckBoxListSelectionModel().addListSelectionListener(this);
+
 
         // Set online help
         jButton3.setAction(new ShowHelpAction(("ENDtt_CommonPlots_Bt")));
@@ -244,7 +248,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         if (useAllTargetsCheckBox.isSelected()) {
             inputTargets = settingsModel.getRootSettings().getTargets().getTarget();
         } else {
-            inputTargets = targetList.getSelectedValues();
+            inputTargets = targetList.getCheckBoxListSelectedValues();
         }
 
         ArrayList<Target> l = new ArrayList();
@@ -273,14 +277,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         plotBaselinesButton = new javax.swing.JButton();
         plotRadialButton = new javax.swing.JButton();
         plotUvCoverageButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        targetList = new javax.swing.JList();
         useAllTargetsCheckBox = new javax.swing.JCheckBox();
         radialComboBox = new javax.swing.JComboBox();
         plotRadialAngleFormattedTextField1 = new javax.swing.JFormattedTextField();
         jButton3 = new javax.swing.JButton();
         addModelCheckBox = new javax.swing.JCheckBox();
         residualsCheckBox = new javax.swing.JCheckBox();
+        targetListScrollPane = new javax.swing.JScrollPane();
         blankPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -341,26 +344,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         commonPanel.add(plotUvCoverageButton, gridBagConstraints);
-
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(48, 80));
-
-        targetList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        targetList.setMaximumSize(new java.awt.Dimension(45, 150));
-        targetList.setMinimumSize(new java.awt.Dimension(45, 50));
-        targetList.setPreferredSize(new java.awt.Dimension(45, 50));
-        jScrollPane1.setViewportView(targetList);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        commonPanel.add(jScrollPane1, gridBagConstraints);
 
         useAllTargetsCheckBox.setText("Use all targets");
         useAllTargetsCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -424,6 +407,14 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
         commonPanel.add(residualsCheckBox, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        commonPanel.add(targetListScrollPane, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -486,7 +477,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private javax.swing.JPanel chi2Panel;
     private javax.swing.JPanel commonPanel;
     private javax.swing.JButton jButton3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel modelPanel;
     private javax.swing.JButton plotBaselinesButton;
     private javax.swing.JFormattedTextField plotRadialAngleFormattedTextField1;
@@ -494,13 +484,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private javax.swing.JButton plotUvCoverageButton;
     private javax.swing.JComboBox radialComboBox;
     private javax.swing.JCheckBox residualsCheckBox;
-    private javax.swing.JList targetList;
+    private javax.swing.JScrollPane targetListScrollPane;
     private javax.swing.JCheckBox useAllTargetsCheckBox;
     // End of variables declaration//GEN-END:variables
 
     // Thrown by a targetList change
     public void valueChanged(ListSelectionEvent e) {
-        updateAvailableObservables();
+        updateAvailableObservables();        
     }
 
     // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel
