@@ -27,7 +27,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
             "fr.jmmc.mf.gui.MFGui");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
@@ -38,8 +37,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
@@ -108,8 +107,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        yogaPanel = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -117,6 +115,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        yogaPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toolbarCheckBox = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
@@ -128,48 +128,41 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jLabel4 = new javax.swing.JLabel();
         preferenceFilenaTextfield = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         saveRestorePanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         restoreButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Preferences");
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        yogaPanel.setLayout(new java.awt.GridBagLayout());
+        jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jCheckBox1.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "yoga.remote.use"));
-        jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        yogaPanel.add(jCheckBox1, gridBagConstraints);
+        jPanel3.add(jCheckBox1, gridBagConstraints);
 
         jLabel1.setText("HTTP URL:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        yogaPanel.add(jLabel1, gridBagConstraints);
+        jPanel3.add(jLabel1, gridBagConstraints);
 
         jTextField1.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.remote.url"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        yogaPanel.add(jTextField1, gridBagConstraints);
+        jPanel3.add(jTextField1, gridBagConstraints);
 
         jLabel2.setText("LITpro package local path:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        yogaPanel.add(jLabel2, gridBagConstraints);
+        jPanel3.add(jLabel2, gridBagConstraints);
 
         jTextField2.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.local.home"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -178,21 +171,27 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        yogaPanel.add(jTextField2, gridBagConstraints);
+        jPanel3.add(jTextField2, gridBagConstraints);
 
         jLabel3.setText("Use remote yoga:"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        yogaPanel.add(jLabel3, gridBagConstraints);
+        jPanel3.add(jLabel3, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        yogaPanel.add(jSeparator1, gridBagConstraints);
+        jPanel3.add(jSeparator1, gridBagConstraints);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Preferences");
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        yogaPanel.setLayout(new java.awt.GridBagLayout());
 
         jLabel6.setText("Show  Toolbar:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -202,7 +201,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         yogaPanel.add(jLabel6, gridBagConstraints);
 
         toolbarCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "show.toolbar"));
-        toolbarCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -219,7 +217,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         yogaPanel.add(jLabel7, gridBagConstraints);
 
         saveResultCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "save.results"));
-        saveResultCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -246,7 +243,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         tooltipsCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "help.tooltips.show"));
-        tooltipsCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -276,20 +272,13 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel2.add(jLabel5, gridBagConstraints);
 
-        jTabbedPane1.addTab("Help", jPanel2);
-
-        jButton1.setText("Display logging utility");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1);
-
         jButton2.setAction(MFGui.getYogaVersionAction);
-        jPanel1.add(jButton2);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        jPanel2.add(jButton2, gridBagConstraints);
 
-        jTabbedPane1.addTab("Advanced", jPanel1);
+        jTabbedPane1.addTab("Help", jPanel2);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -313,8 +302,4 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ModelFitting.showLogGui();
-    }//GEN-LAST:event_jButton1ActionPerformed
 }
