@@ -417,14 +417,14 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
             if (isParameterLink(o)) {
                 Model m = settingsModel.getParent((ParameterLink) o);
-                if (m != null) {
-                    menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
+                if (m != null) {                                       
+                    menuItem = new JMenuItem("This model is located at " + UtilsClass.getRelativeCoords(m) + " relatively to the center of this target.");
                     menuItem.setEnabled(false);
                     parameterPopupMenu.add(menuItem);
                 }
             } else {
                 Model m = settingsModel.getParent(p);
-                menuItem = new JMenuItem("This model is located relatively to the center of this target on " + UtilsClass.getRhoTheta(m));
+                menuItem = new JMenuItem("This model is located at " + UtilsClass.getRelativeCoords(m) + " relatively to the center of this target.");
                 menuItem.setEnabled(false);
                 parameterPopupMenu.add(menuItem);
             }
