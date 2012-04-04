@@ -208,7 +208,11 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
             filenamesToExport.add(r.getName());
             if (r.getName().endsWith("png")) {
                 filesToDisplay.add(file);
-                filenamesToDisplay.add(r.getName());
+                if(r.getDescription().length()>0){
+                    filenamesToDisplay.add(r.getDescription());
+                }else{
+                    filenamesToDisplay.add(r.getName());
+                }
             }
         }
         f = UtilsClass.buildFrameFor(filesToDisplay.toArray(new File[0]),filenamesToDisplay.toArray(new String[0]));
