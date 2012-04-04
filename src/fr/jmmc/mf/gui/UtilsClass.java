@@ -869,41 +869,61 @@ public class UtilsClass {
         return v.toArray(new Model[0]);
     }
 
-    /** Return a string that describe the rho theta information of the given
+    /** Return a string that describe the rho theta information of the given if model has x and y and vice versa
      * model.
      * @param m
-     * @return the rho theta informations
+     * @return the rho/theta or x/y informations
      */
-    public static String getRhoTheta(Model m) {
+    public static String getRelativeCoords(Model m) {
         // compute rho theta from x y parameters
         double x = 0;
         double y = 0;
-
+        double rho=0;
+        double pa=0;
+        boolean cartesianInput=true;
+        
         Parameter[] params = m.getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
-            if (parameter.getType().equals("x")) {
+            if (parameter.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
-            }
-            if (parameter.getType().equals("y")) {
+            }else if (parameter.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            }
+            }else if (parameter.getType().equalsIgnoreCase("rho")) {
+                rho = parameter.getValue();
+                cartesianInput=false;
+            }else if (parameter.getType().equalsIgnoreCase("pa")) {
+                pa = parameter.getValue();
+                cartesianInput=false;
+            }            
         }
         ParameterLink[] paramLinks = m.getParameterLink();
         for (int i = 0; i < paramLinks.length; i++) {
             ParameterLink parameterLink = paramLinks[i];
             Parameter parameter = (Parameter) parameterLink.getParameterRef();
-            if (parameterLink.getType().equals("x")) {
+            if (parameterLink.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
-            }
-            if (parameterLink.getType().equals("y")) {
+            }else if (parameterLink.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            }
-        }
+            }else if (parameter.getType().equalsIgnoreCase("rho")) {
+                rho = parameter.getValue();
+                cartesianInput=false;
+            }else if (parameter.getType().equalsIgnoreCase("pa")) {
+                pa = parameter.getValue();
+                cartesianInput=false;
+            }            
+        }        
 
+        String result=null;
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setMaximumFractionDigits(3);
-        return "rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
+        if(cartesianInput){
+        result="rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
+        }else{
+            result="x='" + nf.format(getX(rho, pa)) + "' y='" + nf.format(getY(rho, pa)) + "'";
+        }
+        
+        return result;
     }
 
     // TODO move into jmal
@@ -918,5 +938,14 @@ public class UtilsClass {
             return r;
         }
         return r + 360.0;
+    }
+    // TODO move into jmal
+    public static double getX(double rho, double pa) {
+        return rho*Math.cos((90.0-pa)*(Math.PI / 180));
+    }
+
+    // TODO move into jmal
+    public static double getY(double rho, double pa) {        
+        return rho*Math.sin((90.0-pa)*(Math.PI / 180));
     }
 }
