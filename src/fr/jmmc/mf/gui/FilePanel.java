@@ -3,11 +3,13 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
+import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
@@ -21,6 +23,10 @@ import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.astrogrid.samp.Client;
+import org.ivoa.util.runner.JobListener;
+import org.ivoa.util.runner.LocalLauncher;
+import org.ivoa.util.runner.RootContext;
+import org.ivoa.util.runner.RunContext;
 
 /**
  *
@@ -62,6 +68,7 @@ public class FilePanel extends javax.swing.JPanel {
     private javax.swing.JButton showVisButton;
     private javax.swing.JCheckBox t3ampCheckBox;
     private javax.swing.JCheckBox t3phiCheckBox;
+    private javax.swing.JButton topcatButton;
     private javax.swing.JCheckBox visampCheckBox;
     private javax.swing.JCheckBox visphiCheckBox;
     // End of variables declaration//GEN-END:variables
@@ -112,8 +119,8 @@ public class FilePanel extends javax.swing.JPanel {
         nameTextField.setText(file.getName());
 
         // update lists
-        hduList.setListData(oifitsFile_.getOiTables());
-        hduListModel = hduList.getModel();
+        hduList.setListData(oifitsFile_.getOiTables()); 
+       hduListModel = hduList.getModel();
         showUVCoverageButton.setEnabled(false);
         showVisButton.setEnabled(oifitsFile_.hasOiVis());
         visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
@@ -124,6 +131,8 @@ public class FilePanel extends javax.swing.JPanel {
         t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
         // update button state
         hduList.setSelectedIndices(new int[]{});
+        
+        topcatButton.setEnabled(fitsViewerComboBox.getModel().getSize()==0);        
 
     }
 
@@ -159,6 +168,7 @@ public class FilePanel extends javax.swing.JPanel {
         visphiCheckBox = new javax.swing.JCheckBox();
         helpButton2 = new javax.swing.JButton();
         fitsViewerComboBox = new javax.swing.JComboBox();
+        topcatButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         addFileButton1 = new javax.swing.JButton();
 
@@ -209,7 +219,6 @@ public class FilePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(loadViewerButton, gridBagConstraints);
@@ -323,9 +332,17 @@ public class FilePanel extends javax.swing.JPanel {
 
         fitsViewerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         jPanel1.add(fitsViewerComboBox, gridBagConstraints);
+
+        topcatButton.setText("Launch Topcat");
+        topcatButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                topcatButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(topcatButton, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -682,9 +699,12 @@ public class FilePanel extends javax.swing.JPanel {
         java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
         settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName, tsv));
 
-
-
     }//GEN-LAST:event_showUVCoverageButtonActionPerformed
+
+    private void topcatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topcatButtonActionPerformed
+        launchTopcat();
+        topcatButton.setEnabled(false);
+    }//GEN-LAST:event_topcatButtonActionPerformed
 
     // End of variables declaration                   
     public void saveFile(java.io.File targetFile)
@@ -745,6 +765,48 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Launch the topcat Java WebStart application 
+     * @return the job context identifier
+     * @throws IllegalStateException if the job can not be submitted to the job queue
+     */
+    public Long launchTopcat() throws IllegalStateException {
+
+        final String jnlpUrl = "http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jnlp";
+
+        if (logger.isLoggable(Level.INFO)) {
+            logger.info("launch: " + jnlpUrl);
+        }
+
+        // create the execution context without log file:
+        final RootContext jobContext = LocalLauncher.prepareMainJob("LITproGUI", "LITproGUI", FileUtils.getTempDirPath(), null);
+
+        // command line: 'javaws -Xnosplash <jnlpUrl>'
+        LocalLauncher.prepareChildJob(jobContext, "LITproGUI", new String[]{"javaws", "-Xnosplash", jnlpUrl});
+
+        // puts the job in the job queue :
+        // can throw IllegalStateException if job not queued :
+        LocalLauncher.startJob(jobContext, new JobListener() {
+
+            public void performJobEvent(RootContext rootCtx) {
+                //logger.info("performJobEvent()");
+            }
+
+            public void performTaskEvent(RootContext rootCtx, RunContext runCtx) {
+                //logger.info("performTaskEvent()");
+
+            }
+
+            public boolean performTaskDone(RootContext rootCtx, RunContext runCtx) {
+                //logger.info("performTaskDone()");
+                return true;
+            }
+        });
+
+        return jobContext.getId();
+    }
+    
+    
     protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
 
         public CheckEmbeddedFileAction() {
@@ -783,12 +845,16 @@ public class FilePanel extends javax.swing.JPanel {
                         throw new IllegalStateException("Can't perform samp action", ex);
                     }
                 }
-            }else {
-                MessagePane.showMessage("Please Launch Topcat (http://www.star.bris.ac.uk/~mbt/topcat/) or any fits viewer before");
+            } else {
+                MessagePane.showMessage("Please Launch Topcat (http://www.star.bris.ac.uk/~mbt/topcat/) or any VO compliant fits table viewer");
             }
         }
+        
+    
+
     }
 
+    
     protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
 
         public String lastDir = System.getProperty("user.home");
