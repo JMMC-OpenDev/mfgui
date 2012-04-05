@@ -163,8 +163,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.setFitter("standard");
         setRootSettings(rootSettings);
 
-        //assert that list has been inited
+        try{
+            //assert that list has been inited
         initSupportedModelsModel();
+        }catch(ExecutionException eexc){
+            MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n",eexc);
+        }
     }
 
     public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
