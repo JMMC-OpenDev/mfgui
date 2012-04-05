@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b9"/>
+    <program name="LITpro" version="1.0.11b10"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -19,14 +19,14 @@
         <!-- Java Mariotti Astronomical library -->
         <package name="jMAL"
             description="JMMC library to provide common astronomical computations (coordinate conversion, SIMBAD star resolver and analytical object models in interferometry)"
-            link="https://www.jmmc.fr/dev/jmal/"
+            link="http://www.jmmc.fr/dev/jmal/"
             jars="jmal.jar"
             license="CECILL-B ???"/>     
 
         <!-- Java Mariotti OITools -->
         <package name="OITools"
             description="OITools is the JMMC library dedicated to OIFits manipulation (load, save and validation)"
-            link="https://www.jmmc.fr/dev/oitools/"
+            link="http://www.jmmc.fr/dev/oitools/"
             jars="oitools.jar"
             license="CECILL-B ???"/>     
 
@@ -128,10 +128,22 @@
     <releasenotes>
        <release version="1.0.11">
             <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <!-- <change type="TODO">Handle webservice url preference reset during major version update</change>-->
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
+            <prerelease version="1.0.11b10">               
+                <!-- use jide checkboxList -->
+                <!-- restore default preferences for yoga webservice url -->
+                <!-- todo: Plot UV Map : ajout des descriptions 
+                TO DO : permettre à l'utilisateur de :
+                    - zoomer, en Z et spatialement
+                    - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
+                -->
+                <change type="CHANGE">... and many other things provided by the shared code between JMMC applications!!</change>                
+                <change type="CHANGE">Interactive plots get proper range to display amplitudes or phases</change>
+                <change type="CHANGE">LITpro web service urls are reset and not shown in the preference window anylonger.</change>                                
+                <change type="CHANGE">Magnified images produced by LITpro web service (yorick core)</change>                                
+            </prerelease>                        
             <prerelease version="1.0.11b9">               
                 <!-- add a combobox to select fits viewer application in filePanel --> 
             </prerelease>            
@@ -159,7 +171,7 @@
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>                
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages easier to understand</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
-                <change type="CHANGE">Use VO protocol (Samp) to display fits tables (you need to startup topcat to get display)</change>
+                <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require topcat separate startup)</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/196">File given to application is now properly loaded on startup</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only if the current settings get all requested parts (data+model)</change>
