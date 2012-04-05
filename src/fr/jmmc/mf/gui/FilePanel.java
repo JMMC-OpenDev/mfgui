@@ -412,6 +412,7 @@ public class FilePanel extends javax.swing.JPanel {
         sb.append("</dataset>");        
         return sb.toString();
     }
+    
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[][] x, double[][] y,
             double[][] errorBar, boolean[][] flags)
@@ -554,11 +555,19 @@ public class FilePanel extends javax.swing.JPanel {
             sb.append("</plot>");
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-            java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
-            settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName,tsv));        
+           
+        if (plotName.toLowerCase().contains("phi")) {
+            UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
+        } else {
+            UtilsClass.fixPlotAxesForAmp(plotMLFrame.plot);            
+        }
+
+        java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
+        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName, tsv));
     }
-    
-    /*TO PUT ON ANOTHER PLACE*/
+
+    /*
+     * TO PUT ON ANOTHER PLACE*/
     private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVisButtonActionPerformed
         final String [] ampAndPhi=new String[]{"VISAMP", "VISPHI"};
@@ -766,9 +775,11 @@ public class FilePanel extends javax.swing.JPanel {
     }
 
     /**
-     * Launch the topcat Java WebStart application 
+     * Launch the topcat Java WebStart application
+     *
      * @return the job context identifier
-     * @throws IllegalStateException if the job can not be submitted to the job queue
+     * @throws IllegalStateException if the job can not be submitted to the job
+     * queue
      */
     public Long launchTopcat() throws IllegalStateException {
 
@@ -794,7 +805,6 @@ public class FilePanel extends javax.swing.JPanel {
 
             public void performTaskEvent(RootContext rootCtx, RunContext runCtx) {
                 //logger.info("performTaskEvent()");
-
             }
 
             public boolean performTaskDone(RootContext rootCtx, RunContext runCtx) {
@@ -805,8 +815,7 @@ public class FilePanel extends javax.swing.JPanel {
 
         return jobContext.getId();
     }
-    
-    
+
     protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
 
         public CheckEmbeddedFileAction() {
@@ -849,12 +858,8 @@ public class FilePanel extends javax.swing.JPanel {
                 MessagePane.showMessage("Please Launch Topcat (http://www.star.bris.ac.uk/~mbt/topcat/) or any VO compliant fits table viewer");
             }
         }
-        
-    
-
     }
 
-    
     protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
 
         public String lastDir = System.getProperty("user.home");
