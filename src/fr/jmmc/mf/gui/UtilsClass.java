@@ -1,6 +1,8 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
- ******************************************************************************/
+ *****************************************************************************
+ */
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.MessagePane;
@@ -58,25 +60,33 @@ import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import ptolemy.plot.plotml.PlotMLParser;
 import ptolemy.plot.Plot;
+import ptolemy.plot.PlotBox;
 import ptolemy.plot.plotml.PlotMLFrame;
 
 /**
- * This class is here just to locate code parts that could be moved under
- * one jmmc.mcs.* package
+ * This class is here just to locate code parts that could be moved under one
+ * jmmc.mcs.* package
  */
 public class UtilsClass {
 
     static final String className = UtilsClass.class.getName();
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    /** Mapping obect used by unmarshalling operations (inited into getMapping()) */
+    /**
+     * Mapping obect used by unmarshalling operations (inited into getMapping())
+     */
     private static Mapping mapping = null;
-    /** Number of first displayed chars if one unmarshalling operation fails */
+    /**
+     * Number of first displayed chars if one unmarshalling operation fails
+     */
     protected static final int HeadSizeToDisplayOnError = 80;
 
-    /** This method wal along the targets and check if no one of them are linked to the given file.
+    /**
+     * This method wal along the targets and check if no one of them are linked
+     * to the given file.
      *
-     * @param settingsModel model that contains target which can contain given file.
+     * @param settingsModel model that contains target which can contain given
+     * file.
      * @param file file to search.
      * @return true if one target is liked to the given file.
      */
@@ -121,6 +131,23 @@ public class UtilsClass {
         return plotMLFrame;
     }
 
+    public static void fixYPlotAxes(PlotBox p, double goodRange[]) {
+        double yRange[] = p.getYAutoRange();        
+        double rangeToApply[] = new double[]{Math.min(yRange[0], goodRange[0]), Math.max(yRange[1], goodRange[1])};
+        logger.fine("Updating plot range from : [" + yRange[0] + "," + yRange[1] + "] to [" + rangeToApply[0] + "," + rangeToApply[1] + "]");
+        p.setYRange(rangeToApply[0], rangeToApply[1]);
+    }
+
+    public static void fixPlotAxesForAmp(PlotBox p) {
+        double goodRange[] = new double[]{0.0, 1.0};
+        fixYPlotAxes(p, goodRange);
+    }
+
+    public static void fixPlotAxesForPhases(PlotBox p) {;
+        double goodRange[] = new double[]{-180.0, 180.0};
+        fixYPlotAxes(p, goodRange);
+    }
+
     public static File getPlotMLTSVFile(String ptPlotStr) {
         // Contruct xml document to plot
         String xmlStr = xsl(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl", null);
@@ -139,10 +166,10 @@ public class UtilsClass {
      * Build a Jframe that displays the given png file(s).
      *
      * @param pngFile image file
-     * @param filenames initial file names (may replace temporary file names of given files)
+     * @param filenames initial file names (may replace temporary file names of
+     * given files)
      * @return a frame that contains the image
-     * @throws IllegalStateException
-     *      if image can't be read from file
+     * @throws IllegalStateException if image can't be read from file
      */
     public static JFrame buildFrameFor(File[] pngFiles, String[] filenames) throws IllegalStateException {
         if (pngFiles == null || pngFiles.length == 0) {
@@ -153,7 +180,7 @@ public class UtilsClass {
 
         if (pngFiles.length == 1) {
             p = new JPanel(new BorderLayout());
-            
+
             JLabel label;
 
             Image image = getImage(pngFiles[0]);
@@ -163,7 +190,7 @@ public class UtilsClass {
             // Use a label to display the image
             label = new JLabel(new ImageIcon(image));
             p.add(label, BorderLayout.CENTER);
-        }else{
+        } else {
             p = new AnimationPanel(pngFiles, filenames);
         }
 
@@ -171,10 +198,11 @@ public class UtilsClass {
         frame.getContentPane().add(p);
         frame.pack();
         return frame;
-    }  
+    }
 
     /**
      * Load and return one swing image for given file
+     *
      * @param pngFile file to load
      * @return the associated image or null if problem occurs
      * @throws IllegalStateException if image can't be read from file
@@ -190,10 +218,10 @@ public class UtilsClass {
     }
 
     /**
-     * This method picks good column sizes with given maxWidth limit.
-     * If all column heads are wider than the column's cells'
-     * contents, then you can just use column.sizeWidthToFit().
-     *@todo move this function into one mcs common area
+     * This method picks good column sizes with given maxWidth limit. If all
+     * column heads are wider than the column's cells' contents, then you can
+     * just use column.sizeWidthToFit(). @todo move this function into one mcs
+     * common area
      */
     public static void initColumnSizes(JTable table, int maxWidth) {
         TableModel model = table.getModel();
@@ -228,13 +256,12 @@ public class UtilsClass {
     }
 
     /**
-     * Do the same job as marsghal(Object, Writer) but do not throw IO since
-     * it only work on memory.
+     * Do the same job as marsghal(Object, Writer) but do not throw IO since it
+     * only work on memory.
+     *
      * @param objectToMarshal
      * @param stringwriter
-     * @throws IllegalStateException
-     *   if marshalling operation fails
-     *   if io occurs
+     * @throws IllegalStateException if marshalling operation fails if io occurs
      */
     public static void marshal(Object objectToMarshal, StringWriter stringwriter) throws IllegalStateException {
         try {
@@ -246,8 +273,9 @@ public class UtilsClass {
 
     /**
      * Return one mapping object to be used by unmarshalling operation.
-     * @throws IllegalStateException
-     *           if unmarshaling can't be done (no marshalling file or invalid)     
+     *
+     * @throws IllegalStateException if unmarshaling can't be done (no
+     * marshalling file or invalid)
      */
     private static synchronized Mapping getMapping() throws IllegalStateException {
         if (mapping == null) {
@@ -268,14 +296,15 @@ public class UtilsClass {
 
     /**
      * Marshal the given object into the given writer.
-     * 
+     *
      * @param objectToMarshal
      * @param writer
-     * @throws IOException
-     *   if object can't be serialized into given file for io reason.
+     * @throws IOException if object can't be serialized into given file for io
+     * reason.
      * @throws IOException if io errors occur onto the writer
-     * @throws IllegalArgumentException if marshalling operation fails from given object
-     * @throws IllegalStateException if Mapping Exception occurs     
+     * @throws IllegalArgumentException if marshalling operation fails from
+     * given object
+     * @throws IllegalStateException if Mapping Exception occurs
      */
     public static void marshal(Object objectToMarshal, Writer writer) throws IOException, IllegalArgumentException, IllegalStateException {
         // Do marshalling      
@@ -302,11 +331,12 @@ public class UtilsClass {
     /**
      * Perfome the unmarsalling operation to transformed serialized object
      * contained in reader into one new Object.
-     * 
+     *
      * @param c template object
      * @param reader container of xml data
      * @return
-     * @throws IllegalStateException if unmarshaling can't be done (no marshalling file or invalid)
+     * @throws IllegalStateException if unmarshaling can't be done (no
+     * marshalling file or invalid)
      * @throws IllegalArgumentException if input data are not well formed
      */
     public static Object unmarshal(Class c, String xml) throws IllegalStateException, IllegalArgumentException {
@@ -337,10 +367,11 @@ public class UtilsClass {
         return o;
     }
 
-    /** 
+    /**
      * Clone the given object using castor specific machinery.
+     *
      * @param o
-     * @return 
+     * @return
      */
     public static Object clone(Object o) {
         // Clone selected object using castor marshalling
@@ -373,11 +404,11 @@ public class UtilsClass {
 
     /**
      * Read the given file and return one href containing base 64 encoded data.
+     *
      * @param filenameToEncode name of file to encode in base64
      * @param dataType mime type of given file to insert into href
      * @return the base64 buffer
-     * @throws IllegalStateException
-     *         if one io occurs or converter fails
+     * @throws IllegalStateException if one io occurs or converter fails
      */
     public static String getBase64Href(String filenameToEncode, String dataType)
             throws IllegalStateException {
@@ -387,11 +418,11 @@ public class UtilsClass {
 
     /**
      * Read the given file and return one href containing base 64 encoded data.
+     *
      * @param fileToEncode file to encode in base64
      * @param dataType mime type of given file to insert into href
      * @return the base64 buffer
-     * @throws IllegalStateException
-     *         if one io occurs or converter fails
+     * @throws IllegalStateException if one io occurs or converter fails
      */
     public static String getBase64Href(java.io.File fileToEncode, String dataType)
             throws IllegalStateException {
@@ -411,8 +442,8 @@ public class UtilsClass {
      *
      * @param b64 the base64 encoded file
      *
-     * @return The original file content.
-     *  @ todo do cleanup with probably duplicated mime type constants...
+     * @return The original file content. @ todo do cleanup with probably
+     * duplicated mime type constants...
      * @throws IOException
      */
     public static String saveBASE64ToString(String b64) {
@@ -539,8 +570,8 @@ public class UtilsClass {
     // General application methods
     //
     /**
-     * @return true indicates that user has saved data or that object has
-     * not been modified
+     * @return true indicates that user has saved data or that object has not
+     * been modified
      */
     public static boolean askToSaveUserModification(ModifyAndSaveObject object) {
         logger.entering(className, "askToSaveUserModification");
@@ -576,8 +607,9 @@ public class UtilsClass {
     }
 
     /**
-     * Check that every objects does not have been modify before application quitting.
-     * If one object has been modified, ask object one filename and propose a dialog to save
+     * Check that every objects does not have been modify before application
+     * quitting. If one object has been modified, ask object one filename and
+     * propose a dialog to save
      */
     public static boolean checkUserModificationToQuit(ModifyAndSaveObject[] objects) {
         logger.entering(className, "checkUserModificationAndQuit");
@@ -651,12 +683,12 @@ public class UtilsClass {
     }
 
     /**
-     * Returns one string resulting of xslt transformation.
-     * If one error occur, then one FeedbackReport show the problem
+     * Returns one string resulting of xslt transformation. If one error occur,
+     * then one FeedbackReport show the problem
      *
      * @param params two by two processor parameter list or null
-     * @return the xslt output or null if one error occured
-     *public static String xsl(String xmlBuffer, URL xslURL, String[] params)
+     * @return the xslt output or null if one error occured public static String
+     * xsl(String xmlBuffer, URL xslURL, String[] params)
      */
     public static String xsl(String xmlBuffer, String filepath, String[] params) {
         // Prepare the input
@@ -665,8 +697,8 @@ public class UtilsClass {
     }
 
     /**
-     * Returns one string resulting of xslt transformation.
-     * If one error occur, then one FeedbackReport show the problem
+     * Returns one string resulting of xslt transformation. If one error occur,
+     * then one FeedbackReport show the problem
      *
      * @param params two by two processor parameter list or null
      * @return the xslt output or null if one error occured
@@ -687,9 +719,9 @@ public class UtilsClass {
     //
     // XML Parsing
     //
-    /** Parses an XML file and returns a DOM document.
-     * If validating is true, the contents is validated against the DTD
-     * specified in the file.
+    /**
+     * Parses an XML file and returns a DOM document. If validating is true, the
+     * contents is validated against the DTD specified in the file.
      */
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
@@ -703,9 +735,9 @@ public class UtilsClass {
         return doc;
     }
 
-    /** Parses an XML string and returns a DOM document.
-     * If validating is true, the contents is validated against the DTD
-     * specified in the file.
+    /**
+     * Parses an XML string and returns a DOM document. If validating is true,
+     * the contents is validated against the DTD specified in the file.
      */
     public static Document parseXmlString(String xmlBuffer, boolean validating)
             throws ParserConfigurationException, IOException, SAXException {
@@ -720,10 +752,11 @@ public class UtilsClass {
     }
 
     /*
-     *  Following section give accesses to response content.
+     * Following section give accesses to response content.
      *
      */
-    /** Returns first setting element of given response.
+    /**
+     * Returns first setting element of given response.
      *
      * @param r response used to find settings into
      * @return the first found settings or null
@@ -740,7 +773,8 @@ public class UtilsClass {
         return null;
     }
 
-    /** Returns first setting element of given response.
+    /**
+     * Returns first setting element of given response.
      *
      * @param r response used to find settings into
      * @return the first found settings or null
@@ -811,7 +845,9 @@ public class UtilsClass {
         return str;
     }
 
-    /** Return the parameter and source of shared parameters for the given target.
+    /**
+     * Return the parameter and source of shared parameters for the given
+     * target.
      *
      * @param t the target to search parameters into
      * @return one parameter list
@@ -839,6 +875,7 @@ public class UtilsClass {
     /**
      * Returns the list of model that contains some parameterLink that point to
      * the given parameter.
+     *
      * @param settingsModel main settingsModel to search into.
      * @param parameter is one shared parameter
      * @return model list
@@ -869,8 +906,10 @@ public class UtilsClass {
         return v.toArray(new Model[0]);
     }
 
-    /** Return a string that describe the rho theta information of the given if model has x and y and vice versa
-     * model.
+    /**
+     * Return a string that describe the rho theta information of the given if
+     * model has x and y and vice versa model.
+     *
      * @param m
      * @return the rho/theta or x/y informations
      */
@@ -878,24 +917,24 @@ public class UtilsClass {
         // compute rho theta from x y parameters
         double x = 0;
         double y = 0;
-        double rho=0;
-        double pa=0;
-        boolean cartesianInput=true;
-        
+        double rho = 0;
+        double pa = 0;
+        boolean cartesianInput = true;
+
         Parameter[] params = m.getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
             if (parameter.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
-            }else if (parameter.getType().equalsIgnoreCase("y")) {
+            } else if (parameter.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            }else if (parameter.getType().equalsIgnoreCase("rho")) {
+            } else if (parameter.getType().equalsIgnoreCase("rho")) {
                 rho = parameter.getValue();
-                cartesianInput=false;
-            }else if (parameter.getType().equalsIgnoreCase("pa")) {
+                cartesianInput = false;
+            } else if (parameter.getType().equalsIgnoreCase("pa")) {
                 pa = parameter.getValue();
-                cartesianInput=false;
-            }            
+                cartesianInput = false;
+            }
         }
         ParameterLink[] paramLinks = m.getParameterLink();
         for (int i = 0; i < paramLinks.length; i++) {
@@ -903,26 +942,26 @@ public class UtilsClass {
             Parameter parameter = (Parameter) parameterLink.getParameterRef();
             if (parameterLink.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
-            }else if (parameterLink.getType().equalsIgnoreCase("y")) {
+            } else if (parameterLink.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            }else if (parameter.getType().equalsIgnoreCase("rho")) {
+            } else if (parameter.getType().equalsIgnoreCase("rho")) {
                 rho = parameter.getValue();
-                cartesianInput=false;
-            }else if (parameter.getType().equalsIgnoreCase("pa")) {
+                cartesianInput = false;
+            } else if (parameter.getType().equalsIgnoreCase("pa")) {
                 pa = parameter.getValue();
-                cartesianInput=false;
-            }            
-        }        
+                cartesianInput = false;
+            }
+        }
 
-        String result=null;
+        String result = null;
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setMaximumFractionDigits(3);
-        if(cartesianInput){
-        result="rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
-        }else{
-            result="x='" + nf.format(getX(rho, pa)) + "' y='" + nf.format(getY(rho, pa)) + "'";
+        if (cartesianInput) {
+            result = "rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
+        } else {
+            result = "x='" + nf.format(getX(rho, pa)) + "' y='" + nf.format(getY(rho, pa)) + "'";
         }
-        
+
         return result;
     }
 
@@ -940,12 +979,13 @@ public class UtilsClass {
         return r + 360.0;
     }
     // TODO move into jmal
+
     public static double getX(double rho, double pa) {
-        return rho*Math.cos((90.0-pa)*(Math.PI / 180));
+        return rho * Math.cos((90.0 - pa) * (Math.PI / 180));
     }
 
     // TODO move into jmal
-    public static double getY(double rho, double pa) {        
-        return rho*Math.sin((90.0-pa)*(Math.PI / 180));
+    public static double getY(double rho, double pa) {
+        return rho * Math.sin((90.0 - pa) * (Math.PI / 180));
     }
 }

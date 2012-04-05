@@ -149,6 +149,13 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         // generate frame and tsv file
         PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
+        
+        if (!residuals && plotName.toLowerCase().contains("phi")) {
+            UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
+        } else {
+            UtilsClass.fixPlotAxesForAmp(plotMLFrame.plot);
+        }
+        
         logger.fine("End plot generation:" + plotName);
         logger.fine("Start tsv generation:" + plotName);
         File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
