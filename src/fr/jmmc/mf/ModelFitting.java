@@ -40,6 +40,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
+import org.ivoa.util.runner.LocalLauncher;
 
 /**
  *
@@ -78,6 +79,9 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         
         myPreferences = Preferences.getInstance();
 
+        // Initialize job runner:
+        LocalLauncher.startUp();
+        
         // Using invokeAndWait to be in sync with this thread :
         // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
         SwingUtils.invokeAndWaitEDT(new Runnable() {
@@ -139,6 +143,9 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
         logger.info("Thank you for using this software!");
 
+        // Stop job runner:
+        LocalLauncher.shutdown();
+        
         super.onFinish();
     }
 
