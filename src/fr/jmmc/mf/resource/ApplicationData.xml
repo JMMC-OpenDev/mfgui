@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11b10"/>
+    <program name="LITpro" version="1.0.11b11"/>
     <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
     
     <text></text>
@@ -131,7 +131,7 @@
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
-            <prerelease version="1.0.11b10">               
+            <prerelease version="1.0.11b11">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- todo: Plot UV Map : ajout des descriptions 
@@ -139,11 +139,15 @@
                     - zoomer, en Z et spatialement
                     - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
                 -->
+                <!--<change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/303">Fix error values in tsv export of some plots (with format change)</change> -->
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/292">Handle oifits flags encoded as integer/short/char (0 indicates false else true)</change>
+            </prerelease> 
+            <prerelease version="1.0.11b10">               
                 <change type="CHANGE">... and many other things provided by the shared code between JMMC applications!!</change>                
                 <change type="CHANGE">Interactive plots get proper range to display amplitudes or phases</change>
                 <change type="CHANGE">LITpro web service urls are reset and not shown in the preference window anylonger.</change>                                
                 <change type="CHANGE">Magnified images produced by LITpro web service (yorick core)</change>                                
-            </prerelease>                        
+            </prerelease>
             <prerelease version="1.0.11b9">               
                 <!-- add a combobox to select fits viewer application in filePanel --> 
             </prerelease>            
