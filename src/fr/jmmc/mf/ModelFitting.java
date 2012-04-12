@@ -139,14 +139,14 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
      * @see App#exit(int)
      */
     @Override
-    public void onFinish() {
+    public void cleanup() {
 
         logger.info("Thank you for using this software!");
 
         // Stop job runner:
         LocalLauncher.shutdown();
         
-        super.onFinish();
+        super.cleanup();
     }
 
     /**
