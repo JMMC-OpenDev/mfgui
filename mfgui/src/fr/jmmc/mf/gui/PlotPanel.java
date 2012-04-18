@@ -187,9 +187,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
             MessagePane.showErrorMessage("Can't plot data", ex);
             return;
         }
-        ResultFile[] resultFiles = UtilsClass.getResultFiles(response);
+        ResultFile[] resultFiles = UtilsClass.getResultFiles(response);        
         if (resultFiles.length == 0) {
-            throw new IllegalStateException("No data returned (this problem is probably data related)");
+            String errors = UtilsClass.getErrorMsg(response);
+            if (errors.length() > 1) {
+               return; 
+            }
+            throw new IllegalStateException("No data returned (this problem is probably data related)");                     
         }
 
         String b64file;
