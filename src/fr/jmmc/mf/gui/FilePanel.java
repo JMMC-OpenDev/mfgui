@@ -3,13 +3,12 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
-import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.util.JnlpStarter;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
@@ -23,10 +22,6 @@ import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.astrogrid.samp.Client;
-import org.ivoa.util.runner.JobListener;
-import org.ivoa.util.runner.LocalLauncher;
-import org.ivoa.util.runner.RootContext;
-import org.ivoa.util.runner.RunContext;
 
 /**
  *
@@ -782,38 +777,7 @@ public class FilePanel extends javax.swing.JPanel {
      * queue
      */
     public Long launchTopcat() throws IllegalStateException {
-
-        final String jnlpUrl = "http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jnlp";
-
-        if (logger.isLoggable(Level.INFO)) {
-            logger.info("launch: " + jnlpUrl);
-        }
-
-        // create the execution context without log file:
-        final RootContext jobContext = LocalLauncher.prepareMainJob("LITproGUI", "LITproGUI", FileUtils.getTempDirPath(), null);
-
-        // command line: 'javaws -Xnosplash <jnlpUrl>'
-        LocalLauncher.prepareChildJob(jobContext, "LITproGUI", new String[]{"javaws", "-Xnosplash", jnlpUrl});
-
-        // puts the job in the job queue :
-        // can throw IllegalStateException if job not queued :
-        LocalLauncher.startJob(jobContext, new JobListener() {
-
-            public void performJobEvent(RootContext rootCtx) {
-                //logger.info("performJobEvent()");
-            }
-
-            public void performTaskEvent(RootContext rootCtx, RunContext runCtx) {
-                //logger.info("performTaskEvent()");
-            }
-
-            public boolean performTaskDone(RootContext rootCtx, RunContext runCtx) {
-                //logger.info("performTaskDone()");
-                return true;
-            }
-        });
-
-        return jobContext.getId();
+        return JnlpStarter.launch("http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jnlp");
     }
 
     protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
