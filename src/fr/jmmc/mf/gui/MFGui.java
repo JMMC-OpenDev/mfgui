@@ -5,7 +5,6 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.ModelFitting;
-import fr.jmmc.jmcs.util.UrlUtils;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.actions.SaveSettingsAction;
 import fr.jmmc.mf.gui.actions.ShowPrefAction;
@@ -17,6 +16,8 @@ import fr.jmmc.mf.gui.actions.CloseModelAction;
 import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.jmcs.gui.component.StatusBar;
+import fr.jmmc.jmcs.resource.image.ResourceImage;
+import fr.jmmc.jmcs.util.ImageUtils;
 
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
@@ -24,6 +25,7 @@ import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
 import fr.jmmc.mf.gui.actions.LoadRemoteDataFilesAction;
 import fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction;
 import fr.nom.tam.fits.FitsException;
+import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -132,7 +134,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         }
 
         // handle frame icon
-        this.setIconImage(new ImageIcon(UrlUtils.fixJarURL(getClass().getResource("/fr/jmmc/jmcs/resource/favicon.png"))).getImage());
+        final String jmmcFavIconPath = ResourceImage.JMMC_FAVICON.path();
+        final Image jmmcFavImage = ImageUtils.loadResourceIcon(jmmcFavIconPath).getImage();
+        this.setIconImage(jmmcFavImage);
 
         fr.jmmc.jmcs.gui.component.StatusBar.show("Application inited");
     }
