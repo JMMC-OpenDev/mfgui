@@ -11,29 +11,27 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /** This class is jst a typed container to present frames into the JTree */
 public class FrameTreeNode extends DefaultMutableTreeNode{
-    private String title;
     private File[] filesToExport;
     private String[] filenamesToExport;
     private JFrame frame;
     
-    public FrameTreeNode(JFrame frame, String title){
-        init(frame,title,null,null);
+    public FrameTreeNode(JFrame frame){
+        init(frame,null,null);
     }
 
-    public FrameTreeNode(JFrame frame, String title, File fileToExport){
-        init(frame,title, new File[]{fileToExport}, new String[]{"Untitled."+FileUtils.getExtension(fileToExport)});
+    public FrameTreeNode(JFrame frame, File fileToExport){
+        init(frame, new File[]{fileToExport}, new String[]{"Untitled."+FileUtils.getExtension(fileToExport)});
     }
     
-    public FrameTreeNode(JFrame frame, String title, File fileToExport, String filenameToExport){
-        init(frame,title, new File[]{fileToExport}, new String[]{filenameToExport});
+    public FrameTreeNode(JFrame frame, File fileToExport, String filenameToExport){
+        init(frame, new File[]{fileToExport}, new String[]{filenameToExport});
     }
 
-    public FrameTreeNode(JFrame frame, String title, File[] filesToExport, String[] filenamesToExport){
-        init(frame,title, filesToExport, filenamesToExport);
+    public FrameTreeNode(JFrame frame, File[] filesToExport, String[] filenamesToExport){
+        init(frame, filesToExport, filenamesToExport);
     }
 
-    private void init(JFrame frame, String title, File[] filesToExport, String[] filenamesToExport){
-        this.title = title;
+    private void init(JFrame frame, File[] filesToExport, String[] filenamesToExport){
         this.frame=frame;
         if (filesToExport==null){
             filesToExport=new File[0];
@@ -43,7 +41,6 @@ public class FrameTreeNode extends DefaultMutableTreeNode{
         }
         this.filesToExport=filesToExport;
         this.filenamesToExport=filenamesToExport;
-        frame.setTitle(title);
         setUserObject(frame);
     }
 
@@ -61,11 +58,6 @@ public class FrameTreeNode extends DefaultMutableTreeNode{
 
     @Override
     public String toString(){
-        return title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
+        return frame.getTitle();
+    }   
 }
