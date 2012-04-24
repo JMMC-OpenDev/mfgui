@@ -26,8 +26,8 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
     private static final int REFRESH_PERIOD = 1000;
     /** File stack */
     File[] files;
-    /** File names stack */
-    String[] filenames;
+    /** File descriptions stack */
+    String[] descriptions;
     /** Image stack */
     Image[] images;
     /** index of displayed image */
@@ -36,18 +36,23 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
     ImageIcon imageIcon=null;
 
     /** Creates new form AnimationPanel */
-    public AnimationPanel(File[] inputFiles, String[] inputFilenames) {
-        initComponents();        
+    public AnimationPanel(String description, File[] inputFiles, String[] descriptions) {
+        initComponents();                
         
         /* Init and launch the timer that will throw actionEvent */
         timer = new Timer(REFRESH_PERIOD, this);
         timer.setInitialDelay(0);
         timer.start();
 
+        /* Init the description label if any desc are given */
+        if(description!=null){
+            descriptionLabel.setText(description);
+        }
+        
         /* Init the images related arrays */
         files = new File[inputFiles.length];
         images = new Image[inputFiles.length];
-        filenames = inputFilenames;
+        this.descriptions = descriptions;
 
         for (int i = 0; i < inputFiles.length; i++) {
             File file = inputFiles[i];
@@ -100,7 +105,7 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
         imageIndex = imageSlider.getValue();
         /* Update and redraw image */
         imageIcon.setImage(images[imageIndex]);
-        filenameLabel.setText(filenames[imageIndex]);
+        filenameLabel.setText(descriptions[imageIndex]);
         imageLabel.repaint();
     }
 
@@ -118,6 +123,7 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
         imageLabel = new javax.swing.JLabel();
         imageSlider = new javax.swing.JSlider();
         filenameLabel = new javax.swing.JLabel();
+        descriptionLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -129,7 +135,7 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
         add(animateCheckBox, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -152,9 +158,14 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(filenameLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        add(descriptionLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox animateCheckBox;
+    private javax.swing.JLabel descriptionLabel;
     private javax.swing.JLabel filenameLabel;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JSlider imageSlider;
