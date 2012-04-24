@@ -102,7 +102,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
     }
 
-    void genPlots(ResultFile[] resultFiles) {
+    void genPlots(String plotTitle, String plotDescription, ResultFile[] resultFiles) {
         // try to locate the corresponding pdf of each png file
         for (int i = 0; i < resultFiles.length; i++) {
             ResultFile r = resultFiles[i];
@@ -126,8 +126,8 @@ public class ResultModel extends DefaultMutableTreeNode {
                 b64file = r.getHref();
                 File pngFile = UtilsClass.saveBASE64ToFile(b64file, "png");
                 filesToExport.add(pngFile);
-                f = UtilsClass.buildFrameFor(new File[]{pngFile}, new String[]{r.getName()});
-                this.add(new FrameTreeNode(f, r.getName(), filesToExport.toArray(new File[0]),filenamesToExport.toArray(new String[0]) ));
+                f = UtilsClass.buildFrameFor(plotTitle, plotDescription, new File[]{pngFile}, new String[]{r.getName()});
+                this.add(new FrameTreeNode(f, filesToExport.toArray(new File[0]),filenamesToExport.toArray(new String[0]) ));
             }
         }
     }
@@ -162,7 +162,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         logger.fine("End tsv generation:" + plotName);
 
         // add on frameTreeNode as child
-        this.add(new FrameTreeNode(plotMLFrame, plotName, tsv));
+        this.add(new FrameTreeNode(plotMLFrame, tsv));
     }
 
     public int getIndex() {
