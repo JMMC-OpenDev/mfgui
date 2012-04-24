@@ -5,20 +5,15 @@ package fr.jmmc.mf.gui;
 
 import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.mf.ModelFitting;
-import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.mf.models.FileLink;
-import fr.jmmc.mf.models.Residual;
-import fr.jmmc.mf.models.Target;
-import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
@@ -156,7 +151,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
     void plotModelUVMap(Target targetToPlot) {
         String args = getGroupValue(targetToPlot);
-        plot("getModelUVMap", args, "UV map of " + targetToPlot.getIdent());
+        plot("getModelUVMap", args, "UV map of " + targetToPlot.getIdent(),
+                "Model map in the uv plane with markers of data overplotted with the same color table.");
     }
 
     void plotModelImage(Target targetToPlot, String xmin, String xmax,
@@ -177,6 +173,18 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      * @param title the plot title.
      */
     public void plot(String methodName, String methodArgs, String title) {
+        plot(methodName, methodArgs, title,null);    
+    }
+    
+    /**
+     * Call plot build routine and draw the new plot.
+     *
+     * @param methodName the method's name.
+     * @param methodArgs the method's arguments.
+     * @param title the plot title.
+     * @param description (optionnal) plot description
+     */
+    public void plot(String methodName, String methodArgs, String title, String description) {
         logger.fine("Requesting yoga '" + methodName + "' call");
 
         Response response = null;
@@ -219,10 +227,10 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
                 }
             }
         }
-        f = UtilsClass.buildFrameFor(filesToDisplay.toArray(new File[0]),filenamesToDisplay.toArray(new String[0]));
+        f = UtilsClass.buildFrameFor(title, "description", filesToDisplay.toArray(new File[0]),filenamesToDisplay.toArray(new String[0]));
         
         if (f != null) {
-            FrameTreeNode ftn = new FrameTreeNode(f, title, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
+            FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
             settingsModel.addPlot(ftn);
         }
 
