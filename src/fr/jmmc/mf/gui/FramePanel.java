@@ -50,7 +50,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             frame.addWindowListener(this);
         }
 
-        titleLabel.setText(frameTreeNode.getTitle());     
+        titleLabel.setText(frameTreeNode.getFrame().getTitle());     
         
         files = frameTreeNode.getFilesToExport();        
         filenames = frameTreeNode.getFilenamesToExport();
