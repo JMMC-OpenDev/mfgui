@@ -550,7 +550,7 @@ public class FilePanel extends javax.swing.JPanel {
             sb.append("</plot>");
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-           
+                       
         if (plotName.toLowerCase().contains("phi")) {
             UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
         } else {
@@ -558,7 +558,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
 
         java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
-        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName, tsv));
+        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, tsv));
     }
 
     /*
@@ -701,7 +701,7 @@ public class FilePanel extends javax.swing.JPanel {
 
         PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
         java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
-        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, plotName, tsv));
+        settingsModel.addPlot(new FrameTreeNode(plotMLFrame, tsv));
 
     }//GEN-LAST:event_showUVCoverageButtonActionPerformed
 
