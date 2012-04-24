@@ -132,7 +132,7 @@ public class UtilsClass {
     }
 
     public static void fixYPlotAxes(PlotBox p, double goodRange[]) {
-        double yRange[] = p.getYAutoRange();        
+        double yRange[] = p.getYAutoRange();
         double rangeToApply[] = new double[]{Math.min(yRange[0], goodRange[0]), Math.max(yRange[1], goodRange[1])};
         logger.fine("Updating plot range from : [" + yRange[0] + "," + yRange[1] + "] to [" + rangeToApply[0] + "," + rangeToApply[1] + "]");
         p.setYRange(rangeToApply[0], rangeToApply[1]);
@@ -165,13 +165,15 @@ public class UtilsClass {
     /**
      * Build a Jframe that displays the given png file(s).
      *
+     * @param title frame title
+     * @param description short description of content (or null)
      * @param pngFile image file
      * @param filenames initial file names (may replace temporary file names of
      * given files)
      * @return a frame that contains the image
      * @throws IllegalStateException if image can't be read from file
      */
-    public static JFrame buildFrameFor(File[] pngFiles, String[] filenames) throws IllegalStateException {
+    public static JFrame buildFrameFor(String title, String description, File[] pngFiles, String[] filenames) throws IllegalStateException {
         if (pngFiles == null || pngFiles.length == 0) {
             return null;
         }
@@ -181,20 +183,26 @@ public class UtilsClass {
         if (pngFiles.length == 1) {
             p = new JPanel(new BorderLayout());
 
-            JLabel label;
+            // add a label if one description is given
+            if (description != null) {
+                JLabel descriptionLabel = new JLabel(description);
+                p.add(descriptionLabel, BorderLayout.NORTH);
+            }
 
+            // Use a label to display the image
+            JLabel label;
             Image image = getImage(pngFiles[0]);
             if (image == null) {
                 return null;
             }
-            // Use a label to display the image
             label = new JLabel(new ImageIcon(image));
             p.add(label, BorderLayout.CENTER);
         } else {
-            p = new AnimationPanel(pngFiles, filenames);
+            p = new AnimationPanel(description, pngFiles, filenames);
         }
 
         JFrame frame = frame = new JFrame();
+        frame.setTitle(title);
         frame.getContentPane().add(p);
         frame.pack();
         return frame;
