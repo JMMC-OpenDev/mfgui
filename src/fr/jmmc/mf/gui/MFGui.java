@@ -17,7 +17,6 @@ import fr.jmmc.mf.gui.actions.NewModelAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.resource.image.ResourceImage;
-import fr.jmmc.jmcs.util.ImageUtils;
 
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
@@ -134,8 +133,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         }
 
         // handle frame icon
-        final String jmmcFavIconPath = ResourceImage.JMMC_FAVICON.path();
-        final Image jmmcFavImage = ImageUtils.loadResourceIcon(jmmcFavIconPath).getImage();
+        final Image jmmcFavImage = ResourceImage.JMMC_FAVICON.icon().getImage();
         this.setIconImage(jmmcFavImage);
 
         fr.jmmc.jmcs.gui.component.StatusBar.show("Application inited");
