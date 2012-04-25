@@ -1041,7 +1041,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (newResult != null) {
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult);
-                r.genPlots(UtilsClass.getResultFiles(newResponse));
+                // TODO: check if following call still get some files to display
+                r.genPlots(null, null, UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1,
