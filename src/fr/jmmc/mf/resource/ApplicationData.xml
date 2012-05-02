@@ -7,8 +7,8 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.11"/>
-    <compilation date="09/11/2011" compiler="JDK 1.5.0_16"/>
+    <program name="LITpro" version="1.0.12b1"/>
+    <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     
     <text></text>
 
@@ -126,20 +126,27 @@
     </menubar>
 
     <releasenotes>
-       <release version="1.0.11">
+        <release version="1.0.12">
             <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
+            <prerelease version="1.0.12b1">               
+                <!-- use jide checkboxList -->
+                <!-- restore default preferences for yoga webservice url -->
+                <!-- todo: 
+                     permettre à l'utilisateur de :
+                    - zoomer, en Z et spatialement
+                    - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
+                -->               
+                <change type="CHANGE">Use default file chooser on Mac OS X</change>
+            </prerelease> 
+            </release>
+       <release version="1.0.11">            
             <prerelease version="1.0.11b11">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
-                <!-- todo: Plot UV Map : ajout des descriptions 
-                TO DO : permettre à l'utilisateur de :
-                    - zoomer, en Z et spatialement
-                    - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
-                -->
-                <!--<change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/303">Fix error values in tsv export of some plots (with format change)</change> -->
+                <!--<change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/303">Fix error handling</change> -->
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/292">Handle oifits flags encoded as integer/short/char (0 indicates false else true)</change>
             </prerelease> 
             <prerelease version="1.0.11b10">               
