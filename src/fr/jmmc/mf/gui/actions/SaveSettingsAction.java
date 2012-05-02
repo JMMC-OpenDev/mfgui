@@ -8,6 +8,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -19,7 +20,7 @@ public class SaveSettingsAction extends RegisteredAction {
     /** Class logger */
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    private String lastDir = System.getProperty("user.home");
+    private File lastDir = null;
     MFGui mfgui;
 
     public SaveSettingsAction(MFGui mfgui, String actionName) {
@@ -36,28 +37,13 @@ public class SaveSettingsAction extends RegisteredAction {
         if (settingsModel == null) {
             return;
         }
-        File file = new File(settingsModel.getAssociatedFilename());
-        // Open a filechooser in previous save directory
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
-        if (lastDir != null) {
-            fileChooser.setCurrentDirectory(new File(lastDir));
-        }
-        fileChooser.setSelectedFile(file);
-        String res = "";
-        fileChooser.setDialogTitle("Save " + settingsModel.getAssociatedFilename() + res + "?");
-        // Open filechooser
-        int returnVal = fileChooser.showSaveDialog(null);
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
+                
+        File file =  FileChooser.showSaveFileChooser(NAME, lastDir, MimeType.LITPRO_SETTINGS, settingsModel.getAssociatedFilename());                
+        if(file==null){
             return;
         }
-        file = fileChooser.getSelectedFile();
-        if (file.exists()) {
-            if (!MessagePane.showConfirmFileOverwrite(file.getAbsolutePath())) {
-                return;
-            }
-        }
-        lastDir = file.getParent();
+        // Store directory for next time
+        lastDir = file.getParentFile();       
         // Fix user associated file and save it with result
         settingsModel.setAssociatedFile(file);
         settingsModel.saveSettingsFile(file);

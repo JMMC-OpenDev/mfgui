@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.util.FileUtils;
@@ -15,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JFrame;
-import javax.swing.JFileChooser;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
@@ -27,7 +27,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     SettingsViewerInterface viewer = null;
     JFrame frame;
     Container contentPane;
-    String lastDir=null;
+    File lastDir=null;
      /** File stack */
     File[] files;
     /** File names stack */
@@ -164,24 +164,11 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         int fileIndex = filenamesComboBox.getSelectedIndex();
         String fileName = filenames[fileIndex];
         File fileToSave = files[fileIndex];
-        // Open a filechooser in previous save directory
-        JFileChooser fileChooser = new JFileChooser();
-        if (lastDir != null) {
-            fileChooser.setSelectedFile(new File(lastDir, fileName));
-        } else if (fileToSave != null) {
-            fileChooser.setSelectedFile(new File(fileName));
-        }
-        fileChooser.setDialogTitle("Export as " + fileName + "?");
-        // Open filechooser
-        int returnVal = fileChooser.showSaveDialog(null);
-        File newFile = fileChooser.getSelectedFile();
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
+        
+        // Open filechooser to get file to save        
+        File newFile = FileChooser.showSaveFileChooser("Export as " + fileName + "?", lastDir, null, fileName);
+        if (newFile == null) {
             return;
-        }
-        if (newFile.exists()) {
-            if (!MessagePane.showConfirmFileOverwrite(newFile.getAbsolutePath())) {
-                return;
-            }
         }
         try {
             FileUtils.copy(fileToSave, newFile);
@@ -191,7 +178,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             MessagePane.showErrorMessage("Can't export data into " + newFile.getAbsolutePath(), ex);
             return;
         }
-        lastDir = newFile.getParent();
+        lastDir = newFile.getParentFile();
         filenames[fileIndex] = newFile.getName();        
         updateFileCombo();
     }//GEN-LAST:event_exportButtonActionPerformed

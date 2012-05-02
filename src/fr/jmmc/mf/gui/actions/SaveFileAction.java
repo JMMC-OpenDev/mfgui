@@ -6,6 +6,8 @@ package fr.jmmc.mf.gui.actions;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.FileChooser;
+import fr.jmmc.jmcs.util.MimeType;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +20,7 @@ public class SaveFileAction extends RegisteredAction {
     /** Class logger */
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    private String lastDir = System.getProperty("user.home");
+    private File lastDir;
     private File fileToSave;
     private String fileName;
     private String originalActionName;
@@ -56,24 +58,11 @@ public class SaveFileAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         logger.entering(className, "actionPerformed");
-        // Open a filechooser in previous save directory
-        JFileChooser fileChooser = new JFileChooser();
-        if (lastDir != null) {
-            fileChooser.setSelectedFile(new File(lastDir, fileName));
-        } else if (fileToSave != null) {
-            fileChooser.setSelectedFile(fileToSave);
-        }
-        fileChooser.setDialogTitle("Export as " + fileName + "?");
+                
         // Open filechooser
-        int returnVal = fileChooser.showSaveDialog(null);
-        File newFile = fileChooser.getSelectedFile();
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
+        File newFile = FileChooser.showSaveFileChooser("Export as " + fileName + "?", lastDir, null, fileName);
+        if (newFile == null) {
             return;
-        }
-        if (newFile.exists()) {
-            if (!MessagePane.showConfirmFileOverwrite(newFile.getAbsolutePath())) {
-                return;
-            }
         }
         try {
             FileUtils.copy(fileToSave, newFile);
@@ -83,7 +72,7 @@ public class SaveFileAction extends RegisteredAction {
             MessagePane.showErrorMessage("Can't export data into " + newFile.getAbsolutePath(), ex);
             return;
         }
-        lastDir = newFile.getParent();
+        lastDir = newFile.getParentFile();
         fileName = newFile.getName();
         this.putValue(SaveFileAction.NAME, originalActionName + " " + fileName);
         fr.jmmc.jmcs.gui.component.StatusBar.show("File saved");

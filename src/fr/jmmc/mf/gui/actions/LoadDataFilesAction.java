@@ -6,15 +6,13 @@ package fr.jmmc.mf.gui.actions;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -26,7 +24,7 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
     public final static String actionName = "loadDataFiles";
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             className);
-    String lastDir = System.getProperty("user.home");
+    java.io.File lastDir = null;
     MFGui mfgui;
     SettingsModel settingsModel;
     Vector<SettingsModel> settingsModelListener = new Vector();
@@ -37,31 +35,23 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setMultiSelectionEnabled(true);
-        fileChooser.setFileFilter(MimeType.OIFITS.getFileFilter());
-        // Set in previous load directory
-        if (lastDir != null) {
-            fileChooser.setCurrentDirectory(new java.io.File(lastDir));
+        java.io.File[] files = FileChooser.showOpenFilesChooser(NAME, lastDir, MimeType.OIFITS);
+
+        if (files == null) {
+            return;
         }
 
-        // Open file chooser
-        int returnVal = fileChooser.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            java.io.File[] files = fileChooser.getSelectedFiles();
-            for (int i = 0; i < files.length; i++) {
-                java.io.File file = files[i];
-                try {
-                    settingsModel.addFile(file);
-                } catch (IOException ex) {
-                    MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
-                } catch (FitsException ex) {
-                    MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
-                }
+        for (int i = 0; i < files.length; i++) {
+            java.io.File file = files[i];
+            try {
+                settingsModel.addFile(file);
+            } catch (IOException ex) {
+                MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
+            } catch (FitsException ex) {
+                MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
             }
-            lastDir = files[0].getParent();
         }
+        lastDir = files[0].getParentFile();
     }
 
     /** Listen to the settings pane selection changes

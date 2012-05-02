@@ -3,12 +3,14 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
 import fr.jmmc.jmcs.util.JnlpStarter;
+import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
@@ -833,30 +835,10 @@ public class FilePanel extends javax.swing.JPanel {
         }
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
-            //logger.entering(""+this.getClass(), "actionPerformed");
-            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-
-            // Set in previous save directory
-            if (lastDir != null) {
-                fileChooser.setCurrentDirectory(new java.io.File(lastDir));
-            }
-
-            fileChooser.setSelectedFile(new java.io.File(current.getName()));
-            // Open filechooser
-            int returnVal = fileChooser.showSaveDialog(null);
-
-            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
-                java.io.File file = fileChooser.getSelectedFile();
-                lastDir = file.getParent();
+            java.io.File file = FileChooser.showSaveFileChooser("Save embedded data file", null, MimeType.OIFITS, current.getName());
+            if (file != null) {
                 try {
-                    // Save if it does not exist or ask to overwrite
-                    if (file.exists()) {
-                        if (MessagePane.showConfirmFileOverwrite(file.getName())) {
-                            saveFile(file);
-                        }
-                    } else {
-                        saveFile(file);
-                    }
+                    saveFile(file);
                 } catch (IOException ioe) {
                     MessagePane.showErrorMessage("Sorry, cannot save your file into " + file.getName(), ioe);
                 }

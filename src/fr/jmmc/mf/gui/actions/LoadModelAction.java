@@ -7,12 +7,12 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JFileChooser;
 import fr.jmmc.jmcs.util.MimeType;
 import java.util.concurrent.ExecutionException;
 
@@ -24,8 +24,7 @@ public class LoadModelAction extends RegisteredAction {
     public final static String actionName = "loadModel";
     /** Class logger */
     static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
-    public String lastDir = System.getProperty("user.home");
+            className);    
     MFGui mfgui;
 
     public LoadModelAction(MFGui mfgui) {
@@ -48,23 +47,11 @@ public class LoadModelAction extends RegisteredAction {
             file = new File(e.getActionCommand());
         } else // User clicked the menu item
         {
-
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(MimeType.LITPRO_SETTINGS.getFileFilter());
-            // Set in previous load directory
-            if (lastDir != null) {
-                fileChooser.setCurrentDirectory(new File(lastDir));
-            }
-            // Open file chooser
-            int returnVal = fileChooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                file = fileChooser.getSelectedFile();
-            }
+            file=FileChooser.showOpenFileChooser("Load settings", null, MimeType.LITPRO_SETTINGS, null);            
         }
 
         // Finally try to load file
-        if (file != null) {
-            lastDir = file.getParent();
+        if (file != null) {            
             try {
                 logger.info("Loading '" + file.getName() + "' setting file");
                 mfgui.addSettings(new SettingsModel(file));
