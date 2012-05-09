@@ -10,8 +10,13 @@
     <program name="LITpro" version="1.0.12b1"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     
-    <text></text>
+    <text><![CDATA[LITpro is a model fitting software, developed and maintained by one JMMC working group ( CRAL, IPAG and FIZEAU ).
+    ]]>
+  </text>
 
+  <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
+
+  <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
     <dependences>      
 
         <!-- JMMC -->
@@ -140,6 +145,7 @@
                     - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
                 -->               
                 <change type="CHANGE">Use default file chooser on Mac OS X</change>
+                <change type="FEATURE">Accept oifits through samp message table.load.fits</change>
             </prerelease> 
             </release>
        <release version="1.0.11">            

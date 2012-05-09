@@ -12,6 +12,7 @@ import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
+import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
 
@@ -46,7 +49,7 @@ import org.ivoa.util.runner.LocalLauncher;
  *
  * @author mella
  */
-public class ModelFitting extends fr.jmmc.jmcs.App {    
+public class ModelFitting extends fr.jmmc.jmcs.App {
 
     final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
     final static String className = ModelFitting.class.getName();
@@ -76,12 +79,12 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
     protected void init(final String[] args) {
         // Set default resource for application
         fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
-        
+
         myPreferences = Preferences.getInstance();
 
         // Initialize job runner:
         LocalLauncher.startUp();
-        
+
         // Using invokeAndWait to be in sync with this thread :
         // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
         SwingUtils.invokeAndWaitEDT(new Runnable() {
@@ -145,7 +148,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
         // Stop job runner:
         LocalLauncher.shutdown();
-        
+
         super.cleanup();
     }
 
@@ -192,17 +195,17 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             }
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
-        }                
-        
-        if (logger.isLoggable(Level.FINE)){
+        }
+
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine(xmlResult);
         }
-        
+
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
-            MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);            
-            logger.warning("Error occurs after following call to LITpro server : "+methodName+" "+methodArg);
+            MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);
+            logger.warning("Error occurs after following call to LITpro server : " + methodName + " " + methodArg);
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
@@ -281,19 +284,19 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                 parts = new Part[]{new StringPart("method", methodName)};
             } else if ((xmlFile == null) && (methodArg != null)) {
                 parts = new Part[]{
-                            new StringPart("method", methodName), new StringPart("arg", methodArg)
-                        };
+                    new StringPart("method", methodName), new StringPart("arg", methodArg)
+                };
             } else if ((xmlFile != null) && (methodArg == null)) {
                 parts = new Part[]{
-                            new StringPart("method", methodName),
-                            new FilePart("userfile", xmlFile.getName(), xmlFile)
-                        };
+                    new StringPart("method", methodName),
+                    new FilePart("userfile", xmlFile.getName(), xmlFile)
+                };
             } else {
                 parts = new Part[]{
-                            new StringPart("method", methodName),
-                            new FilePart("userfile", xmlFile.getName(), xmlFile),
-                            new StringPart("arg", methodArg)
-                        };
+                    new StringPart("method", methodName),
+                    new FilePart("userfile", xmlFile.getName(), xmlFile),
+                    new StringPart("arg", methodArg)
+                };
             }
         } catch (FileNotFoundException fnfe) {
             throw new IllegalStateException("Can't query LITpro remote webservice", fnfe);
@@ -301,7 +304,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
- 
+
         final PostMethod myPost = new PostMethod(targetURL);
         try {
             myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
@@ -312,7 +315,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
             int status = client_.executeMethod(myPost);
             if (status == HttpStatus.SC_OK) {
-                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());                
+                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
 
                 // TODO : define initialSize correctly (get http content length ?) :
                 final StringWriter sw = new StringWriter(65535);
@@ -359,80 +362,120 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             throws Exception {
         return doPost(methodName, xmlFile, null);
     }
-    
-      /**
-       * Create SAMP Message handlers
-       */
-      @Override
-      protected void declareInteroperability() {
-        // Add handler to load one new setting given oifits and model description
 
-        new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
+    /**
+     * Create SAMP Message handlers
+     */
+    @Override
+    protected void declareInteroperability() {
 
-            /**
-             * Implements message processing
-             *
-             * @param senderId public ID of sender client
-             * @param message message with MType this handler is subscribed to
-             * @throws SampException if any error occured while message processing
-             */
+        // Add handler to load one new oifits
+        new SampMessageHandler(SampCapability.LOAD_FITS_TABLE) {
+
+            @Override
             protected void processMessage(final String senderId, final Message message) throws SampException {
-
-                final String xmlModel = (String) message.getParam("model");
-                final String filename = (String) message.getParam("filename");
-
-                if (filename == null) {
-                    throw new SampException("Missing parameter 'filename'");
-                }
-                if (xmlModel == null) {
-                    throw new SampException("Missing parameter 'model'");
-                }
-
-                StatusBar.show("Samp message received : building new model");
-
-                SettingsModel sm = null;
-                try {
-                    sm = new SettingsModel();
-                    sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
-                
-                    // Try to read file on disk as one oifits file
-                    sm.addFile(new File(filename));
-                } catch (IOException ex) {
-                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                } catch (ExecutionException ex) {
-                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                } catch (FitsException ex) {
-                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                }
-
-                // Try to build one new model object from given string
-                Model modelContainer = (Model) UtilsClass.unmarshal(Model.class, xmlModel);
-
-                final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
-                final String targetIdent = f.getOitarget(0).getTarget();
-                final Target target = sm.addTarget(targetIdent);
-
-                for (Model model : modelContainer.getModel()) {
-                    target.addModel(model);
-                }
-
-                final SettingsModel fsm = sm;
-                // Refresh GUI :
+                // bring this application to front and load data in current setting or build a new one
                 SwingUtils.invokeLaterEDT(new Runnable() {
-
-                    /**
-                     * Synchronized by EDT
-                     */
                     public void run() {
-                        // bring this application to front :
                         App.showFrameToFront();
+                        SettingsModel sm = gui.getSelectedSettings();
+                        if (sm == null) {
+                            try {
+                                sm = new SettingsModel();
+                                gui.addSettings(sm);
+                            } catch (ExecutionException ex) {
+                                MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                                return;
+                            }
+                        }
 
-                        gui.addSettings(fsm);
+                        try {
+                            final String url = (String) message.getParam("url");
+                            final URI uri = new URI(url);
+                            File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
+                            Http.download(uri, tmpFile, true);
+                            sm.addFile(tmpFile);
+                        } catch (IllegalArgumentException ex) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                        } catch (FitsException ex) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                        } catch (URISyntaxException ex) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                        } catch (IOException ex) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                        }
                     }
                 });
-            }
+            };
         };
-    }
+        
+        // Add handler to load one new setting given oifits and model description
+        new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
+
+                @Override
+                protected void processMessage
+                (final String senderId,
+                        
+                final Message message
+                ) throws SampException {
+
+                    final String xmlModel = (String) message.getParam("model");
+                    final String filename = (String) message.getParam("filename");
+
+                    if (filename == null) {
+                        throw new SampException("Missing parameter 'filename'");
+                    }
+                    if (xmlModel == null) {
+                        throw new SampException("Missing parameter 'model'");
+                    }
+
+                    StatusBar.show("Samp message received : building new model");
+
+                    SettingsModel sm = null;
+                    try {
+                        sm = new SettingsModel();
+                        sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
+
+                        // Try to read file on disk as one oifits file
+                        sm.addFile(new File(filename));
+                    } catch (IOException ex) {
+                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                    } catch (ExecutionException ex) {
+                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                    } catch (FitsException ex) {
+                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                    }
+
+                    // Try to build one new model object from given string
+                    Model modelContainer = (Model) UtilsClass.unmarshal(Model.class, xmlModel);
+
+                    final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
+                    final String targetIdent = f.getOitarget(0).getTarget();
+                    final Target target = sm.addTarget(targetIdent);
+
+                    for (Model model : modelContainer.getModel()) {
+                        target.addModel(model);
+                    }
+
+                    final SettingsModel fsm = sm;
+                    // bring this application to front  and display new setting in EDT
+                    SwingUtils.invokeLaterEDT(new Runnable() {
+
+                        public void run() {
+                            App.showFrameToFront();
+                            gui.addSettings(fsm);
+                        }
+                    });
+                }
+            }
+        ;
+
+
+        }
+
+    
+
+    
 
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
 
@@ -470,5 +513,5 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         public String getContent() {
             return sb.toString();
         }
-    }  
+    }
 }
