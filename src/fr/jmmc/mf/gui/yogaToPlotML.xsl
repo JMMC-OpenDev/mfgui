@@ -90,7 +90,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <title>
                 <xsl:value-of select="concat('Plot ',$plotName,' versus spatial frequency')"/>
             </title>
-            <xLabel>spatial frequency (1/rad)</xLabel>
+            <xLabel>spatial frequency (1/rad) <xsl:if test="contains($plotName,'3')">(max of the 3 frequencies)</xsl:if></xLabel>
             <yLabel>
                 <xsl:value-of select="$plotName"/>
                 <xsl:if test="contains($plotName,'phi')"> (deg)</xsl:if>
@@ -142,10 +142,8 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <title>
                 <xsl:value-of select="concat('Plot ',$plotName,' residuals versus spatial frequency')"/>
             </title>
-            <xLabel>spatial frequency (1/rad)</xLabel>
-            <yLabel>
-                <xsl:value-of select="$plotName"/> residuals = (d-m)/sigma
-            </yLabel>
+            <xLabel>spatial frequency (1/rad) <xsl:if test="contains($plotName,'3')">(max of the 3 frequencies)</xsl:if></xLabel>
+            <yLabel><xsl:value-of select="$plotName"/> residuals = (d-m)/sigma</yLabel>
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'DB')]">
                 <xsl:if test="./*[name()=$plotName or name()=concat($plotName,'data')]">
                     <!-- plot (m-d)/w -->

@@ -487,7 +487,11 @@ public class FilePanel extends javax.swing.JPanel {
 
             /* Start plotting loop on retained HDU*/
             StringBuffer sb = new StringBuffer();
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?><plot><!-- Ptolemy plot, version 5.6 , PlotML format. --><title>data versus spatial frequency</title><xLabel>spatial frequency (1/rad)</xLabel><yLabel>");
+            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?><plot><!-- Ptolemy plot, version 5.6 , PlotML format. --><title>data versus spatial frequency</title><xLabel>spatial frequency (1/rad)");
+            if(requestedTables.contains("3")){
+                sb.append(" (max of the 3 frequencies)");
+            }
+            sb.append("</xLabel><yLabel>");
             sb.append(requestedTables).append("</yLabel>");
 
             for (int i = 0; i < retainedHdu; i++)
