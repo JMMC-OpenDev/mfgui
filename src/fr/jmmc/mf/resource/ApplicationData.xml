@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.12b1"/>
+    <program name="LITpro" version="1.0.12b2"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     
     <text><![CDATA[LITpro is a model fitting software, developed and maintained by one JMMC working group ( CRAL, IPAG and FIZEAU ).
@@ -136,7 +136,7 @@
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>                -->
-            <prerelease version="1.0.12b1">               
+            <prerelease version="1.0.12b2">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- todo: 
@@ -146,6 +146,7 @@
                 -->               
                 <change type="CHANGE">Use default file chooser on Mac OS X</change>
                 <change type="FEATURE">Accept oifits through samp message table.load.fits</change>
+                <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>                
             </prerelease> 
             </release>
        <release version="1.0.11">            
