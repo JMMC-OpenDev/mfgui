@@ -35,10 +35,11 @@ public class FilesPanel extends javax.swing.JPanel {
     public FilesPanel(SettingsViewerInterface viewer) {
         settingsViewer = viewer;
         loadFilesAction = ActionRegistrar.getInstance().get(LoadDataFilesAction.className, LoadDataFilesAction.actionName);
+        loadRemoteFilesAction = new LoadRemoteDataFilesAction();
         initComponents();
         jButton1.setAction(new ShowHelpAction("_Load_Oifile_Bt_ou_Area"));
         addFileButton.setAction(loadFilesAction);
-        addFileButton1.setAction(new LoadRemoteDataFilesAction());
+        addFileButton1.setAction(loadRemoteFilesAction);
     }
 
     public void show(Files f, SettingsModel s) {
