@@ -92,9 +92,21 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     }
 
     private void plotChi2(boolean log, boolean reduced) {
-        // Build command line arguments according to the widget states
-        StringBuilder args = new StringBuilder("-o '");
-        StringBuilder type = new StringBuilder();
+        String titleLabel="Slice";
+        
+        // Build command line arguments according to the widget states                
+        StringBuilder args = new StringBuilder();
+        
+        // If check box for probing is selected
+        if(runFitCheckBox.isSelected()){
+            // add option in  command line
+            args.append("-m 'probe' ");
+            // change plot title
+            titleLabel="Probe";
+        }
+        
+        StringBuilder type = new StringBuilder();        
+        args.append("-o '");
         if (reduced) {
             type.append("Reduced ");
             args.append("reduced_chi2=1,");
@@ -104,8 +116,8 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             args.append("log_chi2=1");
         } else {
             type.append("Chi2");
-            args.append("log_chi2=0");
-        }
+            args.append("log_chi2=0");   
+       }
         args.append("' ");
         final String xParamName = ((Parameter) xComboBox.getSelectedItem()).getName();
         args.append(xParamName).append(" ");
@@ -114,13 +126,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         args.append(xSamplingFormattedTextField.getText());
 
         if (jRadioButton1D.isSelected()) {
-            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " Slice on " + xParamName);
+            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " "+titleLabel+" on " + xParamName);
         } else {
             final String yParamName = ((Parameter) yComboBox.getSelectedItem()).getName();
             args.append(" '").append(yParamName).append("' ").append(yminFormattedTextField.getText()).append(" ");
             args.append(ymaxFormattedTextField.getText()).append(" ").append(ySamplingFormattedTextField.getText());
             plotPanel.plot("getChi2Map", args.toString(),
-                    "2D " + type + " Slice on " + xParamName + " and " + yParamName);
+                    "2D " + type + " "+titleLabel+" on " + xParamName + " and " + yParamName);
         }
     }
 
@@ -157,6 +169,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jRadioButton2D = new javax.swing.JRadioButton();
         logChi2CheckBox = new javax.swing.JCheckBox();
         reducedChi2CheckBox = new javax.swing.JCheckBox();
+        runFitCheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Cuts in the chi2 space panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -215,8 +228,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.2;
         add(plotChi2Button, gridBagConstraints);
 
         ySamplingFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -351,6 +365,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         add(reducedChi2CheckBox, gridBagConstraints);
+
+        runFitCheckBox.setText("run fit");
+        runFitCheckBox.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        add(runFitCheckBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
@@ -420,6 +441,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jLabel8.setEnabled(flag);
         jLabel7.setEnabled(flag);
     }//GEN-LAST:event_jRadioButton1DActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton helpButton1;
@@ -436,6 +458,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private javax.swing.JCheckBox logChi2CheckBox;
     private javax.swing.JButton plotChi2Button;
     private javax.swing.JCheckBox reducedChi2CheckBox;
+    private javax.swing.JCheckBox runFitCheckBox;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JComboBox xComboBox;
     private javax.swing.JFormattedTextField xSamplingFormattedTextField;
