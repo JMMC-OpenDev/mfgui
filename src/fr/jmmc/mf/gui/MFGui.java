@@ -3,36 +3,24 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.mf.ModelFitting;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
-import fr.jmmc.mf.gui.actions.SaveSettingsAction;
-import fr.jmmc.mf.gui.actions.ShowPrefAction;
-import fr.jmmc.mf.gui.actions.LoadDemoModelAction;
-import fr.jmmc.mf.gui.actions.LoadModelAction;
-import fr.jmmc.mf.gui.actions.GetYogaVersionAction;
-import fr.jmmc.mf.gui.actions.LoadRemoteModelAction;
-import fr.jmmc.mf.gui.actions.CloseModelAction;
-import fr.jmmc.mf.gui.actions.NewModelAction;
-import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.resource.image.ResourceImage;
-
-import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
-import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
-import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
-import fr.jmmc.mf.gui.actions.LoadRemoteDataFilesAction;
-import fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction;
+import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.gui.actions.*;
+import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
-
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JMenuItem;
+import javax.swing.JToolBar;
 
 /**
  *
@@ -84,7 +72,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         tabbedPane_.addChangeListener(deleteTreeSelectionAction);
         tabbedPane_.addChangeListener(attachDetachFrameAction);
         tabbedPane_.addChangeListener(new LoadDataFilesAction(this));
-        tabbedPane_.addChangeListener(new LoadRemoteDataFilesAction(this));
         tabbedPane_.addChangeListener(new ShowLitproSettingsFileAction(this));
 
         getContentPane().add(tabbedPane_, java.awt.BorderLayout.CENTER);
