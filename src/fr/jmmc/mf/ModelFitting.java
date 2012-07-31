@@ -393,8 +393,11 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                             final String url = (String) message.getParam("url");
                             final URI uri = new URI(url);
                             File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
-                            Http.download(uri, tmpFile, true);
-                            sm.addFile(tmpFile);
+                            if (Http.download(uri, tmpFile, true)){
+                                sm.addFile(tmpFile);
+                            }else{
+                                MessagePane.showErrorMessage("File can't be retrieved from following url:\n\t"+url);
+                            }
                         } catch (IllegalArgumentException ex) {
                             MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
                         } catch (FitsException ex) {
