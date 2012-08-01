@@ -233,7 +233,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 1.0;
         add(targetLabel, gridBagConstraints);
 
         targetComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -345,7 +344,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         add(residualsCheckBox, gridBagConstraints);
 
         addModelCheckBox.setSelected(true);
-        addModelCheckBox.setText("Add model with cut angle");
+        addModelCheckBox.setText("Overplot model with cut angle");
         addModelCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelCheckBoxActionPerformed(evt);
@@ -444,6 +443,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         add(jPanel1, gridBagConstraints);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
