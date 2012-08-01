@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.12 beta 3"/>
+    <program name="LITpro" version="1.0.12 beta 4"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     
     <text><![CDATA[LITpro is a model fitting software, developed and maintained by one JMMC working group ( CRAL, IPAG and FIZEAU ).
@@ -131,8 +131,8 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.0.12 beta 3">
-            <prerelease version="1.0.12 beta 3">               
+        <release version="1.0.12 beta 4">
+            <prerelease version="1.0.12 beta 4">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- todo: 
@@ -144,12 +144,15 @@
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>         -->
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/338">Fix NPE in loss of focus from the empty cells of the parameters tables</change>                
+            </prerelease>            
+            <prerelease version="1.0.12 beta 3">                
                 <change type="FEATURE">Chi2 map can be performed in probe mode (use run fit check box)</change>                              
             </prerelease>            
             <prerelease version="1.0.12b2">                
-                <change type="CHANGE">Use default file chooser on Mac OS X</change>
+                <change type="CHANGE">Use default file chooser on Mac OS X (excepted for multiselection choosers)</change>
                 <change type="CHANGE">Save action now save by default result nodes (use preferences to change behaviour)</change>
-                <change type="FEATURE">Accept oifits through samp message table.load.fits</change>
+                <change type="FEATURE">Accept oifits through samp message table.load.fits (visit http://jmmc.fr/oidb)</change>
                 <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>                
             </prerelease> 
             </release>
