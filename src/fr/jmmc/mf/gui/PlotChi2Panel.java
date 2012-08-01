@@ -4,8 +4,8 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
+import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
 import java.util.Observable;
@@ -16,7 +16,7 @@ import javax.swing.DefaultCellEditor;
 public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
             "fr.jmmc.mf.gui.PlotChi2Panel");
     public SettingsModel settingsModel = null;
     private PlotPanel plotPanel;
@@ -44,7 +44,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jTable1.setDefaultRenderer(Double.class, jTable1.getDefaultRenderer(String.class));
     }
 
-    public void show(SettingsModel s) {       
+    public void show(SettingsModel s) {
         settingsModel = s;
 
         isIniting = true;
@@ -62,6 +62,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         // Store old references
         Parameter tmpX = oldXParam;
         Parameter tmpY = oldYParam;
+        // Detect if oldParam are kept
+        boolean xParamChanged = false;
+        boolean yParamChanged = false;
 
         // Populates combo with given params & Call old user entries back
         xComboBox.removeAllItems();
@@ -75,9 +78,11 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
                 yComboBox.addItem(p);
                 if (tmpX != null && tmpX.getName().equals(p.getName())) {
                     xComboBox.setSelectedItem(p);
+                    xParamChanged = true;
                 }
                 if (tmpY != null && tmpY.getName().equals(p.getName())) {
                     yComboBox.setSelectedItem(p);
+                    yParamChanged = true;
                 }
             }
         }
@@ -86,26 +91,30 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         updateTable();
 
         isIniting = false;
-        // fix bounds
-        xComboBoxActionPerformed(null);
-        yComboBoxActionPerformed(null);
+        // fix bounds for new parameters
+        if (xParamChanged) {
+            xComboBoxActionPerformed(null);
+        }
+        if (yParamChanged) {
+            yComboBoxActionPerformed(null);
+        }
     }
 
     private void plotChi2(boolean log, boolean reduced) {
-        String titleLabel="Slice";
-        
+        String titleLabel = "Slice";
+
         // Build command line arguments according to the widget states                
         StringBuilder args = new StringBuilder();
-        
+
         // If check box for probing is selected
-        if(runFitCheckBox.isSelected()){
+        if (runFitCheckBox.isSelected()) {
             // add option in  command line
             args.append("-m 'probe' ");
             // change plot title
-            titleLabel="Probe";
+            titleLabel = "Probe";
         }
-        
-        StringBuilder type = new StringBuilder();        
+
+        StringBuilder type = new StringBuilder();
         args.append("-o '");
         if (reduced) {
             type.append("Reduced ");
@@ -116,8 +125,8 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             args.append("log_chi2=1");
         } else {
             type.append("Chi2");
-            args.append("log_chi2=0");   
-       }
+            args.append("log_chi2=0");
+        }
         args.append("' ");
         final String xParamName = ((Parameter) xComboBox.getSelectedItem()).getName();
         args.append(xParamName).append(" ");
@@ -126,13 +135,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         args.append(xSamplingFormattedTextField.getText());
 
         if (jRadioButton1D.isSelected()) {
-            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " "+titleLabel+" on " + xParamName);
+            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " " + titleLabel + " on " + xParamName);
         } else {
             final String yParamName = ((Parameter) yComboBox.getSelectedItem()).getName();
             args.append(" '").append(yParamName).append("' ").append(yminFormattedTextField.getText()).append(" ");
             args.append(ymaxFormattedTextField.getText()).append(" ").append(ySamplingFormattedTextField.getText());
             plotPanel.plot("getChi2Map", args.toString(),
-                    "2D " + type + " "+titleLabel+" on " + xParamName + " and " + yParamName);
+                    "2D " + type + " " + titleLabel + " on " + xParamName + " and " + yParamName);
         }
     }
 
@@ -441,7 +450,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jLabel8.setEnabled(flag);
         jLabel7.setEnabled(flag);
     }//GEN-LAST:event_jRadioButton1DActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton helpButton1;
