@@ -13,11 +13,12 @@ import fr.jmmc.mf.models.Files;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.tree.TreePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FilesPanel extends javax.swing.JPanel {
 
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.FilesPanel");
+    static Logger logger = LoggerFactory.getLogger(FilesPanel.class.getName());
     static Files current = null;
     SettingsViewerInterface settingsViewer = null;
     public static Action loadFilesAction;
@@ -45,7 +46,7 @@ public class FilesPanel extends javax.swing.JPanel {
     public void show(Files f, SettingsModel s) {
         current = f;
         rootSettingsModel = s;
-        logger.fine("Showing list of " + current.getFileCount() + " files");
+        logger.debug("Showing list of {} files", current.getFileCount());
 
         // update model because it could have been modified
         fileList.setModel(s.allFilesListModel);
@@ -119,6 +120,7 @@ public class FilesPanel extends javax.swing.JPanel {
     } // </editor-fold>       
 
     protected class LoadRemoteDataFilesAction extends MCSAction {
+
         public final static String actionName = "loadRemoteDataFiles";
 
         public LoadRemoteDataFilesAction() {
@@ -126,7 +128,7 @@ public class FilesPanel extends javax.swing.JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-        MessagePane.showMessage("To import a remote oifits file using the VO:\n - visit http://jmmc.fr/oidb\n - press the 'register' button\n - choose 'broadcast' on the rigth data file.");
+            MessagePane.showMessage("To import a remote oifits file using the VO:\n - visit http://jmmc.fr/oidb\n - press the 'register' button\n - choose 'broadcast' on the rigth data file.");
         }
     }
 }

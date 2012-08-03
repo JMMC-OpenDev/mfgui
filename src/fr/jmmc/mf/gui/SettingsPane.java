@@ -3,26 +3,32 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.gui.actions.RunFitAction;
-
+import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
+import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.mf.gui.actions.RunFitAction;
 import fr.jmmc.mf.gui.models.ResultModel;
+import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
-
 import java.awt.Color;
 import java.awt.Component;
-
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import javax.swing.Action;
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.ToolTipManager;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -31,8 +37,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
     final static String className = SettingsPane.class.getName();
     /** Main logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    final static Logger logger = LoggerFactory.getLogger(className);
     // Application actions
     public static RunFitAction runFitAction;
     public Action saveSettingsAction;
@@ -129,8 +134,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * in the right panel; 
      */
     public void valueChanged(TreeSelectionEvent e) {
-        logger.entering(className, "valueChanged", e);
-
         Object o = e.getPath().getLastPathComponent();
         if (e.getNewLeadSelectionPath() != null) {
             showElement(o);
@@ -143,13 +146,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
     
     private void showElement(Object o) {
-        logger.entering(className, "showElement", o);
 
         if (o == null) {
             return;
         }
 
-        logger.finest("object to show is :" + o);
+        logger.trace("object to show is : {}",o);
         modifierPanel.removeAll();
 
         if (o instanceof ResultModel) {
@@ -197,8 +199,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         } else {
             modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass()
                     + "' objects " + o));
-
-            logger.log(Level.WARNING, "missing modifier panel for '" + o.getClass() + "'=" + o, new Throwable());
+            logger.error("missing modifier panel for {}", o, new Throwable());
         }
         modifierPanel.revalidate();
         modifierPanel.repaint();
@@ -210,9 +211,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * Responds to tree structure changes
      */
     public void treeStructureChanged(javax.swing.event.TreeModelEvent e) {
-        logger.entering(className, "treeStructureChanged");
         treeChanged(e);
-        //showElement(rootSettingsModel.getRoot());
     }
 
     /** Use to listen tree model elements that can indicate changes*/
@@ -248,11 +247,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     private void treeChanged(javax.swing.event.TreeModelEvent e) {
-        logger.fine("Listening for settingsModel tree event" + e);
+        logger.debug("Listening for settingsModel tree event {}", e);
         if (e.getSource() instanceof SettingsModel) {
             if (rootSettingsModel.isModified()) {
                 //tabbedPane.setTitleAt(0, "Settings *");
-                logger.fine("tree changed and setting model modified");
+                logger.debug("tree changed and setting model modified");
             } else {
                 // tabbedPane.setTitleAt(0, "Settings");
             }
@@ -299,20 +298,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public SettingsModel getSettingsModel() {
         return rootSettingsModel;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public SettingsPane getSettingsPane() {
         return this;
     }
@@ -488,6 +477,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                     }
                 }
             }
+            // TODO test else case
             return this;
         }
     }

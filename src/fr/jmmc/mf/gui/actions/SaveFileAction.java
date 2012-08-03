@@ -3,24 +3,19 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
-import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.jmcs.gui.component.MessagePane;
+import fr.jmmc.jmcs.util.FileUtils;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.swing.JFileChooser;
 
 public class SaveFileAction extends RegisteredAction {
 
-    private final static String className = "fr.jmmc.mf.gui.actions.SaveFileAction";
-    /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
-    private File lastDir;
+    private final static String className = SaveFileAction.class.getName();
+     private File lastDir;
     private File fileToSave;
     private String fileName;
     private String originalActionName;
@@ -56,9 +51,7 @@ public class SaveFileAction extends RegisteredAction {
         this.fileName = "Untitled." + fileType.toLowerCase();
     }
 
-    public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
-                
+    public void actionPerformed(ActionEvent e) {                
         // Open filechooser
         File newFile = FileChooser.showSaveFileChooser("Export as " + fileName + "?", lastDir, null, fileName);
         if (newFile == null) {

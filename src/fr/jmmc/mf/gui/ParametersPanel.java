@@ -22,8 +22,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class ParametersPanel extends javax.swing.JPanel {
 
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            ParametersPanel.class.getName());
     Parameters current;
     SettingsModel settingsModel;
     DefaultListModel parameterListModel;

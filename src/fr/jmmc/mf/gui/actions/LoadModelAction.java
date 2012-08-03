@@ -3,18 +3,20 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
-import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
+import fr.jmmc.jmcs.gui.component.MessagePane;
+import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import fr.jmmc.jmcs.util.MimeType;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoadModelAction extends RegisteredAction {
 
@@ -23,7 +25,7 @@ public class LoadModelAction extends RegisteredAction {
     /** Action name. This name is used to register to the ActionRegistrar */
     public final static String actionName = "loadModel";
     /** Class logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final Logger logger = LoggerFactory.getLogger(
             className);    
     MFGui mfgui;
 
@@ -36,9 +38,7 @@ public class LoadModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
-
-        // Retrieve file given by App startup or open a filechooser 
+       // Retrieve file given by App startup or open a filechooser 
         File file = null;
 
         // If the action was automatically triggered from App launch

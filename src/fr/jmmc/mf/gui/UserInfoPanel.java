@@ -12,8 +12,7 @@ import fr.jmmc.mf.models.Settings;
  */
 public class UserInfoPanel extends javax.swing.JPanel
 {
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            UserInfoPanel.class.getName());
+ 
     Settings current = null;
     SettingsViewerInterface settingsViewer = null;
    
@@ -82,10 +81,8 @@ public class UserInfoPanel extends javax.swing.JPanel
 
     private void userInfoTextAreaCaretUpdate(javax.swing.event.CaretEvent evt)
     {//GEN-FIRST:event_userInfoTextAreaCaretUpdate
-      //logger.entering(""+this.getClass(), "userInfoTextAreaCaretUpdate");
         current.setUserInfo(userInfoTextArea.getText());
     }//GEN-LAST:event_userInfoTextAreaCaretUpdate
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;

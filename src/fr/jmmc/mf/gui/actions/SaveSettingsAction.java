@@ -3,23 +3,18 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
+import fr.jmmc.jmcs.gui.component.StatusBar;
+import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import javax.swing.JFileChooser;
 
 public class SaveSettingsAction extends RegisteredAction {
 
     static final String className = SaveSettingsAction.class.getName();
-    /** Class logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
     private File lastDir = null;
     MFGui mfgui;
 
@@ -30,8 +25,6 @@ public class SaveSettingsAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
-
         // @todo replace next coede part by enable and disabled event asociated to actions...
         SettingsModel settingsModel = mfgui.getSelectedSettings();
         if (settingsModel == null) {

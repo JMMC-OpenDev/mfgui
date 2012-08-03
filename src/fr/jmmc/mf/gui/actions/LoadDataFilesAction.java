@@ -3,10 +3,10 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
+import fr.jmmc.jmcs.gui.component.MessagePane;
+import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
@@ -17,13 +17,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoadDataFilesAction extends RegisteredAction implements TreeSelectionListener, ChangeListener {
 
     public final static String className = LoadDataFilesAction.class.getName();
     public final static String actionName = "loadDataFiles";
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    static final Logger logger = LoggerFactory.getLogger(className);
     java.io.File lastDir = null;
     MFGui mfgui;
     SettingsModel settingsModel;
@@ -76,7 +77,7 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
         if (e.getSource() instanceof SettingsModel) {
             settingsModel = (SettingsModel) e.getSource();
         } else {
-            logger.warning("dropped treeSelectionEvent from " + e.getSource());
+            logger.warn("dropped treeSelectionEvent from {}", e.getSource());
         }
     }
 }

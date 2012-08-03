@@ -32,7 +32,8 @@ import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
 
-import java.util.logging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
@@ -53,7 +54,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
 
     final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
     final static String className = ModelFitting.class.getName();
-    final static Logger logger = Logger.getLogger(className);
+    final static Logger logger = LoggerFactory.getLogger(className);
     static Preferences myPreferences;
     static MFGui gui = null;
     static HttpClient client_ = null;
@@ -119,7 +120,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
              */
             @Override
             public void run() {
-                logger.fine("ModelFitting.ready : handler called.");
+                logger.debug("ModelFitting.ready : handler called.");
 
                 getFrame().setVisible(true);
             }
@@ -197,15 +198,13 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(xmlResult);
-        }
+        logger.debug(xmlResult);
 
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
             MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);
-            logger.warning("Error occurs after following call to LITpro server : " + methodName + " " + methodArg);
+            logger.warn("Error occurs after following call to LITpro server : " + methodName + " " + methodArg);
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
@@ -237,17 +236,17 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             }
             if (xmlFile == null) {
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
-                logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
+                logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
             } else {
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename, methodArg});
-                logger.fine("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
+                logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
             }
             YogaExec pm = new YogaExec();
             ph.setProcessManager(pm);
             ph.start();
             ph.waitFor();
             result = pm.getContent();
-            logger.finest("exec result=\n" + result);
+            logger.trace("exec result=\n" + result);
             return result;
         } catch (IOException ex) {
             throw new ExecutionException("Can't execute LITpro local service", ex);
@@ -327,16 +326,10 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                 }
                 result = sw.toString();
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Post for '" + methodName + " " + methodArg + "' ok");
-                }
+                logger.debug("Post for '{} {}' ok", methodName, methodArg);
 
             } else {
-
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Post for '" + methodName + " " + methodArg + "' failed");
-                }
-
+                logger.debug("Post for '{} {}' failed", methodName, methodArg);
                 throw new IllegalStateException(
                         "Can't query LITpro remote webservice\nurl: '"
                         + targetURL
@@ -352,9 +345,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             myPost.releaseConnection();
         }
 
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("post result=\n" + result);
-        }
+        logger.trace("post result='{}'\n", result);
         return result;
     }
 
@@ -376,6 +367,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
             protected void processMessage(final String senderId, final Message message) throws SampException {
                 // bring this application to front and load data in current setting or build a new one
                 SwingUtils.invokeLaterEDT(new Runnable() {
+
                     public void run() {
                         App.showFrameToFront();
                         SettingsModel sm = gui.getSelectedSettings();
@@ -393,10 +385,10 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                             final String url = (String) message.getParam("url");
                             final URI uri = new URI(url);
                             File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, true)){
+                            if (Http.download(uri, tmpFile, true)) {
                                 sm.addFile(tmpFile);
-                            }else{
-                                MessagePane.showErrorMessage("File can't be retrieved from following url:\n\t"+url);
+                            } else {
+                                MessagePane.showErrorMessage("File can't be retrieved from following url:\n\t" + url);
                             }
                         } catch (IllegalArgumentException ex) {
                             MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
@@ -409,76 +401,69 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
                         }
                     }
                 });
-            };
+            }
+        ;
         };
         
         // Add handler to load one new setting given oifits and model description
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
 
-                @Override
-                protected void processMessage
-                (final String senderId,
-                        
-                final Message message
-                ) throws SampException {
+            @Override
+            protected void processMessage(final String senderId,
+                    final Message message) throws SampException {
 
-                    final String xmlModel = (String) message.getParam("model");
-                    final String filename = (String) message.getParam("filename");
+                final String xmlModel = (String) message.getParam("model");
+                final String filename = (String) message.getParam("filename");
 
-                    if (filename == null) {
-                        throw new SampException("Missing parameter 'filename'");
-                    }
-                    if (xmlModel == null) {
-                        throw new SampException("Missing parameter 'model'");
-                    }
-
-                    StatusBar.show("Samp message received : building new model");
-
-                    SettingsModel sm = null;
-                    try {
-                        sm = new SettingsModel();
-                        sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
-
-                        // Try to read file on disk as one oifits file
-                        sm.addFile(new File(filename));
-                    } catch (IOException ex) {
-                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                    } catch (ExecutionException ex) {
-                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                    } catch (FitsException ex) {
-                        MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
-                    }
-
-                    // Try to build one new model object from given string
-                    Model modelContainer = (Model) UtilsClass.unmarshal(Model.class, xmlModel);
-
-                    final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
-                    final String targetIdent = f.getOitarget(0).getTarget();
-                    final Target target = sm.addTarget(targetIdent);
-
-                    for (Model model : modelContainer.getModel()) {
-                        target.addModel(model);
-                    }
-
-                    final SettingsModel fsm = sm;
-                    // bring this application to front  and display new setting in EDT
-                    SwingUtils.invokeLaterEDT(new Runnable() {
-
-                        public void run() {
-                            App.showFrameToFront();
-                            gui.addSettings(fsm);
-                        }
-                    });
+                if (filename == null) {
+                    throw new SampException("Missing parameter 'filename'");
                 }
+                if (xmlModel == null) {
+                    throw new SampException("Missing parameter 'model'");
+                }
+
+                StatusBar.show("Samp message received : building new model");
+
+                SettingsModel sm = null;
+                try {
+                    sm = new SettingsModel();
+                    sm.getRootSettings().setUserInfo("Settings file built from incomming request of external VO application");
+
+                    // Try to read file on disk as one oifits file
+                    sm.addFile(new File(filename));
+                } catch (IOException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                } catch (ExecutionException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                } catch (FitsException ex) {
+                    MessagePane.showErrorMessage("Could not load file from samp message : " + filename, ex);
+                }
+
+                // Try to build one new model object from given string
+                Model modelContainer = (Model) UtilsClass.unmarshal(Model.class, xmlModel);
+
+                final fr.jmmc.mf.models.File f = sm.getRootSettings().getFiles().getFile(0);
+                final String targetIdent = f.getOitarget(0).getTarget();
+                final Target target = sm.addTarget(targetIdent);
+
+                for (Model model : modelContainer.getModel()) {
+                    target.addModel(model);
+                }
+
+                final SettingsModel fsm = sm;
+                // bring this application to front  and display new setting in EDT
+                SwingUtils.invokeLaterEDT(new Runnable() {
+
+                    public void run() {
+                        App.showFrameToFront();
+                        gui.addSettings(fsm);
+                    }
+                });
             }
-        ;
+        };
 
 
-        }
-
-    
-
-    
+    }
 
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
 
@@ -489,28 +474,25 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         }
 
         public void processStarted() {
-            logger.entering(this.getClass().getName(), "processStarted");
         }
 
         public void processStoped() {
-            logger.entering(this.getClass().getName(), "processStoped");
-        }
+       }
 
         public void processTerminated(int returnedValue) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "processTerminated");
-            }
+            
+             logger.debug("processTerminated");
+            
         }
 
         public void errorOccured(Exception e) {
-            logger.log(Level.SEVERE, this.getClass().getName() + " errorOccured", e);
+            logger.error("errorOccured", e);
         }
 
         public void outputOccured(String line) {
             sb.append(line);
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.finest("occured line:" + line);
-            }
+            logger.trace("new output line occured: {}",line);
+            
         }
 
         public String getContent() {

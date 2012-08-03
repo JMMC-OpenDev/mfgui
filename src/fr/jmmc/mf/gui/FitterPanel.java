@@ -10,12 +10,7 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.mf.models.Settings;
 
 public class FitterPanel extends javax.swing.JPanel {
-
-    /**
-     * Main logger.
-     */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            FitterPanel.class.getName());
+    
     Settings current = null;
     SettingsViewerInterface settingsViewer = null;
 

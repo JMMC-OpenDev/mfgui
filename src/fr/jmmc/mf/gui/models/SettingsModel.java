@@ -3,54 +3,34 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
-import fr.jmmc.mf.ModelFitting;
-import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
-
 import fr.jmmc.jmcs.util.ObservableDelegate;
-import fr.jmmc.mf.models.File;
-import fr.jmmc.mf.models.FileLink;
-import fr.jmmc.mf.models.Files;
-import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Oitarget;
-import fr.jmmc.mf.models.Parameter;
-import fr.jmmc.mf.models.ParameterLink;
-import fr.jmmc.mf.models.Parameters;
-import fr.jmmc.mf.models.Residual;
-import fr.jmmc.mf.models.Residuals;
-import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.Result;
-import fr.jmmc.mf.models.Results;
-import fr.jmmc.mf.models.Settings;
-import fr.jmmc.mf.models.Target;
-import fr.jmmc.mf.models.Targets;
+import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.gui.*;
+import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsChecker;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.logging.Logger;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-//import fr.jmmc.oifits.validator.GUIValidator;
 import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
 import fr.jmmc.oitools.model.OITarget;
-import java.util.Enumeration;
-import java.util.Observer;
-import java.util.logging.Level;
 import fr.nom.tam.fits.FitsException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.HashMap;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.ListModel;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class manages the castor generated classes to bring
@@ -59,18 +39,16 @@ import java.util.concurrent.ExecutionException;
  *  - the treemodel to be used by the settingsPane tree
  *  - the modifyAndSaveObject to ensure that application save user modification on application exit
  *
- *
  */
 public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
-
+    public final static String className = SettingsModel.class.getName();
+    /** Class logger */
+    static Logger logger = LoggerFactory.getLogger(className);   
     /** list of supported models   */
     private static Hashtable supportedModels = new Hashtable();
     /** Combobox model of supported models */
     private static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
-    public final static String className = SettingsModel.class.getName();
-    /** Class logger */
-    static Logger logger = Logger.getLogger(className);
-    /** Vector of objects that want to listen tree modification */
+     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
     private Settings rootSettings = null;
@@ -132,7 +110,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         try {
             uriToLoad = new URI(url);
         } catch (URISyntaxException ex) {
-            logger.log(Level.WARNING, "Error in uri syntax for " + url, ex);
+            logger.warn("Error in uri syntax for " + url, ex);
             throw new IOException("Error in uri syntax for " + url, ex);
         }
         associatedFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
@@ -163,17 +141,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.setFitter("standard");
         setRootSettings(rootSettings);
 
-        try{
+        try {
             //assert that list has been inited
-        initSupportedModelsModel();
-        }catch(ExecutionException eexc){
-            MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n",eexc);
+            initSupportedModelsModel();
+        } catch (ExecutionException eexc) {
+            MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n", eexc);
         }
     }
 
     public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
-        logger.entering(className, "init");
-
         try {
             // perform default init 
             init();
@@ -219,7 +195,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             for (int i = 0; i < models.length; i++) {
                 Model model = models[i];
                 supportedModelsModel.addElement(model);
-                logger.fine("Adding supported model:" + model.getType());
+                logger.debug("Adding supported model:" + model.getType());
                 supportedModels.put(model.getType(), model);
             }
         }
@@ -241,7 +217,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param file file to use for fileLink addition into the target
      */
     public void addFile(Target target, File file) {
-        logger.entering(className, "addFile", new Object[]{target, file});
         FileLink fileLink = new FileLink();
         fileLink.setFileRef(file);
         target.addFileLink(fileLink);
@@ -252,7 +227,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeFile(Target target, File file) {
-        logger.entering(className, "removeFile", new Object[]{target, file});
         FileLink[] links = target.getFileLink();
 
         for (int i = 0; i < links.length; i++) {
@@ -270,7 +244,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      *  Add observer to be simply nofified by model content changes.
      */
     public void addObserver(Observer observer) {
-        logger.entering(className, "addObserver", observer);
         observableDelegate.addObserver(observer);
     }
 
@@ -287,7 +260,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void setNormalize(Target target, boolean flag) {
-        logger.entering(className, "setNormalize", new Object[]{target, flag});
         target.setNormalize(flag);
         fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets()},
                 getIndexOfChild(rootSettings.getTargets(), target),
@@ -303,9 +275,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void setResiduals(Target target, String visAmpValue,
             String visPhiValue, String vis2Value, String t3AmpValue,
             String t3PhiValue) {
-        logger.entering(className, "setResidual", new Object[]{target,
-                    visAmpValue, visPhiValue, vis2Value, t3AmpValue, t3PhiValue});
-
         Residuals residuals = new Residuals();
 
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -328,12 +297,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void setPlotPanel(PlotPanel plotPanel) {
-        logger.entering(className, "setPlotPanel", plotPanel);
         plotContainerNode.setUserObject(plotPanel);
     }
 
     public void addPlot(FrameTreeNode newPlotNode) {
-        logger.entering(className, "addPlot", newPlotNode);
         plotContainerNode.add(newPlotNode);
         fireTreeNodesInserted(new Object[]{rootSettings, plotContainerNode},
                 plotContainerNode.getChildCount() - 1,
@@ -348,8 +315,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param newModel
      */
     public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
-        logger.entering(className, "replaceModel", new Object[]{parentTarget, newModel});
-
         parentTarget.removeModel(currentModel);
 
         int modelIdx = getNewModelIdx(newModel.getType());
@@ -467,8 +432,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param newModel
      */
     public void addModel(Target parentTarget, Model newModel) {
-        logger.entering(className, "addModel", new Object[]{parentTarget, newModel});
-
         // force another name with unique position
         String type = newModel.getType();
         int modelIdx = getNewModelIdx(type);
@@ -502,9 +465,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
-        logger.entering(className, "removeModel", new Object[]{parentTarget, oldModel});
         if (parentTarget == null) {
-            logger.warning("Something strange appears while trying to remove one model without associated target");
+            logger.warn("Something strange appears while trying to remove one model without associated target");
             return;
         }
         final Model[] models = parentTarget.getModel();
@@ -527,7 +489,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         parameterComboBoxModel.removeElement(parameterLink.getParameterRef());
                         parameterListModel.removeElement(parameterLink.getParameterRef());
                         rootSettings.getParameters().removeParameter((Parameter) parameterLink.getParameterRef());
-                        logger.fine("removing shared parameter : " + parameterLink.getParameterRef());
+                        logger.debug("removing shared parameter : " + parameterLink.getParameterRef());
                     }
                 }
 
@@ -546,12 +508,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeModel(Model oldModel) {
-        logger.entering(className, "removeModel", oldModel);
         removeModel(getParent(oldModel), oldModel);
     }
 
     public Target addTarget(String targetIdent) {
-        logger.entering(className, "addTarget", targetIdent);
         setModified(true);
 
         Target newTarget = new Target();
@@ -564,7 +524,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             FileLink fileLink = new FileLink();
             fileLink.setFileRef(targetFiles.getElementAt(i));
             newTarget.addFileLink(fileLink);
-            logger.fine("Adding default reference to file :" + targetFiles.getElementAt(i));
+            logger.debug("Adding default reference to file :" + targetFiles.getElementAt(i));
         }
         int indice = rootSettings.getTargets().getTargetCount();
         rootSettings.getTargets().addTarget(newTarget);
@@ -577,7 +537,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeTarget(Target oldTarget) {
-        logger.entering(className, "removeTarget", oldTarget);
         setModified(true);
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
@@ -590,11 +549,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeFile(File oldFile) {
-        logger.entering(className, "removeFile", oldFile);
         setModified(true);
 
         if (UtilsClass.containsFile(this, oldFile)) {
-            logger.fine("file " + oldFile + " has not been removed because it is used by one or more targets");
+            logger.debug("file " + oldFile + " has not been removed because it is used by one or more targets");
             return;
         }
 
@@ -609,7 +567,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeFrame(FrameTreeNode frameNode) {
-        logger.entering(className, "removeFrame", frameNode);
         // actually only plotContainer or Result can have such elements as child
         int idx = plotContainerNode.getIndex(frameNode);
         if (idx >= 0) {
@@ -640,7 +597,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return true if the selection contains some frames or false
      */
     public boolean isFrameSelectionEmpty() {
-        logger.entering(className, "isFrameSelectionEmpty");
         TreePath[] treePaths = getSelectionPaths();
         if (treePaths == null) {
             return true;
@@ -656,7 +612,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public boolean isSelectionRemovable() {
-        logger.entering(className, "isSelectionRemovable");
         TreePath[] treePaths = getSelectionPaths();
         if (treePaths == null) {
             return false;
@@ -679,8 +634,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeTreeSelection() {
-        logger.entering(className, "removeTreeSelection");
-
         TreePath[] treepaths = getSelectionPaths();
         for (int i = 0; i < treepaths.length; i++) {
             TreePath treePath = treepaths[i];
@@ -708,13 +661,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             } else if (lastPathComponent instanceof File) {
                 removeFile((File) lastPathComponent);
             } else {
-                logger.warning("No code implemented to remove : " + lastPathComponent.getClass());
+                logger.warn("No code implemented to remove : " + lastPathComponent.getClass());
             }
         }
     }
 
     public void toggleSelectedFrames() {
-        logger.entering(className, "toggleSelectedFrames");
         TreePath[] treepaths = getSelectionPaths();
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
         for (int i = 0; i < treepaths.length; i++) {
@@ -734,15 +686,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /** Tell if the inner model is well filled and consistent */
     public boolean isValid() {
-        logger.entering(className, "isValid");
         boolean isValid = rootSettings.isValid();
-        logger.finest("isValid=" + isValid);
+        logger.trace("isValid=" + isValid);
         return isValid && isSelfConsistent;
     }
 
     /** Returns a new uniq file Id */
     public String getNewFileId() {
-        logger.entering(className, "getNewFileId");
         Vector<String> ids = new Vector();
         File[] files = rootSettings.getFiles().getFile();
         for (int i = 0; i < files.length; i++) {
@@ -754,8 +704,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /** Returns a new id to build a new uniq Model Name by suffixing given prefix */
     public int getNewModelIdx(String prefix) {
-        logger.entering(className, "getNewModelName", prefix);
-
         Vector<String> ids = new Vector();
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
@@ -771,7 +719,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /** Returns a new uniq param name with a preferenced suffixe idx*/
     public String getNewParamName(String prefix, int suffix) {
-        logger.entering(className, "getNewParamName", new Object[]{prefix, suffix});
         Vector<String> ids = new Vector();
         Target[] targets = rootSettings.getTargets().getTarget();
         int nextId = 1;
@@ -799,7 +746,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void setModelName(Model model, String newName) {
-        logger.entering(className, "setModelName", new Object[]{model, newName});
         model.setName(newName);
         Target parentTarget = getParent(model);
         fireTreeNodesChanged(new Object[]{rootSettings},
@@ -828,7 +774,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the filename
      */
     public String getAssociatedFilename() {
-        logger.entering(className, "getAssociatedFilename");
         if (associatedFile == null) {
             return "Untitled." + MimeType.LITPRO_SETTINGS.getExtension();
         }
@@ -840,7 +785,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param fileToSave
      */
     public void setAssociatedFile(java.io.File fileToSave) {
-        logger.entering(className, "setAssociatedFile", fileToSave);
         associatedFile = fileToSave;
     }
 
@@ -848,18 +792,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see ModifyAndSave
      */
     public boolean isModified() {
-        logger.entering(className, "isModified");
-        logger.finest("isModified=" + isModified);
+        logger.trace("isModified={}", isModified);
         return isModified;
     }
 
     public Parameter[] getSharedParameters() {
-        logger.entering(className, "getSharedParameters");
         return rootSettings.getParameters().getParameter();
     }
 
     public boolean isSharedParameter(Parameter p) {
-        logger.entering(className, "isSharedParameter", p);
         Parameter[] params = rootSettings.getParameters().getParameter();
         for (int i = 0; i < params.length; i++) {
             Parameter parameter = params[i];
@@ -876,8 +817,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param sharedParameter parameter to be linked to
      */
     void linkParameter(Parameter parameterToLink, Parameter sharedParameter) {
-        logger.entering(className, "linkParameter", new Object[]{parameterToLink, sharedParameter});
-
         ParameterLink newLink = new ParameterLink();
         newLink.setParameterRef(sharedParameter);
         newLink.setType(parameterToLink.getType());
@@ -899,8 +838,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param sharedParameter parameter to be linked to
      */
     void linkSharedParameter(ParameterLink sharedParameterToLink, Parameter sharedParameter) {
-        logger.entering(className, "linkParameter", new Object[]{sharedParameterToLink, sharedParameter});
-
         ParameterLink newLink = new ParameterLink();
         newLink.setParameterRef(sharedParameter);
         newLink.setType(sharedParameterToLink.getType());
@@ -915,7 +852,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     void shareParameter(Parameter parameterToShare) {
-        logger.entering(className, "shareParameter", parameterToShare);
         Model associatedModel = getParent(parameterToShare);
 
         // Shared parameters must have one id
@@ -948,7 +884,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     private ResultModel getModel(Result r) {
-        logger.entering(className, "getModel", r);
         ResultModel rm = resultToModel.get(r);
         if (rm == null) {
             rm = new ResultModel(this, r, getNewResultModelIndex());
@@ -962,16 +897,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * setModified(false) should be called only after a disk save.
      */
     private void setModified(boolean flag) {
-        logger.entering(className, "setModified", flag);
         isModified = flag;
     }
 
     public java.io.File getTempFile(boolean keepResult) {
-        logger.entering(className, "getTempFile", keepResult);
-        java.io.File tmpFile;
-        tmpFile = FileUtils.getTempFile("tmpSettings", ".xml");
+        java.io.File tmpFile = FileUtils.getTempFile("tmpSettings", ".xml");
         saveSettingsFile(tmpFile, keepResult);
-
         return tmpFile;
     }
 
@@ -981,8 +912,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      *  @param s Settings to grab informations into.
      */
     public void updateWithNewSettings(Response newResponse) {
-        logger.entering(className, "updateWithNewSettings", newResponse);
-
         isSelfConsistent = false;
 
         Settings newSettings = UtilsClass.getSettings(newResponse);
@@ -1002,7 +931,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             parameterComboBoxModel.addElement(sharedParams[i]);
         }
         /*fireTreeNodesChanged(new Object[]{rootSettings},
-        getIndexOfChild(rootSettings, params), params);
+         getIndexOfChild(rootSettings, params), params);
          */
         // update parameters and parameterLinks of every targets
         Target[] newTargets = newSettings.getTargets().getTarget();
@@ -1049,7 +978,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         r);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
             } else {
-                logger.warning("found null result while updating with new settings");
+                logger.warn("found null result while updating with new settings");
             }
         }
 
@@ -1063,8 +992,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // respond to ModifyAndSaveObject interface
     public void save() {
-        logger.entering(className, "save");
-
         if (associatedFile != null) {
             saveSettingsFile(associatedFile, false);
         } else {
@@ -1075,12 +1002,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     // respond to ModifyAndSaveObject interface
     public java.awt.Component getComponent() {
-        logger.entering(className, "getComponent");
         return MFGui.getInstance();
     }
 
     public void updateOiTargetList() {
-        logger.entering(className, "updateOiTargetList");
         oiTargets.removeAllElements();
         File[] files = rootSettings.getFiles().getFile();
         for (int i = 0; i < files.length; i++) {
@@ -1096,7 +1021,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void setRootSettings(Settings newRootModel) {
-        logger.entering(className, "setRootSettings", newRootModel);
         rootSettings = newRootModel;
 
         // clear list of files, oitargets, target and fileListModels
@@ -1150,8 +1074,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
 
-
-
         // assert that rootSettings get container for results and build model for every result child
         if (rootSettings.getResults() == null) {
             rootSettings.setResults(new Results());
@@ -1169,7 +1091,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (rootSettings.getResults() != null) {
             desc = desc + " with results section";
         }
-        logger.fine(desc);
+        logger.debug(desc);
 
         // fire general change event
         fireTreeStructureChanged(rootSettings);
@@ -1177,12 +1099,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public Settings getRootSettings() {
-        logger.entering(className, "getRootSettings");
         return rootSettings;
     }
 
     public Target getParent(Model child) {
-        logger.entering(className, "getParent", child);
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
@@ -1194,23 +1114,22 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.fine("Can't find parent of :" + child);
-        logger.fine("Models are:");
+        logger.debug("Can't find parent of :" + child);
+        logger.debug("Models are:");
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
             Model[] models = target.getModel();
             for (int j = 0; j < models.length; j++) {
                 Model model = models[j];
-                logger.fine("Models are:" + model);
+                logger.debug("Models are:{}", model);
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.warn("Can't find parent of : {}", child, new Throwable());
 
         return null;
     }
 
     public Model getParent(Parameter child) {
-        logger.entering(className, "getParent", child);
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
@@ -1226,13 +1145,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.warn("Can't find parent of : " + child, new Throwable());
 
         return null;
     }
 
     public Model getParent(ParameterLink child) {
-        logger.entering(className, "getParent", child);
         Target[] targets = rootSettings.getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
@@ -1248,14 +1166,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.log(Level.WARNING, "Can't find parent of : " + child, new Throwable());
+        logger.warn("Can't find parent of : " + child, new Throwable());
 
         return null;
     }
 
     private void addFileListModelForOiTarget(Oitarget target, File file) {
-        logger.entering(className, "addFileListModelForTarget", new Object[]{target, file});
-
         // we use target name as key
         String key = target.getTarget().trim();
         DefaultListModel lm = (DefaultListModel) fileListModels.get(key);
@@ -1267,16 +1183,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         if (!lm.contains(file)) {
-            logger.fine("adding file '" + file.getName() + "' to listmodel for '" + key + "'");
+            logger.debug("adding file '" + file.getName() + "' to listmodel for '" + key + "'");
             lm.addElement(file);
         } else {
-            logger.fine("file " + file.getName() + " already registered to listmodel for '" + key
+            logger.debug("file " + file.getName() + " already registered to listmodel for '" + key
                     + "'");
         }
     }
 
     public ListModel getFileListModelForOiTarget(String oiTargetName) {
-        logger.entering(className, "getFileListModelForTarget", oiTargetName);
         // we use target name as key
         String key = oiTargetName.trim();
         return (ListModel) fileListModels.get(key);
@@ -1291,7 +1206,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
-        logger.entering(className, "addFile", fileToAdd);
         Files files = rootSettings.getFiles();
 
         // The file must be one oidata file (next line automatically unzip gz files)
@@ -1303,7 +1217,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         newFile.setId(getNewFileId());
         if (checkFile(newFile)) {
             allFilesListModel.addElement(newFile);
-            logger.fine("'" + fitsFileName + "' oifile added to file list");
+            logger.debug("'" + fitsFileName + "' oifile added to file list");
             int idx = files.getFileCount();
             files.addFile(newFile);
             updateOiTargetList();
@@ -1326,7 +1240,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public boolean checkFile(File boundFile) throws IllegalArgumentException, IOException, FitsException {
-        logger.entering(className, "checkFile", boundFile);
         //Store filename
         String filename = boundFile.getName();
 
@@ -1334,14 +1247,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         java.io.File tmpFile = new java.io.File(boundFile.getName());
         boundFile.setName(tmpFile.getName());
 
-        logger.fine("Checking file from xml name '" + filename + "'");
+        logger.debug("Checking file from xml name '" + filename + "'");
 
         // Check href and return if oitarget are found
         String href = boundFile.getHref();
         if (href != null) {
-            logger.fine("Href already present");
+            logger.debug("Href already present");
             if (boundFile.getOitargetCount() < 1) {
-                logger.warning("No oitarget found");
+                logger.warn("No oitarget found");
                 // restore file from base64 and try to continue
                 OIFitsFile f = getOIFitsFromFile(boundFile);
                 filename = f.getAbsoluteFilePath();
@@ -1364,7 +1277,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     private boolean populate(File fileToPopulate, String filename) throws IllegalArgumentException, IOException, FitsException {
-        logger.entering(className, "populate", new Object[]{fileToPopulate, filename});
         OIFitsFile fits;
         // Populate the boundFile with oifits content
         fileToPopulate.clearOitarget();
@@ -1436,9 +1348,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
 
             alreadyExpandedOifitsFiles.put(key, oifitsFile);
-            logger.fine("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
+            logger.debug("expanding '" + key + "' into " + oifitsFile.getAbsoluteFilePath());
         } else {
-            logger.fine("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getAbsoluteFilePath());
+            logger.debug("oifitsfile '" + key + "' was already expanded into " + oifitsFile.getAbsoluteFilePath());
         }
         return oifitsFile;
     }
@@ -1489,8 +1401,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public void checkSettingsFormat(Settings s) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
-        logger.entering(className, "checkSettingsFormat", s);
-
         if (s == null) {
             throw new ExecutionException("Settings file invalid format", new Throwable("no valid root"));
         }
@@ -1508,14 +1418,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // assert that one parameters section is present to allow param sharing
         if (s.getParameters() == null) {
-            logger.fine("no parameter section, -> new one created");
+            logger.debug("no parameter section, -> new one created");
             s.setParameters(new Parameters());
             setModified(true);
         }
 
         // assert that one userInfo section is present to allow traces
         if (s.getUserInfo() == null) {
-            logger.fine("no userInfo section, -> new one created");
+            logger.debug("no userInfo section, -> new one created");
             s.setUserInfo("UserInfo added on " + new java.util.Date()
                     + " by ModelFitting GUI rev. "
                     + ModelFitting.getSharedApplicationDataModel().getProgramVersion());
@@ -1550,16 +1460,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void saveSettingsFile(java.io.File fileToSave, boolean keepResult)
             throws IllegalStateException {
-        logger.entering(className, "saveSettingsFile", new Object[]{fileToSave, keepResult});
         Results oldResults = rootSettings.getResults();
         /* replace old result section by a new empty one according keepResult parameter
-        oldResults are restored at end of the method */
+         oldResults are restored at end of the method */
         if (keepResult == false) {
             rootSettings.setResults(new Results());
         }
 
         // Write settings into a File
-        logger.fine("start setting file writting");
+        logger.debug("start setting file writting");
         java.io.Writer writer = null;
         try {
             writer = FileUtils.openFile(fileToSave);
@@ -1592,7 +1501,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return associated Model object
      */
     public Model getSupportedModel(String type) {
-        logger.entering(className, "getSupportedModel", type);
         return (Model) supportedModels.get(type);
     }
 
@@ -1600,7 +1508,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the targetListModel
      */
     public DefaultListModel getTargetListModel() {
-        logger.entering(className, "getTargetListModel");
         return targetListModel;
     }
 
@@ -1608,7 +1515,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the targetComboBoxModel
      */
     public DefaultComboBoxModel getTargetComboBoxModel() {
-        logger.entering(className, "getTargetComboBoxModel");
         return targetComboBoxModel;
     }
 
@@ -1616,7 +1522,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the parameterComboBoxModel
      */
     public DefaultComboBoxModel getParameterComboBoxModel() {
-        logger.entering(className, "getParameterComboBoxModel");
         return parameterComboBoxModel;
     }
 
@@ -1624,13 +1529,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the parameterListModel
      */
     public DefaultListModel getParameterListModel() {
-        logger.entering(className, "getParameterListModel");
         return parameterListModel;
     }
 
     //////////////// Fire events //////////////////////////////////////////////
     protected void fireTreeStructureChanged(Object highlyChangedNode) {
-        logger.entering(className, "fireTreeStructureChanged", highlyChangedNode);
         TreeModelEvent e;
         e = new TreeModelEvent(this, new Object[]{highlyChangedNode});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1642,10 +1545,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * @see DefaultTreeModel implementation
      */
-    protected void fireTreeNodesInserted(Object[] path,
-            int childIndice,
+    protected void fireTreeNodesInserted(Object[] path, int childIndice,
             Object child) {
-        logger.entering(className, "fireTreeNodesInserted", new Object[]{path, childIndice, child});
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1658,9 +1559,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-            int childIndice,
-            Object child) {
-        logger.entering(className, "fireTreeNodesRemoved", new Object[]{path, childIndice, child});
+            int childIndice, Object child) {
         TreeModelEvent e = new TreeModelEvent(source, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1672,10 +1571,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * @see DefaultTreeModel implementation
      */
-    protected void fireTreeNodesChanged(Object[] path,
-            int childIndice,
+    protected void fireTreeNodesChanged(Object[] path, int childIndice,
             Object child) {
-        logger.entering(className, "fireTreeNodesChanged", new Object[]{path, childIndice, child});
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1689,7 +1586,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Adds a listener for the TreeModelEvent posted after the tree changes.
      */
     public void addTreeModelListener(TreeModelListener l) {
-        logger.entering(className, "addTreeModelListener", l);
         treeModelListeners.addElement(l);
     }
 
@@ -1697,7 +1593,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Returns the child of parent at index index in the parent's child array.
      */
     public Object getChild(Object parent, int index) {
-        logger.entering(className, "getChild", new Object[]{parent, new Integer(index)});
         if (parent instanceof TreeNode) {
             return ((TreeNode) parent).getChildAt(index);
         } else if (parent instanceof Settings) {
@@ -1718,7 +1613,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (index == 4) {
                 return plotContainerNode;
             } else {
-                logger.warning("This line must not occur");
+                logger.warn("This line must not occur");
                 return "??";
             }
         } else if (parent instanceof Files) {
@@ -1738,7 +1633,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Result r = ((Results) parent).getResult(index);
             return getModel(r);
         }
-        logger.warning("child n=" + index + " of " + parent + " is not handled");
+        logger.warn("child n=" + index + " of " + parent + " is not handled");
         return "unknown " + parent + ".child[" + index + "]";
     }
 
@@ -1774,7 +1669,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Returns the index of child in parent.
      */
     public int getIndexOfChild(Object parent, Object child) {
-        //logger.entering(className, "getIndexOfChild", new Object[]{parent, child});
         if ((parent == null) || (child == null)) {
             return -1;
         }
@@ -1803,7 +1697,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 return idx;
             }
             // TODO fix that point!
-            logger.finest("parent:" + parent + " does not seem to contain:" + child);
+            logger.trace("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getFiles()) {
             File[] elements = rootSettings.getFiles().getFile();
@@ -1815,7 +1709,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
             // TODO fix that point!
-            logger.fine("parent:" + parent + " does not seem to contain:" + child);
+            logger.debug("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getTargets()) {
             Object[] elements = rootSettings.getTargets().getTarget();
@@ -1826,7 +1720,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
             // TODO fix that point!
-            logger.fine("parent:" + parent + " does not seem to contain:" + child);
+            logger.debug("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getParameters()) {
             Object[] elements = rootSettings.getParameters().getParameter();
@@ -1838,7 +1732,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
             }
             // TODO fix that point!
-            logger.fine("parent:" + parent + " does not seem to contain:" + child);
+            logger.debug("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getResults()) {
             Object[] elements = rootSettings.getResults().getResult();
@@ -1855,7 +1749,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
             // TODO fix that point!
-            logger.fine("parent:" + parent + " does not seem to contain:" + child);
+            logger.debug("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else {
             // Search for fileLinks or models children into Target
@@ -1879,13 +1773,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         }
                     }
                     // TODO fix that point!
-                    logger.fine("parent:" + parent + " does not seem to contain:" + child);
+                    logger.debug("parent:" + parent + " does not seem to contain:" + child);
                     return -1;
                 }
             }
         }
         // TODO fix that point!
-        logger.fine("missing code for parent=" + parent + " and child=" + child);
+        logger.debug("missing code for parent=" + parent + " and child=" + child);
         return 0;
     }
 
@@ -1893,7 +1787,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Returns the root of the tree.
      */
     public Object getRoot() {
-        logger.entering(className, "getRoot");
         return rootSettings;
     }
 
@@ -1918,7 +1811,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Removes a listener previously added with addTreeModelListener().
      */
     public void removeTreeModelListener(TreeModelListener l) {
-        logger.entering(className, "removeTreeModelListener", l);
         treeModelListeners.removeElement(l);
     }
 
@@ -1927,7 +1819,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * identified by path to newValue.  Not used by this model.
      */
     public void valueForPathChanged(TreePath path, Object newValue) {
-        logger.entering(className, "valueForPathChanged", new Object[]{path, newValue});
         Object modifiedObject = path.getLastPathComponent();
         throw new IllegalStateException("This code should not be reached, what user interaction can go there?");
         //fireTreeNodesChanged(path,modifiedObject);
@@ -1940,19 +1831,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /** Marshal the settings and return it as a String */
     public String toXml() {
-        logger.entering(className, "toXml");
-        logger.fine("Start of marshalling");
+        logger.debug("Start of marshalling");
         java.io.StringWriter writer = new java.io.StringWriter();
         UtilsClass.marshal(rootSettings, writer);
-        logger.fine("End of marshalling");
-
+        logger.debug("End of marshalling");
         writer.flush();
-        logger.fine("Store xml as string");
+        logger.debug("Store xml as string");
         return writer.toString();
     }
 
     public String toLITproDesc() {
-        logger.entering(className, "toLITproDesc");
         return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
                 new String[]{});
     }

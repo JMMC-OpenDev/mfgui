@@ -19,14 +19,15 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Display GUI for Target elements */
 public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener {
 
     final static String className = TargetPanel.class.getName();
     /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    final static Logger logger = LoggerFactory.getLogger(className);
     /** Main model object of this GUI controller */
     Target current = null;
     ListModel targetFiles;
@@ -79,8 +80,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
      * @param settingsModel its associated settingsModel
      */
     public void show(Target t, SettingsModel settingsModel) {
-        logger.entering(className, "show");
-
         current = t;
         this.rootSettingsModel = settingsModel;
         this.rootSettings = settingsModel.getRootSettings();
@@ -128,7 +127,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         } else {
             // should not append except if user delete some files??
-            logger.warning("Can't find list of files");
+            logger.warn("Can't find list of files");
         }
         listenToFileSelection = true;
 
@@ -152,8 +151,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
     /* receive event on file list */
     public void valueChanged(ListSelectionEvent e) {
-        logger.entering(className, "valueChanged");
-
         if (!listenToFileSelection || e.getValueIsAdjusting()) {
             return;
         }
@@ -576,7 +573,6 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
 
     private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_removeModelButtonActionPerformed
-        logger.entering(className, "removeModelButtonActionPerformed");
         Object[] values = modelList.getSelectedValues();
         for (int i = 0; i < values.length; i++) {
             Object object = values[i];
@@ -604,7 +600,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_addModelButtonActionPerformed
-        logger.entering(className, "addModelButtonActionPerformed");
         // Construct a new copy
         Model selectedModel = (Model) modelTypeComboBox.getSelectedItem();
         Model m = (Model) UtilsClass.clone(selectedModel);

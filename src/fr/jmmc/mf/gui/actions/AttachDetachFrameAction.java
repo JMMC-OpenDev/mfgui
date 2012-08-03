@@ -12,12 +12,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttachDetachFrameAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
 
     final static String className = AttachDetachFrameAction.class.getName();
     /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    final static Logger logger = LoggerFactory.getLogger(
             className);
 
     MFGui mfgui;
@@ -59,7 +61,7 @@ public class AttachDetachFrameAction extends RegisteredAction implements TreeSel
             settingsModel = (SettingsModel)e.getSource();
             this.setEnabled(!settingsModel.isFrameSelectionEmpty());
         }else{
-            logger.warning("dropped treeSelectionEvent from "+e.getSource());
+            logger.warn("dropped treeSelectionEvent from {}",e.getSource());
         }
     }
 }

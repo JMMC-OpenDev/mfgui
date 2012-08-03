@@ -19,13 +19,12 @@ import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlotPanel extends javax.swing.JPanel implements ListSelectionListener {
-
-    final static String className = PlotPanel.class.getName();
     /** Class logger */
-    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    private static Logger logger = LoggerFactory.getLogger(PlotPanel.class.getName());
     /** settings model reference */
     private SettingsModel settingsModel = null;
     private PlotModelPanel plotModelPanel = null;
@@ -185,8 +184,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      * @param description (optionnal) plot description
      */
     public void plot(String methodName, String methodArgs, String title, String description) {
-        logger.fine("Requesting yoga '" + methodName + "' call");
-
         Response response = null;
         try {
             response = ModelFitting.execMethod(methodName,
@@ -257,7 +254,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         targets = settingsModel.getTargetListModel();
         if (targets.getSize()!= targetList.getModel().getSize()){
             targetList.setModel(targets);
-            logger.severe("Trying to work on a non consistent model!!");
+            logger.error("Trying to work on a non consistent model!!");
         }
         
         

@@ -9,6 +9,8 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Settings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This Panel displays the main elements of a settings.
@@ -16,7 +18,7 @@ import fr.jmmc.mf.models.Settings;
 public class SettingsPanel extends javax.swing.JPanel
 {
     /** Class logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    static final Logger logger = LoggerFactory.getLogger(
             SettingsPanel.class.getName());
    
     private FilesPanel filesPanel = null;
@@ -55,7 +57,7 @@ public class SettingsPanel extends javax.swing.JPanel
         }
         else
         {
-            logger.finest("Current settings has no file");
+            logger.trace("Current settings has no file");
             jSplitPane2.setBottomComponent(null);
             jSplitPane3.setTopComponent(null);
         }

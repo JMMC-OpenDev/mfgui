@@ -8,11 +8,12 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import javax.swing.tree.TreePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TargetsPanel extends javax.swing.JPanel {
 
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.TargetsPanel");
+    static Logger logger = LoggerFactory.getLogger(TargetsPanel.class.getName());
     Targets current = null;
     SettingsViewerInterface settingsViewer;
     private SettingsModel rootSettingsModel;
@@ -26,7 +27,7 @@ public class TargetsPanel extends javax.swing.JPanel {
     }
 
     public void show(Targets t, SettingsModel s) {
-        logger.fine("Showing data for " + t);
+        logger.debug("Showing data for {}", t);
         current = t;
         rootSettingsModel = s;
         targetList.setModel(settingsViewer.getSettingsModel().getTargetListModel());

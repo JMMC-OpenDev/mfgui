@@ -15,10 +15,7 @@ import javax.swing.Action;
 
 public class LoadDemoModelAction extends RegisteredAction {
 
-    final static String className = "fr.jmmc.mf.gui.actions.LoadDemoModelAction";
-    /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    final static String className = LoadDemoModelAction.class.getName();
     String demoURL_ = "";
     MFGui mfgui;
 
@@ -30,8 +27,6 @@ public class LoadDemoModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
-
         try {
             mfgui.addSettings(new SettingsModel(demoURL_));
         } catch (IOException ex) {
@@ -41,6 +36,5 @@ public class LoadDemoModelAction extends RegisteredAction {
         } catch (FitsException ex) {
             MessagePane.showErrorMessage("Could not read fits file from remote setting: " + demoURL_, ex);
         }
-
     }
 }

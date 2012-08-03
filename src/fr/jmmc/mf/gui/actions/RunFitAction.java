@@ -17,12 +17,13 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.ButtonModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RunFitAction extends MCSAction {
     
     /** Main logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            RunFitAction.class.getName());
+    static Logger logger = LoggerFactory.getLogger(RunFitAction.class.getName());
     
     String methodName = "runFit";
     ButtonModel iTMaxButtonModel = null;
@@ -69,7 +70,7 @@ public class RunFitAction extends MCSAction {
         Settings newModel = UtilsClass.getSettings(r);
         StatusBar.show("Fitting response received, creating result node...");
         if (newModel == null) {
-            logger.warning("no settings present in result message");
+            logger.warn("no settings present in result message");
             if (UtilsClass.getErrorMsg(r).length() == 0) {
                 throw new IllegalStateException(
                         "Sorry a problem occured on server side without error message.\n"

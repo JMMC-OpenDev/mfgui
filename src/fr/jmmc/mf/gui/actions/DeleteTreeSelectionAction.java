@@ -12,13 +12,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DeleteTreeSelectionAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
 
-    private final static String className = "fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction";
+    private final static String className = DeleteTreeSelectionAction.class.getName();
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    static Logger logger = LoggerFactory.getLogger(className);
 
     MFGui mfgui;
     SettingsModel settingsModel;
@@ -59,7 +60,7 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
             settingsModel = (SettingsModel)e.getSource();
             this.setEnabled(settingsModel.isSelectionRemovable());
         }else{
-            logger.warning("dropped treeSelectionEvent from "+e.getSource());
+            logger.warn("dropped treeSelectionEvent from {} ", e.getSource());
         }
     }
 }

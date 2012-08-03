@@ -15,6 +15,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.JFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ptolemy.plot.plotml.PlotMLFrame;
 
 /**
@@ -22,9 +24,9 @@ import ptolemy.plot.plotml.PlotMLFrame;
  */
 public class ResultModel extends DefaultMutableTreeNode {
 
-    public final static String className = "fr.jmmc.mf.gui.models.SettingsModel";
+    public final static String className = ResultModel.class.getName();
     /** Class logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
+    static final Logger logger = LoggerFactory.getLogger(className);
     private SettingsModel settingsModel;
     private String htmlReport = null;
     private String xmlResult = null;
@@ -40,21 +42,21 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         // use content or href to get the result element
         if (result.getHref() == null) {
-            logger.fine("Start result section write into stringbuffer");
+            logger.debug("Start result section write into stringbuffer");
             StringWriter xmlResultSw = new StringWriter();
             UtilsClass.marshal(result, xmlResultSw);
-            logger.fine("End result section write into stringbuffer");
+            logger.debug("End result section write into stringbuffer");
             xmlResult = xmlResultSw.toString();
-            logger.fine("Start html generation");
+            logger.debug("Start html generation");
             htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
-            logger.fine("End html generation");
+            logger.debug("End html generation");
         } else {
             xmlResult = "<result>"
                     + UtilsClass.saveBASE64ToString(result.getHref())
                     + "</result>";
-            logger.fine("Start html generation");
+            logger.debug("Start html generation");
             htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
-            logger.fine("End html generation");
+            logger.debug("End html generation");
         }
 
         genPlots();
@@ -66,12 +68,10 @@ public class ResultModel extends DefaultMutableTreeNode {
     }
 
     public String getHtmlReport() {
-        logger.entering(className, "getHtmlReport");
         return htmlReport;
     }
 
     public void genPlots() {
-        logger.entering(className, "genPlots");
         Hashtable<String, String> plotTobuild = new Hashtable();
         Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
@@ -106,7 +106,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         // try to locate the corresponding pdf of each png file
         for (int i = 0; i < resultFiles.length; i++) {
             ResultFile r = resultFiles[i];
-            
+
             String b64file;
             File file = null;
             JFrame f = null;
@@ -127,17 +127,16 @@ public class ResultModel extends DefaultMutableTreeNode {
                 File pngFile = UtilsClass.saveBASE64ToFile(b64file, "png");
                 filesToExport.add(pngFile);
                 f = UtilsClass.buildFrameFor(plotTitle, plotDescription, new File[]{pngFile}, new String[]{r.getName()});
-                this.add(new FrameTreeNode(f, filesToExport.toArray(new File[0]),filenamesToExport.toArray(new String[0]) ));
+                this.add(new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0])));
             }
         }
     }
 
     /** Plots using ptplot widgets */
     protected void ptplot(String plotName, boolean residuals) {
-        logger.entering(className, "ptplot", plotName);
         String xmlStr = null;
 
-        logger.fine("Start plot generation:" + plotName + "(residuals=" + residuals + ")");
+        logger.debug("Start plot generation:{}(residuals={})", plotName, residuals);
         // Construct xml document to plot
         String[] args = new String[]{"plotName", plotName};
         if (residuals) {
@@ -149,17 +148,17 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         // generate frame and tsv file
         PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
-        
+
         if (!residuals && plotName.toLowerCase().contains("phi")) {
             UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
         } else {
             UtilsClass.fixPlotAxesForAmp(plotMLFrame.plot);
         }
-        
-        logger.fine("End plot generation:" + plotName);
-        logger.fine("Start tsv generation:" + plotName);
+
+        logger.debug("End plot generation");
+        logger.debug("Start tsv generation:{}", plotName);
         File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
-        logger.fine("End tsv generation:" + plotName);
+        logger.debug("End tsv generation");
 
         // add on frameTreeNode as child
         this.add(new FrameTreeNode(plotMLFrame, tsv));

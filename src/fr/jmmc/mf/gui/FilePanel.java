@@ -18,7 +18,8 @@ import fr.nom.tam.fits.FitsException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.astrogrid.samp.client.SampException;
 import ptolemy.plot.plotml.*;
 import javax.swing.*;
@@ -31,7 +32,7 @@ import org.astrogrid.samp.Client;
  */
 public class FilePanel extends javax.swing.JPanel {
 
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
+    final static Logger logger = LoggerFactory.getLogger(
             FilePanel.class.getName());
     protected SettingsModel settingsModel;
     File current = null;
@@ -381,11 +382,11 @@ public class FilePanel extends javax.swing.JPanel {
           double[] errorBar, boolean[] flags) {
     StringBuffer sb = new StringBuffer();
 
-    if (logger.isLoggable(Level.FINE)) {
+    if (logger.isDebugEnabled()) {
       if (errorBar != null) {
-        logger.fine("x,y,err dimensions :" + x.length + "," + y.length + "," + errorBar.length);
+        logger.debug("x,y,err dimensions : {}, {}, {}" , new Object[]{ x.length, y.length, errorBar.length});
       } else {
-        logger.fine("x,y dimensions :" + x.length + "," + y.length);
+        logger.debug("x,y dimensions : {}, {}", x.length, y.length);
       }
     }
 
@@ -416,9 +417,9 @@ public class FilePanel extends javax.swing.JPanel {
     {
         StringBuffer sb = new StringBuffer();
         if(errorBar!=null){
-            logger.fine("x,y,err dimensions :"+x.length+","+y.length+","+errorBar.length);
+            logger.debug("x,y,err dimensions :{}, {}, {}" , new Object[]{ x.length, y.length, errorBar.length});
         }   else{
-            logger.log(Level.FINE, "x,y dimensions :{0},{1}", new Object[]{x.length, y.length});
+            logger.debug( "x,y dimensions :{},{}", x.length, y.length);
         }
         sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
         for (int i = 0; i < x.length; i++)
@@ -446,7 +447,7 @@ public class FilePanel extends javax.swing.JPanel {
     
     public void showData(String requestedTables, String [] requestedColumns)
     {
-        logger.fine("Searching to plot "+requestedTables);        
+        logger.debug("Searching to plot {}", requestedTables);        
         String plotName=current.getName()+"(";
         for (int i = 0; i < requestedColumns.length; i++) {
             plotName = plotName+requestedColumns[i]+" " ;
@@ -455,7 +456,7 @@ public class FilePanel extends javax.swing.JPanel {
            
             int retainedHdu = 0;
             // Select requested tables:
-            // plot all reqeusted if nothing selected or selection does not contains requested
+            // plot all requested if nothing selected or selection does not contains requested
             // else plot only selected
             Object[] selected = hduList.getSelectedValues();
             OITable[] OITables = oifitsFile_.getOiTables();
@@ -816,7 +817,7 @@ public class FilePanel extends javax.swing.JPanel {
                     final Map<String, String> parameters = new HashMap<String, String>();
                     String filenameUri = "file://" + oifitsFile_.getAbsoluteFilePath() + "#" + ((indices[i]) + 1);
 
-                    logger.fine("transmitting fits file using : uri = " + filenameUri);
+                    logger.debug("transmitting fits file using : uri = {}", filenameUri);
                     parameters.put("url", filenameUri);
                     try {
                         SampManager.sendMessageTo(SampCapability.LOAD_FITS_TABLE.mType(), dest.getId(), parameters);

@@ -11,13 +11,13 @@ import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
-import javax.swing.DefaultCellEditor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
     /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.PlotChi2Panel");
+    final static Logger logger = LoggerFactory.getLogger(PlotChi2Panel.class.getName());
     public SettingsModel settingsModel = null;
     private PlotPanel plotPanel;
     private ParametersTableModel param1TableModel;
@@ -64,11 +64,11 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         // Populates combo with given params & Call old user entries back
         xComboBox.removeAllItems();
         yComboBox.removeAllItems();
-        logger.fine("Searching " + params.length + " parameters to use in chi2 slice");
+        logger.debug("Searching {} parameters to use in chi2 slice", params.length);
         for (int i = 0; i < params.length; i++) {
             Parameter p = (Parameter) params[i];
             if (!p.getHasFixedValue()) {
-                logger.fine(p.getName() + " added to the comboboxes");
+                logger.debug("{} added to the comboboxes", p.getName());
                 xComboBox.addItem(p);
                 yComboBox.addItem(p);
                 if (tmpX != null && tmpX.getName().equals(p.getName())) {
@@ -393,7 +393,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
             parameters[1] = (Parameter) yComboBox.getSelectedItem();
             param1TableModel.setModel(settingsModel, parameters, true);
         } else {
-            logger.fine("No parameter to use for chi2map");
+            logger.debug("No parameter to use for chi2map");
         }
         UtilsClass.initColumnSizes(jTable1, 400);
     }

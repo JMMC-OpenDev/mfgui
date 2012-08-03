@@ -5,8 +5,8 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.data.preference.PreferencesException;
 import fr.jmmc.mf.ModelFitting;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a preference dedicated to the java Model Fitting Client.
@@ -18,10 +18,9 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
     private static Preferences _singleton = null;
 
     /** Class Name */
-    private final static String className_= "fr.jmmc.mf.gui.Preferences";
+    private final static String className= Preferences.class.getName();
     /** Logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className_);
+    static final Logger logger = LoggerFactory.getLogger(className);
 
     private static String _version = ModelFitting.getSharedApplicationDataModel().getProgramVersion();
     /**
@@ -89,8 +88,6 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      */
     protected String getPreferenceFilename()
     {
-        logger.entering("Preferences", "getPreferenceFilename");
-
         if (ModelFitting.isAlphaVersion())
         {
             return "fr.jmmc.modelfitting.alpha.properties";
@@ -107,8 +104,6 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      */
     protected int getPreferencesVersionNumber()
     {
-        logger.entering("Preferences", "getPreferencesVersionNumber");
-
         // 1 -> 2 v1.0.11b10
         return 2;
     }
@@ -123,11 +118,8 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      */
     @Override
     protected boolean updatePreferencesVersion(int loadedVersionNumber) {
-        logger.entering("Preferences", "updatePreferencesVersion");
-
-        logger.info("Upgrading preference file from version '"
-                + loadedVersionNumber + "' to version '" + (loadedVersionNumber + 1)
-                + "'.");
+        logger.info("Upgrading preference file from version '{}' to version '{}'"
+                , loadedVersionNumber ,loadedVersionNumber +1);
 
         switch (loadedVersionNumber) {
             // Wrong column identifiers in the the simple and detailed bright N columns order list
@@ -151,7 +143,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
                 setPreference(preferenceName, defaultValue);
             }            
         } catch (PreferencesException ex) {
-            Logger.getLogger(Preferences.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error ( "Can't update preference version", ex);
             return false;
         }
         return true;        

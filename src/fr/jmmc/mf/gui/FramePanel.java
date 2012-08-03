@@ -18,10 +18,6 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
-
-    /** Class logger */
-    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.PlotPanel");
     /** settings model reference */
     private static SettingsModel settingsModel = null;
     SettingsViewerInterface viewer = null;

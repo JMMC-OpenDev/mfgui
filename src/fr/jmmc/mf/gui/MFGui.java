@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,10 +31,9 @@ import javax.swing.JToolBar;
 public class MFGui extends javax.swing.JFrame implements WindowListener {
 
     /** Class Name */
-    static final String className_ = "fr.jmmc.mf.gui.MFGui";
+    static final String className = "fr.jmmc.mf.gui.MFGui";
     /** Class logger */
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className_);
+    static final Logger logger = LoggerFactory.getLogger(className);
     protected static Preferences myPreferences = Preferences.getInstance();
     protected static JToolBar toolBar;
     protected static StatusBar statusBar;
@@ -170,15 +171,13 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         if (tabbedPane_.getComponentAt(idx) instanceof SettingsPane) {
             sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
             tabbedPane_.setTitleAt(idx, sp.getSettingsModel().getAssociatedFilename());
-            logger.fine("Selected settingsPane name:"
-                    + sp.getSettingsModel().getAssociatedFilename());
+            logger.debug("Selected settingsPane name: {}", sp.getSettingsModel().getAssociatedFilename());
         }
 
         return sp.getSettingsModel();
     }
 
     public static void closeTab(java.awt.Component c) {
-        // not static logger.entering(""+this.getClass(), "closeTab");
         tabbedPane_.remove(c);
     }
 

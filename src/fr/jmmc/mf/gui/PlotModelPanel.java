@@ -18,11 +18,6 @@ import java.util.HashSet;
  * 
  */
 public class PlotModelPanel extends javax.swing.JPanel {
-
-    final static String className = PlotModelPanel.class.getName();
-    /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
     public SettingsModel settingsModel = null;
     private PlotPanel plotPanel;
     private int startValue = 0;

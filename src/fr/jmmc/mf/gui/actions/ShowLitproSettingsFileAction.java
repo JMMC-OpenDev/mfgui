@@ -3,28 +3,24 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeModelListener, TreeSelectionListener, ChangeListener{
 
     public final static String className = ShowLitproSettingsFileAction.class.getName();
     public final static String actionName = "showLitproSettingsFile";
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    static Logger logger = LoggerFactory.getLogger(className);
 
     MFGui mfgui;
     SettingsModel settingsModel;
@@ -79,7 +75,7 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
             settingsModel = (SettingsModel)e.getSource();
             checkSettings();
         }else{
-            logger.warning("dropped treeSelectionEvent from "+e.getSource());
+            logger.warn("dropped treeSelectionEvent from {}", e.getSource());
         }
     }
 

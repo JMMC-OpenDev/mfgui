@@ -13,9 +13,6 @@ import java.awt.event.MouseListener;
 import java.util.Vector;
 
 public class ModelPanel extends javax.swing.JPanel {
-
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            ModelPanel.class.getName());
     ParametersTableModel parametersTableModel;
     Model current;
     SettingsModel settingsModel;
@@ -215,11 +212,10 @@ public class ModelPanel extends javax.swing.JPanel {
 
         // Construct a new copy
         Model selectedModel = (Model) typeComboBox.getSelectedItem();
-        if(selectedModel == null){
+        if (selectedModel == null) {
             return;
         }
-        Model m = (Model) UtilsClass.clone(selectedModel);        
-        settingsModel.replaceModel(current, m);          
+        Model m = (Model) UtilsClass.clone(selectedModel);
+        settingsModel.replaceModel(current, m);
     }//GEN-LAST:event_typeComboBoxActionPerformed
-
 }

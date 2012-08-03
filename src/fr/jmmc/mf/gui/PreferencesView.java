@@ -20,12 +20,10 @@ import javax.swing.ToolTipManager;
  * Preference GUI
  */
 public class PreferencesView extends javax.swing.JFrame implements Observer {
-
+    
     static Preferences myPreferences = Preferences.getInstance();
     static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.MFGui");
-
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
@@ -65,12 +63,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     public void update(Observable o, Object arg) {        
         // Adjust view and behaviour according preferences entries        
         // Keep eye on help.tooltips.show                        
-        boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");
-        if (b) {
-            logger.fine("Enable ToolTipManager");
-        } else {
-            logger.fine("Disable ToolTipManager");
-        }
+        boolean b = myPreferences.getPreferenceAsBoolean("help.tooltips.show");        
         toolTipManager.setEnabled(b);
         tooltipsCheckBox.setSelected(b);
 

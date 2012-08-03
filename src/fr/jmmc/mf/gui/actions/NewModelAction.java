@@ -3,19 +3,20 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
-import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.component.MessagePane;
+import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NewModelAction extends RegisteredAction {
 
-    private final static String className = "fr.jmmc.mf.gui.actions.NewModelAction";
+    private final static String className = NewModelAction.class.getName();
     /** Class logger */
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    static final Logger logger = LoggerFactory.getLogger(className);
     public String lastDir = System.getProperty("user.home");
     MFGui mfgui;
 
@@ -25,7 +26,6 @@ public class NewModelAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.entering(className, "actionPerformed");
         try {
             mfgui.addSettings(new SettingsModel());
         } catch (IllegalStateException ex) {                

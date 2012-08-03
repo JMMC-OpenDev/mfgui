@@ -8,60 +8,46 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.util.FileUtils;
-
 import fr.jmmc.jmcs.util.UrlUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.FileLink;
-import fr.jmmc.mf.models.Message;
-import fr.jmmc.mf.models.Parameter;
-import fr.jmmc.mf.models.Target;
-import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.ParameterLink;
-import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.ResponseItem;
-import fr.jmmc.mf.models.ResultFile;
-import fr.jmmc.mf.models.Settings;
-import fr.jmmc.oitools.model.OIFitsFile;
+import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
-import org.exolab.castor.mapping.MappingException;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
-import org.w3c.dom.Document;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.awt.Component;
-
 import java.awt.Image;
+import java.io.File;
 import java.io.*;
-
 import java.net.URL;
-
 import java.util.Enumeration;
-
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
 import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.exolab.castor.mapping.Mapping;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
-import ptolemy.plot.plotml.PlotMLParser;
+import org.exolab.castor.xml.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import ptolemy.plot.Plot;
 import ptolemy.plot.PlotBox;
 import ptolemy.plot.plotml.PlotMLFrame;
+import ptolemy.plot.plotml.PlotMLParser;
 
 /**
  * This class is here just to locate code parts that could be moved under one
@@ -70,8 +56,7 @@ import ptolemy.plot.plotml.PlotMLFrame;
 public class UtilsClass {
 
     static final String className = UtilsClass.class.getName();
-    static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
+    static final Logger logger = LoggerFactory.getLogger(className);
     /**
      * Mapping obect used by unmarshalling operations (inited into getMapping())
      */
@@ -111,7 +96,7 @@ public class UtilsClass {
         // Construct plot and parse xml
         Plot plot = new Plot();
         plotMLParser = new PlotMLParser(plot);
-        logger.finest("Trying to plot next document:\n" + xmlStr);
+        logger.trace("Trying to plot next document:{}", xmlStr);
         try {
             plotMLParser.parse(null, xmlStr);
         } catch (Exception ex) { // only Exception are returned by ptolemy tool
@@ -126,7 +111,7 @@ public class UtilsClass {
         try {
             UIManager.setLookAndFeel(laf);
         } catch (UnsupportedLookAndFeelException ex) {
-            logger.log(Level.WARNING, null, ex);
+            logger.error("Error plotting {}", plotName, ex);
         }
         return plotMLFrame;
     }
@@ -134,7 +119,7 @@ public class UtilsClass {
     public static void fixYPlotAxes(PlotBox p, double goodRange[]) {
         double yRange[] = p.getYAutoRange();
         double rangeToApply[] = new double[]{Math.min(yRange[0], goodRange[0]), Math.max(yRange[1], goodRange[1])};
-        logger.fine("Updating plot range from : [" + yRange[0] + "," + yRange[1] + "] to [" + rangeToApply[0] + "," + rangeToApply[1] + "]");
+        logger.debug("Updating plot range from : [{},{}] to [{},{}]", new Object[]{yRange[0] ,yRange[1], rangeToApply[0],rangeToApply[1]});
         p.setYRange(rangeToApply[0], rangeToApply[1]);
     }
 
@@ -289,7 +274,7 @@ public class UtilsClass {
         if (mapping == null) {
             URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
             try {
-                logger.fine("Unmarshal will use mapping file :" + mappingURL);
+                logger.debug("Unmarshal will use mapping file :{}", mappingURL);
                 // old simple code sometimes break xml elements order then use a mapping file
                 mapping = new Mapping();
                 mapping.loadMapping(mappingURL);
@@ -333,7 +318,7 @@ public class UtilsClass {
         } catch (MappingException ex) {
             throw new IllegalStateException("Can't use mapping object", ex);
         }
-        logger.fine("End of marshal");
+        logger.debug("End of marshal");
     }
 
     /**
@@ -362,12 +347,12 @@ public class UtilsClass {
             //marshaller.setMapping(mapping);
             unmarshaller.setValidation(false);
             o = Unmarshaller.unmarshal(c, reader);
-            logger.fine("End of unmarshal");
+            logger.debug("End of unmarshal");
         } catch (MarshalException ex) {
-            logger.warning(xml);
+            logger.warn(xml);
             throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
         } catch (ValidationException ex) {
-            logger.warning(xml);
+            logger.warn(xml);
             throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
         } catch (MappingException ex) {
             throw new IllegalStateException("Can't use mapping object", ex);
@@ -467,7 +452,7 @@ public class UtilsClass {
             }
 
             if (b64.startsWith(base64DataType)) {
-                logger.fine("start of decoding '" + base64DataType);
+                logger.debug("start of decoding '{}'", base64DataType);
                 java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
 
                 StringBuilder sb = new StringBuilder(base64DataType.length());
@@ -479,7 +464,7 @@ public class UtilsClass {
                 try {
                     byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
                     if (base64DataType.contains("x-gzip")) {
-                        logger.fine("base64 file was gzipped, unzipping'" + base64DataType);
+                        logger.debug("base64 file was gzipped, unzipping '{}'", base64DataType);
                         gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
                         out = new ByteArrayOutputStream(base64DataType.length());
                         // Transfer bytes from the compressed file to the output file
@@ -498,13 +483,13 @@ public class UtilsClass {
                     FileUtils.closeStream(gzipInputStream);
                     FileUtils.closeStream(out);
                 }
-                logger.fine("end of decoding '" + base64DataType);
-                logger.finest("decoded content is: '" + out + "'");
+                logger.debug("end of decoding '{}'", base64DataType);
+                logger.trace("decoded content is: '{}'", out);
                 return out.toString();
             }
         }
 
-        logger.severe("Nothing has been decoded for given base64 encoded file\n" + b64.substring(0, b64.indexOf(";base64,")));
+        logger.error("Nothing has been decoded for given base64 encoded file\n{}", b64.substring(0, b64.indexOf(";base64,")));
         return null;
     }
 
@@ -530,7 +515,7 @@ public class UtilsClass {
             }
 
             if (b64.startsWith(base64DataType)) {
-                logger.fine("start of decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
+                logger.debug("start of decoding '{}' file into {}", base64DataType, outputFile.getAbsolutePath());
                 java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
                 StringBuilder sb = new StringBuilder(base64DataType.length());
                 while (st.hasMoreTokens()) {
@@ -547,12 +532,12 @@ public class UtilsClass {
                 } finally {
                     FileUtils.closeStream(out);
                 }
-                logger.fine("end of decoding '" + base64DataType + "' file into " + outputFile.getAbsolutePath());
+                logger.debug("end of decoding '{}' file into {}", base64DataType, outputFile.getAbsolutePath());
                 return outputFile;
             }
         }
 
-        logger.severe("Nothing has been decoded for given base64 encoded file\n" + b64.substring(0, b64.indexOf(";base64,")));
+        logger.error("Nothing has been decoded for given base64 encoded file\n{}", b64.substring(0, b64.indexOf(";base64,")));
         return null;
     }
 
@@ -582,8 +567,6 @@ public class UtilsClass {
      * been modified
      */
     public static boolean askToSaveUserModification(ModifyAndSaveObject object) {
-        logger.entering(className, "askToSaveUserModification");
-
         if (object != null && object.isModified()) {
 
             // Ask the user if he wants to save modifications
@@ -620,7 +603,6 @@ public class UtilsClass {
      * propose a dialog to save
      */
     public static boolean checkUserModificationToQuit(ModifyAndSaveObject[] objects) {
-        logger.entering(className, "checkUserModificationAndQuit");
         for (int i = 0; i < objects.length; i++) {
             if (!askToSaveUserModification(objects[i])) {
                 return false;
@@ -642,7 +624,7 @@ public class UtilsClass {
             } catch (SecurityException se) {
                 // This case occurs with java netx and
                 // OpenJDK Runtime Environment (IcedTea6 1.6) (rhel-1.13.b16.el5-x86_64)
-                logger.warning("Can't set security manager to null");
+                logger.warn("Can't set security manager to null");
             }
 
             // allow use of extensions
@@ -653,10 +635,9 @@ public class UtilsClass {
     }
 
     private static String xsl(Source source, String filepath, String[] params) {
-        logger.entering(className, "xsl");
         URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
         xslURL = UrlUtils.fixJarURL(xslURL);
-        logger.fine("using next url for transformation" + xslURL);
+        logger.debug("using next url for transformation{}", xslURL);
         try {
 
             // Use the factory to create a template containing the xsl file
@@ -678,15 +659,12 @@ public class UtilsClass {
 
             // Apply the xsl file to the source file and write the result to the output file
             xformer.transform(source, result);
-            logger.fine("End of transformation ");
+            logger.debug("End of transformation ");
             return sw.toString();
         } catch (IOException ex) {
             throw new IllegalStateException("Can't use xslt function", ex);
         } catch (TransformerException ex) {
             throw new IllegalStateException("Can't use xslt function", ex);
-        } finally {
-            logger.exiting(className, "xsl");
-
         }
     }
 
@@ -719,8 +697,7 @@ public class UtilsClass {
         } catch (FileNotFoundException ex) {
             throw new IllegalStateException(ex);
         }
-
-        logger.exiting(className, "xsl");
+        // And transform it
         return xsl(source, filepath, params);
     }
 
@@ -734,7 +711,6 @@ public class UtilsClass {
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
             SAXException, IOException {
-        logger.entering(className, "parseXmlString");
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
@@ -749,7 +725,6 @@ public class UtilsClass {
      */
     public static Document parseXmlString(String xmlBuffer, boolean validating)
             throws ParserConfigurationException, IOException, SAXException {
-        logger.entering(className, "parseXmlString");
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
@@ -770,7 +745,6 @@ public class UtilsClass {
      * @return the first found settings or null
      */
     public static Settings getSettings(Response r) {
-        logger.entering(className, "getSettings");
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
@@ -787,8 +761,7 @@ public class UtilsClass {
      * @param r response used to find settings into
      * @return the first found settings or null
      */
-    public static Model getModel(Response r) {
-        logger.entering(className, "getSettings");
+    public static Model getModel(Response r) {        
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];
@@ -800,7 +773,6 @@ public class UtilsClass {
     }
 
     public static ResultFile[] getResultFiles(Response r) {
-        logger.entering(className, "getSettings");
         ResponseItem[] responseItems = r.getResponseItem();
         Vector<ResultFile> v = new Vector();
         for (int i = 0; i < responseItems.length; i++) {
@@ -815,7 +787,6 @@ public class UtilsClass {
     //@todo add list of supported message types actually
     // empty, INFO, MESSAGE, ERROR, WARNING
     public static String getOutputMsg(Response r) {
-        logger.entering(className, "getOutputMsg");
         String str = "";
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
@@ -833,7 +804,6 @@ public class UtilsClass {
     }
 
     public static String getErrorMsg(Response r) {
-        logger.entering(className, "getErrorMsg");
         String str = "";
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
@@ -845,7 +815,7 @@ public class UtilsClass {
                             || m.getType().equalsIgnoreCase("USAGE")
                             || m.getType().equalsIgnoreCase("WARNING")) {
                         str = str + "\n" + m.getContent();
-                        logger.fine("getErrorMsg find a message of type: " + m.getType());
+                        logger.debug("getErrorMsg find a message of type: {}", m.getType());
                     }
                 }
             }
@@ -861,7 +831,6 @@ public class UtilsClass {
      * @return one parameter list
      */
     public static Parameter[] getParameters(Target t) {
-        logger.entering(className, "getParameters", t);
         Vector<Parameter> v = new Vector();
         Model[] models = t.getModel();
         for (int i = 0; i < models.length; i++) {
@@ -889,7 +858,6 @@ public class UtilsClass {
      * @return model list
      */
     public static Model[] getSharedParameterOwners(SettingsModel settingsModel, Parameter sharedParameter) {
-        logger.entering(className, "getOwners");
         Vector<Model> v = new Vector();
 
         Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();

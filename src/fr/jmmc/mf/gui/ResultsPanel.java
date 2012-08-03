@@ -9,8 +9,6 @@ import fr.jmmc.mf.models.Results;
 
 public class ResultsPanel extends javax.swing.JPanel {
 
-  static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-          ResultsPanel.class.getName());
   Results current;
   SettingsViewerInterface viewer = null;
   SettingsModel settingsModel = null;

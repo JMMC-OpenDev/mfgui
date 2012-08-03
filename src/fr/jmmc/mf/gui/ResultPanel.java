@@ -4,12 +4,11 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.models.ResultModel;
+import fr.jmmc.mf.gui.models.SettingsModel;
 
 public class ResultPanel extends javax.swing.JPanel {
-    static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            "fr.jmmc.mf.gui.ResultPanel");
+    
     ResultModel current;
     SettingsViewerInterface viewer = null;
     SettingsModel settingsModel = null;

@@ -13,19 +13,15 @@ import java.util.concurrent.ExecutionException;
 public class GetYogaVersionAction extends RegisteredAction {
 
     final static String className = GetYogaVersionAction.class.getName();
-    /** Class logger */
-    final static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(
-            className);
-    String methodName = "getYogaVersion";
+    final static String methodName = "getYogaVersion";
     MFGui mfgui;
 
     public GetYogaVersionAction(MFGui mfgui) {
-        super(className, "getYogaVersion");
+        super(className, methodName);
         this.mfgui = mfgui;
     }
 
     public void actionPerformed(ActionEvent e) {
-        logger.fine("Requesting yoga \'" + methodName + "\' call");
         String v=null;
         try {
             v = UtilsClass.getOutputMsg(ModelFitting.execMethod(methodName, null));
