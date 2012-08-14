@@ -525,7 +525,7 @@ public class FilePanel extends javax.swing.JPanel {
                             data = t.getT3Phi();
                             err = t.getT3PhiErr();
                         }
-                        dist = t.getSpatial();
+                        dist = t.getSpatialFreq();
                         flags = t.getFlag();
                     } else if (table instanceof OIVis)
                     {
