@@ -795,8 +795,13 @@ public class FilePanel extends javax.swing.JPanel {
 
         public void actionPerformed(java.awt.event.ActionEvent e) {
             // file extension can be *fits or *fits.gz
-            OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
-            MessagePane.showMessage(checker.getCheckReport());
+            final OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
+
+            // display validation messages anyway:
+            final String checkReport = checker.getCheckReport();
+            logger.info("validation results:\n{}", checkReport);
+
+            MessagePane.showMessage(checkReport);
         }
     }
 
