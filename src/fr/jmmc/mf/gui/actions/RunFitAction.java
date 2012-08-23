@@ -72,11 +72,14 @@ public class RunFitAction extends MCSAction {
         if (newModel == null) {
             logger.warn("no settings present in result message");
             if (UtilsClass.getErrorMsg(r).length() == 0) {
-                throw new IllegalStateException(
-                        "Sorry a problem occured on server side without error message.\n"
-                        +"No result has been returned\n"+
-                        "Please send this bug report (with email)"
-                        +" and you will be contacted if the data are needed to repeat the problem");
+                final StringBuilder sb = new StringBuilder();
+                sb.append("Sorry a problem occured on server side without error message.\n");
+                sb.append("No result has been returned\n");
+                sb.append("Please send this bug report (with email)");
+                sb.append("and you will be contacted if the data are needed to repeat the problem");                                
+                logger.warn(settingsModel.toLITproDesc());
+                logger.warn(Preferences.getInstance().dumpCurrentProperties());
+                throw new IllegalStateException(sb.toString());
             }
             //setCursor(null);
             return;
