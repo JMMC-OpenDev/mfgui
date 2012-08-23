@@ -1210,7 +1210,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // The file must be one oidata file (next line automatically unzip gz files)
         OIFitsFile oifitsFile = new OIFitsFile(fileToAdd.getAbsolutePath());
-        String fitsFileName = oifitsFile.getName();
+        String fitsFileName = oifitsFile.getAbsoluteFilePath();
 
         File newFile = new File();
         newFile.setName(fitsFileName);
