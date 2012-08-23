@@ -7,7 +7,7 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
-    <program name="LITpro" version="1.0.12 beta 4"/>
+    <program name="LITpro" version="1.0.12 beta 5"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     
     <text><![CDATA[LITpro is a model fitting software, developed and maintained by one JMMC working group ( CRAL, IPAG and FIZEAU ).
@@ -131,8 +131,8 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.0.12 beta 4">
-            <prerelease version="1.0.12 beta 4">               
+        <release version="1.0.12 beta 5">
+            <prerelease version="1.0.12 beta 5">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- todo: 
@@ -144,6 +144,10 @@
             <!-- <change type="DOC">Update documentation</change>-->  
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>         -->
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/340">Fix support of '*' in fits loaded filenames</change>                
+            <!-- <change type="BUGFIX">fix App.isAlpha() for the beta versions</change>-->                
+            </prerelease>       
+            <prerelease version="1.0.12 beta 4">                               
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/338">Fix NPE in loss of focus from the empty cells of the parameters tables</change>                
             </prerelease>            
             <prerelease version="1.0.12 beta 3">                
