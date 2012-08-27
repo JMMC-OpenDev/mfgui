@@ -7,16 +7,21 @@
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
     
+    <company>
+        <short_name>JMMC</short_name>
+        <legal_name>Jean-Marie Mariotti Center</legal_name>
+        <logo_resource>fr/jmmc/jmcs/resource/image/jmmc_logo.png</logo_resource>
+        <homepage_url>http://www.jmmc.fr/</homepage_url>
+        <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
+    </company>
+
     <program name="LITpro" version="1.0.12 beta 5"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
-    
-    <text><![CDATA[LITpro is a model fitting software, developed and maintained by one JMMC working group ( CRAL, IPAG and FIZEAU ).
-    ]]>
-  </text>
+    <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
+    <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
+    <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
+    <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
 
-  <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
-
-  <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
     <dependences>      
 
         <!-- JMMC -->
@@ -27,6 +32,13 @@
             link="http://www.jmmc.fr/dev/jmal/"
             jars="jmal.jar"
             license="CECILL-B ???"/>     
+
+        <!-- Java Mariotti OIfitsExplorer-core -->
+        <package name="OIFits Explorer core"
+            description="OIFits Explorer core is the JMMC library dedicated to share OIFits GUI components (plots)"
+            link="http://www.jmmc.fr/dev/oiexplorer-core/"
+            jars="oiexplorer-core.jar"
+            license="CECILL-B ???"/>
 
         <!-- Java Mariotti OITools -->
         <package name="OITools"

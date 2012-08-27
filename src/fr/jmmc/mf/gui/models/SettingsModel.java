@@ -8,7 +8,7 @@ import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
-import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsChecker;
@@ -179,7 +179,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (supportedModelsModel.getSize() < 1) {
             Response r;
             try {
-                r = ModelFitting.execMethod("getModelList", null);
+                r = LITpro.execMethod("getModelList", null);
             } catch (IllegalStateException ex) {
                 throw new IllegalStateException("Can't get list of supported models", ex);
             } catch (ExecutionException ex) {
@@ -1432,7 +1432,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.debug("no userInfo section, -> new one created");
             s.setUserInfo("UserInfo added on " + new java.util.Date()
                     + " by ModelFitting GUI rev. "
-                    + ModelFitting.getSharedApplicationDataModel().getProgramVersion());
+                    + LITpro.getSharedApplicationDataModel().getProgramVersion());
             setModified(true);
         }
 

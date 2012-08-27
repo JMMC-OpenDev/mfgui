@@ -7,7 +7,7 @@ import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.resource.image.ResourceImage;
-import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.actions.*;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
@@ -92,7 +92,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
         toolBar.addSeparator();
-        toolBar.add(ModelFitting.showHelpAction());
+        toolBar.add(LITpro.showHelpAction());
         toolBar.setVisible(myPreferences.getPreferenceAsBoolean("show.toolbar"));
 
 
@@ -100,9 +100,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 
-        String title = ModelFitting.getSharedApplicationDataModel().getProgramName();
-        if (ModelFitting.isAlphaVersion() || ModelFitting.isBetaVersion()) {
-            title += " " + ModelFitting.getSharedApplicationDataModel().getProgramVersion();
+        String title = LITpro.getSharedApplicationDataModel().getProgramName();
+        if (LITpro.isAlphaVersion() || LITpro.isBetaVersion()) {
+            title += " " + LITpro.getSharedApplicationDataModel().getProgramVersion();
         }
         setTitle(title);
 
@@ -221,7 +221,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        ModelFitting.quitAction().actionPerformed(null);
+        LITpro.quitAction().actionPerformed(null);
     }
 
     /**

@@ -44,5 +44,5 @@
     <jar href="@SHARED@/xmlParserAPIs.jar"/>
 
   </resources>
-  <application-desc main-class="fr.jmmc.mf.ModelFitting"/>
+  <application-desc main-class="fr.jmmc.mf.LITpro"/>
 </jnlp>

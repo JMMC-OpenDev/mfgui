@@ -50,10 +50,10 @@ import org.ivoa.util.runner.LocalLauncher;
  *
  * @author mella
  */
-public class ModelFitting extends fr.jmmc.jmcs.App {
+public class LITpro extends fr.jmmc.jmcs.App {
 
     final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
-    final static String className = ModelFitting.class.getName();
+    final static String className = LITpro.class.getName();
     final static Logger logger = LoggerFactory.getLogger(className);
     static Preferences myPreferences;
     static MFGui gui = null;
@@ -62,11 +62,11 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
 
     /**
-     * Creates a new ModelFitting object.
+     * Creates a new LITpro object.
      *
      * @param args command-line options.
      */
-    public ModelFitting(final String[] args) {
+    public LITpro(final String[] args) {
         super(args);
     }
 
@@ -161,7 +161,7 @@ public class ModelFitting extends fr.jmmc.jmcs.App {
         // init swing application for science
         SwingSettings.setup();
 
-        ModelFitting mf = new ModelFitting(args);
+        LITpro mf = new LITpro(args);
     }
 
     /** This is the main wrappers method to execute yoga actions.

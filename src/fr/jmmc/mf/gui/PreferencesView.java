@@ -8,7 +8,7 @@
 package fr.jmmc.mf.gui;
 
 
-import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.LITpro;
 import java.io.File;
 
 import java.util.Observable;

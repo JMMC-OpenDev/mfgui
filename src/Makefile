@@ -120,7 +120,7 @@ JAVA_EXECUTABLES = LITproGUI \
 
 #
 # <brief description of ModelFitting java program>
-LITproGUI_CLASS     = fr.jmmc.mf.gui.ModelFitting
+LITproGUI_CLASS     = fr.jmmc.mf.gui.LITpro
 mfguiReadAndWriteXml_CLASS     = fr.jmmc.mf.ReadAndWriteXml
 mfguiShowXmlPlot_CLASS = fr.jmmc.mcs.ImageViewer
 

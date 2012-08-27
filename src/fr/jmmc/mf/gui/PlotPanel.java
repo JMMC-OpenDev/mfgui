@@ -7,7 +7,7 @@ import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsFile;
@@ -186,7 +186,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     public void plot(String methodName, String methodArgs, String title, String description) {
         Response response = null;
         try {
-            response = ModelFitting.execMethod(methodName,
+            response = LITpro.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
         } catch (ExecutionException ex) {
             MessagePane.showErrorMessage("Can't plot data", ex);

@@ -4,7 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.data.preference.PreferencesException;
-import fr.jmmc.mf.ModelFitting;
+import fr.jmmc.mf.LITpro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +22,14 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
     /** Logger */
     static final Logger logger = LoggerFactory.getLogger(className);
 
-    private static String _version = ModelFitting.getSharedApplicationDataModel().getProgramVersion();
+    private static String _version = LITpro.getSharedApplicationDataModel().getProgramVersion();
     /**
      * Privatized constructor that must be empty.
      */
     private Preferences()
     {
         //_version=ApplicationDataModel.getProgramVersion();
-        //_version=ModelFitting.getVersion()
+        //_version=LITpro.getVersion()
     }
 
     /**
@@ -67,11 +67,11 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
         setDefaultPreference("yoga.local.home", "../ys");
         setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
         // our actual convention tells that a beta version ends with b1...bN
-        if (ModelFitting.isAlphaVersion())
+        if (LITpro.isAlphaVersion())
         {
             setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproWebService/run.php");
         }
-        else  if (ModelFitting.isBetaVersion())
+        else  if (LITpro.isBetaVersion())
         {
             setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
         }
@@ -88,10 +88,10 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      */
     protected String getPreferenceFilename()
     {
-        if (ModelFitting.isAlphaVersion())
+        if (LITpro.isAlphaVersion())
         {
             return "fr.jmmc.modelfitting.alpha.properties";
-        }else if (ModelFitting.isBetaVersion()){
+        }else if (LITpro.isBetaVersion()){
             return "fr.jmmc.modelfitting.beta.properties";
         }
         return "fr.jmmc.modelfitting.properties";
