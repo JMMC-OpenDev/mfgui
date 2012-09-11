@@ -149,7 +149,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         // Then append model parameters that are linked
         ParameterLink[] paramLinks = model.getParameterLink();
         int nbOfSharedParams = paramLinks.length;
-        logger.debug("Adding {} normal params and {} shared parameters for {}", new Object[]{nbOfParams, nbOfSharedParams, model});
+        logger.debug("Adding {} normal params and {} shared parameters for {}", nbOfParams, nbOfSharedParams, model);
         // Create with initial data
         for (int i = 0; i < nbOfSharedParams; i++) {
             ParameterLink link = paramLinks[i];

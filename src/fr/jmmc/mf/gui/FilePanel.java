@@ -384,7 +384,7 @@ public class FilePanel extends javax.swing.JPanel {
 
     if (logger.isDebugEnabled()) {
       if (errorBar != null) {
-        logger.debug("x,y,err dimensions : {}, {}, {}" , new Object[]{ x.length, y.length, errorBar.length});
+        logger.debug("x,y,err dimensions : {}, {}, {}" , x.length, y.length, errorBar.length);
       } else {
         logger.debug("x,y dimensions : {}, {}", x.length, y.length);
       }
@@ -417,7 +417,7 @@ public class FilePanel extends javax.swing.JPanel {
     {
         StringBuffer sb = new StringBuffer();
         if(errorBar!=null){
-            logger.debug("x,y,err dimensions :{}, {}, {}" , new Object[]{ x.length, y.length, errorBar.length});
+            logger.debug("x,y,err dimensions :{}, {}, {}" , x.length, y.length, errorBar.length);
         }   else{
             logger.debug( "x,y dimensions :{},{}", x.length, y.length);
         }

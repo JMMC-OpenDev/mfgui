@@ -119,7 +119,7 @@ public class UtilsClass {
     public static void fixYPlotAxes(PlotBox p, double goodRange[]) {
         double yRange[] = p.getYAutoRange();
         double rangeToApply[] = new double[]{Math.min(yRange[0], goodRange[0]), Math.max(yRange[1], goodRange[1])};
-        logger.debug("Updating plot range from : [{},{}] to [{},{}]", new Object[]{yRange[0] ,yRange[1], rangeToApply[0],rangeToApply[1]});
+        logger.debug("Updating plot range from : [{},{}] to [{},{}]", yRange[0], yRange[1], rangeToApply[0], rangeToApply[1]);
         p.setYRange(rangeToApply[0], rangeToApply[1]);
     }
 
