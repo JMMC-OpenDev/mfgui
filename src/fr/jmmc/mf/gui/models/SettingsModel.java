@@ -1256,7 +1256,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (boundFile.getOitargetCount() < 1) {
                 logger.warn("No oitarget found");
                 // restore file from base64 and try to continue
-                OIFitsFile f = getOIFitsFromFile(boundFile);
+                OIFitsFile f = getOIFitsFromFile(boundFile);                
                 filename = f.getAbsoluteFilePath();
             } else {
                 return true;
@@ -1283,7 +1283,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // file extension can be *fits or *fits.gz
         OIFitsChecker checker = new OIFitsChecker();
         try {
-            fits = OIFitsLoader.loadOIFits(checker, filename);
+            fits = OIFitsLoader.loadOIFits(checker, filename);            
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException("Can't add fits file '" + filename + "' to this setting ", ex);
         } catch (IOException ex) {
@@ -1323,6 +1323,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return true;
     }
 
+    /**
+     * Return the OIFitsFile associated to the given File. 
+     * If no OIFitsFile is found, a new one is created and associated in the internal
+     * Map.
+     * @param dataFile the File object
+     * @return the associated OIFitsFile
+     */
     public static OIFitsFile getOIFitsFromFile(fr.jmmc.mf.models.File dataFile) {
         fr.jmmc.mf.models.File key = dataFile;
         // Search if this file has already been loaded
@@ -1345,6 +1352,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             UtilsClass.saveBASE64ToFile(dataFile.getHref(), outputFile);
             try {
                 oifitsFile = OIFitsLoader.loadOIFits(outputFile.getAbsolutePath());
+                oifitsFile.analyze();
             } catch (FitsException fe) {
                 throw new IllegalArgumentException("Can't extract fits file", fe);
             } catch (IOException ioe) {
