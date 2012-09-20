@@ -179,7 +179,6 @@ man   : do_man
 install : install_all
 	@echo "Deploy $(JNLP).jnlp and install $(JNLP).jar"
 	jmcsDeployJnlp $(JNLP).jnlp
-	@cp $$HOME/public_html/$(JNLP)/$(JNLP).jar $(INSTALL_ROOT)/lib
 	@echo " . . . installation done"
 
 do_castor:
