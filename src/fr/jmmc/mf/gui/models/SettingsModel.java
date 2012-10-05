@@ -1199,7 +1199,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * This method add one file to the given settingsModel and ensure that the given file but still uncompress files
+     * This method add one file to the given settingsModel.
      * @todo place this method into fr.jmmc.mf.util and make it much much simpler
      * @param fileToAdd
      * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
@@ -1208,9 +1208,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
         
-        if(!FitsUtil.isCompressed(fileToAdd)){
-            //perform compression before embedding in base64...
-        }
+        //if(!FitsUtil.isCompressed(fileToAdd)){
+            //TODO perform file compression (always, according a user's preference)            
+        //}
         
         Files files = rootSettings.getFiles();
                 
