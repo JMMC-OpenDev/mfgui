@@ -16,6 +16,7 @@ import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
 import fr.jmmc.oitools.model.OITarget;
 import fr.nom.tam.fits.FitsException;
+import fr.nom.tam.fits.FitsUtil;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -1198,7 +1199,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * 
+     * This method add one file to the given settingsModel and ensure that the given file but still uncompress files
      * @todo place this method into fr.jmmc.mf.util and make it much much simpler
      * @param fileToAdd
      * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
@@ -1206,12 +1207,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
+        
+        if(!FitsUtil.isCompressed(fileToAdd)){
+            //perform compression before embedding in base64...
+        }
+        
         Files files = rootSettings.getFiles();
-
+                
         // The file must be one oidata file (next line automatically unzip gz files)
-        OIFitsFile oifitsFile = new OIFitsFile(fileToAdd.getAbsolutePath());
+        OIFitsFile oifitsFile = OIFitsLoader.loadOIFits(fileToAdd.getAbsolutePath());
         String fitsFileName = oifitsFile.getAbsoluteFilePath();
-
+        
         File newFile = new File();
         newFile.setName(fitsFileName);
         newFile.setId(getNewFileId());
