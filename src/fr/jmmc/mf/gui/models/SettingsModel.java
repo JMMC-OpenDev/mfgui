@@ -1199,28 +1199,32 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * This method add one file to the given settingsModel.
+     * This method add one oifits file to the given settingsModel.
+     * The fits file is compressed if it is not yet the case.
      * @todo place this method into fr.jmmc.mf.util and make it much much simpler
-     * @param fileToAdd
+     * @param fileToAdd OIFits file
      * @throws IllegalArgumentException if file can't be read to be integrated as part of the setting file
      * @throws IllegalStateException if fits exception occurs
      * @throws FitsException if file io errors occurs
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
         
-        //if(!FitsUtil.isCompressed(fileToAdd)){
-            //TODO perform file compression (always, according a user's preference)            
-        //}
+        // Zip file if it is not the case to embedd in base64.
+        if(!FitsUtil.isCompressed(fileToAdd)){
+            java.io.File zippedFile = FileUtils.getTempFile(fileToAdd.getName()+".gz");
+            FileUtils.zip(fileToAdd,zippedFile);
+            fileToAdd = zippedFile;
+        }
         
         Files files = rootSettings.getFiles();
-                
-        // The file must be one oidata file (next line automatically unzip gz files)
+                        
         OIFitsFile oifitsFile = OIFitsLoader.loadOIFits(fileToAdd.getAbsolutePath());
         String fitsFileName = oifitsFile.getAbsoluteFilePath();
         
-        File newFile = new File();
+        File newFile = new File();        
         newFile.setName(fitsFileName);
         newFile.setId(getNewFileId());
+        
         if (checkFile(newFile)) {
             allFilesListModel.addElement(newFile);
             logger.debug("'" + fitsFileName + "' oifile added to file list");
@@ -1228,9 +1232,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             files.addFile(newFile);
             updateOiTargetList();
             setModified(true);
-            fireTreeNodesInserted(new Object[]{rootSettings, files},
-                    idx,
-                    newFile);
+            fireTreeNodesInserted(new Object[]{rootSettings, files}, idx, newFile);
             setSelectionPath(new TreePath(new Object[]{rootSettings, files, newFile}));
         }
     }
