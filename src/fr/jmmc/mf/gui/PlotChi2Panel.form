@@ -310,7 +310,7 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="runFitCheckBox">
       <Properties>
-        <Property name="text" type="java.lang.String" value="run fit"/>
+        <Property name="text" type="java.lang.String" value="with fit"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>

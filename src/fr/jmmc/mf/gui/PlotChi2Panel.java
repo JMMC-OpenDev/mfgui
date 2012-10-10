@@ -370,7 +370,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.gridy = 2;
         add(reducedChi2CheckBox, gridBagConstraints);
 
-        runFitCheckBox.setText("run fit");
+        runFitCheckBox.setText("with fit");
         runFitCheckBox.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
