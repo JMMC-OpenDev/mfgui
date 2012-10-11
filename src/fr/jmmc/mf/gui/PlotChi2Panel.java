@@ -114,6 +114,8 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         if (reduced) {
             type.append("Reduced ");
             args.append("reduced_chi2=1,");
+        }else{
+            args.append("reduced_chi2=0,");
         }
         if (log) {
             type.append("log(Chi2)");
