@@ -157,7 +157,7 @@
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <!-- <change type="CHANGE">Reduce the number of data sets in the result plots</change>         -->
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>                
-            <change type="CHANGE">Uncompressed OIFits files are now always zipped before being loaded and embedded in the xml setting.</change>                                        
+            <change type="CHANGE">Uncompressed OIFits files are now always zipped before beeing embedded in the xml setting.</change>                                        
             </prerelease>       
             <prerelease version="1.0.12 beta 5">               
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/340">Fix support of '*' in fits loaded filenames</change>                
