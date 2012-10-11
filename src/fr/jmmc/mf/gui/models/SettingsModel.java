@@ -42,14 +42,15 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
+
     public final static String className = SettingsModel.class.getName();
     /** Class logger */
-    static Logger logger = LoggerFactory.getLogger(className);   
+    static Logger logger = LoggerFactory.getLogger(className);
     /** list of supported models   */
     private static Hashtable supportedModels = new Hashtable();
     /** Combobox model of supported models */
     private static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
-     /** Vector of objects that want to listen tree modification */
+    /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
     private Settings rootSettings = null;
@@ -73,7 +74,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private static java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile>();
     private HashMap<OIFitsFile, OIFitsChecker> oiFitsFileToOIFitsChecker = new HashMap<OIFitsFile, OIFitsChecker>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
-
         public String toString() {
             return "Plots";
         }
@@ -446,10 +446,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Parameter p = params[i];
             // init some default parameters depending on first place
             if (firstModel) {
-                if (p.getName().equals("x") || p.getName().equals("y")) {
+                if (p.getName().equals("x")
+                        || p.getName().equals("y")
+                        || p.getName().equals("rho")
+                        || p.getName().equals("PA")) {
                     p.setHasFixedValue(true);
                 }
             }
+            // fix Claret limb darkening coeff
+            if (type.contains("Claret") && p.getName().endsWith("_coeff")) {
+                p.setHasFixedValue(true);
+                p.setValue(.5);
+            }
+
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
             }
@@ -1208,23 +1217,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
-        
+
         // Zip file if it is not the case to embedd in base64.
-        if(!FitsUtil.isCompressed(fileToAdd)){
-            java.io.File zippedFile = FileUtils.getTempFile(fileToAdd.getName()+".gz");
-            FileUtils.zip(fileToAdd,zippedFile);
+        if (!FitsUtil.isCompressed(fileToAdd)) {
+            java.io.File zippedFile = FileUtils.getTempFile(fileToAdd.getName() + ".gz");
+            FileUtils.zip(fileToAdd, zippedFile);
             fileToAdd = zippedFile;
         }
-        
+
         Files files = rootSettings.getFiles();
-                        
+
         OIFitsFile oifitsFile = OIFitsLoader.loadOIFits(fileToAdd.getAbsolutePath());
         String fitsFileName = oifitsFile.getAbsoluteFilePath();
-        
-        File newFile = new File();        
+
+        File newFile = new File();
         newFile.setName(fitsFileName);
         newFile.setId(getNewFileId());
-        
+
         if (checkFile(newFile)) {
             allFilesListModel.addElement(newFile);
             logger.debug("'" + fitsFileName + "' oifile added to file list");
@@ -1264,7 +1273,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (boundFile.getOitargetCount() < 1) {
                 logger.warn("No oitarget found");
                 // restore file from base64 and try to continue
-                OIFitsFile f = getOIFitsFromFile(boundFile);                
+                OIFitsFile f = getOIFitsFromFile(boundFile);
                 filename = f.getAbsoluteFilePath();
             } else {
                 return true;
@@ -1291,7 +1300,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // file extension can be *fits or *fits.gz
         OIFitsChecker checker = new OIFitsChecker();
         try {
-            fits = OIFitsLoader.loadOIFits(checker, filename);            
+            fits = OIFitsLoader.loadOIFits(checker, filename);
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException("Can't add fits file '" + filename + "' to this setting ", ex);
         } catch (IOException ex) {
