@@ -37,6 +37,7 @@ public class LoadModelAction extends RegisteredAction {
         putValue(LoadModelAction.NAME, null);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
        // Retrieve file given by App startup or open a filechooser 
         File file = null;
