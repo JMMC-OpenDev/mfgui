@@ -152,6 +152,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        runFitCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -175,7 +176,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jRadioButton2D = new javax.swing.JRadioButton();
         logChi2CheckBox = new javax.swing.JCheckBox();
         reducedChi2CheckBox = new javax.swing.JCheckBox();
-        runFitCheckBox = new javax.swing.JCheckBox();
+
+        runFitCheckBox.setText("with fit");
+        runFitCheckBox.setToolTipText("");
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Cuts in the chi2 space panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -371,13 +374,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         add(reducedChi2CheckBox, gridBagConstraints);
-
-        runFitCheckBox.setText("with fit");
-        runFitCheckBox.setToolTipText("");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        add(runFitCheckBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
