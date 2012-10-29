@@ -387,8 +387,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
                             File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
                             if (Http.download(uri, tmpFile, true)) {
                                 sm.addFile(tmpFile);
-                            } else {
-                                MessagePane.showErrorMessage("File can't be retrieved from following url:\n\t" + url);
                             }
                         } catch (IllegalArgumentException ex) {
                             MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
