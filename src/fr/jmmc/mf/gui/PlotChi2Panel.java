@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
@@ -36,7 +37,10 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         initComponents();
         // build help button
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);        
+        
+        // display for beta only
+        runFitCheckBox.setVisible( LITpro.isAlphaVersion() || LITpro.isBetaVersion() );       
     }
 
     public void show(SettingsModel s) {
@@ -152,7 +156,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        runFitCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -162,6 +165,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         plotChi2Button = new javax.swing.JButton();
         ySamplingFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel7 = new javax.swing.JLabel();
+        runFitCheckBox = new javax.swing.JCheckBox();
         yminFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -176,9 +180,6 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         jRadioButton2D = new javax.swing.JRadioButton();
         logChi2CheckBox = new javax.swing.JCheckBox();
         reducedChi2CheckBox = new javax.swing.JCheckBox();
-
-        runFitCheckBox.setText("with fit");
-        runFitCheckBox.setToolTipText("");
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Cuts in the chi2 space panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -256,6 +257,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 2;
         add(jLabel7, gridBagConstraints);
+
+        runFitCheckBox.setText("with fit");
+        runFitCheckBox.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        add(runFitCheckBox, gridBagConstraints);
 
         yminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         yminFormattedTextField.setText("-"+startValue);
