@@ -4,10 +4,12 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.jmcs.gui.component.MessagePane;
+import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
+import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
@@ -80,9 +82,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     };
     // Use a delegate that will trigger listener on this model changes
     private ObservableDelegate observableDelegate;
-    /** store the resultModelIndex returned by getNewResultModelIndex() */
-    private int resultModelIndex;
-
+    
     /**
      * Creates a new empty SettingsModel object.
      */
@@ -886,17 +886,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         notifyObservers();
     }
 
-    /**
-     * Returns one incremented index to be used as label by new ResultModel.
-     */
-    private int getNewResultModelIndex() {
-        return resultModelIndex++;
-    }
-
-    private ResultModel getModel(Result r) {
+    private ResultModel getModel(Result r, boolean testDataBeforeShowing) {
         ResultModel rm = resultToModel.get(r);
         if (rm == null) {
-            rm = new ResultModel(this, r, getNewResultModelIndex());
+            rm = new ResultModel(this, r, testDataBeforeShowing);
             resultToModel.put(r, rm);
         }
         return rm;
@@ -979,7 +972,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Result newResult = newResults[i];
             if (newResult != null) {
                 rootSettings.getResults().addResult(newResult);
-                ResultModel r = getModel(newResult);
+                ResultModel r = getModel(newResult,false);
                 // TODO: check if following call still get some files to display
                 r.genPlots(null, null, UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
@@ -1090,10 +1083,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         Result[] results = rootSettings.getResults().getResult();
         for (int i = 0; i < results.length; i++) {
-            getModel(results[i]);
-        }
-        resultModelIndex = results.length;
-
+            getModel(results[i], true);
+            StatusBar.show("Building result node "+(i+1)+" / "+results.length);
+        }       
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount()
                 + " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ "
@@ -1660,7 +1652,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         } else if (parent instanceof Results) {
             Result r = ((Results) parent).getResult(index);
-            return getModel(r);
+            return getModel(r, false);
         }
         logger.warn("child n=" + index + " of " + parent + " is not handled");
         return "unknown " + parent + ".child[" + index + "]";
@@ -1870,7 +1862,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public String toLITproDesc() {
-        return UtilsClass.xsl(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl",
-                new String[]{});
+        return XmlFactory.transform(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl");
     }
 }

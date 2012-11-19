@@ -3,18 +3,21 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Residual;
-import javax.swing.tree.DefaultMutableTreeNode;
 import fr.jmmc.mf.models.Result;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Target;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import javax.swing.JFrame;
+import javax.swing.tree.DefaultMutableTreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ptolemy.plot.plotml.PlotMLFrame;
@@ -31,12 +34,10 @@ public class ResultModel extends DefaultMutableTreeNode {
     private String htmlReport = null;
     private String xmlResult = null;
     private Result result;
-    private int index;
 
-    public ResultModel(SettingsModel settingsModel, Result result, int index) {
+    public ResultModel(SettingsModel settingsModel, Result result, boolean testDataBeforeShowing) {
         this.settingsModel = settingsModel;
         this.result = result;
-        this.index = index;
 
         String xslPath = "fr/jmmc/mf/gui/resultToHtml.xsl";
 
@@ -48,18 +49,18 @@ public class ResultModel extends DefaultMutableTreeNode {
             logger.debug("End result section write into stringbuffer");
             xmlResult = xmlResultSw.toString();
             logger.debug("Start html generation");
-            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            htmlReport = XmlFactory.transform(xmlResult, xslPath, null);
             logger.debug("End html generation");
         } else {
             xmlResult = "<result>"
                     + UtilsClass.saveBASE64ToString(result.getHref())
                     + "</result>";
             logger.debug("Start html generation");
-            htmlReport = UtilsClass.xsl(xmlResult, xslPath, null);
+            htmlReport = XmlFactory.transform(xmlResult, xslPath, null);
             logger.debug("End html generation");
         }
 
-        genPlots();
+        genPlots(testDataBeforeShowing);
         this.setUserObject(result);
     }
 
@@ -71,7 +72,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         return htmlReport;
     }
 
-    public void genPlots() {
+    public void genPlots(boolean testDataBeforeShowing) {
         Hashtable<String, String> plotTobuild = new Hashtable();
         Target[] targets = settingsModel.getRootSettings().getTargets().getTarget();
         for (int i = 0; i < targets.length; i++) {
@@ -89,7 +90,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         String[] plotNames = new String[]{"plotBaselines", "plotUVCoverage"};//, "visamp", "visphi", "vis2", "t3amp", "t3phi"};
         for (int i = 0; i < plotNames.length; i++) {
             String plotName = plotNames[i];
-            ptplot(plotName, false);
+            ptplot(plotName, false, false);
         }
         plotNames = plotTobuild.values().toArray(new String[0]);
         if (plotTobuild.size() == 0) {
@@ -97,8 +98,8 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
         for (int i = 0; i < plotNames.length; i++) {
             String plotName = plotNames[i];
-            ptplot(plotName, false);
-            ptplot(plotName, true);
+            ptplot(plotName, false, testDataBeforeShowing);
+            ptplot(plotName, true, testDataBeforeShowing);
         }
     }
 
@@ -108,7 +109,6 @@ public class ResultModel extends DefaultMutableTreeNode {
             ResultFile r = resultFiles[i];
 
             String b64file;
-            File file = null;
             JFrame f = null;
             ArrayList<File> filesToExport = new ArrayList<File>();
             ArrayList<String> filenamesToExport = new ArrayList<String>();
@@ -133,19 +133,25 @@ public class ResultModel extends DefaultMutableTreeNode {
     }
 
     /** Plots using ptplot widgets */
-    protected void ptplot(String plotName, boolean residuals) {
+    protected void ptplot(String plotName, boolean residuals, boolean testDataBeforeShowing) {
         String xmlStr = null;
 
         logger.debug("Start plot generation:{}(residuals={})", plotName, residuals);
         // Construct xml document to plot
-        String[] args = new String[]{"plotName", plotName};
+        Map <String, Object> args= new HashMap<String, Object>();
+        args.put("plotName", plotName);
         if (residuals) {
-            args = new String[]{"plotName", plotName, "residuals", Boolean.toString(residuals)};
+            // TODO test if we can use residuals directly
+            args.put("residuals", Boolean.toString(residuals));
             plotName = plotName + " residuals";
         }
-        xmlStr = UtilsClass.xsl(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl",
-                args);
+        xmlStr = XmlFactory.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
 
+        // this test is perform during load of results element in settings file that may or not have all kind of dataset
+        if (testDataBeforeShowing && !xmlStr.substring(0, Math.min(xmlStr.length(), 500)).contains("dataset")) {
+            logger.debug("No dataset to display");
+            return;
+        }
         // generate frame and tsv file
         PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(xmlStr, plotName);
 
@@ -164,11 +170,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         this.add(new FrameTreeNode(plotMLFrame, tsv));
     }
 
-    public int getIndex() {
-        return index;
-    }
-
     public String toString() {
-        return "Fit Result " + index;
+        return "Fit Result " + settingsModel.getIndexOfChild(settingsModel.getRootSettings().getResults(), this);
     }
 }
