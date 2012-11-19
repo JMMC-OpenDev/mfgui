@@ -72,12 +72,11 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
     /**
      * Initialize application objects
-     * @param args ignored arguments
      *
      * @throws RuntimeException if the AppLauncher initialisation failed
      */
     @Override
-    protected void init(final String[] args) {
+    protected void init() {
         // Set default resource for application
         fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
 
