@@ -9,6 +9,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.UrlUtils;
+import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
@@ -135,11 +136,13 @@ public class UtilsClass {
 
     public static File getPlotMLTSVFile(String ptPlotStr) {
         // Contruct xml document to plot
-        String xmlStr = xsl(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl", null);
-
+        String xmlStr = XmlFactory.transform(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl");
+        
+        // TODO use stream
+        
         // Write content into a temporary file
         File f = FileUtils.getTempFile("tsvPlot", ".tsv");
-        try {
+        try {            
             FileUtils.writeFile(f, xmlStr);
         } catch (IOException ioe) {
             throw new IllegalStateException("Can't store plot data into one tsv temporary file", ioe);
@@ -634,73 +637,7 @@ public class UtilsClass {
         return factory_;
     }
 
-    private static String xsl(Source source, String filepath, String[] params) {
-        URL xslURL = UtilsClass.class.getClassLoader().getResource(filepath);
-        xslURL = UrlUtils.fixJarURL(xslURL);
-        logger.debug("using next url for transformation{}", xslURL);
-        try {
-
-            // Use the factory to create a template containing the xsl file
-            Templates template = getTransformerFactoryInstance().newTemplates(new StreamSource(xslURL.openStream()));
-
-            // Use the template to create a transformer
-            Transformer xformer = template.newTransformer();
-
-            // Prepare the output
-            StringWriter sw = new StringWriter();
-            Result result = new StreamResult(sw);
-
-            // Apply the xsl file to the source file and return the result
-            if (params != null) {
-                for (int i = 0; i < params.length; i += 2) {
-                    xformer.setParameter(params[i], params[i + 1]);
-                }
-            }
-
-            // Apply the xsl file to the source file and write the result to the output file
-            xformer.transform(source, result);
-            logger.debug("End of transformation ");
-            return sw.toString();
-        } catch (IOException ex) {
-            throw new IllegalStateException("Can't use xslt function", ex);
-        } catch (TransformerException ex) {
-            throw new IllegalStateException("Can't use xslt function", ex);
-        }
-    }
-
-    /**
-     * Returns one string resulting of xslt transformation. If one error occur,
-     * then one FeedbackReport show the problem
-     *
-     * @param params two by two processor parameter list or null
-     * @return the xslt output or null if one error occured public static String
-     * xsl(String xmlBuffer, URL xslURL, String[] params)
-     */
-    public static String xsl(String xmlBuffer, String filepath, String[] params) {
-        // Prepare the input
-        Source source = new StreamSource(new StringReader(xmlBuffer));
-        return xsl(source, filepath, params);
-    }
-
-    /**
-     * Returns one string resulting of xslt transformation. If one error occur,
-     * then one FeedbackReport show the problem
-     *
-     * @param params two by two processor parameter list or null
-     * @return the xslt output or null if one error occured
-     */
-    public static String xsl(java.io.File inFile, String filepath, String[] params) {
-        // Prepare the input and output files
-        Source source = null;
-        try {
-            source = new StreamSource(new FileInputStream(inFile));
-        } catch (FileNotFoundException ex) {
-            throw new IllegalStateException(ex);
-        }
-        // And transform it
-        return xsl(source, filepath, params);
-    }
-
+  
     //
     // XML Parsing
     //
