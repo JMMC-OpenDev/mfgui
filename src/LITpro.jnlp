@@ -5,10 +5,10 @@
     <vendor>JMMC</vendor>
     <homepage href="http://www.jmmc.fr/litpro"/>
     <description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
-    <icon href="LITpro.png"/>
+    <icon href="LITpro.jpg"/>
     <offline-allowed/>
     <association mime-type="application/x-litpro+xml" extensions="litprox">
-      <icon href="LITpro.png"/>
+      <icon href="LITpro.jpg"/>
       <description>LITpro settings files</description>
     </association>
     <shortcut>

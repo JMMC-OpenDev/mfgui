@@ -159,6 +159,7 @@
                 -->    
             <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
+            <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>
             <change type="DEVELOPPER">Use common XmlFactory for xslt transformations.</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>                                        
             </prerelease><prerelease version="1.0.13 beta 1">                              
