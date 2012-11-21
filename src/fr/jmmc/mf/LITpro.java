@@ -88,7 +88,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
         // Using invokeAndWait to be in sync with this thread :
         // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
         SwingUtils.invokeAndWaitEDT(new Runnable() {
-
             /**
              * Initializes the swing components with their actions in EDT
              */
@@ -113,7 +112,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
     @Override
     protected void execute() {
         SwingUtils.invokeLaterEDT(new Runnable() {
-
             /**
              * Show the application frame using EDT
              */
@@ -361,12 +359,10 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
         // Add handler to load one new oifits
         new SampMessageHandler(SampCapability.LOAD_FITS_TABLE) {
-
             @Override
             protected void processMessage(final String senderId, final Message message) throws SampException {
                 // bring this application to front and load data in current setting or build a new one
                 SwingUtils.invokeLaterEDT(new Runnable() {
-
                     public void run() {
                         App.showFrameToFront();
                         SettingsModel sm = gui.getSelectedSettings();
@@ -404,10 +400,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
         
         // Add handler to load one new setting given oifits and model description
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
-
             @Override
             protected void processMessage(final String senderId,
-                    final Message message) throws SampException {
+                                          final Message message) throws SampException {
 
                 final String xmlModel = (String) message.getParam("model");
                 final String filename = (String) message.getParam("filename");
@@ -450,7 +445,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 final SettingsModel fsm = sm;
                 // bring this application to front  and display new setting in EDT
                 SwingUtils.invokeLaterEDT(new Runnable() {
-
                     public void run() {
                         App.showFrameToFront();
                         gui.addSettings(fsm);
@@ -474,12 +468,12 @@ public class LITpro extends fr.jmmc.jmcs.App {
         }
 
         public void processStoped() {
-       }
+        }
 
         public void processTerminated(int returnedValue) {
-            
-             logger.debug("processTerminated");
-            
+
+            logger.debug("processTerminated");
+
         }
 
         public void errorOccured(Exception e) {
@@ -488,8 +482,8 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
         public void outputOccured(String line) {
             sb.append(line);
-            logger.trace("new output line occured: {}",line);
-            
+            logger.trace("new output line occured: {}", line);
+
         }
 
         public String getContent() {
