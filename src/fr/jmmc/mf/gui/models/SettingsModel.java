@@ -82,7 +82,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     };
     // Use a delegate that will trigger listener on this model changes
     private ObservableDelegate observableDelegate;
-    
+
     /**
      * Creates a new empty SettingsModel object.
      */
@@ -274,8 +274,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param residualModuleValue default,
      */
     public void setResiduals(Target target, String visAmpValue,
-            String visPhiValue, String vis2Value, String t3AmpValue,
-            String t3PhiValue) {
+                             String visPhiValue, String vis2Value, String t3AmpValue,
+                             String t3PhiValue) {
         Residuals residuals = new Residuals();
 
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -972,7 +972,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Result newResult = newResults[i];
             if (newResult != null) {
                 rootSettings.getResults().addResult(newResult);
-                ResultModel r = getModel(newResult,false);
+                ResultModel r = getModel(newResult, false);
                 // TODO: check if following call still get some files to display
                 r.genPlots(null, null, UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
@@ -1084,8 +1084,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Result[] results = rootSettings.getResults().getResult();
         for (int i = 0; i < results.length; i++) {
             getModel(results[i], true);
-            StatusBar.show("Building result node "+(i+1)+" / "+results.length);
-        }       
+            StatusBar.show("Building result node " + (i + 1) + " / " + results.length);
+        }
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount()
                 + " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ "
@@ -1567,7 +1567,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesInserted(Object[] path, int childIndice,
-            Object child) {
+                                         Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1580,7 +1580,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-            int childIndice, Object child) {
+                                        int childIndice, Object child) {
         TreeModelEvent e = new TreeModelEvent(source, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1593,7 +1593,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesChanged(Object[] path, int childIndice,
-            Object child) {
+                                        Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1784,7 +1784,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     Object[] elements = target.getFileLink();
                     System.arraycopy(elements, 0, all, 0, target.getFileLinkCount());
                     elements =
-                            target.getModel();
+                    target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
                     for (int j = 0; j
@@ -1853,7 +1853,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** Marshal the settings and return it as a String */
     public String toXml() {
         logger.debug("Start of marshalling");
-        java.io.StringWriter writer = new java.io.StringWriter();
+        java.io.StringWriter writer = new java.io.StringWriter(16384); // 16K buffer
         UtilsClass.marshal(rootSettings, writer);
         logger.debug("End of marshalling");
         writer.flush();

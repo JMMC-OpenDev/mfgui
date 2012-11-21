@@ -137,12 +137,12 @@ public class UtilsClass {
     public static File getPlotMLTSVFile(String ptPlotStr) {
         // Contruct xml document to plot
         String xmlStr = XmlFactory.transform(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl");
-        
+
         // TODO use stream
-        
+
         // Write content into a temporary file
         File f = FileUtils.getTempFile("tsvPlot", ".tsv");
-        try {            
+        try {
             FileUtils.writeFile(f, xmlStr);
         } catch (IOException ioe) {
             throw new IllegalStateException("Can't store plot data into one tsv temporary file", ioe);
@@ -371,7 +371,7 @@ public class UtilsClass {
      */
     public static Object clone(Object o) {
         // Clone selected object using castor marshalling
-        StringWriter writer = new StringWriter();
+        StringWriter writer = new StringWriter(16384); // 16K buffer
         UtilsClass.marshal(o, writer);
         return UtilsClass.unmarshal(o.getClass(), writer.toString());
     }
@@ -637,7 +637,6 @@ public class UtilsClass {
         return factory_;
     }
 
-  
     //
     // XML Parsing
     //
@@ -647,7 +646,7 @@ public class UtilsClass {
      */
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
-            SAXException, IOException {
+                   SAXException, IOException {
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
@@ -698,7 +697,7 @@ public class UtilsClass {
      * @param r response used to find settings into
      * @return the first found settings or null
      */
-    public static Model getModel(Response r) {        
+    public static Model getModel(Response r) {
         ResponseItem[] responseItems = r.getResponseItem();
         for (int i = 0; i < responseItems.length; i++) {
             ResponseItem responseItem = responseItems[i];

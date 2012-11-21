@@ -44,19 +44,19 @@ public class ResultModel extends DefaultMutableTreeNode {
         // use content or href to get the result element
         if (result.getHref() == null) {
             logger.debug("Start result section write into stringbuffer");
-            StringWriter xmlResultSw = new StringWriter();
+            StringWriter xmlResultSw = new StringWriter(16384); // 16K buffer
             UtilsClass.marshal(result, xmlResultSw);
             logger.debug("End result section write into stringbuffer");
             xmlResult = xmlResultSw.toString();
             logger.debug("Start html generation");
-            htmlReport = XmlFactory.transform(xmlResult, xslPath, null);
+            htmlReport = XmlFactory.transform(xmlResult, xslPath);
             logger.debug("End html generation");
         } else {
             xmlResult = "<result>"
                     + UtilsClass.saveBASE64ToString(result.getHref())
                     + "</result>";
             logger.debug("Start html generation");
-            htmlReport = XmlFactory.transform(xmlResult, xslPath, null);
+            htmlReport = XmlFactory.transform(xmlResult, xslPath);
             logger.debug("End html generation");
         }
 
@@ -138,7 +138,7 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         logger.debug("Start plot generation:{}(residuals={})", plotName, residuals);
         // Construct xml document to plot
-        Map <String, Object> args= new HashMap<String, Object>();
+        Map<String, Object> args = new HashMap<String, Object>();
         args.put("plotName", plotName);
         if (residuals) {
             // TODO test if we can use residuals directly
