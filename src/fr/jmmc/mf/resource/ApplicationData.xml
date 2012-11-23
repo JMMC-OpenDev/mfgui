@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.13 beta 2"/>
+    <program name="LITpro" version="1.0.13 beta 3"/>
     <compilation date="05/04/2012" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
@@ -148,18 +148,20 @@
             </prerelease>            
             -->
             
-            <release version="1.0.13 beta 2">
-            <prerelease version="1.0.13 beta 2">               
+            <release version="1.0.13 beta 3">
+            <prerelease version="1.0.13 beta 3">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
-                <!-- todo: 
                      permettre à l'utilisateur de :
                     - zoomer, en Z et spatialement
                     - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
                 -->    
             <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
             <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
-            <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>
+            <change type="CHANGE">Index results using datetime in the left tree and notebook.</change>            
+            <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>            
+            <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>            
+            </prerelease><prerelease version="1.0.13 beta 2">               
             <change type="DEVELOPPER">Use common XmlFactory for xslt transformations.</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>                                        
             </prerelease><prerelease version="1.0.13 beta 1">                              

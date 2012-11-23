@@ -12,7 +12,9 @@ import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Target;
 import java.io.File;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -33,7 +35,8 @@ public class ResultModel extends DefaultMutableTreeNode {
     private SettingsModel settingsModel;
     private String htmlReport = null;
     private String xmlResult = null;
-    private Result result;
+    private Result result = null;
+    private String creationDate = null;
 
     public ResultModel(SettingsModel settingsModel, Result result, boolean testDataBeforeShowing) {
         this.settingsModel = settingsModel;
@@ -62,6 +65,8 @@ public class ResultModel extends DefaultMutableTreeNode {
 
         genPlots(testDataBeforeShowing);
         this.setUserObject(result);
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        creationDate = ft.format(new Date());
     }
 
     public Result getResult() {
@@ -170,7 +175,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         this.add(new FrameTreeNode(plotMLFrame, tsv));
     }
 
-    public String toString() {
-        return "Fit Result " + settingsModel.getIndexOfChild(settingsModel.getRootSettings().getResults(), this);
+    public String toString() {                
+        return "Fit Result " + creationDate;
     }
 }

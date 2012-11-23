@@ -11,6 +11,7 @@ import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.actions.*;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -25,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * @author  mella
  */
 public class MFGui extends javax.swing.JFrame implements WindowListener {
@@ -46,11 +47,13 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
     private static MFGui instance = null;
     private static javax.swing.JTabbedPane tabbedPane_;
     private static final long serialVersionUID = 1L;
-
+    /* Minimal size of main component */
+    private static final Dimension INITIAL_DIMENSION = new java.awt.Dimension(1000, 700);
+    
     /** Creates new form MFGui */
     public MFGui(String[] filenames) {
         instance = this;
-        // instanciate actions       
+        // instanciate actions
         getYogaVersionAction = new GetYogaVersionAction(this);
 
         new ShowPrefAction(this);
@@ -67,9 +70,9 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
 
-        tabbedPane_ = new javax.swing.JTabbedPane();
-        tabbedPane_.setMinimumSize(new java.awt.Dimension(980, 700));
-        tabbedPane_.setPreferredSize(new java.awt.Dimension(980, 700));
+        tabbedPane_ = new javax.swing.JTabbedPane();        
+        tabbedPane_.setMinimumSize(INITIAL_DIMENSION);
+        tabbedPane_.setPreferredSize(INITIAL_DIMENSION);
         tabbedPane_.addChangeListener(deleteTreeSelectionAction);
         tabbedPane_.addChangeListener(attachDetachFrameAction);
         tabbedPane_.addChangeListener(new LoadDataFilesAction(this));
