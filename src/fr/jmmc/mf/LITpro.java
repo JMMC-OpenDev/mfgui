@@ -364,6 +364,8 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 // bring this application to front and load data in current setting or build a new one
                 SwingUtils.invokeLaterEDT(new Runnable() {
                     public void run() {
+                        Exception e = null;
+                        final String url = (String) message.getParam("url");
                         App.showFrameToFront();
                         SettingsModel sm = gui.getSelectedSettings();
                         if (sm == null) {
@@ -377,20 +379,25 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         }
 
                         try {
-                            final String url = (String) message.getParam("url");
                             final URI uri = new URI(url);
                             File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
                             if (Http.download(uri, tmpFile, true)) {
                                 sm.addFile(tmpFile);
+                            } else {
+                                e = new IOException();
                             }
                         } catch (IllegalArgumentException ex) {
-                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                            e = ex;
                         } catch (FitsException ex) {
-                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                            e = ex;
                         } catch (URISyntaxException ex) {
-                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                            e = ex;
                         } catch (IOException ex) {
-                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                            e = ex;
+                        }
+
+                        if (e != null) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, e);
                         }
                     }
                 });
@@ -402,7 +409,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
             protected void processMessage(final String senderId,
-                                          final Message message) throws SampException {
+                    final Message message) throws SampException {
 
                 final String xmlModel = (String) message.getParam("model");
                 final String filename = (String) message.getParam("filename");
