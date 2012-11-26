@@ -74,6 +74,7 @@ public class ResultPanel extends javax.swing.JPanel {
         jSplitPane1.setTopComponent(jPanel2);
 
         jScrollPane1.setAlignmentX(1.0F);
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 100));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
