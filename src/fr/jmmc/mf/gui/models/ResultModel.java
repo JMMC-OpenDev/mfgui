@@ -98,7 +98,7 @@ public class ResultModel extends DefaultMutableTreeNode {
             ptplot(plotName, false, false);
         }
         plotNames = plotTobuild.values().toArray(new String[0]);
-        if (plotTobuild.size() == 0) {
+        if (plotTobuild.isEmpty()) {
             plotNames = new String[]{"visamp", "visphi", "vis2", "t3amp", "t3phi"};
         }
         for (int i = 0; i < plotNames.length; i++) {
