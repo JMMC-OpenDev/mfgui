@@ -37,10 +37,14 @@ public class SaveSettingsAction extends RegisteredAction {
         }
         // Store directory for next time
         lastDir = file.getParentFile();       
-        // Fix user associated file and save it with result
-        settingsModel.setAssociatedFile(file);
+        
+        // Save model on disk
         settingsModel.saveSettingsFile(file);
-        /* ask to update title */
+        
+        // Fix user associated file and save it with result
+        settingsModel.setAssociatedFile(file, true);
+        
+        /* Ask to update title */
         mfgui.getSelectedSettings();
         StatusBar.show("Settings stored into '" + file.getName() + "'");
     }

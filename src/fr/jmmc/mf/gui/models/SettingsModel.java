@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.gui.action.RecentFilesManager;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
@@ -98,7 +99,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public SettingsModel(java.io.File fileToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
         init(FileUtils.readFile(fileToLoad));
-        associatedFile = fileToLoad;
+        setAssociatedFile(fileToLoad, true);
     }
 
     /**
@@ -114,12 +115,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.warn("Error in uri syntax for " + url, ex);
             throw new IOException("Error in uri syntax for " + url, ex);
         }
-        associatedFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
-        if (Http.download(uriToLoad, associatedFile, false)) {
-            init(FileUtils.readFile(associatedFile));
+        java.io.File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
+        if (Http.download(uriToLoad, tmpFile, false)) {
+            init(FileUtils.readFile(tmpFile));
         } else {
             throw new IOException("Can't download " + url);
         }
+        setAssociatedFile(tmpFile, false);
     }
 
     public final void init() throws ExecutionException {
@@ -274,8 +276,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param residualModuleValue default,
      */
     public void setResiduals(Target target, String visAmpValue,
-                             String visPhiValue, String vis2Value, String t3AmpValue,
-                             String t3PhiValue) {
+            String visPhiValue, String vis2Value, String t3AmpValue,
+            String t3PhiValue) {
         Residuals residuals = new Residuals();
 
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -780,7 +782,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Return the filename that could be used to store settings into.
+     * Return the filename that is used to store settings into.
      * @return the filename
      */
     public String getAssociatedFilename() {
@@ -791,11 +793,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     *  Tell to the model that given file is used by user to store its data
-     * @param fileToSave
+     * Return the file that is used to store settings into.
+     * @return the file
      */
-    public void setAssociatedFile(java.io.File fileToSave) {
+    public java.io.File getAssociatedFile() {
+        return associatedFile;
+    }
+
+    /**
+     *  Tell to the model that given file is used by user to store its data.
+     * @param fileToSave file to save
+     * @param appendInRecentMenu request to append given file in 'Recent File' menu
+     */
+    public void setAssociatedFile(java.io.File fileToSave, boolean appendInRecentMenu) {
         associatedFile = fileToSave;
+        if (appendInRecentMenu) {
+            RecentFilesManager.addFile(associatedFile);
+        }
     }
 
     /**
@@ -1567,7 +1581,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesInserted(Object[] path, int childIndice,
-                                         Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1580,7 +1594,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-                                        int childIndice, Object child) {
+            int childIndice, Object child) {
         TreeModelEvent e = new TreeModelEvent(source, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1593,7 +1607,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesChanged(Object[] path, int childIndice,
-                                        Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1784,7 +1798,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     Object[] elements = target.getFileLink();
                     System.arraycopy(elements, 0, all, 0, target.getFileLinkCount());
                     elements =
-                    target.getModel();
+                            target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
                     for (int j = 0; j
