@@ -68,6 +68,12 @@ public class Settings implements java.io.Serializable {
      */
     private java.lang.String _userInfo;
 
+    /**
+     * Contains responses.
+     *  
+     */
+    private fr.jmmc.mf.models.Responses _responses;
+
 
       //----------------/
      //- Constructors -/
@@ -116,6 +122,19 @@ public class Settings implements java.io.Serializable {
     {
         return this._parameters;
     } //-- fr.jmmc.mf.models.Parameters getParameters() 
+
+    /**
+     * Returns the value of field 'responses'. The field
+     * 'responses' has the following description: Contains
+     * responses.
+     *  
+     * 
+     * @return the value of field 'responses'.
+     */
+    public fr.jmmc.mf.models.Responses getResponses()
+    {
+        return this._responses;
+    } //-- fr.jmmc.mf.models.Responses getResponses() 
 
     /**
      * Returns the value of field 'results'. The field 'results'
@@ -222,6 +241,18 @@ public class Settings implements java.io.Serializable {
     {
         this._parameters = parameters;
     } //-- void setParameters(fr.jmmc.mf.models.Parameters) 
+
+    /**
+     * Sets the value of field 'responses'. The field 'responses'
+     * has the following description: Contains responses.
+     *  
+     * 
+     * @param responses the value of field 'responses'.
+     */
+    public void setResponses(fr.jmmc.mf.models.Responses responses)
+    {
+        this._responses = responses;
+    } //-- void setResponses(fr.jmmc.mf.models.Responses) 
 
     /**
      * Sets the value of field 'results'. The field 'results' has

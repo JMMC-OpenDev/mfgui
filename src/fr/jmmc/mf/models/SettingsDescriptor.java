@@ -278,6 +278,39 @@ public class SettingsDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
             fieldValidator.setValidator(typeValidator);
         }
         desc.setValidator(fieldValidator);
+        //-- _responses
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Responses.class, "_responses", "responses", org.exolab.castor.xml.NodeType.Element);
+        handler = (new org.exolab.castor.xml.XMLFieldHandler() {
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Settings target = (Settings) object;
+                return target.getResponses();
+            }
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Settings target = (Settings) object;
+                    target.setResponses( (fr.jmmc.mf.models.Responses) value);
+                }
+                catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public java.lang.Object newInstance( java.lang.Object parent ) {
+                return new fr.jmmc.mf.models.Responses();
+            }
+        } );
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        
+        //-- validation code for: _responses
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
     } //-- fr.jmmc.mf.models.SettingsDescriptor()
 
 

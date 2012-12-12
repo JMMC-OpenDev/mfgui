@@ -40,6 +40,11 @@ public class Result implements java.io.Serializable {
     private java.lang.String _href;
 
     /**
+     * Field _description
+     */
+    private java.lang.String _description;
+
+    /**
      * Field _anyObject
      */
     private java.lang.Object _anyObject;
@@ -67,6 +72,16 @@ public class Result implements java.io.Serializable {
     {
         return this._anyObject;
     } //-- java.lang.Object getAnyObject() 
+
+    /**
+     * Returns the value of field 'description'.
+     * 
+     * @return the value of field 'description'.
+     */
+    public java.lang.String getDescription()
+    {
+        return this._description;
+    } //-- java.lang.String getDescription() 
 
     /**
      * Returns the value of field 'href'.
@@ -125,6 +140,16 @@ public class Result implements java.io.Serializable {
     {
         this._anyObject = anyObject;
     } //-- void setAnyObject(java.lang.Object) 
+
+    /**
+     * Sets the value of field 'description'.
+     * 
+     * @param description the value of field 'description'.
+     */
+    public void setDescription(java.lang.String description)
+    {
+        this._description = description;
+    } //-- void setDescription(java.lang.String) 
 
     /**
      * Sets the value of field 'href'.

@@ -1,11 +1,25 @@
+/*
+ * This class was automatically generated with 
+ * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * Schema.
+ * $Id$
+ */
+
 package fr.jmmc.mf.models;
 
   //---------------------------------/
  //- Imported classes and packages -/
 //---------------------------------/
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.Writer;
+import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
+import org.exolab.castor.xml.ValidationException;
+import org.xml.sax.ContentHandler;
 
 /**
  * File link.
