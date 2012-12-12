@@ -18,10 +18,9 @@ The form try to collect every informtions needed by model fitting process
     </xsd:annotation>
 
 <xsd:element name="response">
-
         <xsd:annotation>
             <xsd:documentation>
-                Highest element of that generally is a server response of LITpro wrapper.
+                Highest element of what generally is a server response of LITpro wrapper.
             </xsd:documentation>
         </xsd:annotation>
 
@@ -32,10 +31,11 @@ The form try to collect every informtions needed by model fitting process
                 <xsd:element ref="model"/>
                 <xsd:element ref="resultFile"/>
             </xsd:choice>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
         </xsd:complexType>
 
-    </xsd:element>
-    
+    </xsd:element> 
+   
     <!--
 Root element of settings 
     -->
@@ -53,6 +53,7 @@ Root element of settings
                 <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
                 <xsd:element ref="results" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="responses" minOccurs="0" maxOccurs="1"/>               
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -75,6 +76,23 @@ File list.
         
     </xsd:element>
     
+    <!--
+    Response list. 
+    -->
+    <xsd:element name="responses">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains responses.
+            </xsd:documentation>
+        </xsd:annotation>
+        
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="response" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        
+    </xsd:element>
     
     <!--
 File description with its possible content. 
@@ -327,6 +345,7 @@ Result list.
         </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:any minOccurs="0" processContents="skip"/>
             </xsd:sequence>
             <xsd:attribute name="href" type="xsd:string" use="optional"/>
