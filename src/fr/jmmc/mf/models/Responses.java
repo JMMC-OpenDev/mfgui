@@ -234,5 +234,5 @@ public class Responses implements java.io.Serializable {
         validator.validate(this);
     } //-- void validate() 
 
-    public String toString(){ return "Responses"; } 
+    public String toString(){ return "Plots"; } 
 }

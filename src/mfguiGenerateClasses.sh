@@ -51,6 +51,12 @@ do
     elif [ "$className" == "Target" ]
     then
         toString="\"Target[\"+getIdent()+\"]\";"
+    elif [ "$className" == "Responses" ]
+    then
+        toString="\"Plots\";"
+    elif [ "$className" == "Response" ]
+    then
+        toString="getName();"
     elif [ "$className" == "Model" ]
     then
         toString="\"Model[\"+getType()+\":\"+getName()+\"]\";"
