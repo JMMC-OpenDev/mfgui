@@ -56,7 +56,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
     final static Logger logger = LoggerFactory.getLogger(className);
     /** Preferences */
     static Preferences myPreferences;
+    /** Main frame reference */
     static MFGui gui = null;
+    /** Common httpclient */
     static HttpClient client_ = null;
     /** Title of message pane shown after reception of message/error from the remote service */
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
@@ -240,7 +242,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
      */
     private static String doExec(String methodName, java.io.File xmlFile, String methodArg) throws ExecutionException {
         try {
-            String result = "";
             String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
             String filename = null;
             // Run main application waiting for end of cat process
@@ -259,7 +260,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
             ph.setProcessManager(pm);
             ph.start();
             ph.waitFor();
-            result = pm.getContent();
+            String result = pm.getContent();
             logger.trace("exec result=\n" + result);
             return result;
         } catch (IOException ex) {
@@ -283,7 +284,16 @@ public class LITpro extends fr.jmmc.jmcs.App {
             throws ExecutionException {
         return doExec(methodName, xmlFile, "");
     }
-
+    
+    /** Execute given command over an HTTP POST 
+      *
+     * @param methodName name of method to call
+     * @param xmlFile setting file
+     * @param methodArg argument
+     *
+     * @return the output of the process
+     * @throws IOException if IO problems occurs 
+     */
     public static String doPost(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String result = "";
 
@@ -363,6 +373,14 @@ public class LITpro extends fr.jmmc.jmcs.App {
         return result;
     }
 
+    /** Execute given command over an HTTP POST 
+     *
+     * @param methodName name of method to call
+     * @param xmlFile setting file
+     *
+     * @return the output of the process
+     * @throws IOException if IO problems occurs 
+     */
     public static String doPost(String methodName, java.io.File xmlFile)
             throws Exception {
         return doPost(methodName, xmlFile, null);
@@ -479,11 +497,13 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
 
     }
-
+    
+    /** Class that manage the execution on the local machine through system exec */
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
 
         StringBuffer sb;
 
+        /** Handle process execution */
         public YogaExec() {
             sb = new StringBuffer();
         }
@@ -510,6 +530,11 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
         }
 
+        /** 
+         * Return the data coming from the stdout of associated process.
+         * 
+         * @return output of command execution 
+         */        
         public String getContent() {
             return sb.toString();
         }
