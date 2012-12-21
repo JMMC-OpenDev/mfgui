@@ -5,7 +5,6 @@ package fr.jmmc.mf;
 
 import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.gui.component.MessagePane;
-
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.util.SwingSettings;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
@@ -20,6 +19,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Target;
+import fr.jmmc.oiexplorer.core.model.OIFitsCollectionManager;
 import fr.nom.tam.fits.FitsException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,10 +31,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -45,6 +41,8 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
 import org.ivoa.util.runner.LocalLauncher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -52,9 +50,11 @@ import org.ivoa.util.runner.LocalLauncher;
  */
 public class LITpro extends fr.jmmc.jmcs.App {
 
-    final static String rcsId = "$Id: ModelFitting.java,v 1.41 2011-04-07 14:07:27 mella Exp $";
+    /** Class name */
     final static String className = LITpro.class.getName();
+    /** Class Logger */
     final static Logger logger = LoggerFactory.getLogger(className);
+    /** Preferences */
     static Preferences myPreferences;
     static MFGui gui = null;
     static HttpClient client_ = null;
@@ -77,13 +77,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
      */
     @Override
     protected void init() {
-        // Set default resource for application
-        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
+        logger.debug("LITpro.init() handler : enter");
 
-        myPreferences = Preferences.getInstance();
-
-        // Initialize job runner:
-        LocalLauncher.startUp();
+        this.initServices();
 
         // Using invokeAndWait to be in sync with this thread :
         // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
@@ -104,6 +100,27 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 App.setFrame(gui);
             }
         });
+    }
+
+    /**
+     * Initialize services before the GUI
+     *
+     * @throws IllegalStateException if the configuration files are not found or IO failure
+     * @throws IllegalArgumentException if the load configuration failed
+     */
+    private void initServices() throws IllegalStateException, IllegalArgumentException {
+
+        // Set default resource for application
+        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
+
+        myPreferences = Preferences.getInstance();
+
+        // Initialize job runner:
+        LocalLauncher.startUp();
+
+        // Create OIFitsCollectionManager at startup (JAXB factory, event queues and PlotDefinitionFactory ...)
+        // to avoid OpenJDK classloader issues (ie use main thread):
+        OIFitsCollectionManager.getInstance();
     }
 
     /**
