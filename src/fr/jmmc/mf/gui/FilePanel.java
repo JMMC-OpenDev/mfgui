@@ -787,7 +787,7 @@ public class FilePanel extends javax.swing.JPanel {
         return JnlpStarter.launch("http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jnlp");
     }
 
-    protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
+    protected class CheckEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.ResourcedAction {
 
         public CheckEmbeddedFileAction() {
             super("checkEmbeddedFile");
@@ -805,7 +805,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-    protected class ShowEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
+    protected class ShowEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.ResourcedAction {
 
         public ShowEmbeddedFileAction() {
             super("showEmbeddedFile");
@@ -836,7 +836,7 @@ public class FilePanel extends javax.swing.JPanel {
         }
     }
 
-    protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.MCSAction {
+    protected class SaveEmbeddedFileAction extends fr.jmmc.jmcs.gui.action.ResourcedAction {
 
         public String lastDir = System.getProperty("user.home");
 

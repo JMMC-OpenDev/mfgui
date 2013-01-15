@@ -8,7 +8,7 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.gui.action.MCSAction;
+import fr.jmmc.jmcs.gui.action.ResourcedAction;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.Settings;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import javax.swing.text.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RunFitAction extends MCSAction {
+public class RunFitAction extends ResourcedAction {
     
     /** Main logger */
     static Logger logger = LoggerFactory.getLogger(RunFitAction.class.getName());

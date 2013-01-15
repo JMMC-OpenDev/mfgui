@@ -4,7 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
-import fr.jmmc.jmcs.gui.action.MCSAction;
+import fr.jmmc.jmcs.gui.action.ResourcedAction;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
@@ -119,7 +119,7 @@ public class FilesPanel extends javax.swing.JPanel {
         }
     } // </editor-fold>       
 
-    protected class LoadRemoteDataFilesAction extends MCSAction {
+    protected class LoadRemoteDataFilesAction extends ResourcedAction {
 
         public final static String actionName = "loadRemoteDataFiles";
 
