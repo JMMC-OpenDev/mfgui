@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
+import fr.jmmc.jmcs.gui.action.internal.InternalActionFactory;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.resource.image.ResourceImage;
@@ -49,7 +50,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
     private static final long serialVersionUID = 1L;
     /* Minimal size of main component */
     private static final Dimension INITIAL_DIMENSION = new java.awt.Dimension(1000, 700);
-    
+
     /** Creates new form MFGui */
     public MFGui(String[] filenames) {
         instance = this;
@@ -70,7 +71,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
 
-        tabbedPane_ = new javax.swing.JTabbedPane();        
+        tabbedPane_ = new javax.swing.JTabbedPane();
         tabbedPane_.setMinimumSize(INITIAL_DIMENSION);
         tabbedPane_.setPreferredSize(INITIAL_DIMENSION);
         tabbedPane_.addChangeListener(deleteTreeSelectionAction);
@@ -95,7 +96,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
         toolBar.addSeparator();
-        toolBar.add(LITpro.showHelpAction());
+        toolBar.add(InternalActionFactory.showHelpAction());
         toolBar.setVisible(myPreferences.getPreferenceAsBoolean("show.toolbar"));
 
 
@@ -224,7 +225,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        LITpro.quitAction().actionPerformed(null);
+        LITpro.quit();
     }
 
     /**
@@ -268,7 +269,7 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
     }
 
     /**
-     * App lifecycle finish step.
+     * App lifecycle shouldFinish step.
      *
      * @return true if App can quit or false.
      */

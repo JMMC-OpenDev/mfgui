@@ -150,7 +150,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      * to cancel exit.
      */
     @Override
-    protected boolean finish() {
+    public boolean shouldFinish() {
         return gui.finish();
     }
 
@@ -284,9 +284,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
             throws ExecutionException {
         return doExec(methodName, xmlFile, "");
     }
-    
+
     /** Execute given command over an HTTP POST 
-      *
+     *
      * @param methodName name of method to call
      * @param xmlFile setting file
      * @param methodArg argument
@@ -497,7 +497,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
 
     }
-    
+
     /** Class that manage the execution on the local machine through system exec */
     protected static class YogaExec implements fr.jmmc.mcs.util.ProcessManager {
 
@@ -534,7 +534,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
          * Return the data coming from the stdout of associated process.
          * 
          * @return output of command execution 
-         */        
+         */
         public String getContent() {
             return sb.toString();
         }
