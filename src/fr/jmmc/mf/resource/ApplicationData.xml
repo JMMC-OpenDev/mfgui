@@ -155,9 +155,11 @@
                      permettre à l'utilisateur de :
                     - zoomer, en Z et spatialement
                     - sauvegarder le(s) plot(s) en un format .fits (pas compris...)                
-                -->    
-            <!-- <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
-            <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
+                -->                
+            <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
+            <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.
+            </change>            
+                <!-- <change type="TODO">FIXME!!! Leave resource in MFGui.closeSettings()</change> -->
             <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>                                      
             <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>                                                  
             </prerelease><prerelease version="1.0.13 beta 3">
@@ -172,7 +174,7 @@
             <change type="CHANGE">Inline documentation updated.</change>                                        
             </prerelease>       
             </release>
-        <release version="1.0.12">
+        <release version="1.0.12"><pubDate>Fri, 26 Oct 2012 10:40:56 GMT</pubDate>
             <prerelease version="1.0.12 beta 6">               
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>                
             <change type="CHANGE">Uncompressed OIFits files are now always zipped before beeing embedded in the xml setting.</change>                                        
@@ -191,7 +193,7 @@
                 <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>                
             </prerelease> 
             </release>
-       <release version="1.0.11">            
+       <release version="1.0.11"><pubDate>Wed, 18 Apr 2012 15:46:03 GMT</pubDate>            
             <prerelease version="1.0.11b11">               
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
@@ -237,7 +239,7 @@
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only if the current settings get all requested parts (data+model)</change>
             </prerelease>
         </release>
-        <release version="1.0.10">
+        <release version="1.0.10"><pubDate>Thu, 03 Mar 2011 09:33:07 GMT</pubDate>
             <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
             <prerelease version="1.0.10a1">
                 <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
@@ -247,7 +249,7 @@
                 <change type="CHANGE">Use new feedback report (which saves your email adress in a preference file)</change>
             </prerelease>
         </release>
-        <release version="1.0.9">
+        <release version="1.0.9"><pubDate>Fri, 28 Jan 2011 09:00:34 GMT</pubDate>
             <!--
                   <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
             -->
@@ -269,12 +271,12 @@
                 <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>                
             </prerelease>
        </release>
-        <release version="1.0.8">
+        <release version="1.0.8"><pubDate>Tue, 23 Nov 2010 09:58:17 GMT</pubDate>
             <prerelease version="1.0.8b1">                
                 <change type="BUGFIX">Fix UV coverage plots in the file panel for t3data</change>
             </prerelease>
        </release>
-        <release version="1.0.7">
+        <release version="1.0.7"><pubDate>Tue, 09 Nov 2010 13:52:44 GMT</pubDate>
             <prerelease version="1.0.7b5">
                 <change type="CHANGE">Use new Topcat release 3.6</change>
                 <!-- use of jmmc oival module by oitools -->
@@ -301,7 +303,7 @@ feature is set to true.
 -->
             </prerelease>
        </release>
-      <release version="1.0.6">
+      <release version="1.0.6"><pubDate>Wed, 21 Jul 2010 16:14:38 GMT</pubDate>
        <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
        <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
        <prerelease version="1.0.6b6">
@@ -321,7 +323,7 @@ feature is set to true.
           <change type="CHANGE">Add the personal notebook widget into the result panels</change>
         </prerelease>
       </release>
-        <release version="1.0.5">
+        <release version="1.0.5"><pubDate>Wed, 21 Jul 2010 16:14:38 GMT</pubDate>
             <prerelease version="1.0.5b3">                
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
                 <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
@@ -336,25 +338,25 @@ feature is set to true.
                 <change type="CHANGE">The angle of radial plots is displayed in the label presented into the left tree and can get decimals</change>
             </prerelease>
         </release>
-        <release version="1.0.4">
+        <release version="1.0.4"><pubDate>Fri, 09 Apr 2010 16:11:05 GMT</pubDate>
             <prerelease version="1.0.4b1">
                 <change type="CHANGE">The radial plot can now get different angles</change>
                 <change type="CHANGE">Model Image and UVMap image are now exported into fits file in addition to pdf and png</change>
                 <!-- Some labels have been changed into the preferences view -->
             </prerelease>
         </release>
-        <release version="1.0.3">
+        <release version="1.0.3"><pubDate>Mon, 01 Mar 2010 16:02:14 GMT</pubDate>
             <prerelease version="1.0.3b1">
                 <change type="CHANGE">One system property is set on the machines which require one proxy for the web services (httpclient)</change>
                 <change type="CHANGE">The LITpro engine has been updated to plot images in the right orientation and draw color bars</change>
         </prerelease>
         </release>
-        <release version="1.0.2">
+        <release version="1.0.2"><pubDate>Mon, 01 Mar 2010 16:02:14 GMT</pubDate>
             <prerelease version="1.0.2b1">
                 <change type="CHANGE">Shared parameters are now properly displayed in the table(type was wrong)</change>
             </prerelease>
         </release>
-        <release version="1.0.1">
+        <release version="1.0.1"><pubDate>Fri, 12 Feb 2010 14:37:29 GMT</pubDate>
             <prerelease version="1.0.1b4">
                 <change type="CHANGE">Move the standard deviation column into the result panel</change>
             </prerelease>
@@ -369,7 +371,7 @@ feature is set to true.
                 <change type="CHANGE">Improve efficiency during the reading of the webservice return</change>
             </prerelease>
         </release>
-        <release version="1.0">
+        <release version="1.0"><pubDate>Fri, 12 Feb 2010 14:37:29 GMT</pubDate>
             <prerelease version="1.0b0">
                 <change type="CHANGE">First public release</change>
             </prerelease>
