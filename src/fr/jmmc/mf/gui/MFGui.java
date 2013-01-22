@@ -14,13 +14,12 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author  mella
  */
-public class MFGui extends javax.swing.JFrame implements WindowListener {
+public final class MFGui extends JFrame {
 
     /** Class Name */
     static final String className = "fr.jmmc.mf.gui.MFGui";
@@ -67,9 +66,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
 
         deleteTreeSelectionAction = new DeleteTreeSelectionAction(this);
         attachDetachFrameAction = new AttachDetachFrameAction(this);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(this);
 
         tabbedPane_ = new javax.swing.JTabbedPane();
         tabbedPane_.setMinimumSize(INITIAL_DIMENSION);
@@ -209,63 +205,6 @@ public class MFGui extends javax.swing.JFrame implements WindowListener {
             action = new LoadDemoModelAction("demoModel" + i, demo.get(title), title, this);
             i++;
         }
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowOpened(WindowEvent e) {
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowClosing(WindowEvent e) {
-        LITpro.quit();
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowIconified(WindowEvent e) {
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowActivated(WindowEvent e) {
-    }
-
-    /**
-     * Listen window event.
-     * @param e window event.
-     */
-    @Override
-    public void windowDeactivated(WindowEvent e) {
     }
 
     /**

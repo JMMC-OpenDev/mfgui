@@ -4,9 +4,9 @@
 package fr.jmmc.mf;
 
 import fr.jmmc.jmcs.App;
+import fr.jmmc.jmcs.Bootstrapper;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.gui.util.SwingSettings;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
@@ -58,7 +58,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     static Preferences myPreferences;
     /** Main frame reference */
     static MFGui gui = null;
-    /** Common httpclient */
+    /** Common HTTP client */
     static HttpClient client_ = null;
     /** Title of message pane shown after reception of message/error from the remote service */
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
@@ -75,7 +75,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     /**
      * Initialize application objects
      *
-     * @throws RuntimeException if the AppLauncher initialisation failed
+     * @throws RuntimeException if the AppLauncher initialization failed
      */
     @Override
     protected void init() {
@@ -174,10 +174,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // init swing application for science
-        SwingSettings.setup();
-
-        LITpro mf = new LITpro(args);
+        Bootstrapper.launch(new LITpro(args));
     }
 
     /** This is the main wrappers method to execute yoga actions.
@@ -398,6 +395,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
             protected void processMessage(final String senderId, final Message message) throws SampException {
                 // bring this application to front and load data in current setting or build a new one
                 SwingUtils.invokeLaterEDT(new Runnable() {
+                    @Override
                     public void run() {
                         Exception e = null;
                         final String url = (String) message.getParam("url");
@@ -437,9 +435,8 @@ public class LITpro extends fr.jmmc.jmcs.App {
                     }
                 });
             }
-        ;
         };
-        
+
         // Add handler to load one new setting given oifits and model description
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
@@ -487,6 +484,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 final SettingsModel fsm = sm;
                 // bring this application to front  and display new setting in EDT
                 SwingUtils.invokeLaterEDT(new Runnable() {
+                    @Override
                     public void run() {
                         App.showFrameToFront();
                         gui.addSettings(fsm);
@@ -494,8 +492,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 });
             }
         };
-
-
     }
 
     /** Class that manage the execution on the local machine through system exec */
@@ -508,26 +504,28 @@ public class LITpro extends fr.jmmc.jmcs.App {
             sb = new StringBuffer();
         }
 
+        @Override
         public void processStarted() {
         }
 
+        @Override
         public void processStoped() {
         }
 
+        @Override
         public void processTerminated(int returnedValue) {
-
             logger.debug("processTerminated");
-
         }
 
+        @Override
         public void errorOccured(Exception e) {
             logger.error("errorOccured", e);
         }
 
+        @Override
         public void outputOccured(String line) {
             sb.append(line);
             logger.trace("new output line occured: {}", line);
-
         }
 
         /** 
