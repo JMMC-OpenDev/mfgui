@@ -3,8 +3,8 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.data.ApplicationDescription;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
@@ -37,10 +37,10 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         initComponents();
         // build help button
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
-        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);        
-        
+        tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+
         // display for beta only
-        runFitCheckBox.setVisible( LITpro.isAlphaVersion() || LITpro.isBetaVersion() );       
+        runFitCheckBox.setVisible(ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion());
     }
 
     public void show(SettingsModel s) {
@@ -118,7 +118,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         if (reduced) {
             type.append("Reduced ");
             args.append("reduced_chi2=1,");
-        }else{
+        } else {
             args.append("reduced_chi2=0,");
         }
         if (log) {
@@ -479,6 +479,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private javax.swing.JFormattedTextField yminFormattedTextField;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void update(Observable o, Object arg) {
         show(settingsModel);
     }
