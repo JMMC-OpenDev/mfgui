@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.data.ApplicationDescription;
 import fr.jmmc.jmcs.data.preference.PreferencesException;
 import fr.jmmc.mf.LITpro;
 import org.slf4j.Logger;
@@ -22,13 +23,13 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
     /** Logger */
     static final Logger logger = LoggerFactory.getLogger(className);
 
-    private static String _version = LITpro.getSharedApplicationDataModel().getProgramVersion();
+    private static String _version = ApplicationDescription.getInstance().getProgramVersion();
     /**
      * Privatized constructor that must be empty.
      */
     private Preferences()
     {
-        //_version=ApplicationDataModel.getProgramVersion();
+        //_version=ApplicationDescription.getProgramVersion();
         //_version=LITpro.getVersion()
     }
 
@@ -37,7 +38,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      *
      * @return the singleton preference instance
      */
-    public final synchronized static Preferences getInstance()
+    public static synchronized Preferences getInstance()
     {
         // Build new reference if singleton does not already exist
         // or return previous reference
@@ -54,6 +55,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      *
      * @throws PreferencesException DOCUMENT ME!
      */
+    @Override
     protected void setDefaultPreferences() throws PreferencesException
     {
         setDefaultPreference("mf.version", _version);
@@ -86,6 +88,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      * 
      * @return preference filename.    
      */
+    @Override
     protected String getPreferenceFilename()
     {
         if (LITpro.isAlphaVersion())
@@ -102,6 +105,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences
      *
      * @return preference version number.
      */
+    @Override
     protected int getPreferencesVersionNumber()
     {
         // 1 -> 2 v1.0.11b10

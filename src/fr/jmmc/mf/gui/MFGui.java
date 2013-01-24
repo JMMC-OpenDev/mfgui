@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.data.ApplicationDescription;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.action.internal.InternalActionFactory;
 import fr.jmmc.jmcs.gui.component.MessagePane;
@@ -100,9 +101,9 @@ public final class MFGui extends JFrame {
         statusBar = new StatusBar();
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 
-        String title = LITpro.getSharedApplicationDataModel().getProgramName();
+        String title = ApplicationDescription.getInstance().getProgramName();
         if (LITpro.isAlphaVersion() || LITpro.isBetaVersion()) {
-            title += " " + LITpro.getSharedApplicationDataModel().getProgramVersion();
+            title += " " + ApplicationDescription.getInstance().getProgramVersion();
         }
         setTitle(title);
 

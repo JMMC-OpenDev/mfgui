@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.data.ApplicationDescription;
 import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
@@ -1463,7 +1464,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.debug("no userInfo section, -> new one created");
             s.setUserInfo("UserInfo added on " + new java.util.Date()
                     + " by ModelFitting GUI rev. "
-                    + LITpro.getSharedApplicationDataModel().getProgramVersion());
+                    + ApplicationDescription.getInstance().getProgramVersion());
             setModified(true);
         }
 
