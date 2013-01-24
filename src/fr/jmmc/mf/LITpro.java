@@ -150,7 +150,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      * to cancel exit.
      */
     @Override
-    public boolean shouldFinish() {
+    public boolean canBeTerminatedNow() {
         return gui.finish();
     }
 

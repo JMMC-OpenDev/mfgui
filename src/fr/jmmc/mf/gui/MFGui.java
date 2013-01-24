@@ -208,7 +208,7 @@ public final class MFGui extends JFrame {
     }
 
     /**
-     * App lifecycle shouldFinish step.
+     * App lifecycle canBeTerminatedNow step.
      *
      * @return true if App can quit or false.
      */
