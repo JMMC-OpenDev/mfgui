@@ -72,16 +72,30 @@ public class LITpro extends fr.jmmc.jmcs.App {
         super(args);
     }
 
+    @Override
+    protected void initServices() throws IllegalStateException, IllegalArgumentException {
+
+        // Set default resource for application
+        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
+
+        myPreferences = Preferences.getInstance();
+
+        // Initialize job runner:
+        LocalLauncher.startUp();
+
+        // Create OIFitsCollectionManager at startup (JAXB factory, event queues and PlotDefinitionFactory ...)
+        // to avoid OpenJDK classloader issues (ie use main thread):
+        OIFitsCollectionManager.getInstance();
+    }
+
     /**
      * Initialize application objects
      *
      * @throws RuntimeException if the AppLauncher initialization failed
      */
     @Override
-    protected void init() {
+    protected void setupGui() {
         logger.debug("LITpro.init() handler : enter");
-
-        this.initServices();
 
         // Using invokeAndWait to be in sync with this thread :
         // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
@@ -102,27 +116,6 @@ public class LITpro extends fr.jmmc.jmcs.App {
                 App.setFrame(gui);
             }
         });
-    }
-
-    /**
-     * Initialize services before the GUI
-     *
-     * @throws IllegalStateException if the configuration files are not found or IO failure
-     * @throws IllegalArgumentException if the load configuration failed
-     */
-    private void initServices() throws IllegalStateException, IllegalArgumentException {
-
-        // Set default resource for application
-        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
-
-        myPreferences = Preferences.getInstance();
-
-        // Initialize job runner:
-        LocalLauncher.startUp();
-
-        // Create OIFitsCollectionManager at startup (JAXB factory, event queues and PlotDefinitionFactory ...)
-        // to avoid OpenJDK classloader issues (ie use main thread):
-        OIFitsCollectionManager.getInstance();
     }
 
     /**
