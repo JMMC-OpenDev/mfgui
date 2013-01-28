@@ -153,13 +153,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      */
     @Override
     public void cleanup() {
-
         logger.info("Thank you for using this software!");
-
-        // Stop job runner:
-        LocalLauncher.shutdown();
-
-        super.cleanup();
     }
 
     /**
@@ -167,7 +161,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Bootstrapper.launch(new LITpro(args));
+        Bootstrapper.launchApp(new LITpro(args));
     }
 
     /** This is the main wrappers method to execute yoga actions.
