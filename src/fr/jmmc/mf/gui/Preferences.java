@@ -124,10 +124,11 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     private boolean updateFromVersion1ToVersion2() {
 
         String[] preferencesToReset = new String[]{"save.results", "yoga.remote.use", "yoga.remote.url"};
+        String[] defaultValues = new String[]{"true", "true", "http://jmmc.fr/~mella/LITproWebService/run.php"};
         try {
             for (int i = 0; i < preferencesToReset.length; i++) {
                 String preferenceName = preferencesToReset[i];
-                String defaultValue = _defaultProperties.getProperty(preferenceName);
+                String defaultValue = defaultValues[i];
                 setPreference(preferenceName, defaultValue);
             }
         } catch (PreferencesException ex) {
