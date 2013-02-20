@@ -27,6 +27,7 @@
     <!-- JMMC modules -->
     <jar href="jar/jmcs.jar" />
     <jar href="jar/oitools.jar" />
+    <jar href="jar/oiexplorer_core.jar" />
     <jar href="jar/mfgui-doc.jar" />
     
     <!-- JMCS libs -->
