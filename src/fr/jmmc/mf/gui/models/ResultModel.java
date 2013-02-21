@@ -150,8 +150,11 @@ public class ResultModel extends DefaultMutableTreeNode {
             args.put("residuals", Boolean.toString(residuals));
             plotName = plotName + " residuals";
         }
+        
+        logger.debug("start xslt from yoga xml to ptolemy plot (args={})",args);
         xmlStr = XmlFactory.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
-
+        logger.debug("end xslt from yoga xml to ptolemy plot");
+        
         // this test is perform during load of results element in settings file that may or not have all kind of dataset
         if (testDataBeforeShowing && !xmlStr.substring(0, Math.min(xmlStr.length(), 500)).contains("dataset")) {
             logger.debug("No dataset to display");
