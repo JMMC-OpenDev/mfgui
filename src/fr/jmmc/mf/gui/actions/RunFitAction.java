@@ -28,6 +28,7 @@ public class RunFitAction extends ResourcedAction {
     String methodName = "runFit";
     ButtonModel iTMaxButtonModel = null;
     Document iTMaxDocument = null;
+    ButtonModel skipPlotDocument = null;
     SettingsViewerInterface settingsViewer = null;
 
     public RunFitAction(SettingsViewerInterface settingsViewer) {
@@ -35,16 +36,30 @@ public class RunFitAction extends ResourcedAction {
         this.settingsViewer = settingsViewer;
     }
 
-    public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument) {
+    public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument, ButtonModel skipPlotDocument) {
         this.iTMaxButtonModel = iTMaxButtonModel;
         this.iTMaxDocument = iTMaxDocument;
+        this.skipPlotDocument = skipPlotDocument;
+        
     }
 
+    
+    public boolean shouldSkipPlots(){
+        // this dummy test could be replaced by a more sophisticated rule eg: 
+        // max data threshold ...
+        // could also be a preference...
+        return skipPlotDocument.isSelected();
+    }
+    
     public void actionPerformed(ActionEvent e) {
         String args = "";
+        if (shouldSkipPlots()){            
+            args = "-s ";
+        }
+        
         if (iTMaxButtonModel.isSelected() && (iTMaxDocument.getLength() > 0)) {
             try {
-                args = "itmax=" + iTMaxDocument.getText(0, iTMaxDocument.getLength());
+                args = args + "itmax=" + iTMaxDocument.getText(0, iTMaxDocument.getLength());
             } catch (BadLocationException ble) {
                 throw new IllegalStateException("Can't read ITMax document", ble);
             }
@@ -84,6 +99,7 @@ public class RunFitAction extends ResourcedAction {
             //setCursor(null);
             return;
         }
+        
         settingsModel.updateWithNewSettings(r);
         StatusBar.show("GUI updated with fitting results");
 
