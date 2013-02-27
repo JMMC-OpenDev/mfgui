@@ -278,15 +278,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
         jLabel1 = new javax.swing.JLabel();
         identComboBox = new javax.swing.JComboBox();
-        jPanel2 = new javax.swing.JPanel();
-        fileListScrollPane = new javax.swing.JScrollPane();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        modelList = new javax.swing.JList();
-        addModelButton = new javax.swing.JButton();
-        modelTypeComboBox = new javax.swing.JComboBox();
-        removeModelButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         normalizeCheckBox = new javax.swing.JCheckBox();
         t3phiCheckBox = new javax.swing.JCheckBox();
@@ -298,6 +289,16 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        modelList = new javax.swing.JList();
+        addModelButton = new javax.swing.JButton();
+        modelTypeComboBox = new javax.swing.JComboBox();
+        removeModelButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -333,83 +334,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         add(identComboBox, gridBagConstraints);
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
-        jPanel2.add(fileListScrollPane);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jPanel2, gridBagConstraints);
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
-        jPanel4.setLayout(new java.awt.GridBagLayout());
-
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 82));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(260, 82));
-
-        modelList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                modelListMouseClicked(evt);
-            }
-        });
-        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                modelListValueChanged(evt);
-            }
-        });
-        jScrollPane2.setViewportView(modelList);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jPanel4.add(jScrollPane2, gridBagConstraints);
-
-        addModelButton.setText("Add model");
-        addModelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addModelButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        jPanel4.add(addModelButton, gridBagConstraints);
-
-        modelTypeComboBox.setModel(settingsViewer.getSettingsModel().getSupportedModelsModel());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel4.add(modelTypeComboBox, gridBagConstraints);
-
-        removeModelButton.setText("Remove");
-        removeModelButton.setEnabled(false);
-        removeModelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeModelButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        jPanel4.add(removeModelButton, gridBagConstraints);
-
-        jButton1.setText("jButton1");
-        jPanel4.add(jButton1, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jPanel4, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Fitter setup"));
         jPanel6.setLayout(new java.awt.GridBagLayout());
@@ -526,6 +450,82 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jPanel6, gridBagConstraints);
+
+        jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.LINE_AXIS));
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Model list"));
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 82));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(260, 82));
+
+        modelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modelListMouseClicked(evt);
+            }
+        });
+        modelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                modelListValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(modelList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel4.add(jScrollPane2, gridBagConstraints);
+
+        addModelButton.setText("Add model");
+        addModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        jPanel4.add(addModelButton, gridBagConstraints);
+
+        modelTypeComboBox.setModel(settingsViewer.getSettingsModel().getSupportedModelsModel());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        jPanel4.add(modelTypeComboBox, gridBagConstraints);
+
+        removeModelButton.setText("Remove");
+        removeModelButton.setEnabled(false);
+        removeModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        jPanel4.add(removeModelButton, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        jPanel4.add(jButton1, new java.awt.GridBagConstraints());
+
+        jPanel7.add(jPanel4);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel2.add(fileListScrollPane);
+
+        jPanel7.add(jPanel2);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(jPanel7, gridBagConstraints);
 
         subplotPanel.setLayout(new javax.swing.BoxLayout(subplotPanel, javax.swing.BoxLayout.Y_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -654,6 +654,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList modelList;
     private javax.swing.JComboBox modelTypeComboBox;
