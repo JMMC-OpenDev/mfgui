@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.13 beta 5"/>
+    <program name="LITpro" version="1.0.13 beta 6"/>
     <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
@@ -144,12 +144,11 @@
 
     <releasenotes>
         <!--<prerelease version="1.0.12 beta 3">                
-                <change type="FEATURE">Chi2 map can be performed in probe mode (use run fit check box)</change>                              
             </prerelease>            
             -->
             
-            <release version="1.0.13 beta 5">
-            <prerelease version="1.0.13 beta 5">                                
+            <release version="1.0.13 beta 6">
+            <prerelease version="1.0.13 beta 6">                                
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- not yet done: 
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
@@ -157,16 +156,20 @@
                 FIXME 
                   1/ result title generations in the tree does not get proper timing
                   2/ Leave resource in MFGui.closeSettings()
-                -->                   
-                <change type="FEATUREP">Provide a checkbox to skip very long (and sometimes non working) processing inside the GUI - should be improved</change>                    
+                -->            
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/450">Chi2 cuts bounds are now reported immediatly if entered out of parameter's bounds</change>
+                                              
+            </prerelease><prerelease version="1.0.13 beta 5"> 
+                <change type="FEATURE">Chi2 map can be performed in probe mode (use 'run fit' check box)</change>                              
+                <change type="FEATURE">Provide a checkbox to skip very long (and sometimes non working) processing inside the GUI - should be improved</change>                    
                 <change type="CHANGE">Fix 'bad case' blocking error loading in the GUI some oifits</change>
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Fix support of running fit with a max iteration value over 1000</change>                            
-                
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Fix support of running fit with a max iteration value over 1000</change>                
             </prerelease><prerelease version="1.0.13 beta 4"> 
             <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>                                      
             <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>                                                  
-            </prerelease><prerelease version="1.0.13 beta 3">
-            <change type="CHANGE">Index results using datetime in the left tree and notebook.</change>            
+            </prerelease><prerelease version="1.0.13 beta 3">            
+            <change type="CHANGE">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>                                             
             <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>            
             <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>            
             </prerelease><prerelease version="1.0.13 beta 2">               
@@ -174,7 +177,6 @@
             <change type="DEVELOPPER">Use use jide checkboxLists.</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>                                        
             </prerelease><prerelease version="1.0.13 beta 1">                              
-            <change type="CHANGE">Diplay more informations in the result summary.</change>                                        
             <change type="CHANGE">Inline documentation updated.</change>                                        
             </prerelease>       
             </release>
