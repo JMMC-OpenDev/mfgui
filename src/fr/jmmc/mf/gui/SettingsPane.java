@@ -3,7 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.data.ApplicationDescription;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.RunFitAction;
@@ -108,7 +108,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
 
-
         settingsTree.setModel(rootSettingsModel);
         settingsTree.setSelectionModel(rootSettingsModel);
         // register as treeSelectionListener to permit modifier panel changes
@@ -127,6 +126,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));
+        
+        // display for beta only 
+        skipPlotResultsCheckBox.setVisible(ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion()); 
+        
     }
 
     /**
