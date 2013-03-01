@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
@@ -986,14 +987,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         for (int i = 0; i < newResults.length; i++) {
             Result newResult = newResults[i];
             if (newResult != null) {
+                // define label for the new result nodes
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                newResult.setLabel("Fit Result " + ft.format(new Date()));
+
+                // add it to the previous result list
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult, false);
                 // TODO: check if following call still get some files to display
                 r.genPlots(null, null, UtilsClass.getResultFiles(newResponse));
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
-                        rootSettings.getResults().getResultCount() - 1,
-                        r);
+                        rootSettings.getResults().getResultCount() - 1, r);
                 setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
             } else {
                 logger.warn("found null result while updating with new settings");
