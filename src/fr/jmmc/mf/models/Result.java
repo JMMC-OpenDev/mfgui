@@ -40,6 +40,11 @@ public class Result implements java.io.Serializable {
     private java.lang.String _href;
 
     /**
+     * Field _label
+     */
+    private java.lang.String _label;
+
+    /**
      * Field _description
      */
     private java.lang.String _description;
@@ -92,6 +97,16 @@ public class Result implements java.io.Serializable {
     {
         return this._href;
     } //-- java.lang.String getHref() 
+
+    /**
+     * Returns the value of field 'label'.
+     * 
+     * @return the value of field 'label'.
+     */
+    public java.lang.String getLabel()
+    {
+        return this._label;
+    } //-- java.lang.String getLabel() 
 
     /**
      * Method isValid
@@ -160,6 +175,16 @@ public class Result implements java.io.Serializable {
     {
         this._href = href;
     } //-- void setHref(java.lang.String) 
+
+    /**
+     * Sets the value of field 'label'.
+     * 
+     * @param label the value of field 'label'.
+     */
+    public void setLabel(java.lang.String label)
+    {
+        this._label = label;
+    } //-- void setLabel(java.lang.String) 
 
     /**
      * Method unmarshal
