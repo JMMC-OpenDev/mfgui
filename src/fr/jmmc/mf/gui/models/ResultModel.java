@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -12,9 +13,7 @@ import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Target;
 import java.io.File;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -36,7 +35,6 @@ public class ResultModel extends DefaultMutableTreeNode {
     private String htmlReport = null;
     private String xmlResult = null;
     private Result result = null;
-    private String creationDate = null;
 
     public ResultModel(SettingsModel settingsModel, Result result, boolean testDataBeforeShowing) {
         this.settingsModel = settingsModel;
@@ -64,9 +62,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
 
         genPlots(testDataBeforeShowing);
-        this.setUserObject(result);
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        creationDate = ft.format(new Date());
+        this.setUserObject(result);        
     }
 
     public Result getResult() {
@@ -150,11 +146,11 @@ public class ResultModel extends DefaultMutableTreeNode {
             args.put("residuals", Boolean.toString(residuals));
             plotName = plotName + " residuals";
         }
-        
-        logger.debug("start xslt from yoga xml to ptolemy plot (args={})",args);
+
+        logger.debug("start xslt from yoga xml to ptolemy plot (args={})", args);
         xmlStr = XmlFactory.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
         logger.debug("end xslt from yoga xml to ptolemy plot");
-        
+
         // this test is perform during load of results element in settings file that may or not have all kind of dataset
         if (testDataBeforeShowing && !xmlStr.substring(0, Math.min(xmlStr.length(), 500)).contains("dataset")) {
             logger.debug("No dataset to display");
@@ -178,7 +174,11 @@ public class ResultModel extends DefaultMutableTreeNode {
         this.add(new FrameTreeNode(plotMLFrame, tsv));
     }
 
-    public String toString() {                
-        return "Fit Result " + creationDate;
+    public String toString() {
+        String s = result.getLabel();
+        if (StringUtils.isEmpty(s)){
+            return "Fit result (missing timedate)";
+        }
+        return s;
     }
 }
