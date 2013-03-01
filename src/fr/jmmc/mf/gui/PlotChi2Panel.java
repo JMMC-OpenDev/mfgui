@@ -3,19 +3,26 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.data.ApplicationDescription;
+import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
+public class PlotChi2Panel extends javax.swing.JPanel implements Observer, FocusListener {
 
     /** Class logger */
     final static Logger logger = LoggerFactory.getLogger(PlotChi2Panel.class.getName());
@@ -28,6 +35,10 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     private int startValue = 0;
     /** this variable is true during init method and false else */
     private boolean isIniting;
+    /** array of 2 bound textfield for 1D chi2 ranges */
+    private JFormattedTextField[] rangeTextfields1D;
+    /** array of 4 bound textfield for 2D chi2 ranges */
+    private JFormattedTextField[] rangeTextfields2D;
 
     /** Creates new form PlotPanel */
     public PlotChi2Panel(PlotPanel plotPanel) {
@@ -39,8 +50,15 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
 
-        // display for beta only
-        runFitCheckBox.setVisible(ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion());
+        // init array of chi2 bound textfields 
+        rangeTextfields1D = new JFormattedTextField[]{xminFormattedTextField, xmaxFormattedTextField};
+        rangeTextfields2D = new JFormattedTextField[]{xminFormattedTextField, xmaxFormattedTextField,
+            yminFormattedTextField, ymaxFormattedTextField};
+        //and become listener of them for validations step inside the GUI
+        for (JFormattedTextField tf : rangeTextfields2D) {
+            // tf.addActionListener(this);
+            tf.addFocusListener(this);
+        }
     }
 
     public void show(SettingsModel s) {
@@ -71,21 +89,25 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         logger.debug("Searching {} parameters to use in chi2 slice", params.length);
         for (int i = 0; i < params.length; i++) {
             Parameter p = (Parameter) params[i];
-            if (!p.getHasFixedValue()) {
-                logger.debug("{} added to the comboboxes", p.getName());
-                xComboBox.addItem(p);
-                yComboBox.addItem(p);
-                if (tmpX != null && tmpX.getName().equals(p.getName())) {
-                    xComboBox.setSelectedItem(p);
-                    xParamChanged = true;
-                }
-                if (tmpY != null && tmpY.getName().equals(p.getName())) {
-                    yComboBox.setSelectedItem(p);
-                    yParamChanged = true;
-                }
+            logger.debug("{} added to the comboboxes", p.getName());
+            xComboBox.addItem(p);
+            yComboBox.addItem(p);
+            if (tmpX != null && tmpX.getName().equals(p.getName())) {
+                xComboBox.setSelectedItem(p);
+                xParamChanged = true;
+            }
+            if (tmpY != null && tmpY.getName().equals(p.getName())) {
+                yComboBox.setSelectedItem(p);
+                yParamChanged = true;
             }
         }
-
+        // try to get different value at startup for X and Y
+        final int nbYChoices = yComboBox.getModel().getSize();
+        if (nbYChoices > 1) {
+            if (xComboBox.getSelectedItem().equals(yComboBox.getSelectedItem())) {
+                yComboBox.setSelectedIndex((yComboBox.getSelectedIndex() + 1) % nbYChoices);
+            }
+        }
         // update table with
         updateTable();
 
@@ -99,12 +121,99 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         }
     }
 
-    private void plotChi2(boolean log, boolean reduced) {
+    /** 
+     * Check min or max range for a given parameter.
+     * return true if given value is compatible  with the parameter range if any, else false
+     */
+    private boolean isRangeOk(JTextField textfield, StringBuffer report) {
+
+        boolean isMin = (textfield == xminFormattedTextField || textfield == yminFormattedTextField);
+
+        Parameter p = (Parameter) yComboBox.getSelectedItem();
+        if (textfield == xminFormattedTextField || textfield == xmaxFormattedTextField) {
+            p = (Parameter) xComboBox.getSelectedItem();
+        }
+        boolean isOk = true;
+
+        try {
+            // test chi2 bound acccording parameter one if any
+            double value = Double.parseDouble(textfield.getText());
+            if (isMin && p.hasMinValue() && p.getMinValue() > value) {
+                report.append("the provided minimum ( ");
+                report.append(value);
+                report.append(" ) for ");
+                report.append(p);
+                report.append(" must be greater than ");
+                report.append(p.getMinValue());
+                report.append("\n");
+                isOk = false;
+            }
+            if (isMin && p.hasMaxValue() && p.getMaxValue() < value) {
+                report.append("the provided minimum ( ");
+                report.append(value);
+                report.append(" ) for ");
+                report.append(p);
+                report.append(" must be smaller than ");
+                report.append(p.getMaxValue());
+                report.append("\n");
+                isOk = false;
+            }
+        } catch (NumberFormatException nfe) {
+            report.append("invalid ").append(isMin ? "min" : "max").append(" value ");
+            report.append(" for ");
+            report.append(p);
+            report.append(" : ");
+            report.append(nfe.getMessage());
+            report.append("\n");
+            isOk = false;
+        }
+
+        return isOk;
+    }
+
+    /**
+     * Test given bound according to the associated given textfields.
+     * 
+     * @param textfields textfield array to check value of or null for every one 
+     * @return  true if noting is out of bound, else false
+     */
+    private boolean areParameterRangesOk(final JTextField[] textfields) {
+        boolean hasError = false;
+        Parameter p = null;
+        StringBuffer report = new StringBuffer();
+        report.append("Chi2 parameter out of parameter range:\n");
+
+        JTextField[] textfieldsToCheck = textfields == null ? rangeTextfields2D : textfields;
+        for (JTextField textfield : textfieldsToCheck) {
+            if (!isRangeOk(textfield, report)) {
+                hasError = true;
+                textfield.setForeground(Color.RED);
+            }else{
+                textfield.setForeground(Color.BLACK);
+            }
+        }
+        
+        if ( hasError ) {
+            MessagePane.showErrorMessage(report.toString());
+        }
+        return !hasError;
+    }
+
+    private void plotChi2() {
         String titleLabel = "Slice";
 
         // Build command line arguments according to the widget states                
         StringBuilder args = new StringBuilder();
 
+        boolean log = logChi2CheckBox.isSelected();
+        boolean reduced = reducedChi2CheckBox.isSelected();
+        boolean is1DChi2 =jRadioButton1D.isSelected();
+        
+        // stop if bounds are not ok
+        if (!areParameterRangesOk(is1DChi2 ? rangeTextfields1D : rangeTextfields2D)) {
+            return;
+        }
+        
         // If check box for probing is selected
         if (runFitCheckBox.isSelected()) {
             // add option in  command line
@@ -135,7 +244,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
         args.append(xmaxFormattedTextField.getText()).append(" ");
         args.append(xSamplingFormattedTextField.getText());
 
-        if (jRadioButton1D.isSelected()) {
+        if (is1DChi2) {
             plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " " + titleLabel + " on " + xParamName);
         } else {
             final String yParamName = ((Parameter) yComboBox.getSelectedItem()).getName();
@@ -386,7 +495,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
-        plotChi2(logChi2CheckBox.isSelected(), reducedChi2CheckBox.isSelected());
+        plotChi2();
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 
     private void updateTable() {
@@ -482,5 +591,15 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         show(settingsModel);
+    }
+
+    public void focusGained(FocusEvent e) {
+        //nop
+    }
+
+    public void focusLost(FocusEvent e) {
+        final JFormattedTextField tf = (JFormattedTextField) e.getSource();
+        //checkParamRanges(new JTextField[]{(JTextField) e.getSource()});
+        areParameterRangesOk(new JTextField[]{tf});
     }
 }
