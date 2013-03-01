@@ -157,6 +157,7 @@
                   1/ result title generations in the tree does not get proper timing
                   2/ Leave resource in MFGui.closeSettings()
                 -->            
+                <change type="CHANGE">Target panels sub-components moved to save space</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/450">Chi2 cuts bounds are now reported immediatly if entered out of parameter's bounds</change>
                                               
@@ -169,7 +170,7 @@
             <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>                                      
             <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>                                                  
             </prerelease><prerelease version="1.0.13 beta 3">            
-            <change type="CHANGE">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>                                             
+            <change type="CHANGE"  url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>                                             
             <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>            
             <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>            
             </prerelease><prerelease version="1.0.13 beta 2">               
