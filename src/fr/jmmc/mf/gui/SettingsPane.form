@@ -173,7 +173,7 @@
                         </Constraint>
                       </Constraints>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel2">
+                    <Component class="javax.swing.JLabel" name="skipPlotLabel">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Skip plots"/>
                       </Properties>

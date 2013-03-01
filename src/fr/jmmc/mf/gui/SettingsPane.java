@@ -128,7 +128,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));
         
         // display for beta only 
-        skipPlotResultsCheckBox.setVisible(ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion()); 
+        boolean isInProd = ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion();        
+        skipPlotResultsCheckBox.setVisible(isInProd); 
+        skipPlotLabel.setVisible(isInProd);
         
     }
 
@@ -330,7 +332,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jLabel1 = new javax.swing.JLabel();
         helpButton1 = new javax.swing.JButton();
         skipPlotResultsCheckBox = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
+        skipPlotLabel = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         modifierPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -408,12 +410,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.gridy = 3;
         jPanel1.add(skipPlotResultsCheckBox, gridBagConstraints);
 
-        jLabel2.setText("Skip plots");
+        skipPlotLabel.setText("Skip plots");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        jPanel1.add(jLabel2, gridBagConstraints);
+        jPanel1.add(skipPlotLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -504,7 +506,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel controlPanel;
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
@@ -515,6 +516,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel modifierPanel2;
     private javax.swing.JButton runFitButton;
     private javax.swing.JScrollPane settingsTreeScrollPane;
+    private javax.swing.JLabel skipPlotLabel;
     private javax.swing.JCheckBox skipPlotResultsCheckBox;
     // End of variables declaration//GEN-END:variables
 }
