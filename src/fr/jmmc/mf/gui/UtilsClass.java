@@ -8,15 +8,14 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.util.FileUtils;
-import fr.jmmc.jmcs.util.UrlUtils;
 import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
-import java.io.File;
 import java.io.*;
+import java.io.File;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -30,10 +29,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
@@ -136,8 +132,10 @@ public class UtilsClass {
 
     public static File getPlotMLTSVFile(String ptPlotStr) {
         // Contruct xml document to plot
+        logger.debug("start xslt from ptolemy xml to TSV");
         String xmlStr = XmlFactory.transform(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl");
-
+        logger.debug("end xslt from ptolemy xml to TSV");
+        
         // TODO use stream
 
         // Write content into a temporary file
@@ -899,5 +897,75 @@ public class UtilsClass {
     // TODO move into jmal
     public static double getY(double rho, double pa) {
         return rho * Math.sin((90.0 - pa) * (Math.PI / 180));
+    }
+
+    /**
+     * Return the maximum value of the model unique index found recursively using the given model and child models
+     *
+     * @param models models to traverse
+     */
+    public static int findModelMaxUniqueIndex(final Settings s) {
+
+        int prevIdx = 1;
+
+        // Test target's models and their parameters
+        for (Target t : s.getTargets().getTarget()) {
+            final Model[] models = t.getModel();
+            for (Model m : models) {
+                prevIdx = Math.max(prevIdx, parseModelUniqueIndex(m));
+                for (Parameter p : m.getParameter()) {
+                    prevIdx = Math.max(prevIdx, parseParameterUniqueIndex(p));
+                }
+            }
+        }
+
+        // Test shared parameters if any
+        for (Parameter p : s.getParameters().getParameter()) {
+            prevIdx = Math.max(prevIdx, parseParameterUniqueIndex(p));
+        }
+
+        return prevIdx;
+    }
+
+    /**
+     * Return the model unique index from its name parsing [model type + digit] like 'disk'1 ...
+     *
+     * @param model model to use
+     * @return model unique index
+     */
+    public static int parseModelUniqueIndex(final Model model) {
+        final String idx = model.getName().substring(model.getType().length());
+
+        int index = 0;
+        if (idx.length() > 0) {
+            try {
+                index = Integer.parseInt(idx);
+            } catch (NumberFormatException nfe) {
+                logger.error("model id parsing failure:", nfe);
+            }
+        }
+
+        return index;
+    }
+
+    /**
+     * Return the parameter unique index from its name parsing [param type + digit] like 'diameter'1 ...
+     *
+     * @param param parameter to use
+     * @return parameter unique index
+     */
+    public static int parseParameterUniqueIndex(final Parameter param) {
+        final String idx = param.getName().substring(param.getType().length());
+
+        int index = 0;
+        if (idx.length() > 0) {
+            try {
+                index = Integer.parseInt(idx);
+            } catch (NumberFormatException nfe) {
+                logger.error("model id parsing failure:", nfe);
+            }
+        }
+
+        return index;
     }
 }
