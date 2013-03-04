@@ -4,13 +4,13 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.jmcs.data.ApplicationDescription;
-import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
+import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
@@ -322,14 +322,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
         parentTarget.removeModel(currentModel);
 
-        int modelIdx = getNewModelIdx(newModel.getType());
+        int modelIdx = UtilsClass.parseModelUniqueIndex(currentModel);
         newModel.setName(newModel.getType() + modelIdx);
         // try to recover previous parameters
         Parameter[] currentModelParams = currentModel.getParameter();
         Parameter[] newModelParams = newModel.getParameter();
         for (int i = 0; i < newModelParams.length; i++) {
             Parameter np = newModelParams[i];
-            np.setName(getNewParamName(np.getName(), modelIdx));
+            np.setName(np.getType()+modelIdx);
             for (int j = 0; j < currentModelParams.length; j++) {
                 Parameter cp = currentModelParams[j];
                 if (matchType(np.getType(), cp.getType())) {
@@ -439,7 +439,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void addModel(Target parentTarget, Model newModel) {
         // force another name with unique position
         String type = newModel.getType();
-        int modelIdx = getNewModelIdx(type);
+        int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings())+1;
         newModel.setName(type + modelIdx);
 
         boolean firstModel = parentTarget.getModelCount() == 0;
@@ -466,7 +466,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
             }
-            p.setName(getNewParamName(p.getName(), modelIdx));
+            p.setName(p.getType()+ modelIdx);
             parameterComboBoxModel.addElement(p);
             parameterListModel.addElement(p);
         }
@@ -679,7 +679,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
     }
-
+    
     public void toggleSelectedFrames() {
         TreePath[] treepaths = getSelectionPaths();
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
@@ -698,67 +698,21 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
-    /** Tell if the inner model is well filled and consistent */
+    /** 
+     * Tell if the inner model is well filled and consistent 
+     * @return true if valid, else false
+     */
     public boolean isValid() {
         boolean isValid = rootSettings.isValid();
         logger.trace("isValid=" + isValid);
         return isValid && isSelfConsistent;
-    }
+    }            
 
-    /** Returns a new uniq file Id */
-    public String getNewFileId() {
-        Vector<String> ids = new Vector();
-        File[] files = rootSettings.getFiles().getFile();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            ids.add(file.getId());
-        }
-        return "fileId" + getNewId("fileId", ids, 1);
-    }
-
-    /** Returns a new id to build a new uniq Model Name by suffixing given prefix */
-    public int getNewModelIdx(String prefix) {
-        Vector<String> ids = new Vector();
-        Target[] targets = rootSettings.getTargets().getTarget();
-        for (int i = 0; i < targets.length; i++) {
-            Target target = targets[i];
-            Model[] models = target.getModel();
-            for (int j = 0; j < models.length; j++) {
-                Model model = models[j];
-                ids.add(model.getName());
-            }
-        }
-        return getNewId(prefix, ids, 1);
-    }
-
-    /** Returns a new uniq param name with a preferenced suffixe idx*/
-    public String getNewParamName(String prefix, int suffix) {
-        Vector<String> ids = new Vector();
-        Target[] targets = rootSettings.getTargets().getTarget();
-        int nextId = 1;
-        for (int i = 0; i < targets.length; i++) {
-            Target target = targets[i];
-            Model[] models = target.getModel();
-            for (int j = 0; j < models.length; j++) {
-                Model model = models[j];
-                // parameter construction will try to start from model count
-                // instead of parameter count
-                nextId++;
-                Parameter[] params = model.getParameter();
-                for (int k = 0; k < params.length; k++) {
-                    Parameter parameter = params[k];
-                    ids.add(parameter.getName());
-                }
-            }
-        }
-        return prefix + getNewId(prefix, ids, suffix);
-    }
-
-    /** Returns a new uniq param name */
-    public String getNewParamName(String prefix) {
-        return getNewParamName(prefix, 1);
-    }
-
+    /**
+     * Change Model name.
+     * @param model model to change
+     * @param newName new name for given model
+     */
     public void setModelName(Model model, String newName) {
         model.setName(newName);
         Target parentTarget = getParent(model);
@@ -767,21 +721,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 model);
     }
 
-    /**
-     * Return a new id according to the given prefix, starting index and list of previous ids.
-     * @param prefix prefix of the new id
-     * @param firstId staring index of new id
-     * @param previousIds list of previous ids
-     * @return the new id
-     */
-    protected int getNewId(String prefix, Vector<String> previousIds, int firstId) {
-        String newId = prefix + firstId;
-        while (previousIds.contains(newId)) {
-            firstId++;
-            newId = prefix + firstId;
-        }
-        return firstId;
-    }
+
 
     /**
      * Return the filename that is used to store settings into.
@@ -1244,7 +1184,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         File newFile = new File();
         newFile.setName(fitsFileName);
-        newFile.setId(getNewFileId());
+        newFile.setId(oifitsFile.getName());
 
         if (checkFile(newFile)) {
             allFilesListModel.addElement(newFile);
