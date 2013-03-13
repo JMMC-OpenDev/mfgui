@@ -11,6 +11,7 @@ import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.RecentFilesManager;
+import fr.jmmc.jmcs.util.ResourceUtils;
 import fr.jmmc.jmcs.util.XmlFactory;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
@@ -40,9 +41,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class manages the castor generated classes to bring
- * one interface over a more conventionnal object.
+ * one interface over a more conventional object.
  * It implements:
- *  - the treemodel to be used by the settingsPane tree
+ *  - the tree model to be used by the settingsPane tree
  *  - the modifyAndSaveObject to ensure that application save user modification on application exit
  *
  */
@@ -79,6 +80,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private static java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile> alreadyExpandedOifitsFiles = new java.util.HashMap<fr.jmmc.mf.models.File, OIFitsFile>();
     private HashMap<OIFitsFile, OIFitsChecker> oiFitsFileToOIFitsChecker = new HashMap<OIFitsFile, OIFitsChecker>();
     private DefaultMutableTreeNode plotContainerNode = new DefaultMutableTreeNode("Plots") {
+        @Override
         public String toString() {
             return "Plots";
         }
@@ -117,7 +119,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.warn("Error in uri syntax for " + url, ex);
             throw new IOException("Error in uri syntax for " + url, ex);
         }
-        java.io.File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
+        java.io.File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
         if (Http.download(uriToLoad, tmpFile, false)) {
             init(FileUtils.readFile(tmpFile));
         } else {
@@ -208,7 +210,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Return the supported models. This method autoatically make a request to get server
+     * Return the supported models. This method automatically make a request to get server
      * list if the current list is empty.
      * @return the supportedModelsModel
      */
@@ -329,7 +331,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Parameter[] newModelParams = newModel.getParameter();
         for (int i = 0; i < newModelParams.length; i++) {
             Parameter np = newModelParams[i];
-            np.setName(np.getType()+modelIdx);
+            np.setName(np.getType() + modelIdx);
             for (int j = 0; j < currentModelParams.length; j++) {
                 Parameter cp = currentModelParams[j];
                 if (matchType(np.getType(), cp.getType())) {
@@ -393,8 +395,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
     }
 
-    /** try to tell if the data of the old param can be copied to new Param
-     * according to both names. If they ends with te same string after the '_'
+    /** try to tell if the data of the old parameter can be copied to new parameter.
+     * according to both names. If they ends with the same string after the '_'
      * character, then this method returns true.
      * @return true if both string ends with same keyword, else returns false
      */
@@ -439,7 +441,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void addModel(Target parentTarget, Model newModel) {
         // force another name with unique position
         String type = newModel.getType();
-        int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings())+1;
+        int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings()) + 1;
         newModel.setName(type + modelIdx);
 
         boolean firstModel = parentTarget.getModelCount() == 0;
@@ -466,7 +468,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
             }
-            p.setName(p.getType()+ modelIdx);
+            p.setName(p.getType() + modelIdx);
             parameterComboBoxModel.addElement(p);
             parameterListModel.addElement(p);
         }
@@ -679,7 +681,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
     }
-    
+
     public void toggleSelectedFrames() {
         TreePath[] treepaths = getSelectionPaths();
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode}));
@@ -706,7 +708,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         boolean isValid = rootSettings.isValid();
         logger.trace("isValid=" + isValid);
         return isValid && isSelfConsistent;
-    }            
+    }
 
     /**
      * Change Model name.
@@ -720,8 +722,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 getIndexOfChild(rootSettings.getTargets(), parentTarget),
                 model);
     }
-
-
 
     /**
      * Return the filename that is used to store settings into.

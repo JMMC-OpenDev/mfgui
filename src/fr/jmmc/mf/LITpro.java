@@ -12,6 +12,7 @@ import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.util.ResourceUtils;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -45,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author mella
  */
 public class LITpro extends fr.jmmc.jmcs.App {
@@ -76,7 +76,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     protected void initServices() throws IllegalStateException, IllegalArgumentException {
 
         // Set default resource for application
-        fr.jmmc.jmcs.util.ResourceUtils.setResourceName("fr/jmmc/mf/gui/Resources");
+        fr.jmmc.jmcs.util.PropertyUtils.setResourceName("fr/jmmc/mf/gui/Resources");
 
         myPreferences = Preferences.getInstance();
 
@@ -400,7 +400,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
                         try {
                             final URI uri = new URI(url);
-                            File tmpFile = FileUtils.getTempFile(FileUtils.filenameFromResourcePath(url));
+                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
                             if (Http.download(uri, tmpFile, true)) {
                                 sm.addFile(tmpFile);
                             } else {
