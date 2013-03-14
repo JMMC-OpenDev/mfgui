@@ -3,7 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.data.ApplicationDescription;
+import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.RunFitAction;

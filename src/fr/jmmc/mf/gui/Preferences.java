@@ -3,7 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.data.ApplicationDescription;
+import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.data.preference.PreferencesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
