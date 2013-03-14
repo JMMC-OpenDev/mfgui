@@ -8,7 +8,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
 import fr.jmmc.jmcs.util.FileUtils;
-import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.util.ResourceUtils;

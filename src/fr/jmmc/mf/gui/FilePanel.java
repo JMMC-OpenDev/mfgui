@@ -10,7 +10,7 @@ import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
 import fr.jmmc.jmcs.util.JnlpStarter;
-import fr.jmmc.jmcs.util.MimeType;
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
