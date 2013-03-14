@@ -10,8 +10,7 @@
  * Fix demo loading and save screenshot with LITpro prefix.. C'est vraiment top!!!
  *
  * Revision 1.1  2011/04/05 08:34:31  mella
- * First implementatio of basic tests
- *
+ * First implementation of basic tests
  *
  * Copied from AsproDocJUnitTest/bourges
  */
@@ -19,34 +18,23 @@ package fest;
 
 import static org.fest.swing.core.matcher.JButtonMatcher.*;
 import static org.fest.swing.timing.Pause.*;
-
 import fest.common.JmcsApplicationSetup;
-
 import fest.common.JmcsFestSwingJUnitTestCase;
-import org.ivoa.util.timer.TimerFactory;
-import org.ivoa.util.timer.TimerFactory.UNIT;
-
-import java.awt.Frame;
+import fr.jmmc.jmcs.util.timer.TimerFactory;
+import fr.jmmc.jmcs.util.timer.TimerFactory.UNIT;
 import java.util.logging.Level;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import org.fest.assertions.Fail;
-
 import org.fest.swing.annotation.GUITest;
-import org.fest.swing.core.matcher.FrameMatcher;
 import org.fest.swing.edt.GuiActionRunner;
 import org.fest.swing.edt.GuiQuery;
-import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JButtonFixture;
 import org.fest.swing.timing.Condition;
 import org.fest.swing.timing.Timeout;
-
 import org.junit.Test;
 
-
-
 /**
- * This simple tests takes screenshots to complete the Aspro2 documentation
+ * This simple tests takes screen shots to complete the Aspro2 documentation
  * 
  * @author bourgesl
  */
@@ -54,9 +42,8 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
 
     /** queries to perform */
     private static final int QUERY_ITERATIONS = 20;
-
     /** 60s timeout */
-    private static final Timeout LONG_TIMEOUT = Timeout.timeout(60 * 1000l);    
+    private static final Timeout LONG_TIMEOUT = Timeout.timeout(60 * 1000l);
     /** time to wait between queries (ms) */
     private static final long QUERY_PAUSE = 1 * 200l;
 
@@ -99,15 +86,15 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
      * }
      * ADSL2:
      * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
-  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2352.07077, avg = 2610.93381, max = 4081.17988, acc = 52218.67628, std = 202.38237 [16] std low  = 305.54489 [12] std high = 0.0 [4] }
-  High : Timer [LITpro (ms) - ms] [0]
-}
+     Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2352.07077, avg = 2610.93381, max = 4081.17988, acc = 52218.67628, std = 202.38237 [16] std low  = 305.54489 [12] std high = 0.0 [4] }
+     High : Timer [LITpro (ms) - ms] [0]
+     }
      * ADSL2 et reponse serveur gzippee:
      * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
-  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2293.26749, avg = 2648.40666, max = 4076.51545, acc = 52968.1333, std = 329.80932 [16] std low  = 301.387 [12] std high = 0.0 [4] }
-  High : Timer [LITpro (ms) - ms] [0]
-}
-}
+     Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 2293.26749, avg = 2648.40666, max = 4076.51545, acc = 52968.1333, std = 329.80932 [16] std low  = 301.387 [12] std high = 0.0 [4] }
+     High : Timer [LITpro (ms) - ms] [0]
+     }
+     }
      *
      * Avec compression de fichier
      * LABO
@@ -117,14 +104,14 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
      *}
      * ADSL2
      * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
-  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1730.28448, avg = 1972.07167, max = 3535.25745, acc = 39441.43348, std = 222.11101 [16] std low  = 310.72906 [13] std high = 0.0 [3] }
-  High : Timer [LITpro (ms) - ms] [0]
-}
+     Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1730.28448, avg = 1972.07167, max = 3535.25745, acc = 39441.43348, std = 222.11101 [16] std low  = 310.72906 [13] std high = 0.0 [3] }
+     High : Timer [LITpro (ms) - ms] [0]
+     }
      * ADSL2  et reponse serveur gzippee:
      * Timer [LITpro (ms) - ms] [20] (threshold = 5000.0 ms) {
-  Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1684.15672, avg = 2033.1817, max = 3558.05825, acc = 40663.63419, std = 470.95373 [16] std low  = 378.57893 [10] std high = 0.0 [6] }
-  High : Timer [LITpro (ms) - ms] [0]
-}
+     Low  : Timer [LITpro (ms) - ms] [20] {num = 20 : min = 1684.15672, avg = 2033.1817, max = 3558.05825, acc = 40663.63419, std = 470.95373 [16] std low  = 378.57893 [10] std high = 0.0 [6] }
+     High : Timer [LITpro (ms) - ms] [0]
+     }
      */
     @Test
     @GUITest
@@ -164,7 +151,7 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
                      */
                     public boolean test() {
                         return GuiActionRunner.execute(new GuiQuery<Boolean>() {
-                            protected Boolean executeInEDT() {                               
+                            protected Boolean executeInEDT() {
                                 return button.isEnabled();
                             }
                         });
@@ -190,21 +177,20 @@ public final class LITproDocJUnitTest extends JmcsFestSwingJUnitTestCase {
         }
     }
 
-  /**
-   * Test the application exit sequence : ALWAYS THE LAST TEST
-   */
-  @Test
-  @GUITest
-  public void shouldExit() {
-    logger.severe("shouldExit test");
+    /**
+     * Test the application exit sequence : ALWAYS THE LAST TEST
+     */
+    @Test
+    @GUITest
+    public void shouldExit() {
+        logger.severe("shouldExit test");
 
-    window.close();
+        window.close();
 
-    confirmDialogDontSave();
-  }
+        confirmDialogDontSave();
+    }
 
-  /*
-  --- Utility methods  ---------------------------------------------------------
-   */
-
+    /*
+     --- Utility methods  ---------------------------------------------------------
+     */
 }

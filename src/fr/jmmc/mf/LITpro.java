@@ -41,7 +41,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
-import org.ivoa.util.runner.LocalLauncher;
+import fr.jmmc.jmcs.util.runner.LocalLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
