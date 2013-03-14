@@ -906,7 +906,7 @@ public class UtilsClass {
      */
     public static int findModelMaxUniqueIndex(final Settings s) {
 
-        int prevIdx = 1;
+        int prevIdx = 0;
 
         // Test target's models and their parameters
         for (Target t : s.getTargets().getTarget()) {
