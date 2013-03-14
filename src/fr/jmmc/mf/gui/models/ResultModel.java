@@ -3,8 +3,8 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.StringUtils;
-import fr.jmmc.jmcs.util.XslTransform;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Residual;
@@ -62,7 +62,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
 
         genPlots(testDataBeforeShowing);
-        this.setUserObject(result);        
+        this.setUserObject(result);
     }
 
     public Result getResult() {
@@ -176,7 +176,7 @@ public class ResultModel extends DefaultMutableTreeNode {
 
     public String toString() {
         String s = result.getLabel();
-        if (StringUtils.isEmpty(s)){
+        if (StringUtils.isEmpty(s)) {
             return "Fit result (missing timedate)";
         }
         return s;

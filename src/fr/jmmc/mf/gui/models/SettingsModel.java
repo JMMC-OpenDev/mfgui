@@ -3,16 +3,16 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
+import fr.jmmc.jmcs.service.RecentFilesManager;
+import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
-import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
-import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.util.ResourceUtils;
-import fr.jmmc.jmcs.util.XslTransform;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;

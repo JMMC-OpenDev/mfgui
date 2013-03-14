@@ -3,14 +3,14 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.gui.component.FileChooser;
-import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampManager;
-import fr.jmmc.jmcs.util.JnlpStarter;
-import fr.jmmc.jmcs.data.MimeType;
+import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
+import fr.jmmc.jmcs.service.JnlpStarter;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.oitools.model.*;
@@ -18,13 +18,13 @@ import fr.nom.tam.fits.FitsException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.astrogrid.samp.client.SampException;
-import ptolemy.plot.plotml.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.astrogrid.samp.Client;
+import org.astrogrid.samp.client.SampException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ptolemy.plot.plotml.*;
 
 /**
  *
