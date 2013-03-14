@@ -12,7 +12,7 @@ import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.RecentFilesManager;
 import fr.jmmc.jmcs.util.ResourceUtils;
-import fr.jmmc.jmcs.util.XmlFactory;
+import fr.jmmc.jmcs.util.XslTransform;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
@@ -1822,6 +1822,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public String toLITproDesc() {
-        return XmlFactory.transform(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl");
+        return XslTransform.transform(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl");
     }
 }

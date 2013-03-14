@@ -8,7 +8,7 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.util.FileUtils;
-import fr.jmmc.jmcs.util.XmlFactory;
+import fr.jmmc.jmcs.util.XslTransform;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
@@ -133,7 +133,7 @@ public class UtilsClass {
     public static File getPlotMLTSVFile(String ptPlotStr) {
         // Contruct xml document to plot
         logger.debug("start xslt from ptolemy xml to TSV");
-        String xmlStr = XmlFactory.transform(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl");
+        String xmlStr = XslTransform.transform(ptPlotStr, "fr/jmmc/mf/gui/ptplotToTsv.xsl");
         logger.debug("end xslt from ptolemy xml to TSV");
         
         // TODO use stream

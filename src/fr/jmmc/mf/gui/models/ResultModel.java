@@ -4,7 +4,7 @@
 package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.jmcs.util.StringUtils;
-import fr.jmmc.jmcs.util.XmlFactory;
+import fr.jmmc.jmcs.util.XslTransform;
 import fr.jmmc.mf.gui.FrameTreeNode;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Residual;
@@ -50,14 +50,14 @@ public class ResultModel extends DefaultMutableTreeNode {
             logger.debug("End result section write into stringbuffer");
             xmlResult = xmlResultSw.toString();
             logger.debug("Start html generation");
-            htmlReport = XmlFactory.transform(xmlResult, xslPath);
+            htmlReport = XslTransform.transform(xmlResult, xslPath);
             logger.debug("End html generation");
         } else {
             xmlResult = "<result>"
                     + UtilsClass.saveBASE64ToString(result.getHref())
                     + "</result>";
             logger.debug("Start html generation");
-            htmlReport = XmlFactory.transform(xmlResult, xslPath);
+            htmlReport = XslTransform.transform(xmlResult, xslPath);
             logger.debug("End html generation");
         }
 
@@ -148,7 +148,7 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
 
         logger.debug("start xslt from yoga xml to ptolemy plot (args={})", args);
-        xmlStr = XmlFactory.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
+        xmlStr = XslTransform.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
         logger.debug("end xslt from yoga xml to ptolemy plot");
 
         // this test is perform during load of results element in settings file that may or not have all kind of dataset
