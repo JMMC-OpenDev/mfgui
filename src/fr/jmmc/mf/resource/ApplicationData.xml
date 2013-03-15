@@ -117,10 +117,10 @@
     <menubar>
         <menu label="File">
             <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
-            icon="/fr/jmmc/mf/gui/icons/filenew.png"/>
+                icon="fr/jmmc/mf/gui/icons/filenew.png"/>
             <menu/>
             <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
-            icon="/fr/jmmc/mf/gui/icons/fileopen.png"/>
+                icon="fr/jmmc/mf/gui/icons/fileopen.png"/>
             <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
@@ -130,13 +130,13 @@
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
-            icon="/fr/jmmc/mf/gui/icons/filesaveas.png"/>            
+                icon="fr/jmmc/mf/gui/icons/filesaveas.png"/>            
         </menu>
         <menu label="Edit">
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
-            icon="/fr/jmmc/mf/gui/icons/button_fewer.png"/>
+                icon="fr/jmmc/mf/gui/icons/button_fewer.png"/>
             <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"
-            icon="/fr/jmmc/mf/gui/icons/view_sidetree.png"/>
+                icon="fr/jmmc/mf/gui/icons/view_sidetree.png"/>
             <menu/>
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
