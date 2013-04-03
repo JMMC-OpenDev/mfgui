@@ -4,25 +4,33 @@
 package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
+import fr.jmmc.jmcs.gui.util.WindowUtils;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.PreferencesView;
 import java.awt.event.ActionEvent;
 
+/**
+ * Display the (centered) preference window.
+ * @author mella
+ */
 public class ShowPrefAction extends RegisteredAction {
 
+    /** Class name */
     final static String className = ShowPrefAction.class.getName();
     /** Preferences view */
-    PreferencesView preferencesView;
-    MFGui mfgui;
+    PreferencesView preferencesView;    
 
-    public ShowPrefAction(MFGui mfgui) {
-        super(className, "showPreferences");
-        this.mfgui = mfgui;
+    /**
+     * Create show preference action
+     */
+    public ShowPrefAction() {
+        super(className, "showPreferences");        
         flagAsPreferenceAction();
         preferencesView = new PreferencesView();
+        WindowUtils.centerOnMainScreen(preferencesView);        
     }
 
     public void actionPerformed(ActionEvent e) {
-        preferencesView.setVisible(true);
+        preferencesView.setVisible(true);        
     }
 }
