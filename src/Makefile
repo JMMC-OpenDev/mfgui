@@ -103,7 +103,8 @@ JAVA_JAR =
 #
 # <brief description of mfgui jar files>
 mfgui_DIRS     = fr 
-mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
+mfgui_EXTRAS   = LogbackConfiguration.xml \
+                 fr/jmmc/mf/gui/Resources.properties \
                  fr/jmmc/mf/resource/*.* \
                  fr/jmmc/mf/gui/*.html \
                  fr/jmmc/mf/gui/*.xml \
@@ -115,8 +116,8 @@ mfgui_EXTRAS   = fr/jmmc/mf/gui/Resources.properties \
 # Java programs
 # ---------------------------------
 JAVA_EXECUTABLES = LITproGUI \
-				   mfguiReadAndWriteXml\
-									 mfguiShowXmlPlot
+                   mfguiReadAndWriteXml\
+                   mfguiShowXmlPlot
 
 #
 # <brief description of ModelFitting java program>
