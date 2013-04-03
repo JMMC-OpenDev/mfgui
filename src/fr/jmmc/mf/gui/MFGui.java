@@ -56,7 +56,7 @@ public final class MFGui extends JFrame {
         // instanciate actions
         getYogaVersionAction = new GetYogaVersionAction(this);
 
-        new ShowPrefAction(this);
+        new ShowPrefAction();
         new NewModelAction(this);
         new CloseModelAction(this);
         new LoadModelAction(this);
