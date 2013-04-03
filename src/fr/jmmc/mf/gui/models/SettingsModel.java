@@ -1430,7 +1430,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void saveSettingsFile(java.io.File fileToSave)
             throws IllegalStateException {
-        boolean saveResults = myPreferences.getPreferenceAsBoolean("save.results");
+        boolean saveResults = myPreferences.getPreferenceAsBoolean(Preferences.SAVE_RESULTS);
         saveSettingsFile(fileToSave, saveResults);
     }
 

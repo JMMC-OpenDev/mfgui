@@ -93,7 +93,7 @@ public final class MFGui extends JFrame {
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
         toolBar.addSeparator();
         toolBar.add(InternalActionFactory.showHelpAction());
-        toolBar.setVisible(myPreferences.getPreferenceAsBoolean("show.toolbar"));
+        toolBar.setVisible(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));
 
 
         // Handle status bar

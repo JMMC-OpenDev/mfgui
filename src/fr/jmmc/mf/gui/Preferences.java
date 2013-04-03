@@ -19,7 +19,17 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     private final static String className = Preferences.class.getName();
     /** Logger */
     static final Logger logger = LoggerFactory.getLogger(className);
-    private static String _version = ApplicationDescription.getInstance().getProgramVersion();
+    public static final String MF_VERSION = "mf.version";
+    public static final String HELP_TOOLTIPS_SHOW = "help.tooltips.show";
+    public static final String SHOW_TOOLBAR = "show.toolbar";
+    public static final String SHOW_RECURSIVE_PARAMETERS = "show.recursive.parameters";
+    public static final String SAVE_RESULTS = "save.results";
+    public static final String USER_FOV = "user.fov";
+    public static final String USER_UVPOINT_LIMITFORPLOT = "user.uvpoint.limitforplot";
+    public static final String YOGA_REMOTE_USE = "yoga.remote.use";
+    public static final String YOGA_LOCAL_HOME = "yoga.local.home";
+    public static final String YOGA_LOCAL_PROGNAME = "yoga.local.progname";
+    public static final String YOGA_REMOTE_URL = "yoga.remote.url";
 
     /**
      * Privatized constructor that must be empty.
@@ -51,23 +61,24 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
      */
     @Override
     protected void setDefaultPreferences() throws PreferencesException {
-        setDefaultPreference("mf.version", _version);
+        setDefaultPreference(MF_VERSION, ApplicationDescription.getInstance().getProgramVersion());
         /* Place general preferences  */
-        setDefaultPreference("help.tooltips.show", "true");
-        setDefaultPreference("show.toolbar", "true");
-        setDefaultPreference("show.recursive.parameters", "false");
-        setDefaultPreference("save.results", "true");
-        setDefaultPreference("user.fov", "30");
-        setDefaultPreference("yoga.remote.use", "true");
-        setDefaultPreference("yoga.local.home", "../ys");
-        setDefaultPreference("yoga.local.progname", "/bin/yoga.sh");
+        setDefaultPreference(HELP_TOOLTIPS_SHOW, "true");
+        setDefaultPreference(SHOW_TOOLBAR, "true");
+        setDefaultPreference(SHOW_RECURSIVE_PARAMETERS, "false");
+        setDefaultPreference(SAVE_RESULTS, "true");
+        setDefaultPreference(USER_FOV, "30");
+        setDefaultPreference(USER_UVPOINT_LIMITFORPLOT, "300");                
+        setDefaultPreference(YOGA_REMOTE_USE, "true");
+        setDefaultPreference(YOGA_LOCAL_HOME, "../ys");
+        setDefaultPreference(YOGA_LOCAL_PROGNAME, "/bin/yoga.sh");
         // our actual convention tells that a beta version ends with b1...bN
         if (ApplicationDescription.isAlphaVersion()) {
-            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~mella/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~mella/LITproWebService/run.php");
         } else if (ApplicationDescription.isBetaVersion()) {
-            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
         } else {
-            setDefaultPreference("yoga.remote.url", "http://jmmc.fr/~swmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~swmgr/LITproWebService/run.php");
         }
     }
 
