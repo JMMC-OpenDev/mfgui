@@ -16,6 +16,7 @@ import fr.jmmc.jmcs.util.ResourceUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
+import fr.jmmc.oitools.model.OIData;
 import fr.jmmc.oitools.model.OIFitsChecker;
 import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
@@ -245,6 +246,24 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         i, fileLink);
             }
         }
+    }
+    
+    /**
+     * Return the number of measurements from every oidata tables.
+     * @return the sum of every table measurements for every loaded oifits.
+     */
+    public int getNbMeasurements(){
+        int count=0;
+        // add all points of each table entries for every files
+        File[] files = this.rootSettings.getFiles().getFile();
+        for (File file : files) {
+            OIFitsFile oifits = getOIFitsFromFile(file);
+            List<OIData> oidata = oifits.getOiDataList();
+            for (OIData table : oidata) {
+                count+=table.getNbMeasurements();
+            }
+        }                               
+        return count;
     }
 
     /**

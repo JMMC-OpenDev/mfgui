@@ -107,6 +107,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         ActionRegistrar actionRegistrar = ActionRegistrar.getInstance();
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
+        
+        skipPlotResultsButton.setAction(actionRegistrar.getPreferenceAction());
 
         settingsTree.setModel(rootSettingsModel);
         settingsTree.setSelectionModel(rootSettingsModel);
@@ -125,13 +127,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         runFitButton.setAction(runFitAction);
 
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));
-        
-        // display for beta only 
-        boolean isInProd = ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion();        
-        skipPlotResultsCheckBox.setVisible(isInProd); 
-        skipPlotLabel.setVisible(isInProd);
-        
+        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));                      
     }
 
     /**
@@ -300,6 +296,17 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         }
         
         runFitAction.setEnabled(validSettingsModel && hasOneFreeParam);
+        
+        int nbMeasurements = rootSettingsModel.getNbMeasurements();
+        int prefLimit = Preferences.getInstance().getPreferenceAsInt(Preferences.USER_UVPOINT_LIMITFORPLOT);
+        boolean limitReached = nbMeasurements > prefLimit;
+        if(limitReached){
+            skipPlotResultsLabel.setText(""+nbMeasurements+" UV points > "+prefLimit+" : skip plots");
+        }
+        skipPlotResultsButton.setVisible(limitReached);
+        skipPlotResultsLabel.setVisible(limitReached);
+        skipPlotResultsCheckBox.setSelected(limitReached);
+        
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
@@ -320,23 +327,27 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        skipPlotResultsCheckBox = new javax.swing.JCheckBox();
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         settingsTreeScrollPane = new javax.swing.JScrollPane();
         controlPanel = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        skipPlotResultsLabel = new javax.swing.JLabel();
+        skipPlotResultsButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         runFitButton = new javax.swing.JButton();
         ITMaxCheckBox = new javax.swing.JCheckBox();
         ITMaxTextField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         helpButton1 = new javax.swing.JButton();
-        skipPlotResultsCheckBox = new javax.swing.JCheckBox();
-        skipPlotLabel = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         modifierPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         modifierPanel = new javax.swing.JPanel();
+
+        skipPlotResultsCheckBox.setForeground(java.awt.Color.red);
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -354,6 +365,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         jPanel2.setPreferredSize(new java.awt.Dimension(91, 168));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
+        settingsTreeScrollPane.setForeground(new java.awt.Color(234, 90, 90));
         settingsTreeScrollPane.setMinimumSize(new java.awt.Dimension(110, 23));
         settingsTreeScrollPane.setPreferredSize(new java.awt.Dimension(110, 4));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -366,7 +378,33 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jSplitPane2.setTopComponent(jPanel2);
 
+        controlPanel.setMinimumSize(new java.awt.Dimension(275, 100));
+        controlPanel.setPreferredSize(new java.awt.Dimension(275, 100));
         controlPanel.setLayout(new java.awt.GridBagLayout());
+
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+
+        skipPlotResultsLabel.setForeground(java.awt.Color.red);
+        skipPlotResultsLabel.setText("replaced in code");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        jPanel5.add(skipPlotResultsLabel, gridBagConstraints);
+
+        skipPlotResultsButton.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
+        jPanel5.add(skipPlotResultsButton, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        gridBagConstraints.weightx = 1.0;
+        controlPanel.add(jPanel5, gridBagConstraints);
 
         jPanel1.setMinimumSize(new java.awt.Dimension(232, 57));
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -405,30 +443,21 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         jPanel1.add(helpButton1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        jPanel1.add(skipPlotResultsCheckBox, gridBagConstraints);
 
-        skipPlotLabel.setText("Skip plots");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        jPanel1.add(skipPlotLabel, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        controlPanel.add(jPanel1, gridBagConstraints);
-
-        jPanel5.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         gridBagConstraints.weightx = 1.0;
-        controlPanel.add(jPanel5, gridBagConstraints);
+        gridBagConstraints.weighty = 0.1;
+        controlPanel.add(jPanel1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        controlPanel.add(jPanel3, gridBagConstraints);
 
         jSplitPane2.setBottomComponent(controlPanel);
 
@@ -508,6 +537,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -516,7 +546,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private javax.swing.JPanel modifierPanel2;
     private javax.swing.JButton runFitButton;
     private javax.swing.JScrollPane settingsTreeScrollPane;
-    private javax.swing.JLabel skipPlotLabel;
+    private javax.swing.JButton skipPlotResultsButton;
     private javax.swing.JCheckBox skipPlotResultsCheckBox;
+    private javax.swing.JLabel skipPlotResultsLabel;
     // End of variables declaration//GEN-END:variables
 }
