@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
+
+/**
+\mainpage mfgui : Model fitting GUI.
+
+\bdesc
+This module handle the GUI part associated to the model fitting server part.
+
+\ddesc
+
+\usedfiles
+castor.jar is used to generate source code of models object from a given xml
+schema.
+mfguiGenerateClasses.sh script must be called to modify toString() methods of
+generated classes (this makes Jtree item more readeable)
+
+
+jas3 jars have been tried to be used for plots
+
+\n
+
+*/

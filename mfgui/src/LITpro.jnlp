@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<jnlp spec="1.0+" codebase="@GENERATED@" href="@GENERATED@">
+  <information>
+    <title>LITpro</title>
+    <vendor>JMMC</vendor>
+    <homepage href="http://www.jmmc.fr/litpro"/>
+    <description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyons Interferometric Tool.</description>
+    <icon href="LITpro.jpg"/>
+    <offline-allowed/>
+    <association mime-type="application/x-litpro+xml" extensions="litprox">
+      <icon href="LITpro.jpg"/>
+      <description>LITpro settings files</description>
+    </association>
+    <shortcut>
+      <desktop/>
+    </shortcut>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5+" initial-heap-size="512m" max-heap-size="1024m"/>
+
+    <!-- Application module first (main class) -->
+    <jar href="jar/mfgui.jar" />
+
+    <!-- JMMC modules -->
+    <jar href="jar/jmcs.jar" />
+    <jar href="jar/oitools.jar" />
+    <jar href="jar/oiexplorer_core.jar" />
+    <jar href="jar/mfgui-doc.jar" />
+    
+    <!-- JMMC libs -->
+    <extension href="../JmcsLibs/JmcsLibs.jnlp"/>    
+    <extension href="../OIExplorerCoreLibs/OIExplorerCoreLibs.jnlp"/>
+
+    <!-- ptolemy plots -->
+    <jar href="@SHARED@/ptplot5.6.jar" />
+
+    <!--  Xml binding (castor) -->
+    <jar href="@SHARED@/castor.jar"/>
+    
+    <!-- castor dependency -->
+    <jar href="@SHARED@/xercesImpl.jar"/>
+    <jar href="@SHARED@/xmlParserAPIs.jar"/>
+
+  </resources>
+  <application-desc main-class="fr.jmmc.mf.LITpro"/>
+</jnlp>
