@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.13 beta 7"/>
+    <program name="LITpro" version="1.0.13"/>
     <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
@@ -142,12 +142,8 @@
         </menu>
     </menubar>
 
-    <releasenotes>
-        <!--<prerelease version="1.0.12 beta 3">                
-            </prerelease>            
-            -->
-            
-            <release version="1.0.13 beta 7">
+    <releasenotes>        
+            <release version="1.0.13">
             <prerelease version="1.0.13 beta 7">                                
                 <!-- restore default preferences for yoga webservice url -->
                 <!-- not yet done: 
@@ -156,8 +152,7 @@
                 FIXME 
                   1/ result title generations in the tree does not get proper timing
                   2/ Leave resource in MFGui.closeSettings()
-                -->            
-                <change type="DEVELOPPER">follow JMCS refactoring</change>                                                              
+                -->                                                                               
             </prerelease><prerelease version="1.0.13 beta 6">                                                
                 <change type="CHANGE">Target panels sub-components moved to save space</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
