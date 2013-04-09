@@ -58,6 +58,11 @@ public class Model implements java.io.Serializable {
     private java.lang.String _desc;
 
     /**
+     * Field _code
+     */
+    private java.lang.String _code;
+
+    /**
      * A common representation of every model parameters.
      *  
      */
@@ -202,6 +207,16 @@ public class Model implements java.io.Serializable {
     {
         return new org.exolab.castor.util.IteratorEnumeration(_parameterLinkList.iterator());
     } //-- java.util.Enumeration enumerateParameterLink() 
+
+    /**
+     * Returns the value of field 'code'.
+     * 
+     * @return the value of field 'code'.
+     */
+    public java.lang.String getCode()
+    {
+        return this._code;
+    } //-- java.lang.String getCode() 
 
     /**
      * Returns the value of field 'desc'.
@@ -414,6 +429,16 @@ public class Model implements java.io.Serializable {
         boolean removed = _parameterLinkList.remove(vParameterLink);
         return removed;
     } //-- boolean removeParameterLink(fr.jmmc.mf.models.ParameterLink) 
+
+    /**
+     * Sets the value of field 'code'.
+     * 
+     * @param code the value of field 'code'.
+     */
+    public void setCode(java.lang.String code)
+    {
+        this._code = code;
+    } //-- void setCode(java.lang.String) 
 
     /**
      * Sets the value of field 'desc'.
