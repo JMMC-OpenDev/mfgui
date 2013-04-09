@@ -45,6 +45,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     private Target targetToPresent;
     private Model modelToPresent;
     private Object[] parametersOrParameterLinksToPresent;
+    private boolean allowFullEditing;
 
     public ParametersTableModel() {
         super();
@@ -74,6 +75,14 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     public void setModel(SettingsModel settingsModel, Parameter[] parametersToPresent, boolean recursive) {
         logger.debug("Updating model for a given parameter list");
         refreshModel(settingsModel, null, null, parametersToPresent, recursive);
+    }
+    
+    /**
+     * Accept or not to edit full parameter meta data.
+     * @param flag true if table model should allow editing of whole parameters, else false
+     */
+    public void setEditable(boolean flag) {
+        allowFullEditing=flag;
     }
 
     private void refreshModel(SettingsModel settingsModel, Target target, Model model, Object[] parametersAndParameterLinks, boolean recursive) {
@@ -258,7 +267,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnEditableFlags[columnIndex];
+        return allowFullEditing || columnEditableFlags[columnIndex];
     }
 
     @Override
@@ -451,4 +460,5 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     private boolean isParameterLink(Object parameterOrParameterLink) {
         return parameterOrParameterLink instanceof ParameterLink;
     }
+
 }

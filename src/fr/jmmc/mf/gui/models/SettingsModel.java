@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui.models;
 
 import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.data.app.ApplicationDescription;
+import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.Http;
@@ -13,6 +14,7 @@ import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.ResourceUtils;
+import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
@@ -54,9 +56,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** Class logger */
     static Logger logger = LoggerFactory.getLogger(className);
     /** list of supported models   */
-    private static Hashtable supportedModels = new Hashtable();
-    /** Combobox model of supported models */
-    private static DefaultComboBoxModel supportedModelsModel = new DefaultComboBoxModel();
+    private static List<Model> supportedModelsList = new LinkedList<Model>();
+    /** list of supported models   */
+    private static GenericListModel supportedModels = new GenericListModel<Model>(supportedModelsList);
     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
@@ -149,12 +151,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         rootSettings.setFitter("standard");
         setRootSettings(rootSettings);
 
-        try {
-            //assert that list has been inited
-            initSupportedModelsModel();
-        } catch (ExecutionException eexc) {
-            MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n", eexc);
-        }
+        //assert that list has been inited
+        getSupportedModels();
     }
 
     public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
@@ -178,45 +176,49 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Return the supported models. This method autoatically make a request to get server
-     * list if the current list is empty.
-     * @return the supportedModelsModel
-     */
-    public static DefaultComboBoxModel initSupportedModelsModel() throws ExecutionException {
-        // Fill modelTypeComboBox model if empty
-        if (supportedModelsModel.getSize() < 1) {
-            Response r;
-            try {
-                r = LITpro.execMethod("getModelList", null);
-            } catch (IllegalStateException ex) {
-                throw new IllegalStateException("Can't get list of supported models", ex);
-            } catch (ExecutionException ex) {
-                throw new ExecutionException("Can't get list of supported models", ex);
-            }
-            // Search model into return result
-            Model newModel = UtilsClass.getModel(r);
-            // update list of supported models
-            supportedModels.clear();
-            // update MVC model of available models checkboxes
-            supportedModelsModel.removeAllElements();
-            Model[] models = newModel.getModel();
-            for (int i = 0; i < models.length; i++) {
-                Model model = models[i];
-                supportedModelsModel.addElement(model);
-                logger.debug("Adding supported model:" + model.getType());
-                supportedModels.put(model.getType(), model);
-            }
-        }
-        return supportedModelsModel;
-    }
-
-    /**
      * Return the supported models. This method automatically make a request to get server
      * list if the current list is empty.
      * @return the supportedModelsModel
+     * @throws ExecutionException thrown if execution exception occurs
      */
-    public static DefaultComboBoxModel getSupportedModelsModel() {
-        return supportedModelsModel;
+    public static GenericListModel<Model> getSupportedModels() {
+        // Fill modelTypeComboBox model if empty
+        if (supportedModels.size() < 1) {
+            Response r;
+            try {
+                r = LITpro.execMethod("getModelList", null);
+                // Search model into return result
+                Model newModel = UtilsClass.getModel(r);
+                // update list of supported models
+                supportedModels.clear();
+                Model[] models = newModel.getModel();
+                for (int i = 0; i < models.length; i++) {
+                    Model model = models[i];
+                    supportedModels.add(model);
+                    logger.debug("Adding supported model:" + model.getType());
+                }
+            } catch (IllegalStateException ex) {
+                throw new IllegalStateException("Can't get list of supported models", ex);
+            } catch (ExecutionException ex) {
+                MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n", ex.getMessage());
+            }
+        }
+        return supportedModels;
+    }
+
+    /**
+     * Get the Model associated to the given model name     
+     * @param type model type
+     *
+     * @return associated Model object or null if not present
+     */
+    public Model getSupportedModel(String type) {
+        for (Model m : supportedModelsList) {
+            if (m.getType().equalsIgnoreCase(type)) {
+                return m;
+            }
+        }
+        return null;
     }
 
     /** Add a new FileLink associated to the given File.
@@ -247,22 +249,22 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
     }
-    
+
     /**
      * Return the number of measurements from every oidata tables.
      * @return the sum of every table measurements for every loaded oifits.
      */
-    public int getNbMeasurements(){
-        int count=0;
+    public int getNbMeasurements() {
+        int count = 0;
         // add all points of each table entries for every files
         File[] files = this.rootSettings.getFiles().getFile();
         for (File file : files) {
             OIFitsFile oifits = getOIFitsFromFile(file);
             List<OIData> oidata = oifits.getOiDataList();
             for (OIData table : oidata) {
-                count+=table.getNbMeasurements();
+                count += table.getNbMeasurements();
             }
-        }                               
+        }
         return count;
     }
 
@@ -457,7 +459,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param parentTarget
      * @param newModel
      */
-    public void addModel(Target parentTarget, Model newModel) {
+    public void addModel(Target parentTarget, Model newModel) {        
         // force another name with unique position
         String type = newModel.getType();
         int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings()) + 1;
@@ -497,6 +499,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         // add the new element to current target
         parentTarget.addModel(newModel);
         fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
+        
+        // Select custom models in tree to be edited
+        if (!StringUtils.isEmpty(newModel.getCode())) {
+            setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
+        }
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
@@ -1491,17 +1498,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (rootSettings.getResults() == null) {
             rootSettings.setResults(new Results());
         }
-    }
-
-    /**
-     * Get the Model associated to the given model name
-     *
-     * @param type model type
-     *
-     * @return associated Model object
-     */
-    public Model getSupportedModel(String type) {
-        return (Model) supportedModels.get(type);
     }
 
     /**

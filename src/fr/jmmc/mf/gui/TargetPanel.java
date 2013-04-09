@@ -18,6 +18,8 @@ import javax.swing.JCheckBox;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +70,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
 
         // build help button
-        jButton1.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
-        jButton2.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
+        addModelHelpButton.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
+        fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
 
     }
 
@@ -131,12 +133,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         }
         listenToFileSelection = true;
 
+        availableModelList.setModel(rootSettingsModel.getSupportedModels());
+        
         updateModels();
 
         fixFitterSetup();
 
         plotModelImagePanel.show(settingsModel, current);
-        plotChi2Panel.show(settingsModel);
+        plotChi2Panel.show(settingsModel);                
     }
 
     private void updateModels() {
@@ -288,15 +292,17 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        fitterSetupHelpButton = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         modelList = new javax.swing.JList();
         addModelButton = new javax.swing.JButton();
-        modelTypeComboBox = new javax.swing.JComboBox();
         removeModelButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        addModelHelpButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        availableModelList = new javax.swing.JList();
+        addMyModelButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
@@ -425,14 +431,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("jButton2");
-        jButton2.setAlignmentX(1.0F);
-        jButton2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        fitterSetupHelpButton.setText("jButton2");
+        fitterSetupHelpButton.setAlignmentX(1.0F);
+        fitterSetupHelpButton.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        fitterSetupHelpButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
-        jPanel3.add(jButton2, gridBagConstraints);
+        jPanel3.add(fitterSetupHelpButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
@@ -472,32 +478,25 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jScrollPane2.setViewportView(modelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
-        addModelButton.setText("Add model");
+        addModelButton.setText("+");
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         jPanel4.add(addModelButton, gridBagConstraints);
 
-        modelTypeComboBox.setModel(settingsViewer.getSettingsModel().getSupportedModelsModel());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel4.add(modelTypeComboBox, gridBagConstraints);
-
-        removeModelButton.setText("Remove");
+        removeModelButton.setText("-");
         removeModelButton.setEnabled(false);
         removeModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -509,8 +508,31 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 1;
         jPanel4.add(removeModelButton, gridBagConstraints);
 
-        jButton1.setText("jButton1");
-        jPanel4.add(jButton1, new java.awt.GridBagConstraints());
+        addModelHelpButton.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        jPanel4.add(addModelHelpButton, gridBagConstraints);
+
+        availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(availableModelList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel4.add(jScrollPane1, gridBagConstraints);
+
+        addMyModelButton.setText("add custom...");
+        addMyModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMyModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        jPanel4.add(addMyModelButton, gridBagConstraints);
 
         jPanel7.add(jPanel4);
 
@@ -598,17 +620,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 
     }//GEN-LAST:event_modelListValueChanged
 
-    private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_addModelButtonActionPerformed
-        // Construct a new copy
-        Model selectedModel = (Model) modelTypeComboBox.getSelectedItem();
-        Model m = (Model) UtilsClass.clone(selectedModel);
-        rootSettingsModel.addModel(current, m);
-        updateModels();
-        plotModelImagePanel.show(rootSettingsModel, current);
-        plotChi2Panel.show(rootSettingsModel);
-    }//GEN-LAST:event_addModelButtonActionPerformed
-
             private void targetFitterParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetFitterParamActionPerformed
 
                 rootSettingsModel.setNormalize(current, normalizeCheckBox.isSelected());
@@ -639,12 +650,35 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
                 // refresh modelpanel to get updated list of residual plots
                 plotModelImagePanel.show(rootSettingsModel, current);
 }//GEN-LAST:event_targetFitterParamActionPerformed
+
+    private void addMyModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMyModelButtonActionPerformed
+        // TODO 
+        // create a new empty custom model and show it in editor
+        Model m = new Model();
+        m.setType("custom");
+        m.setCode(" ");
+        rootSettingsModel.addModel(current, m);
+        
+    }//GEN-LAST:event_addMyModelButtonActionPerformed
+
+    private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
+        // Construct a new copy
+        Model selectedModel = (Model) availableModelList.getSelectedValue();
+        Model m = (Model) UtilsClass.clone(selectedModel);
+        rootSettingsModel.addModel(current, m);
+        updateModels();
+        plotModelImagePanel.show(rootSettingsModel, current);
+        plotChi2Panel.show(rootSettingsModel);
+    }//GEN-LAST:event_addModelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
+    private javax.swing.JButton addModelHelpButton;
+    private javax.swing.JButton addMyModelButton;
+    private javax.swing.JList availableModelList;
     private javax.swing.JScrollPane fileListScrollPane;
+    private javax.swing.JButton fitterSetupHelpButton;
     private javax.swing.JComboBox identComboBox;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -655,9 +689,9 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList modelList;
-    private javax.swing.JComboBox modelTypeComboBox;
     private javax.swing.JCheckBox normalizeCheckBox;
     private javax.swing.JTable parametersTable;
     private javax.swing.JButton removeModelButton;
