@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.13"/>
+    <program name="LITpro" version="1.0.14beta1"/>
     <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
@@ -143,16 +143,20 @@
     </menubar>
 
     <releasenotes>        
+            <release version="1.0.14 beta 1">
+                <prerelease version="1.0.14 beta 1">                                
+                    <change type="FEATURE">Basic support for user models</change>                              
+                    <!-- not yet done: 
+                    <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
+                    <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>            
+                    FIXME 
+                      * Leave resource in MFGui.closeSettings()
+                    -->                                                                               
+                </prerelease>
+            </release>
             <release version="1.0.13">
             <prerelease version="1.0.13 beta 7">                                
-                <!-- restore default preferences for yoga webservice url -->
-                <!-- not yet done: 
-                <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
-                <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>            
-                FIXME 
-                  1/ result title generations in the tree does not get proper timing
-                  2/ Leave resource in MFGui.closeSettings()
-                -->                                                                               
+            <!-- restore default preferences for yoga webservice url -->                
             </prerelease><prerelease version="1.0.13 beta 6">                                                
                 <change type="CHANGE">Target panels sub-components moved to save space</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
