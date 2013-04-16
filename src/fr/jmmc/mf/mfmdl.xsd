@@ -7,6 +7,8 @@ Author     : mella
 Description:
 
 The form try to collect every informtions needed by model fitting process
+some subtle differences exist between the server and client side xsd
+e.g. the server side do not handle filelinks as IDref but strings
 
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -34,7 +36,7 @@ The form try to collect every informtions needed by model fitting process
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
         </xsd:complexType>
 
-    </xsd:element> 
+    </xsd:element>
    
     <!--
 Root element of settings 
