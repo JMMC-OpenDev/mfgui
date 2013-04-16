@@ -60,7 +60,7 @@ do
     elif [ "$className" == "Model" ]
     then
         toString="\"Model[\"+getType()+\":\"+getName()+\"]\";"
-        toString="getName();"
+        toString="getType();"
     else
         toString="\"$className\";"
     fi
