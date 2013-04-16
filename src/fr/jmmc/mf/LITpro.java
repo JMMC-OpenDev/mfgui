@@ -311,6 +311,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
+        
+        // TO BE REMOVED
+        targetURL = "http://jmmc.obs.ujf-grenoble.fr/~mella/LITproWebService/run.php";
 
         final PostMethod myPost = new PostMethod(targetURL);
         try {

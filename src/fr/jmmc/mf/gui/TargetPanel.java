@@ -72,6 +72,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // build help button
         addModelHelpButton.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
+        availableModelList.addListSelectionListener(this);
 
     }
 
@@ -155,13 +156,24 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
     /* receive event on file list */
     public void valueChanged(ListSelectionEvent e) {
-        if (!listenToFileSelection || e.getValueIsAdjusting()) {
+        
+        if ( e.getValueIsAdjusting()) {
             return;
         }
-
-// We will try to detect differences between selection and target filelinks
+        if(listenToFileSelection && e.getSource()==fileList){
+            fileListValueChanged(e);
+        }
+        //TODO add support for model selection
+        if(e.getSource()==availableModelList){
+            boolean hasSelection = availableModelList.getSelectedIndex()>=0;
+            addModelButton.setEnabled(hasSelection);
+        }
+        
+    }
+    
+    public void fileListValueChanged(ListSelectionEvent e) {
+        // We will try to detect differences between selection and target filelinks
         // for all possible file
-
         for (int i = 0; i < targetFiles.getSize(); i++) {
             Object file = targetFiles.getElementAt(i);
             boolean isInTarget = false;
@@ -486,6 +498,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
         addModelButton.setText("+");
+        addModelButton.setEnabled(false);
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelButtonActionPerformed(evt);
@@ -609,12 +622,9 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
 private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     {//GEN-FIRST:event_modelListValueChanged
 
-        if (modelList.getSelectedIndex() != -1)
-        {
+        if (modelList.getSelectedIndex() != -1) {
             removeModelButton.setEnabled(true);
-        }
-        else
-        {
+        } else {
             removeModelButton.setEnabled(false);
         }
 
@@ -657,8 +667,28 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         Model m = new Model();
         m.setType("custom");
         m.setCode(" ");
-        rootSettingsModel.addModel(current, m);
         
+        Parameter flux_weight= new Parameter();
+        flux_weight.setType("flux_weight");  
+        flux_weight.setName("flux_weight");          
+        flux_weight.setMinValue(0.0d);
+        flux_weight.setMaxValue(1.0d);
+        flux_weight.setHasFixedValue(false);        
+
+        Parameter x= new Parameter();
+        x.setType("x");
+        x.setName("x");
+        x.setHasFixedValue(false);
+        Parameter y= new Parameter();
+        y.setType("y");
+        y.setName("y");
+        x.setHasFixedValue(false);
+        
+        m.addParameter(flux_weight);
+        m.addParameter(x);
+        m.addParameter(y);
+        rootSettingsModel.addModel(current, m);
+
     }//GEN-LAST:event_addMyModelButtonActionPerformed
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
@@ -670,7 +700,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         plotModelImagePanel.show(rootSettingsModel, current);
         plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_addModelButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
     private javax.swing.JButton addModelHelpButton;

@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ParametersTableModel extends AbstractTableModel implements MouseListener {
-
+    
     static Logger logger = LoggerFactory.getLogger(
             ParametersTableModel.class.getName());
     protected boolean recursive;
