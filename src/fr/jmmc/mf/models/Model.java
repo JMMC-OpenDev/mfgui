@@ -581,5 +581,5 @@ public class Model implements java.io.Serializable {
         validator.validate(this);
     } //-- void validate() 
 
-    public String toString(){ return getName(); } 
+    public String toString(){ return getType(); } 
 }
