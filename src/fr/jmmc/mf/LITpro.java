@@ -97,25 +97,11 @@ public class LITpro extends fr.jmmc.jmcs.App {
     protected void setupGui() {
         logger.debug("LITpro.init() handler : enter");
 
-        // Using invokeAndWait to be in sync with this thread :
-        // note: invokeAndWaitEDT throws an IllegalStateException if any exception occurs
-        SwingUtils.invokeAndWaitEDT(new Runnable() {
-            /**
-             * Initializes the swing components with their actions in EDT
-             */
-            @Override
-            public void run() {
-                // there is a conflict if one option is given
-                // the app take it as argument!!##"!!
-                // gui = new MFGui(args);
-                // workaround make no more argument support
-                gui = new MFGui(new String[]{});
+        gui = new MFGui(new String[]{});
 
-                // define the application frame
-                // TODO should be refactored so that Gui uses the App.getFrame()
-                App.setFrame(gui);
-            }
-        });
+        // define the application frame
+        // TODO should be refactored so that Gui uses the App.getFrame()
+        App.setFrame(gui);
     }
 
     /**
@@ -311,7 +297,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
 
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
-        
+
         // TO BE REMOVED
         targetURL = "http://jmmc.obs.ujf-grenoble.fr/~mella/LITproWebService/run.php";
 
