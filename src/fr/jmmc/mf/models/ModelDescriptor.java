@@ -213,6 +213,43 @@ public class ModelDescriptor extends org.exolab.castor.xml.util.XMLClassDescript
             fieldValidator.setValidator(typeValidator);
         }
         desc.setValidator(fieldValidator);
+        //-- _shortdesc
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.String.class, "_shortdesc", "shortdesc", org.exolab.castor.xml.NodeType.Element);
+        desc.setImmutable(true);
+        handler = (new org.exolab.castor.xml.XMLFieldHandler() {
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Model target = (Model) object;
+                return target.getShortdesc();
+            }
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Model target = (Model) object;
+                    target.setShortdesc( (java.lang.String) value);
+                }
+                catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public java.lang.Object newInstance( java.lang.Object parent ) {
+                return null;
+            }
+        } );
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        
+        //-- validation code for: _shortdesc
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+            StringValidator typeValidator = new StringValidator();
+            typeValidator.setWhiteSpace("preserve");
+            fieldValidator.setValidator(typeValidator);
+        }
+        desc.setValidator(fieldValidator);
         //-- _code
         desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.String.class, "_code", "code", org.exolab.castor.xml.NodeType.Element);
         desc.setImmutable(true);

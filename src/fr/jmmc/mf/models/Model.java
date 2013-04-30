@@ -58,6 +58,11 @@ public class Model implements java.io.Serializable {
     private java.lang.String _desc;
 
     /**
+     * Field _shortdesc
+     */
+    private java.lang.String _shortdesc;
+
+    /**
      * Field _code
      */
     private java.lang.String _code;
@@ -350,6 +355,16 @@ public class Model implements java.io.Serializable {
     } //-- int getParameterLinkCount() 
 
     /**
+     * Returns the value of field 'shortdesc'.
+     * 
+     * @return the value of field 'shortdesc'.
+     */
+    public java.lang.String getShortdesc()
+    {
+        return this._shortdesc;
+    } //-- java.lang.String getShortdesc() 
+
+    /**
      * Returns the value of field 'type'.
      * 
      * @return the value of field 'type'.
@@ -549,6 +564,16 @@ public class Model implements java.io.Serializable {
             _parameterLinkList.add(parameterLinkArray[i]);
         }
     } //-- void setParameterLink(fr.jmmc.mf.models.ParameterLink) 
+
+    /**
+     * Sets the value of field 'shortdesc'.
+     * 
+     * @param shortdesc the value of field 'shortdesc'.
+     */
+    public void setShortdesc(java.lang.String shortdesc)
+    {
+        this._shortdesc = shortdesc;
+    } //-- void setShortdesc(java.lang.String) 
 
     /**
      * Sets the value of field 'type'.
