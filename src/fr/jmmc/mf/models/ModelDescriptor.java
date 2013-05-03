@@ -140,6 +140,129 @@ public class ModelDescriptor extends org.exolab.castor.xml.util.XMLClassDescript
             fieldValidator.setValidator(typeValidator);
         }
         desc.setValidator(fieldValidator);
+        //-- _polar
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.Boolean.TYPE, "_polar", "polar", org.exolab.castor.xml.NodeType.Attribute);
+        handler = (new org.exolab.castor.xml.XMLFieldHandler() {
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Model target = (Model) object;
+                if(!target.hasPolar())
+                    return null;
+                return new Boolean(target.getPolar());
+            }
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Model target = (Model) object;
+                    // if null, use delete method for optional primitives 
+                    if (value == null) {
+                        target.deletePolar();
+                        return;
+                    }
+                    target.setPolar( ((Boolean)value).booleanValue());
+                }
+                catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public java.lang.Object newInstance( java.lang.Object parent ) {
+                return null;
+            }
+        } );
+        desc.setHandler(handler);
+        addFieldDescriptor(desc);
+        
+        //-- validation code for: _polar
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+            BooleanValidator typeValidator = new BooleanValidator();
+            fieldValidator.setValidator(typeValidator);
+        }
+        desc.setValidator(fieldValidator);
+        //-- _stretched
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.Boolean.TYPE, "_stretched", "stretched", org.exolab.castor.xml.NodeType.Attribute);
+        handler = (new org.exolab.castor.xml.XMLFieldHandler() {
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Model target = (Model) object;
+                if(!target.hasStretched())
+                    return null;
+                return new Boolean(target.getStretched());
+            }
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Model target = (Model) object;
+                    // if null, use delete method for optional primitives 
+                    if (value == null) {
+                        target.deleteStretched();
+                        return;
+                    }
+                    target.setStretched( ((Boolean)value).booleanValue());
+                }
+                catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public java.lang.Object newInstance( java.lang.Object parent ) {
+                return null;
+            }
+        } );
+        desc.setHandler(handler);
+        addFieldDescriptor(desc);
+        
+        //-- validation code for: _stretched
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+            BooleanValidator typeValidator = new BooleanValidator();
+            fieldValidator.setValidator(typeValidator);
+        }
+        desc.setValidator(fieldValidator);
+        //-- _rotated
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.Boolean.TYPE, "_rotated", "rotated", org.exolab.castor.xml.NodeType.Attribute);
+        handler = (new org.exolab.castor.xml.XMLFieldHandler() {
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Model target = (Model) object;
+                if(!target.hasRotated())
+                    return null;
+                return new Boolean(target.getRotated());
+            }
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Model target = (Model) object;
+                    // if null, use delete method for optional primitives 
+                    if (value == null) {
+                        target.deleteRotated();
+                        return;
+                    }
+                    target.setRotated( ((Boolean)value).booleanValue());
+                }
+                catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public java.lang.Object newInstance( java.lang.Object parent ) {
+                return null;
+            }
+        } );
+        desc.setHandler(handler);
+        addFieldDescriptor(desc);
+        
+        //-- validation code for: _rotated
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+            BooleanValidator typeValidator = new BooleanValidator();
+            fieldValidator.setValidator(typeValidator);
+        }
+        desc.setValidator(fieldValidator);
         //-- initialize element descriptors
         
         //-- _modelList

@@ -47,6 +47,36 @@ public class Model implements java.io.Serializable {
     private java.lang.String _type;
 
     /**
+     * Field _polar
+     */
+    private boolean _polar;
+
+    /**
+     * keeps track of state for field: _polar
+     */
+    private boolean _has_polar;
+
+    /**
+     * Field _stretched
+     */
+    private boolean _stretched;
+
+    /**
+     * keeps track of state for field: _stretched
+     */
+    private boolean _has_stretched;
+
+    /**
+     * Field _rotated
+     */
+    private boolean _rotated;
+
+    /**
+     * keeps track of state for field: _rotated
+     */
+    private boolean _has_rotated;
+
+    /**
      * A common representation of every models.
      *  
      */
@@ -188,6 +218,30 @@ public class Model implements java.io.Serializable {
     {
         _parameterLinkList.clear();
     } //-- void clearParameterLink() 
+
+    /**
+     * Method deletePolar
+     */
+    public void deletePolar()
+    {
+        this._has_polar= false;
+    } //-- void deletePolar() 
+
+    /**
+     * Method deleteRotated
+     */
+    public void deleteRotated()
+    {
+        this._has_rotated= false;
+    } //-- void deleteRotated() 
+
+    /**
+     * Method deleteStretched
+     */
+    public void deleteStretched()
+    {
+        this._has_stretched= false;
+    } //-- void deleteStretched() 
 
     /**
      * Method enumerateModel
@@ -355,6 +409,26 @@ public class Model implements java.io.Serializable {
     } //-- int getParameterLinkCount() 
 
     /**
+     * Returns the value of field 'polar'.
+     * 
+     * @return the value of field 'polar'.
+     */
+    public boolean getPolar()
+    {
+        return this._polar;
+    } //-- boolean getPolar() 
+
+    /**
+     * Returns the value of field 'rotated'.
+     * 
+     * @return the value of field 'rotated'.
+     */
+    public boolean getRotated()
+    {
+        return this._rotated;
+    } //-- boolean getRotated() 
+
+    /**
      * Returns the value of field 'shortdesc'.
      * 
      * @return the value of field 'shortdesc'.
@@ -365,6 +439,16 @@ public class Model implements java.io.Serializable {
     } //-- java.lang.String getShortdesc() 
 
     /**
+     * Returns the value of field 'stretched'.
+     * 
+     * @return the value of field 'stretched'.
+     */
+    public boolean getStretched()
+    {
+        return this._stretched;
+    } //-- boolean getStretched() 
+
+    /**
      * Returns the value of field 'type'.
      * 
      * @return the value of field 'type'.
@@ -373,6 +457,30 @@ public class Model implements java.io.Serializable {
     {
         return this._type;
     } //-- java.lang.String getType() 
+
+    /**
+     * Method hasPolar
+     */
+    public boolean hasPolar()
+    {
+        return this._has_polar;
+    } //-- boolean hasPolar() 
+
+    /**
+     * Method hasRotated
+     */
+    public boolean hasRotated()
+    {
+        return this._has_rotated;
+    } //-- boolean hasRotated() 
+
+    /**
+     * Method hasStretched
+     */
+    public boolean hasStretched()
+    {
+        return this._has_stretched;
+    } //-- boolean hasStretched() 
 
     /**
      * Method isValid
@@ -566,6 +674,28 @@ public class Model implements java.io.Serializable {
     } //-- void setParameterLink(fr.jmmc.mf.models.ParameterLink) 
 
     /**
+     * Sets the value of field 'polar'.
+     * 
+     * @param polar the value of field 'polar'.
+     */
+    public void setPolar(boolean polar)
+    {
+        this._polar = polar;
+        this._has_polar = true;
+    } //-- void setPolar(boolean) 
+
+    /**
+     * Sets the value of field 'rotated'.
+     * 
+     * @param rotated the value of field 'rotated'.
+     */
+    public void setRotated(boolean rotated)
+    {
+        this._rotated = rotated;
+        this._has_rotated = true;
+    } //-- void setRotated(boolean) 
+
+    /**
      * Sets the value of field 'shortdesc'.
      * 
      * @param shortdesc the value of field 'shortdesc'.
@@ -574,6 +704,17 @@ public class Model implements java.io.Serializable {
     {
         this._shortdesc = shortdesc;
     } //-- void setShortdesc(java.lang.String) 
+
+    /**
+     * Sets the value of field 'stretched'.
+     * 
+     * @param stretched the value of field 'stretched'.
+     */
+    public void setStretched(boolean stretched)
+    {
+        this._stretched = stretched;
+        this._has_stretched = true;
+    } //-- void setStretched(boolean) 
 
     /**
      * Sets the value of field 'type'.

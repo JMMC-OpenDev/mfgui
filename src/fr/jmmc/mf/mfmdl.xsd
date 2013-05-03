@@ -249,6 +249,9 @@ Basic model representation. This model also correspond to composite model
     <xsd:attributeGroup name="ModelAttributes">
         <xsd:attribute name="name" type="xsd:string" use="required"/>
         <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <xsd:attribute name="polar" type="xsd:boolean"/>
+        <xsd:attribute name="stretched" type="xsd:boolean"/>
+        <xsd:attribute name="rotated" type="xsd:boolean"/>
     </xsd:attributeGroup>
     
     
