@@ -25,7 +25,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JButton addParamButton;
     private javax.swing.JList availableModelList;
     private javax.swing.JScrollPane availableModelScrollPane;
-    private javax.swing.JLabel codePrototypeLabel;
+    private javax.swing.JTextArea closingTextArea;
     private javax.swing.JPanel customCodePanel;
     private javax.swing.JScrollPane customCodeScrollPane;
     private javax.swing.JTextArea customCodeTextArea;
@@ -42,12 +42,14 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JButton moveDownButton;
     private javax.swing.JButton moveUpButton;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTable parametersTable;
+    private javax.swing.JTextArea startingTextArea;
     // End of variables declaration//GEN-END:variables
     private boolean initStep=false;
 
@@ -76,7 +78,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodePanel.setVisible(isCustomModel);
         addParamButton.setVisible(isCustomModel);
         delParamButton.setVisible(isCustomModel);
-        codePrototypeLabel.setVisible(isCustomModel);
+        startingTextArea.setVisible(isCustomModel);
         
         availableModelList.setVisible(!isCustomModel);
         availableModelScrollPane.setVisible(!isCustomModel);        
@@ -89,14 +91,14 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             availableModelList.setModel(settingsModel.getSupportedModels());
         }else{
             StringBuffer sb = new StringBuffer("");
-            sb.append("tf= ").append(current.getType()).append("(ufreq, vfreq,");
+            sb.append("tf= ").append(current.getType()).append("(ufreq, vfreq, wavelength, bandwidth, ");
             Parameter[] params = current.getParameter();
             for (Parameter param : params) {
                 sb.append(param.getType()).append(", ");
             }
             sb.setLength(sb.length()-2);
-            sb.append(")");
-            codePrototypeLabel.setText(sb.toString());
+            sb.append("){");
+            startingTextArea.setText(sb.toString());
             
             // Fill custom type textfield
             customTypeTextField.setText(m.getType());
@@ -147,8 +149,10 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customTypeTextField = new javax.swing.JTextField();
         customCodePanel = new javax.swing.JPanel();
         customCodeScrollPane = new javax.swing.JScrollPane();
+        jPanel6 = new javax.swing.JPanel();
+        startingTextArea = new javax.swing.JTextArea();
         customCodeTextArea = new javax.swing.JTextArea();
-        codePrototypeLabel = new javax.swing.JLabel();
+        closingTextArea = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
@@ -177,7 +181,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         descTextArea.setEditable(false);
         descTextArea.setColumns(20);
-        descTextArea.setRows(5);
+        descTextArea.setRows(4);
         descTextArea.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 descTextAreaCaretUpdate(evt);
@@ -247,26 +251,51 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Code"));
         customCodePanel.setLayout(new java.awt.GridBagLayout());
 
+        jPanel6.setBackground(java.awt.Color.white);
+        jPanel6.setLayout(new java.awt.GridBagLayout());
+
+        startingTextArea.setColumns(20);
+        startingTextArea.setRows(1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel6.add(startingTextArea, gridBagConstraints);
+
         customCodeTextArea.setColumns(20);
-        customCodeTextArea.setRows(5);
+        customCodeTextArea.setRows(4);
         customCodeTextArea.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 customCodeTextAreaCaretUpdate(evt);
             }
         });
-        customCodeScrollPane.setViewportView(customCodeTextArea);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        jPanel6.add(customCodeTextArea, gridBagConstraints);
+
+        closingTextArea.setColumns(20);
+        closingTextArea.setRows(1);
+        closingTextArea.setText("}");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel6.add(closingTextArea, gridBagConstraints);
+
+        customCodeScrollPane.setViewportView(jPanel6);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         customCodePanel.add(customCodeScrollPane, gridBagConstraints);
-
-        codePrototypeLabel.setText("replaced by prototype");
-        customCodePanel.add(codePrototypeLabel, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
