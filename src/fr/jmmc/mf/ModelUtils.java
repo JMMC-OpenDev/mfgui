@@ -11,9 +11,13 @@ import java.text.NumberFormat;
 
 /**
  * util function applied to models.
+ * TODO, most of following functions could be added as method to the Model class 
  * @author mella
  */
 public class ModelUtils {
+
+    public final static String ROTATION_PARAMETER_NAME = "rotation";
+    public final static String STRETCHED_PARAMETER_NAME = "stretched_ratio";
 
     public static void moveParamUp(Model model, int paramIndex) {
         Parameter[] params = model.getParameter();
@@ -36,7 +40,8 @@ public class ModelUtils {
             return false;
         }
 
-        model.setPolar(flag);
+        // TODO add some tests to avoid duplicated types
+
         if (flag) {
             // xy -> rho pa            
             Parameter p1 = getParameterOfType(model, "x");
@@ -68,8 +73,9 @@ public class ModelUtils {
             p2.setType("y");
             p2.setUnits("mas");
         }
-        // TODO min max / fixed values
+        // TODO add min max / fixed values conversions
 
+        model.setPolar(flag);
         return true;
     }
 
@@ -77,7 +83,21 @@ public class ModelUtils {
         if (model.getStretched() == flag) {
             return false;
         }
+        if (flag) {
+            // add rotation            
+            final Parameter r = new Parameter();
+            r.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
+            r.setType(STRETCHED_PARAMETER_NAME);
+            r.setValue(1.0);            
+            r.setHasFixedValue(true);
+            r.setHasFixedValue(false);
+            model.addParameter(r);
+        } else {
+            // remove rotation parameter
+            model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
+        }
 
+        model.setStretched(flag);
         return true;
     }
 
@@ -86,6 +106,22 @@ public class ModelUtils {
             return false;
         }
 
+        if (flag) {
+            // add rotation            
+            final Parameter r = new Parameter();
+            r.setName(ROTATION_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
+            r.setType(ROTATION_PARAMETER_NAME);
+            r.setValue(0);
+            r.setUnits("deg");
+            r.setHasFixedValue(true);
+            r.setHasFixedValue(false);
+            model.addParameter(r);
+        } else {
+            // remove rotation parameter
+            model.removeParameter(getParameterOfType(model, ROTATION_PARAMETER_NAME));
+        }
+
+        model.setRotated(flag);
         return true;
     }
 
