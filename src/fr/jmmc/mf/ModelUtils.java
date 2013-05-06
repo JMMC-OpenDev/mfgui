@@ -85,28 +85,14 @@ public class ModelUtils {
         }
         if (flag) {
             // add rotation            
-            final Parameter r = new Parameter();
-            r.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
-            r.setType(STRETCHED_PARAMETER_NAME);
-            r.setValue(1.0);            
-            r.setHasFixedValue(true);
-            r.setHasFixedValue(false);
-            model.addParameter(r);
-        } else {
-            // remove rotation parameter
-            model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
-        }
-
-        model.setStretched(flag);
-        return true;
-    }
-
-    public static boolean setRotatedModel(Model model, boolean flag) {
-        if (model.getRotated() == flag) {
-            return false;
-        }
-
-        if (flag) {
+            final Parameter s = new Parameter();
+            s.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
+            s.setType(STRETCHED_PARAMETER_NAME);
+            s.setValue(1.0);            
+            s.setHasFixedValue(true);
+            s.setHasFixedValue(false);
+            model.addParameter(s);
+            
             // add rotation            
             final Parameter r = new Parameter();
             r.setName(ROTATION_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
@@ -119,11 +105,14 @@ public class ModelUtils {
         } else {
             // remove rotation parameter
             model.removeParameter(getParameterOfType(model, ROTATION_PARAMETER_NAME));
+         
+            // remove rotation parameter
+            model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
         }
 
-        model.setRotated(flag);
+        model.setStretched(flag);
         return true;
-    }
+    }    
 
     public static boolean hasPosition(Model selectedModel) {
         // test if marqued polar or has a classical x param

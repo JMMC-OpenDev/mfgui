@@ -323,7 +323,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         addMyModelButton = new javax.swing.JButton();
         polarCheckBox = new javax.swing.JCheckBox();
         stretchedCheckBox = new javax.swing.JCheckBox();
-        rotatedCheckBox = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
@@ -586,18 +585,6 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridy = 2;
         jPanel4.add(stretchedCheckBox, gridBagConstraints);
 
-        rotatedCheckBox.setText("Rotated");
-        rotatedCheckBox.setEnabled(false);
-        rotatedCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rotatedCheckBoxActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 2;
-        jPanel4.add(rotatedCheckBox, gridBagConstraints);
-
         jPanel7.add(jPanel4);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
@@ -678,13 +665,11 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         //sync checkbox with selection
         polarCheckBox.setSelected(hasSelection && getSelectedModel().getPolar());
         stretchedCheckBox.setSelected(hasSelection && getSelectedModel().getStretched());
-        rotatedCheckBox.setSelected(hasSelection && getSelectedModel().getRotated());
         
         // accept some modification for positional model only
         hasSelection = hasSelection && getSelectedModel() != null && ModelUtils.hasPosition(getSelectedModel());
         polarCheckBox.setEnabled(hasSelection);
         stretchedCheckBox.setEnabled(hasSelection);
-        rotatedCheckBox.setEnabled(hasSelection);
 
     }//GEN-LAST:event_modelListValueChanged
 
@@ -779,12 +764,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         }
     }//GEN-LAST:event_stretchedCheckBoxActionPerformed
 
-    private void rotatedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotatedCheckBoxActionPerformed
-        if (ModelUtils.setRotatedModel(getSelectedModel(), rotatedCheckBox.isSelected())) {
-            updateModels(getSelectedModel());
-        }
-    }//GEN-LAST:event_rotatedCheckBoxActionPerformed
-
     private void availableModelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_availableModelListMouseClicked
         if (evt.getClickCount() == 2)
         {
@@ -824,7 +803,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JTable parametersTable;
     private javax.swing.JCheckBox polarCheckBox;
     private javax.swing.JButton removeModelButton;
-    private javax.swing.JCheckBox rotatedCheckBox;
     private javax.swing.JCheckBox stretchedCheckBox;
     private javax.swing.JPanel subplotPanel;
     private javax.swing.JCheckBox t3ampCheckBox;
