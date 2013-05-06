@@ -154,6 +154,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         parametersTableModel.setModel(rootSettingsModel, current, true);
         UtilsClass.initColumnSizes(parametersTable, 330);
     }
+    
+    private void updateModels(Model modelToSelect) {
+        updateModels();
+        modelList.setSelectedValue(modelToSelect, true);
+    }
 
     /* receive event on file list */
     public void valueChanged(ListSelectionEvent e) {
@@ -757,26 +762,26 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         Model selectedModel = (Model) availableModelList.getSelectedValue();
         Model m = (Model) UtilsClass.clone(selectedModel);
         rootSettingsModel.addModel(current, m);
-        updateModels();
+        updateModels(m);
         plotModelImagePanel.show(rootSettingsModel, current);
         plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_addModelButtonActionPerformed
 
     private void polarCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polarCheckBoxActionPerformed
         if (ModelUtils.setPolarModel(getSelectedModel(), polarCheckBox.isSelected())) {
-            updateModels();
+            updateModels(getSelectedModel());
         }
     }//GEN-LAST:event_polarCheckBoxActionPerformed
 
     private void stretchedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stretchedCheckBoxActionPerformed
         if (ModelUtils.setStretchedModel(getSelectedModel(), stretchedCheckBox.isSelected())) {
-            updateModels();
+            updateModels(getSelectedModel());
         }
     }//GEN-LAST:event_stretchedCheckBoxActionPerformed
 
     private void rotatedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotatedCheckBoxActionPerformed
         if (ModelUtils.setRotatedModel(getSelectedModel(), rotatedCheckBox.isSelected())) {
-            updateModels();
+            updateModels(getSelectedModel());
         }
     }//GEN-LAST:event_rotatedCheckBoxActionPerformed
 
