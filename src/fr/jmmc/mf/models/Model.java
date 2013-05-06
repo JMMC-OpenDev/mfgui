@@ -67,16 +67,6 @@ public class Model implements java.io.Serializable {
     private boolean _has_stretched;
 
     /**
-     * Field _rotated
-     */
-    private boolean _rotated;
-
-    /**
-     * keeps track of state for field: _rotated
-     */
-    private boolean _has_rotated;
-
-    /**
      * A common representation of every models.
      *  
      */
@@ -226,14 +216,6 @@ public class Model implements java.io.Serializable {
     {
         this._has_polar= false;
     } //-- void deletePolar() 
-
-    /**
-     * Method deleteRotated
-     */
-    public void deleteRotated()
-    {
-        this._has_rotated= false;
-    } //-- void deleteRotated() 
 
     /**
      * Method deleteStretched
@@ -419,16 +401,6 @@ public class Model implements java.io.Serializable {
     } //-- boolean getPolar() 
 
     /**
-     * Returns the value of field 'rotated'.
-     * 
-     * @return the value of field 'rotated'.
-     */
-    public boolean getRotated()
-    {
-        return this._rotated;
-    } //-- boolean getRotated() 
-
-    /**
      * Returns the value of field 'shortdesc'.
      * 
      * @return the value of field 'shortdesc'.
@@ -465,14 +437,6 @@ public class Model implements java.io.Serializable {
     {
         return this._has_polar;
     } //-- boolean hasPolar() 
-
-    /**
-     * Method hasRotated
-     */
-    public boolean hasRotated()
-    {
-        return this._has_rotated;
-    } //-- boolean hasRotated() 
 
     /**
      * Method hasStretched
@@ -683,17 +647,6 @@ public class Model implements java.io.Serializable {
         this._polar = polar;
         this._has_polar = true;
     } //-- void setPolar(boolean) 
-
-    /**
-     * Sets the value of field 'rotated'.
-     * 
-     * @param rotated the value of field 'rotated'.
-     */
-    public void setRotated(boolean rotated)
-    {
-        this._rotated = rotated;
-        this._has_rotated = true;
-    } //-- void setRotated(boolean) 
 
     /**
      * Sets the value of field 'shortdesc'.

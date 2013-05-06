@@ -74,6 +74,11 @@ public class Settings implements java.io.Serializable {
      */
     private fr.jmmc.mf.models.Responses _responses;
 
+    /**
+     * Field _code
+     */
+    private java.lang.String _code;
+
 
       //----------------/
      //- Constructors -/
@@ -87,6 +92,16 @@ public class Settings implements java.io.Serializable {
       //-----------/
      //- Methods -/
     //-----------/
+
+    /**
+     * Returns the value of field 'code'.
+     * 
+     * @return the value of field 'code'.
+     */
+    public java.lang.String getCode()
+    {
+        return this._code;
+    } //-- java.lang.String getCode() 
 
     /**
      * Returns the value of field 'files'. The field 'files' has
@@ -207,6 +222,16 @@ public class Settings implements java.io.Serializable {
         
         Marshaller.marshal(this, handler);
     } //-- void marshal(org.xml.sax.ContentHandler) 
+
+    /**
+     * Sets the value of field 'code'.
+     * 
+     * @param code the value of field 'code'.
+     */
+    public void setCode(java.lang.String code)
+    {
+        this._code = code;
+    } //-- void setCode(java.lang.String) 
 
     /**
      * Sets the value of field 'files'. The field 'files' has the
