@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
@@ -315,6 +316,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jScrollPane1 = new javax.swing.JScrollPane();
         availableModelList = new javax.swing.JList();
         addMyModelButton = new javax.swing.JButton();
+        polarCheckBox = new javax.swing.JCheckBox();
+        stretchedCheckBox = new javax.swing.JCheckBox();
+        rotatedCheckBox = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
@@ -362,9 +366,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel6.add(normalizeCheckBox, gridBagConstraints);
 
         t3phiCheckBox.setText("T3phi");
@@ -374,8 +378,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(t3phiCheckBox, gridBagConstraints);
 
@@ -386,8 +390,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(t3ampCheckBox, gridBagConstraints);
 
@@ -398,8 +402,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(visPhiCheckBox, gridBagConstraints);
 
@@ -410,8 +414,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(vis2CheckBox, gridBagConstraints);
 
@@ -422,23 +426,24 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(visAmpCheckBox, gridBagConstraints);
 
         jLabel2.setText("Select data to fit:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel6.add(jLabel2, gridBagConstraints);
-
-        jLabel3.setText("Normalize total flux:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+        jPanel6.add(jLabel2, gridBagConstraints);
+
+        jLabel3.setText("Normalize total flux");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel6.add(jLabel3, gridBagConstraints);
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
@@ -453,9 +458,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel3.add(fitterSetupHelpButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -529,6 +533,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel4.add(addModelHelpButton, gridBagConstraints);
 
         availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        availableModelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                availableModelListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(availableModelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -546,6 +555,43 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         jPanel4.add(addMyModelButton, gridBagConstraints);
+
+        polarCheckBox.setText("Polar");
+        polarCheckBox.setEnabled(false);
+        polarCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                polarCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        jPanel4.add(polarCheckBox, gridBagConstraints);
+
+        stretchedCheckBox.setText("Stretched");
+        stretchedCheckBox.setEnabled(false);
+        stretchedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stretchedCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        jPanel4.add(stretchedCheckBox, gridBagConstraints);
+
+        rotatedCheckBox.setText("Rotated");
+        rotatedCheckBox.setEnabled(false);
+        rotatedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rotatedCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        jPanel4.add(rotatedCheckBox, gridBagConstraints);
 
         jPanel7.add(jPanel4);
 
@@ -621,12 +667,19 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
 
 private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     {//GEN-FIRST:event_modelListValueChanged
+        boolean hasSelection = modelList.getSelectedIndex() != -1;
+        removeModelButton.setEnabled(hasSelection);
 
-        if (modelList.getSelectedIndex() != -1) {
-            removeModelButton.setEnabled(true);
-        } else {
-            removeModelButton.setEnabled(false);
-        }
+        //sync checkbox with selection
+        polarCheckBox.setSelected(hasSelection && getSelectedModel().getPolar());
+        stretchedCheckBox.setSelected(hasSelection && getSelectedModel().getStretched());
+        rotatedCheckBox.setSelected(hasSelection && getSelectedModel().getRotated());
+        
+        // accept some modification for positional model only
+        hasSelection = hasSelection && getSelectedModel() != null && ModelUtils.hasPosition(getSelectedModel());
+        polarCheckBox.setEnabled(hasSelection);
+        stretchedCheckBox.setEnabled(hasSelection);
+        rotatedCheckBox.setEnabled(hasSelection);
 
     }//GEN-LAST:event_modelListValueChanged
 
@@ -667,27 +720,35 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         Model m = new Model();
         m.setType("custom");
         m.setCode(" ");
-        
-        Parameter flux_weight= new Parameter();
-        flux_weight.setType("flux_weight");  
-        flux_weight.setName("flux_weight");          
+
+        Parameter flux_weight = new Parameter();
+        flux_weight.setType("flux_weight");
+        flux_weight.setName("flux_weight");
         flux_weight.setMinValue(0.0d);
         flux_weight.setMaxValue(1.0d);
-        flux_weight.setHasFixedValue(false);        
+        flux_weight.setValue(0.0d);
+        flux_weight.setHasFixedValue(true);
+        flux_weight.setHasFixedValue(false);
 
-        Parameter x= new Parameter();
+        // TODO add an util method to get pre-inited params
+        Parameter x = new Parameter();
         x.setType("x");
         x.setName("x");
+        x.setValue(0.0d);
+        x.setHasFixedValue(true);
         x.setHasFixedValue(false);
-        Parameter y= new Parameter();
+        Parameter y = new Parameter();
         y.setType("y");
         y.setName("y");
-        x.setHasFixedValue(false);
-        
+        y.setValue(0.0d);
+        y.setHasFixedValue(true);
+        y.setHasFixedValue(false);
+
         m.addParameter(flux_weight);
         m.addParameter(x);
         m.addParameter(y);
         rootSettingsModel.addModel(current, m);
+        rootSettingsModel.addSpecificModel(m);
 
     }//GEN-LAST:event_addMyModelButtonActionPerformed
 
@@ -700,6 +761,39 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         plotModelImagePanel.show(rootSettingsModel, current);
         plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_addModelButtonActionPerformed
+
+    private void polarCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polarCheckBoxActionPerformed
+        if (ModelUtils.setPolarModel(getSelectedModel(), polarCheckBox.isSelected())) {
+            updateModels();
+        }
+    }//GEN-LAST:event_polarCheckBoxActionPerformed
+
+    private void stretchedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stretchedCheckBoxActionPerformed
+        if (ModelUtils.setStretchedModel(getSelectedModel(), stretchedCheckBox.isSelected())) {
+            updateModels();
+        }
+    }//GEN-LAST:event_stretchedCheckBoxActionPerformed
+
+    private void rotatedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotatedCheckBoxActionPerformed
+        if (ModelUtils.setRotatedModel(getSelectedModel(), rotatedCheckBox.isSelected())) {
+            updateModels();
+        }
+    }//GEN-LAST:event_rotatedCheckBoxActionPerformed
+
+    private void availableModelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_availableModelListMouseClicked
+        if (evt.getClickCount() == 2)
+        {
+            addModelButtonActionPerformed(null);
+        }
+
+    }//GEN-LAST:event_availableModelListMouseClicked
+
+    private Model getSelectedModel() {
+        if (modelList.getSelectedIndex() < 0) {
+            return null;
+        }
+        return (Model) models.getElementAt(modelList.getSelectedIndex());
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
     private javax.swing.JButton addModelHelpButton;
@@ -723,7 +817,10 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JList modelList;
     private javax.swing.JCheckBox normalizeCheckBox;
     private javax.swing.JTable parametersTable;
+    private javax.swing.JCheckBox polarCheckBox;
     private javax.swing.JButton removeModelButton;
+    private javax.swing.JCheckBox rotatedCheckBox;
+    private javax.swing.JCheckBox stretchedCheckBox;
     private javax.swing.JPanel subplotPanel;
     private javax.swing.JCheckBox t3ampCheckBox;
     private javax.swing.JCheckBox t3phiCheckBox;

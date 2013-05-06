@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
@@ -422,13 +423,13 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             if (isParameterLink(o)) {
                 Model m = settingsModel.getParent((ParameterLink) o);
                 if (m != null) {
-                    menuItem = new JMenuItem("This model is located at " + UtilsClass.getRelativeCoords(m) + " relatively to the center of this target.");
+                    menuItem = new JMenuItem("This model is located at " + ModelUtils.getRelativeCoords(m) + " relatively to the center of this target.");
                     menuItem.setEnabled(false);
                     parameterPopupMenu.add(menuItem);
                 }
             } else {
                 Model m = settingsModel.getParent(p);
-                menuItem = new JMenuItem("This model is located at " + UtilsClass.getRelativeCoords(m) + " relatively to the center of this target.");
+                menuItem = new JMenuItem("This model is located at " + ModelUtils.getRelativeCoords(m) + " relatively to the center of this target.");
                 menuItem.setEnabled(false);
                 parameterPopupMenu.add(menuItem);
             }

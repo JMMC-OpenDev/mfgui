@@ -9,6 +9,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
@@ -814,89 +815,6 @@ public class UtilsClass {
 
 
         return v.toArray(new Model[0]);
-    }
-
-    /**
-     * Return a string that describe the rho theta information of the given if
-     * model has x and y and vice versa model.
-     *
-     * @param m
-     * @return the rho/theta or x/y informations
-     */
-    public static String getRelativeCoords(Model m) {
-        // compute rho theta from x y parameters
-        double x = 0;
-        double y = 0;
-        double rho = 0;
-        double pa = 0;
-        boolean cartesianInput = true;
-
-        Parameter[] params = m.getParameter();
-        for (int i = 0; i < params.length; i++) {
-            Parameter parameter = params[i];
-            if (parameter.getType().equalsIgnoreCase("x")) {
-                x = parameter.getValue();
-            } else if (parameter.getType().equalsIgnoreCase("y")) {
-                y = parameter.getValue();
-            } else if (parameter.getType().equalsIgnoreCase("rho")) {
-                rho = parameter.getValue();
-                cartesianInput = false;
-            } else if (parameter.getType().equalsIgnoreCase("pa")) {
-                pa = parameter.getValue();
-                cartesianInput = false;
-            }
-        }
-        ParameterLink[] paramLinks = m.getParameterLink();
-        for (int i = 0; i < paramLinks.length; i++) {
-            ParameterLink parameterLink = paramLinks[i];
-            Parameter parameter = (Parameter) parameterLink.getParameterRef();
-            if (parameterLink.getType().equalsIgnoreCase("x")) {
-                x = parameter.getValue();
-            } else if (parameterLink.getType().equalsIgnoreCase("y")) {
-                y = parameter.getValue();
-            } else if (parameter.getType().equalsIgnoreCase("rho")) {
-                rho = parameter.getValue();
-                cartesianInput = false;
-            } else if (parameter.getType().equalsIgnoreCase("pa")) {
-                pa = parameter.getValue();
-                cartesianInput = false;
-            }
-        }
-
-        String result = null;
-        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(3);
-        if (cartesianInput) {
-            result = "rho='" + nf.format(getRho(x, y)) + "' PA='" + nf.format(getTheta(x, y)) + "'";
-        } else {
-            result = "x='" + nf.format(getX(rho, pa)) + "' y='" + nf.format(getY(rho, pa)) + "'";
-        }
-
-        return result;
-    }
-
-    // TODO move into jmal
-    public static double getRho(double x, double y) {
-        return Math.sqrt(x * x + y * y);
-    }
-
-    // TODO move into jmal
-    public static double getTheta(double x, double y) {
-        double r = Math.atan2(x, y) / (Math.PI / 180);
-        if (r >= 0) {
-            return r;
-        }
-        return r + 360.0;
-    }
-    // TODO move into jmal
-
-    public static double getX(double rho, double pa) {
-        return rho * Math.cos((90.0 - pa) * (Math.PI / 180));
-    }
-
-    // TODO move into jmal
-    public static double getY(double rho, double pa) {
-        return rho * Math.sin((90.0 - pa) * (Math.PI / 180));
     }
 
     /**

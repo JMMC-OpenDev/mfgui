@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.util.StringUtils;
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
@@ -32,6 +33,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JButton delParamButton;
     private javax.swing.JTextArea descTextArea;
     private javax.swing.JButton helpButton1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -41,9 +44,12 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JButton moveDownButton;
+    private javax.swing.JButton moveUpButton;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTable parametersTable;
     // End of variables declaration//GEN-END:variables
+    private boolean initStep=false;
 
     /** Creates new form ModelPanel */
     public ModelPanel() {
@@ -56,6 +62,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     }
 
     public void show(Model m, SettingsModel s) {
+        initStep=false;
         settingsModel = s;
 
         // select corresponding element with current=null to ignore event
@@ -112,6 +119,11 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         }
         descTextArea.setText(m.getDesc());
         descTextArea.setCaretPosition(0);
+        
+        // init param related buttons
+        valueChanged(null);
+        
+        initStep=true;
     }
 
     /** This method is called from within the constructor to
@@ -137,6 +149,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodeScrollPane = new javax.swing.JScrollPane();
         customCodeTextArea = new javax.swing.JTextArea();
         codePrototypeLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
@@ -145,6 +159,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         addParamButton = new javax.swing.JButton();
         delParamButton = new javax.swing.JButton();
         helpButton1 = new javax.swing.JButton();
+        moveUpButton = new javax.swing.JButton();
+        moveDownButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Model panel:"));
         setLayout(new java.awt.GridBagLayout());
@@ -172,7 +188,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -186,6 +202,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         jPanel5.add(jLabel2, gridBagConstraints);
 
+        nameTextField.setText("toto");
         nameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameTextFieldActionPerformed(evt);
@@ -194,6 +211,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         jPanel5.add(nameTextField, gridBagConstraints);
@@ -210,6 +228,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel5.add(availableModelScrollPane, gridBagConstraints);
 
@@ -222,6 +241,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
         jPanel5.add(customTypeTextField, gridBagConstraints);
 
         customCodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Code"));
@@ -251,11 +271,25 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel5.add(customCodePanel, gridBagConstraints);
+
+        jButton1.setText("Share this model");
+        jButton1.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        jPanel5.add(jButton1, gridBagConstraints);
+
+        jButton2.setText("Validate code");
+        jButton2.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        jPanel5.add(jButton2, gridBagConstraints);
 
         jSplitPane1.setTopComponent(jPanel5);
         jPanel5.getAccessibleContext().setAccessibleDescription("");
@@ -295,6 +329,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel1.add(addParamButton, gridBagConstraints);
 
@@ -305,13 +341,42 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         jPanel1.add(delParamButton, gridBagConstraints);
 
-        helpButton1.setText("jButton1");
+        helpButton1.setText("Help");
         helpButton1.setAlignmentX(1.0F);
-        jPanel1.add(helpButton1, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.weightx = 0.1;
+        jPanel1.add(helpButton1, gridBagConstraints);
+
+        moveUpButton.setText("Move Up");
+        moveUpButton.setEnabled(false);
+        moveUpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveUpButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(moveUpButton, gridBagConstraints);
+
+        moveDownButton.setText("Move Down");
+        moveDownButton.setEnabled(false);
+        moveDownButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveDownButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(moveDownButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -334,20 +399,22 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_nameTextFieldActionPerformed
         settingsModel.setModelName(current, nameTextField.getText());
+        refresh();
     }//GEN-LAST:event_nameTextFieldActionPerformed
 
     private void addParamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParamButtonActionPerformed
         Parameter p = new Parameter();
         p.setValue(0.0d);
-        p.setHasFixedValue(false);        
         current.addParameter(p);
-        // TODO : check if there is a better refresh method ?
-        show(current, settingsModel);
+        p.setHasFixedValue(true);
+        p.setHasFixedValue(false);
+
+        refresh();
     }//GEN-LAST:event_addParamButtonActionPerformed
 
     private void delParamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delParamButtonActionPerformed
         current.removeParameter(current.getParameter(parametersTable.getSelectedRow()));
-        show(current, settingsModel);
+        refresh();
     }//GEN-LAST:event_delParamButtonActionPerformed
 
     private void customCodeTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_customCodeTextAreaCaretUpdate
@@ -360,10 +427,31 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
     private void customTypeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customTypeTextFieldActionPerformed
         current.setType(customTypeTextField.getText());
+        refresh();
     }//GEN-LAST:event_customTypeTextFieldActionPerformed
 
+    private void moveUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpButtonActionPerformed
+        ModelUtils.moveParamUp(current, parametersTable.getSelectedRow());
+        refresh();
+    }//GEN-LAST:event_moveUpButtonActionPerformed
+
+    private void moveDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownButtonActionPerformed
+        ModelUtils.moveParamDown(current, parametersTable.getSelectedRow());        
+        refresh();
+    }//GEN-LAST:event_moveDownButtonActionPerformed
+
     public void valueChanged(ListSelectionEvent e) {
-        boolean hasSelection = parametersTable.getSelectedRow()>=0;
+        final int selectedRow = parametersTable.getSelectedRow();
+        final boolean hasSelection = selectedRow >= 0;
         delParamButton.setEnabled(hasSelection);
+        moveUpButton.setEnabled(hasSelection && selectedRow != current.getParameterCount());
+        moveDownButton.setEnabled(hasSelection && selectedRow != 0);
+    }
+
+    private void refresh() {
+        if (initStep) {
+            // TODO : check if there is a better refresh method ?
+            show(current, settingsModel);
+        }
     }
 }

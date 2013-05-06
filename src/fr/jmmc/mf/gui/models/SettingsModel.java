@@ -205,6 +205,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         return supportedModels;
     }
+    
+    public static void addSpecificModel(Model specificModel){
+        //Model m = (Model) UtilsClass.clone(specificModel);
+        getSupportedModels().add(specificModel);
+    }
 
     /**
      * Get the Model associated to the given model name     
@@ -455,7 +460,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     /**
      * Add the given model to the given target.
-     * The model will change parameter name
+     * The model will change parameter name 
      * @param parentTarget
      * @param newModel
      */
@@ -488,7 +493,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
-            }
+            }            
             p.setName(p.getType() + modelIdx);
             parameterComboBoxModel.addElement(p);
             parameterListModel.addElement(p);
