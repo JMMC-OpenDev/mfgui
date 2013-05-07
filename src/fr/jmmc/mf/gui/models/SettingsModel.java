@@ -206,11 +206,20 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return supportedModels;
     }
     
-    public static void addSpecificModel(Model specificModel){
+    public void addUserModel(Model userModel){
         //Model m = (Model) UtilsClass.clone(specificModel);
-        getSupportedModels().add(specificModel);
+        getSupportedModels().add(userModel);
+        getUserCode().addModel(userModel);        
+        
+        // Fire Change event and Select custom models in tree to be edited        
+        fireTreeStructureChanged(rootSettings);
+        selectUserModel(userModel);        
     }
-
+    
+    public void selectUserModel(Model userModel){
+        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), getUserCode(), userModel}));
+    }
+    
     /**
      * Get the Model associated to the given model name     
      * @param type model type
@@ -503,12 +512,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // add the new element to current target
         parentTarget.addModel(newModel);
-        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
-        
-        // Select custom models in tree to be edited
-        if (!StringUtils.isEmpty(newModel.getCode())) {
-            setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
-        }
+        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);               
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
@@ -742,16 +746,24 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Change Model name.
+     * Change Model name and fire event.
      * @param model model to change
-     * @param newName new name for given model
+     * @param newType new type for given model
+     * @param userModel true if model gets user code
      */
-    public void setModelName(Model model, String newName) {
-        model.setName(newName);
-        Target parentTarget = getParent(model);
-        fireTreeNodesChanged(new Object[]{rootSettings},
-                getIndexOfChild(rootSettings.getTargets(), parentTarget),
-                model);
+    public void setModelType(Model model, String newType, boolean userModel) {
+        model.setType(newType);
+        if (userModel) {
+            fireTreeNodesChanged(new Object[]{rootSettings,rootSettings.getUsercode()},
+                    getIndexOfChild(rootSettings.getUsercode(),model),
+                    model);
+        } else {
+            Target parentTarget = getParent(model);
+            fireTreeNodesChanged(new Object[]{rootSettings},
+                    getIndexOfChild(rootSettings.getTargets(), parentTarget),
+                    model);
+
+        }
     }
 
     /**
@@ -793,7 +805,29 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return isModified;
     }
 
-    public Parameter[] getSharedParameters() {
+    /**
+     * Return the UserCode associated object and creates if not present.
+     * @return the user code element
+     */
+    public Usercode getUserCode() {        
+        if (rootSettings.getUsercode() == null) {
+            Usercode uc = new Usercode();
+            uc.setCommon(new Common());            
+            rootSettings.setUsercode(uc);
+            setModified(true);
+        }
+        return rootSettings.getUsercode();
+    }
+    /**
+     * Return the list of shared parameters.
+     * This method ensures to get a container for shared parameters.
+     * @return the list of shared parameters
+     */
+    public Parameter[] getSharedParameters() {        
+        if (rootSettings.getParameters() == null) {
+            rootSettings.setParameters(new Parameters());
+            setModified(true);
+        }
         return rootSettings.getParameters().getParameter();
     }
 
@@ -808,6 +842,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return false;
     }
 
+    /**
+     * Return the list of results
+     * @return the list of results
+     */
+    private Result[] getResults(){       
+        if (rootSettings.getResults() == null) {
+            rootSettings.setResults(new Results());
+        }
+        return rootSettings.getResults().getResult();
+    }
+    
     /**
      * Replace the parameterToLink parameter by a link onto the given sharedParameter.
      * @param parameterToLink param to replace by a link
@@ -1054,25 +1099,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-
-        // assert that rootSettings get container for shared parameters
-        if (rootSettings.getParameters() == null) {
-            rootSettings.setParameters(new Parameters());
-        } else {
-            // add shared parameters to the parameter list containers
-            Parameter[] params = rootSettings.getParameters().getParameter();
-            for (int i = 0; i < params.length; i++) {
-                parameterListModel.addElement(params[i]);
-                parameterComboBoxModel.addElement(params[i]);
-            }
+       
+        // assert that usercode is created.
+        getUserCode();
+        
+        // add shared parameters to the parameter list containers
+        Parameter[] params = getSharedParameters();
+        for (int i = 0; i < params.length; i++) {
+            parameterListModel.addElement(params[i]);
+            parameterComboBoxModel.addElement(params[i]);
         }
-
-
-        // assert that rootSettings get container for results and build model for every result child
-        if (rootSettings.getResults() == null) {
-            rootSettings.setResults(new Results());
-        }
-        Result[] results = rootSettings.getResults().getResult();
+      
+        // build model for every result child
+        Result[] results = getResults();
         for (int i = 0; i < results.length; i++) {
             getModel(results[i], true);
             StatusBar.show("Building result node " + (i + 1) + " / " + results.length);
@@ -1080,12 +1119,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount()
                 + " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ "
-                + rootSettings.getUserInfo() + " ]";
-        if (rootSettings.getResults() != null) {
-            desc = desc + " with results section";
-        }
+                + rootSettings.getUserInfo() + " ]" +
+                " with "+getResults().length+"results section";
         logger.debug(desc);
-
+                
         // fire general change event
         fireTreeStructureChanged(rootSettings);
 
@@ -1498,11 +1535,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         if (fileToSave.equals(associatedFile)) {
             setModified(false);
-        }
-
-        if (rootSettings.getResults() == null) {
-            rootSettings.setResults(new Results());
-        }
+        }        
     }
 
     /**
@@ -1606,12 +1639,15 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 return s.getTargets();
             }
             if (index == 2) {
-                return s.getParameters();
+                return s.getUsercode();
             }
             if (index == 3) {
-                return s.getResults();
+                return s.getParameters();
             }
             if (index == 4) {
+                return s.getResults();
+            }
+            if (index == 5) {
                 return plotContainerNode;
             } else {
                 logger.warn("This line must not occur");
@@ -1630,6 +1666,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             } else {
                 return t.getModel(index - t.getFileLinkCount());
             }
+        } else if (parent instanceof Usercode) {
+            Usercode u = (Usercode) parent;
+            return u.getModel(index);            
         } else if (parent instanceof Results) {
             Result r = ((Results) parent).getResult(index);
             return getModel(r, false);
@@ -1646,8 +1685,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (parent instanceof TreeNode) {
             return ((TreeNode) parent).getChildCount();
         } else if (parent instanceof Settings) {
-            // return files, targets, parameters, results, plots
-            return 5;
+            // return files, targets, usercode, parameters, results, plots
+            return 6;
         } else if (parent instanceof Files) {
             Files f = (Files) parent;
             return f.getFileCount();
@@ -1658,6 +1697,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Target t = (Target) parent;
             // return number of files and models
             return t.getFileLinkCount() + t.getModelCount();
+        } else if (parent instanceof Usercode) {
+            Usercode u = (Usercode) parent;
+            return u.getModelCount();
         } else if (parent instanceof Results) {
             Results r = (Results) parent;
             return r.getResultCount();
@@ -1683,6 +1725,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
             idx++;
             if (child == rootSettings.getTargets()) {
+                return idx;
+            }
+            idx++;
+            if (child == rootSettings.getUsercode()) {
                 return idx;
             }
             idx++;
@@ -1800,11 +1846,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         if (node instanceof TreeNode) {
             return ((TreeNode) node).isLeaf();
-        } else if ((node instanceof Settings) || (node instanceof Files) || (node instanceof Targets)
-                || (node instanceof Target) || (node instanceof Results)) {
-            return false;
-        } else {
+        } else if (node instanceof Parameters 
+                || node instanceof File
+                || node instanceof FileLink
+                || node instanceof Model) {
             return true;
+        } else {
+            return false;
         }
     }
 
