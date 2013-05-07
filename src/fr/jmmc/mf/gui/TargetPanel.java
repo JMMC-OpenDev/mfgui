@@ -549,7 +549,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel4.add(jScrollPane1, gridBagConstraints);
 
-        addMyModelButton.setText("add custom...");
+        addMyModelButton.setText("create user model...");
         addMyModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMyModelButtonActionPerformed(evt);
@@ -736,9 +736,8 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 
         m.addParameter(flux_weight);
         m.addParameter(x);
-        m.addParameter(y);
-        rootSettingsModel.addModel(current, m);
-        rootSettingsModel.addSpecificModel(m);
+        m.addParameter(y);        
+        rootSettingsModel.addUserModel(m);
 
     }//GEN-LAST:event_addMyModelButtonActionPerformed
 
@@ -746,6 +745,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         // Construct a new copy
         Model selectedModel = (Model) availableModelList.getSelectedValue();
         Model m = (Model) UtilsClass.clone(selectedModel);
+        m.setCode(null);
         rootSettingsModel.addModel(current, m);
         updateModels(m);
         plotModelImagePanel.show(rootSettingsModel, current);

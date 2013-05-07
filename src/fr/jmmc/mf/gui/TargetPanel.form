@@ -331,7 +331,7 @@
             </Container>
             <Component class="javax.swing.JButton" name="addMyModelButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="add custom..."/>
+                <Property name="text" type="java.lang.String" value="create user model..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addMyModelButtonActionPerformed"/>
