@@ -26,7 +26,7 @@ public class UsercodePanel extends javax.swing.JPanel {
     public UsercodePanel(SettingsViewerInterface viewer) {
         initComponents();
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("ENDtt_Usercode")));
+        //TODO link to doc section : helpButton1.setAction(new ShowHelpAction(("ENDtt_Usercode")));
     }
 
     public void show(SettingsModel s, Usercode u) {

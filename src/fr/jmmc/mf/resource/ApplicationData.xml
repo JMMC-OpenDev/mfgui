@@ -151,6 +151,8 @@
                     <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>            
                     FIXME 
                       * Leave resource in MFGui.closeSettings()
+                      
+                    TODO  add link for futur "ENDtt_Usercode" doc in UserCodePanel
                     -->                                                                               
                 </prerelease>
             </release>
