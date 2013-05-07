@@ -341,6 +341,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
         // Notify a model change        
         settingsModel.notifyObservers();
+        fireTableDataChanged();
     }
 
     private void checkPopupMenu(java.awt.event.MouseEvent evt) {
