@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
@@ -35,11 +36,16 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     
     static Logger logger = LoggerFactory.getLogger(
             ParametersTableModel.class.getName());
+    
+    public static final String TYPE_COLUMN_NAME = "Type";
+    public static final String NAME_COLUMN_NAME = "Name";
+    
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
+        
     // Init columns titles and types
-    protected final String[] columnNames = new String[]{"Name", "Type", "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
+    protected final String[] columnNames = new String[]{TYPE_COLUMN_NAME, NAME_COLUMN_NAME, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
     protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
     private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
@@ -47,7 +53,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     private Target targetToPresent;
     private Model modelToPresent;
     private Object[] parametersOrParameterLinksToPresent;
-    private boolean allowFullEditing;
+    private boolean editForCustomModel;
 
     public ParametersTableModel() {
         super();
@@ -78,14 +84,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         logger.debug("Updating model for a given parameter list");
         refreshModel(settingsModel, null, null, parametersToPresent, recursive);
     }
-    
-    /**
-     * Accept or not to edit full parameter meta data.
-     * @param flag true if table model should allow editing of whole parameters, else false
-     */
-    public void setEditable(boolean flag) {
-        allowFullEditing=flag;
-    }
+       
 
     private void refreshModel(SettingsModel settingsModel, Target target, Model model, Object[] parametersAndParameterLinks, boolean recursive) {
         this.settingsModel = settingsModel;
@@ -111,6 +110,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
         } else if (modelToPresent != null) {
+            editForCustomModel= StringUtils.isSet(modelToPresent.getCode());
             parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
             Vector params = new Vector();
@@ -269,7 +269,8 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return allowFullEditing || columnEditableFlags[columnIndex];
+        // in full editin mode, the name is a copy of type
+        return (editForCustomModel&&columnNames[columnIndex]!=NAME_COLUMN_NAME) || columnEditableFlags[columnIndex];
     }
 
     @Override
@@ -322,7 +323,10 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     Class[] c = new Class[]{aValue.getClass()};
                     Method set = Parameter.class.getMethod(methodName, c);
                     Object[] obj = new Object[]{aValue};
-                    set.invoke(p, obj);
+                    set.invoke(p, obj);                    
+                    if(columnNames[columnIndex]==TYPE_COLUMN_NAME && editForCustomModel){
+                        p.setName((String)aValue);
+                    }
                 } else {
                     methodName = "delete" + columnNames[columnIndex];
                     Method m = Parameter.class.getMethod(methodName);
