@@ -53,6 +53,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     TargetPanel targetPanel;
     FilePanel filePanel;
     ModelPanel modelPanel;
+    UsercodePanel usercodePanel;
     ParametersPanel parametersPanel;
     ResultPanel resultPanel;
     ResultsPanel resultsPanel;
@@ -97,6 +98,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         settingsPanel = new SettingsPanel(filesPanel, targetsPanel, fitterPanel, userInfoPanel);
         filePanel = new FilePanel();
         modelPanel = new ModelPanel();
+        usercodePanel = new UsercodePanel(this);
         parametersPanel = new ParametersPanel(this);
         resultsPanel = new ResultsPanel(this);
         resultPanel = new ResultPanel(this);
@@ -191,6 +193,9 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             FileLink link = (FileLink) o;
             filePanel.show((File) link.getFileRef(), rootSettingsModel);
             modifierPanel.add(filePanel);
+        } else if (o instanceof Usercode) {
+            usercodePanel.show(rootSettingsModel, (Usercode) o);
+            modifierPanel.add(usercodePanel);
         } else if (o instanceof Parameters) {
             parametersPanel.show(rootSettingsModel, (Parameters) o);
             modifierPanel.add(parametersPanel);
