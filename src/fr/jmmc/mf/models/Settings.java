@@ -58,6 +58,12 @@ public class Settings implements java.io.Serializable {
     private java.lang.String _fitter;
 
     /**
+     * Contains user models (with code element) and user functions.
+     *  
+     */
+    private fr.jmmc.mf.models.Usercode _usercode;
+
+    /**
      * Contains results.
      *  
      */
@@ -74,11 +80,6 @@ public class Settings implements java.io.Serializable {
      */
     private fr.jmmc.mf.models.Responses _responses;
 
-    /**
-     * Field _code
-     */
-    private java.lang.String _code;
-
 
       //----------------/
      //- Constructors -/
@@ -92,16 +93,6 @@ public class Settings implements java.io.Serializable {
       //-----------/
      //- Methods -/
     //-----------/
-
-    /**
-     * Returns the value of field 'code'.
-     * 
-     * @return the value of field 'code'.
-     */
-    public java.lang.String getCode()
-    {
-        return this._code;
-    } //-- java.lang.String getCode() 
 
     /**
      * Returns the value of field 'files'. The field 'files' has
@@ -186,6 +177,19 @@ public class Settings implements java.io.Serializable {
     } //-- java.lang.String getUserInfo() 
 
     /**
+     * Returns the value of field 'usercode'. The field 'usercode'
+     * has the following description: Contains user models (with
+     * code element) and user functions.
+     *  
+     * 
+     * @return the value of field 'usercode'.
+     */
+    public fr.jmmc.mf.models.Usercode getUsercode()
+    {
+        return this._usercode;
+    } //-- fr.jmmc.mf.models.Usercode getUsercode() 
+
+    /**
      * Method isValid
      */
     public boolean isValid()
@@ -222,16 +226,6 @@ public class Settings implements java.io.Serializable {
         
         Marshaller.marshal(this, handler);
     } //-- void marshal(org.xml.sax.ContentHandler) 
-
-    /**
-     * Sets the value of field 'code'.
-     * 
-     * @param code the value of field 'code'.
-     */
-    public void setCode(java.lang.String code)
-    {
-        this._code = code;
-    } //-- void setCode(java.lang.String) 
 
     /**
      * Sets the value of field 'files'. The field 'files' has the
@@ -312,6 +306,19 @@ public class Settings implements java.io.Serializable {
     {
         this._userInfo = userInfo;
     } //-- void setUserInfo(java.lang.String) 
+
+    /**
+     * Sets the value of field 'usercode'. The field 'usercode' has
+     * the following description: Contains user models (with code
+     * element) and user functions.
+     *  
+     * 
+     * @param usercode the value of field 'usercode'.
+     */
+    public void setUsercode(fr.jmmc.mf.models.Usercode usercode)
+    {
+        this._usercode = usercode;
+    } //-- void setUsercode(fr.jmmc.mf.models.Usercode) 
 
     /**
      * Method unmarshal

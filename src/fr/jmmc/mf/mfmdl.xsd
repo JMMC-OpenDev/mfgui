@@ -53,10 +53,10 @@ Root element of settings
                 <xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
                 <xsd:element ref="parameters" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="usercode" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="results" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="responses" minOccurs="0" maxOccurs="1"/>               
-                <xsd:element name="code" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -325,6 +325,41 @@ by their id.
         <xsd:attribute name="id" type="xsd:ID"/>
     </xsd:attributeGroup>
 
+<!--
+User code material (models and common functions).
+    -->
+    <xsd:element name="usercode">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains user models (with code element) and user functions.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="common" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+    <!-- Common Section -->
+    <xsd:element name="common">
+        <xsd:annotation>
+            <xsd:documentation>
+                Define a common code part.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+            </xsd:extension>
+        </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+
+ 
  <!--
 Result list.
     -->
