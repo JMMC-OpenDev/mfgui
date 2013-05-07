@@ -206,8 +206,41 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return supportedModels;
     }
     
-    public void addUserModel(Model userModel){
-        //Model m = (Model) UtilsClass.clone(specificModel);
+    public void addUserModel(){
+        // TODO 
+        // create a new empty custom model and show it in editor
+        Model userModel = new Model();
+        userModel.setType("custom");
+        userModel.setCode(" ");
+
+        Parameter flux_weight = new Parameter();
+        flux_weight.setType("flux_weight");
+        flux_weight.setName("flux_weight");
+        flux_weight.setMinValue(0.0d);
+        flux_weight.setMaxValue(1.0d);
+        flux_weight.setValue(0.0d);
+        flux_weight.setHasFixedValue(true);
+        flux_weight.setHasFixedValue(false);
+
+        // TODO add an util method to get pre-inited params
+        Parameter x = new Parameter();
+        x.setType("x");
+        x.setName("x");
+        x.setValue(0.0d);
+        x.setHasFixedValue(true);
+        x.setHasFixedValue(false);
+        Parameter y = new Parameter();
+        y.setType("y");
+        y.setName("y");
+        y.setValue(0.0d);
+        y.setHasFixedValue(true);
+        y.setHasFixedValue(false);
+
+        userModel.addParameter(flux_weight);
+        userModel.addParameter(x);
+        userModel.addParameter(y);        
+        
+        
         getSupportedModels().add(userModel);
         getUserCode().addModel(userModel);        
         
