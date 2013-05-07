@@ -132,6 +132,19 @@ public class ModelUtils {
         }
         return null;
     }
+    
+    public static boolean hasModelOfType(Model[] models, String type) {
+        return getModelOfType(models, type) != null;
+    }
+    
+    public static Model getModelOfType(Model[] models, String type) {        
+        for (Model m : models) {
+            if (m.getType().equals(type)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     /**
      * Return a string that describe the rho theta information of the given if
