@@ -665,7 +665,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         //sync checkbox with selection
         polarCheckBox.setSelected(hasSelection && getSelectedModel().getPolar());
         stretchedCheckBox.setSelected(hasSelection && getSelectedModel().getStretched());
-        
+
         // accept some modification for positional model only
         hasSelection = hasSelection && getSelectedModel() != null && ModelUtils.hasPosition(getSelectedModel());
         polarCheckBox.setEnabled(hasSelection);
@@ -705,40 +705,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 }//GEN-LAST:event_targetFitterParamActionPerformed
 
     private void addMyModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMyModelButtonActionPerformed
-        // TODO 
-        // create a new empty custom model and show it in editor
-        Model m = new Model();
-        m.setType("custom");
-        m.setCode(" ");
-
-        Parameter flux_weight = new Parameter();
-        flux_weight.setType("flux_weight");
-        flux_weight.setName("flux_weight");
-        flux_weight.setMinValue(0.0d);
-        flux_weight.setMaxValue(1.0d);
-        flux_weight.setValue(0.0d);
-        flux_weight.setHasFixedValue(true);
-        flux_weight.setHasFixedValue(false);
-
-        // TODO add an util method to get pre-inited params
-        Parameter x = new Parameter();
-        x.setType("x");
-        x.setName("x");
-        x.setValue(0.0d);
-        x.setHasFixedValue(true);
-        x.setHasFixedValue(false);
-        Parameter y = new Parameter();
-        y.setType("y");
-        y.setName("y");
-        y.setValue(0.0d);
-        y.setHasFixedValue(true);
-        y.setHasFixedValue(false);
-
-        m.addParameter(flux_weight);
-        m.addParameter(x);
-        m.addParameter(y);        
-        rootSettingsModel.addUserModel(m);
-
+        rootSettingsModel.addUserModel();
     }//GEN-LAST:event_addMyModelButtonActionPerformed
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
@@ -765,8 +732,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     }//GEN-LAST:event_stretchedCheckBoxActionPerformed
 
     private void availableModelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_availableModelListMouseClicked
-        if (evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             addModelButtonActionPerformed(null);
         }
 
