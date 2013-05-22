@@ -9,7 +9,6 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
-import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import java.awt.BorderLayout;
@@ -818,9 +817,32 @@ public class UtilsClass {
     }
 
     /**
+     * Test if settings contains a model of given type.
+     *
+     * @param type model type to search for
+     * @param s settings to search into
+     * 
+     * @return true if settings contains one or more model of given type, else false
+     */
+    public static boolean hasModel(final Settings s,final String modelType) {
+
+        // Test target's models and their parameters
+        for (Target t : s.getTargets().getTarget()) {
+            final Model[] models = t.getModel();
+            for (Model m : models) {                
+                if(m.getType().equals(modelType)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Return the maximum value of the model unique index found recursively using the given model and child models
      *
-     * @param models models to traverse
+     * @param s settings to traverse
      */
     public static int findModelMaxUniqueIndex(final Settings s) {
 
