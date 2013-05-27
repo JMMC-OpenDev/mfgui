@@ -413,6 +413,52 @@ public class LITpro extends fr.jmmc.jmcs.App {
             }
         };
 
+         // Add handler to load one new oifits
+        new SampMessageHandler(SampCapability.LITPRO_LOAD_USERMODEL) {
+            @Override
+            protected void processMessage(final String senderId, final Message message) throws SampException {
+                // bring this application to front and load data in current setting or build a new one
+                SwingUtils.invokeLaterEDT(new Runnable() {
+                    @Override
+                    public void run() {
+                        Exception e = null;
+                        final String url = (String) message.getParam("url");
+                        App.showFrameToFront();
+                        SettingsModel sm = gui.getSelectedSettings();
+                        if (sm == null) {
+                            try {
+                                sm = new SettingsModel();
+                                gui.addSettings(sm);
+                            } catch (ExecutionException ex) {
+                                MessagePane.showErrorMessage("Could not load file from samp message : " + message, ex);
+                                return;
+                            }
+                        }
+
+                        try {
+                            final URI uri = new URI(url);
+                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
+                            if (Http.download(uri, tmpFile, true)) {
+                                sm.addUserModel(tmpFile);
+                            } else {
+                                e = new IOException();
+                            }
+                        } catch (IllegalArgumentException ex) {
+                            e = ex;
+                        } catch (URISyntaxException ex) {
+                            e = ex;
+                        } catch (IOException ex) {
+                            e = ex;
+                        }
+
+                        if (e != null) {
+                            MessagePane.showErrorMessage("Could not load file from samp message : " + message, e);
+                        }
+                    }
+                });
+            }
+        };
+
         // Add handler to load one new setting given oifits and model description
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
