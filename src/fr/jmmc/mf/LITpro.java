@@ -95,7 +95,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      */
     @Override
     protected void setupGui() {
-        logger.debug("LITpro.init() handler : enter");
+        logger.debug("LITpro.setupGui() handler called.");
 
         gui = new MFGui(new String[]{});
 
@@ -115,7 +115,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
              */
             @Override
             public void run() {
-                logger.debug("ModelFitting.ready : handler called.");
+                logger.debug("ModelFitting.execute() handler called.");
 
                 getFrame().setVisible(true);
             }
