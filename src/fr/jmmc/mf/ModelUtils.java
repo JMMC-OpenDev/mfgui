@@ -4,10 +4,19 @@
 package fr.jmmc.mf;
 
 import fr.jmmc.jmal.model.gui.EditableRhoThetaParameter;
+import fr.jmmc.jmcs.gui.component.GenericListModel;
+import fr.jmmc.jmcs.service.BrowserLauncher;
+import fr.jmmc.jmcs.util.StringUtils;
+import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
+import fr.jmmc.mf.models.Settings;
+import fr.jmmc.mf.models.Target;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.NumberFormat;
+import org.apache.commons.httpclient.util.URIUtil;
 
 /**
  * util function applied to models.
@@ -18,6 +27,10 @@ public class ModelUtils {
 
     public final static String ROTATION_PARAMETER_NAME = "rotation";
     public final static String STRETCHED_PARAMETER_NAME = "stretched_ratio";
+
+    public static boolean isUserModel(Model model) {
+        return StringUtils.isEmpty(model.getCode());
+    }
 
     public static void moveParamUp(Model model, int paramIndex) {
         Parameter[] params = model.getParameter();
@@ -88,11 +101,11 @@ public class ModelUtils {
             final Parameter s = new Parameter();
             s.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
             s.setType(STRETCHED_PARAMETER_NAME);
-            s.setValue(1.0);            
+            s.setValue(1.0);
             s.setHasFixedValue(true);
             s.setHasFixedValue(false);
             model.addParameter(s);
-            
+
             // add rotation            
             final Parameter r = new Parameter();
             r.setName(ROTATION_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
@@ -105,14 +118,14 @@ public class ModelUtils {
         } else {
             // remove rotation parameter
             model.removeParameter(getParameterOfType(model, ROTATION_PARAMETER_NAME));
-         
+
             // remove rotation parameter
             model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
         }
 
         model.setStretched(flag);
         return true;
-    }    
+    }
 
     public static boolean hasPosition(Model selectedModel) {
         // test if marqued polar or has a classical x param
@@ -132,12 +145,45 @@ public class ModelUtils {
         }
         return null;
     }
-    
+
+    /**
+     * Test if given settings uses model of given type in the list of targets.
+     * @param s settings to search into
+     * @param type model type
+     * @return true if settings uses given model type, else false.
+     */
+    public static boolean hasModelOfType(Settings s, String type) {
+        Target[] targets = s.getTargets().getTarget();
+        for (Target target : targets) {
+            if (hasModelOfType(target.getModel(), type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Search in given list if only one model have the given type.
+     * @param models model list
+     * @param type model type
+     * @return true if only one model has the given type, false else
+     */
+    public static boolean isModelTypeUniq(final GenericListModel<Model> models, final String type) {
+        int count = 0;
+        for (int i = 0; i < models.size(); i++) {
+            if (type.equalsIgnoreCase(models.getElementAt(i).getType())) {
+                count++;
+            }
+        }
+        return count==1;
+    }
+
     public static boolean hasModelOfType(Model[] models, String type) {
         return getModelOfType(models, type) != null;
     }
+
     
-    public static Model getModelOfType(Model[] models, String type) {        
+    public static Model getModelOfType(Model[] models, String type) {
         for (Model m : models) {
             if (m.getType().equals(type)) {
                 return m;
@@ -200,5 +246,12 @@ public class ModelUtils {
             result = "x='" + nf.format(EditableRhoThetaParameter.getX(rho, pa)) + "' y='" + nf.format(EditableRhoThetaParameter.getY(rho, pa)) + "'";
         }
         return result;
+    }
+
+    public static void share(final Model model) throws IOException {
+        final StringWriter strWriter = new StringWriter();
+        UtilsClass.marshal(model, strWriter);
+        String xmlstr = URIUtil.encodePath(strWriter.toString());
+        BrowserLauncher.openURL("http://apps.jmmc.fr/exist/apps/usermodels/add.html?xmlstr=" + xmlstr);
     }
 }
