@@ -14,7 +14,6 @@ import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.ResourceUtils;
-import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
@@ -207,8 +206,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
     
     public void addUserModel(){
-        // TODO 
-        // create a new empty custom model and show it in editor
         Model userModel = new Model();
         userModel.setType("custom");
         userModel.setCode(" ");
@@ -249,9 +246,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         selectUserModel(userModel);        
     }
     
+    public void addUserModel(java.io.File f) throws IOException{        
+        Model m = (Model) UtilsClass.unmarshal(Settings.class, FileUtils.readFile(f));
+        getSupportedModels().add(m);
+        getUserCode().addModel(m);        
+    }
+    
     public void selectUserModel(Model userModel){
         setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), getUserCode(), userModel}));
     }
+    
+    
     
     /**
      * Get the Model associated to the given model name     
@@ -779,13 +784,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Change Model name and fire event.
+     * Change Model name and type with given type and fire event.
      * @param model model to change
      * @param newType new type for given model
      * @param userModel true if model gets user code
      */
     public void setModelType(Model model, String newType, boolean userModel) {
         model.setType(newType);
+        model.setName(newType);
         if (userModel) {
             fireTreeNodesChanged(new Object[]{rootSettings,rootSettings.getUsercode()},
                     getIndexOfChild(rootSettings.getUsercode(),model),
@@ -1155,6 +1161,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 + rootSettings.getUserInfo() + " ]" +
                 " with "+getResults().length+"results section";
         logger.debug(desc);
+        
+        // verify that user models are in the supported ones        
+        for (Model um : rootSettings.getUsercode().getModel()){
+            if(getSupportedModel(um.getType())==null){
+                getSupportedModels().add(um);
+                logger.info("Add usermodel as new available model : " + um.getType());
+            }
+        }
                 
         // fire general change event
         fireTreeStructureChanged(rootSettings);
