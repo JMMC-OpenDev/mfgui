@@ -33,17 +33,14 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ParametersTableModel extends AbstractTableModel implements MouseListener {
-    
+
     static Logger logger = LoggerFactory.getLogger(
             ParametersTableModel.class.getName());
-    
     public static final String TYPE_COLUMN_NAME = "Type";
     public static final String NAME_COLUMN_NAME = "Name";
-    
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
-        
     // Init columns titles and types
     protected final String[] columnNames = new String[]{TYPE_COLUMN_NAME, NAME_COLUMN_NAME, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
@@ -84,7 +81,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         logger.debug("Updating model for a given parameter list");
         refreshModel(settingsModel, null, null, parametersToPresent, recursive);
     }
-       
 
     private void refreshModel(SettingsModel settingsModel, Target target, Model model, Object[] parametersAndParameterLinks, boolean recursive) {
         this.settingsModel = settingsModel;
@@ -110,7 +106,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
         } else if (modelToPresent != null) {
-            editForCustomModel= StringUtils.isSet(modelToPresent.getCode());
+            editForCustomModel = StringUtils.isSet(modelToPresent.getCode()) && settingsModel != null && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), modelToPresent.getType());
             parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
             Vector params = new Vector();
@@ -270,7 +266,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         // in full editin mode, the name is a copy of type
-        return (editForCustomModel&&columnNames[columnIndex]!=NAME_COLUMN_NAME) || columnEditableFlags[columnIndex];
+        return (editForCustomModel && columnNames[columnIndex] != NAME_COLUMN_NAME) || columnEditableFlags[columnIndex];
     }
 
     @Override
@@ -282,7 +278,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         } else {
             p = (Parameter) o;
         }
-        
+
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
         // and most of parameter ones accept double only :(
@@ -323,9 +319,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     Class[] c = new Class[]{aValue.getClass()};
                     Method set = Parameter.class.getMethod(methodName, c);
                     Object[] obj = new Object[]{aValue};
-                    set.invoke(p, obj);                    
-                    if(columnNames[columnIndex]==TYPE_COLUMN_NAME && editForCustomModel){
-                        p.setName((String)aValue);
+                    set.invoke(p, obj);
+                    if (columnNames[columnIndex] == TYPE_COLUMN_NAME && editForCustomModel) {
+                        p.setName((String) aValue);
                     }
                 } else {
                     methodName = "delete" + columnNames[columnIndex];
@@ -385,7 +381,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 // Show share parameter entry
                 menuItem = new JMenuItem("Share this parameter");
                 menuItem.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         settingsModel.shareParameter(p);
                         refreshModel(settingsModel, targetToPresent, modelToPresent, parametersOrParameterLinksToPresent, recursive);
@@ -404,7 +399,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 final Parameter sp = sharedParams[i];
                 menuItem = new JMenuItem(sp.getName());
                 menuItem.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         if (isParameterLink(o)) {
                             settingsModel.linkSharedParameter((ParameterLink) o, sp);
@@ -433,7 +427,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     parameterPopupMenu.add(menuItem);
                 }
             } else {
-                Model m = settingsModel.getParent(p);
+                Model m = modelToPresent == null ? settingsModel.getParent(p) : modelToPresent;
                 menuItem = new JMenuItem("This model is located at " + ModelUtils.getRelativeCoords(m) + " relatively to the center of this target.");
                 menuItem.setEnabled(false);
                 parameterPopupMenu.add(menuItem);
@@ -467,5 +461,4 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     private boolean isParameterLink(Object parameterOrParameterLink) {
         return parameterOrParameterLink instanceof ParameterLink;
     }
-
 }
