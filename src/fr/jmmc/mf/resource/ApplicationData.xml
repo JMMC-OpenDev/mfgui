@@ -143,17 +143,24 @@
     </menubar>
 
     <releasenotes>        
-            <release version="1.0.14 beta 1">
-                <prerelease version="1.0.14 beta 1">                                
+            <release version="1.0.14 beta 2">
+                <prerelease version="1.0.14 beta 2">                                
                     <change type="FEATURE">Basic support for user models</change>                              
+                    <change type="CHANGE">Model names can't be renamed (so that numbering in param label should stay consistent)</change>
                     <!-- not yet done: 
                     <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
                     <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>            
                     FIXME 
-                      * Leave resource in MFGui.closeSettings()
-                      
-                    TODO  add link for futur "ENDtt_Usercode" doc in UserCodePanel
-                    -->                                                                               
+                      * Leave resource in MFGui.closeSettings()                                            
+                    TODO  
+                      * add link for futur "ENDtt_Usercode" doc in UserCodePanel
+                      * Always edit the master custom model: ie do not only edit the custom model of a settings file.
+                      * Finish PlotImage bounds shortcut
+                      * Finish plotImage with decimal bounds
+                    -->                                                                                                                                          
+                </prerelease>
+                <prerelease version="1.0.14 beta 1">                                
+                    <change type="FEATURE">Basic support for user models</change>                                                                                                                 
                 </prerelease>
             </release>
             <release version="1.0.13">
