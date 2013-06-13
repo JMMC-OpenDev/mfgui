@@ -630,10 +630,12 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         // add init message if any
         c.addMessages(inUseMessageContainer);        
         
-        // complete if actual type is not uniq
-        final boolean uniq = ModelUtils.isModelTypeUniq(settingsModel.getSupportedModels(), customTypeTextField.getText());
-        if (!uniq) {
-            c.addErrorMessage("Given type '"+customTypeTextField.getText()+"'is already defined.");            
+        if(isCustomModel){
+            // complete if actual type is not uniq
+            final boolean uniq = ModelUtils.isModelTypeUniq(settingsModel.getSupportedModels(), customTypeTextField.getText());
+            if (!uniq) {
+                c.addErrorMessage("Given type '"+customTypeTextField.getText()+"'is already defined.");            
+            }
         }
         
         messagePanel1.update(c);
