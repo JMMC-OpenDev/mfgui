@@ -145,7 +145,7 @@
     <releasenotes>        
             <release version="1.0.14 beta 2">
                 <prerelease version="1.0.14 beta 2">                                
-                    <change type="FEATURE">Basic support for user models</change>                              
+                    <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>                              
                     <change type="CHANGE">Model names can't be renamed (so that numbering in param label should stay consistent)</change>
                     <!-- not yet done: 
                     <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
