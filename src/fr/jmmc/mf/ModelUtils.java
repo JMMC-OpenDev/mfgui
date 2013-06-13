@@ -178,6 +178,16 @@ public class ModelUtils {
         return count==1;
     }
 
+    public static boolean hasModelOfType(final GenericListModel<Model> models, String type) {
+        for (int i = 0; i < models.size(); i++) {
+            if (type.equalsIgnoreCase(models.getElementAt(i).getType())) {
+                return true;
+            }
+        }
+        return false;        
+    }
+
+    
     public static boolean hasModelOfType(Model[] models, String type) {
         return getModelOfType(models, type) != null;
     }
