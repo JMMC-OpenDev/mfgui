@@ -88,6 +88,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         this.modelToPresent = model;
         this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
         this.recursive = recursive;
+        
+        // do not allow edition of param type by default
+        editForCustomModel=false;
 
         if (targetToPresent != null) {
             parametersOrParameterLinksToPresent = new Parameter[]{};
@@ -106,7 +109,11 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 modelOfParameters[i] = (Model) models.elementAt(i);
             }
         } else if (modelToPresent != null) {
-            editForCustomModel = StringUtils.isSet(modelToPresent.getCode()) && settingsModel != null && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), modelToPresent.getType());
+            // accept to edit only for custom models that have no instance
+            editForCustomModel = StringUtils.isSet(modelToPresent.getCode()) 
+                    && settingsModel != null 
+                    && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), modelToPresent.getType())
+                    && ! ModelUtils.hasModelOfType(settingsModel.getRootSettings(), modelToPresent.getType());
             parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
             Vector params = new Vector();
