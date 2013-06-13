@@ -3,7 +3,10 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.FeedbackReport;
+import fr.jmmc.jmcs.gui.component.MessageContainer;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.resource.image.ResourceImage;
 import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
@@ -12,13 +15,15 @@ import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Vector;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-public class ModelPanel extends javax.swing.JPanel implements ListSelectionListener, TableModelListener{
+public class ModelPanel extends javax.swing.JPanel implements ListSelectionListener, TableModelListener {
+
     ParametersTableModel parametersTableModel;
     Model current;
     SettingsModel settingsModel;
@@ -36,6 +41,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JTextArea descTextArea;
     private javax.swing.JButton editAssociatedButton;
     private javax.swing.JButton helpButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -46,23 +52,27 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
+    private fr.jmmc.jmcs.gui.component.MessagePanel messagePanel1;
     private javax.swing.JButton moveDownButton;
     private javax.swing.JButton moveUpButton;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTable parametersTable;
     private javax.swing.JButton shareButton;
+    private javax.swing.JTextField shortDescTextField;
     private javax.swing.JTextArea startingTextArea;
     private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
-    private boolean initStep=false;
-    private boolean isCustomModel=false;
-
+    private boolean initStep = false;
+    private boolean isCustomModel = false;
+    private MessageContainer inUseMessageContainer = new MessageContainer();
+    private MessageContainer duplicatedMessageContainer = new MessageContainer();
+    
     /** Creates new form ModelPanel */
     public ModelPanel() {
         // first create our parameters table model
         parametersTableModel = new ParametersTableModel();
-        initComponents();        
+        initComponents();
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
         parametersTable.getSelectionModel().addListSelectionListener(this);
@@ -70,17 +80,25 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     }
 
     public void show(Model m, SettingsModel s) {
-        initStep=false;
+        initStep = false;
         settingsModel = s;
 
         // select corresponding element with current=null to ignore event
         current = m;
-        
+
         // handle some widget config if custom model or not
         isCustomModel = !StringUtils.isEmpty(m.getCode());
-        boolean customType = !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel() , current.getType());
+        boolean isCustomInstance = !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), current.getType());
+
+        // test that we are not in use
+        final boolean hasInstances = isCustomModel && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), current.getType());
         
-        
+        if (hasInstances) {
+            inUseMessageContainer.addWarningMessage("model is currently in use, remove instance first to edit table of params. (WorkInProgress)");
+        }else{
+            inUseMessageContainer.clear();
+        }
+
         // show only for custom models
         customTypeTextField.setVisible(isCustomModel);
         customCodeTextArea.setVisible(isCustomModel);
@@ -94,34 +112,43 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         moveDownButton.setVisible(isCustomModel);
         moveUpButton.setVisible(isCustomModel);
         descTextArea.setEditable(isCustomModel);
+        shortDescTextField.setEditable(isCustomModel);
+
+        customTypeTextField.setEditable(!hasInstances);
         
+        if (isCustomModel) {
+            addParamButton.setEnabled(!hasInstances);
+            delParamButton.setEnabled(!hasInstances);
+            moveDownButton.setEnabled(!hasInstances);
+            moveUpButton.setEnabled(!hasInstances);
+        }
+
         // show only for classical models
         nameTextField.setVisible(!isCustomModel);
-        nameLabel.setVisible(!isCustomModel);                
+        nameLabel.setVisible(!isCustomModel);
         availableModelList.setVisible(!isCustomModel);
-        availableModelScrollPane.setVisible(!isCustomModel);        
-        
+        availableModelScrollPane.setVisible(!isCustomModel);
+
         // show only for instances of custom models
-        editAssociatedButton.setVisible(customType);                                 
-        
-        if(!isCustomModel){            
+        editAssociatedButton.setVisible(isCustomInstance);
+
+        if (!isCustomModel) {
             availableModelList.setModel(settingsModel.getSupportedModels());
-            availableModelList.setSelectedValue(s.getSupportedModel(m.getType()),true);    
-        }else{
-            updatePrototype();            
-            
+            availableModelList.setSelectedValue(s.getSupportedModel(m.getType()), true);
+        } else {
+            updatePrototype();
+
             // Fill custom type textfield            
             customTypeTextField.setText(m.getType());
-            
+
             // Fill code
             customCodeTextArea.setText(m.getCode());
-            
         }
-                
-        nameTextField.setText(m.getName());        
-        
+
+        nameTextField.setText(m.getName());
+
         parametersTableModel.setModel(s, m, false);
-        
+
         jPanel2.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
         UtilsClass.initColumnSizes(parametersTable, 330);
 
@@ -129,13 +156,20 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             parametersTable.addMouseListener(parametersTableModel);
             mouseListeners.add(parametersTableModel);
         }
-        descTextArea.setText(m.getDesc());
+
+        // Fill short and full description 
+        final Model parentModel = settingsModel.getSupportedModel(current.getType());
+        descTextArea.setText(parentModel.getDesc());
         descTextArea.setCaretPosition(0);
-        
+        shortDescTextField.setText(parentModel.getShortdesc());
+
         // init param related buttons
         valueChanged(null);
+
+        // display messages if any
+        updateMessagePanel();
         
-        initStep=true;
+        initStep = true;
     }
 
     /** This method is called from within the constructor to
@@ -167,6 +201,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         validateButton = new javax.swing.JButton();
         editAssociatedButton = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        shortDescTextField = new javax.swing.JTextField();
+        messagePanel1 = new fr.jmmc.jmcs.gui.component.MessagePanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
@@ -203,7 +240,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -215,24 +252,19 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
         jPanel5.add(jLabel2, gridBagConstraints);
 
-        nameTextField.setText("toto");
+        nameTextField.setEditable(false);
         nameTextField.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 nameTextFieldCaretUpdate(evt);
             }
         });
-        nameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameTextFieldActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         jPanel5.add(nameTextField, gridBagConstraints);
@@ -241,15 +273,16 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         jPanel5.add(nameLabel, gridBagConstraints);
 
         availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         availableModelScrollPane.setViewportView(availableModelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel5.add(availableModelScrollPane, gridBagConstraints);
 
         customTypeTextField.addCaretListener(new javax.swing.event.CaretListener() {
@@ -257,10 +290,16 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
                 customTypeTextFieldCaretUpdate(evt);
             }
         });
+        customTypeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                customTypeTextFieldFocusLost(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         gridBagConstraints.weightx = 0.1;
         jPanel5.add(customTypeTextField, gridBagConstraints);
 
@@ -317,7 +356,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -325,17 +364,23 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         jPanel5.add(customCodePanel, gridBagConstraints);
 
         shareButton.setText("Share this model");
-        shareButton.setEnabled(false);
+        shareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shareButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         jPanel5.add(shareButton, gridBagConstraints);
 
         validateButton.setText("Validate code");
         validateButton.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         jPanel5.add(validateButton, gridBagConstraints);
 
         editAssociatedButton.setText("Edit associated model");
@@ -345,7 +390,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
         jPanel5.add(editAssociatedButton, gridBagConstraints);
@@ -354,6 +399,30 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel5.add(jPanel7, gridBagConstraints);
+
+        jLabel1.setText("Short description :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        jPanel5.add(jLabel1, gridBagConstraints);
+
+        shortDescTextField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                shortDescTextFieldCaretUpdate(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel5.add(shortDescTextField, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel5.add(messagePanel1, gridBagConstraints);
 
         jSplitPane1.setTopComponent(jPanel5);
         jPanel5.getAccessibleContext().setAccessibleDescription("");
@@ -418,7 +487,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.weightx = 0.1;
         jPanel1.add(helpButton1, gridBagConstraints);
 
-        moveUpButton.setText("Move Up");
+        moveUpButton.setIcon(ResourceImage.UP_ARROW.icon());
         moveUpButton.setEnabled(false);
         moveUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -430,7 +499,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.gridy = 0;
         jPanel1.add(moveUpButton, gridBagConstraints);
 
-        moveDownButton.setText("Move Down");
+        moveDownButton.setIcon(ResourceImage.DOWN_ARROW.icon());
         moveDownButton.setEnabled(false);
         moveDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -460,10 +529,6 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         add(jSplitPane1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_nameTextFieldActionPerformed
-    }//GEN-LAST:event_nameTextFieldActionPerformed
-
     private void addParamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParamButtonActionPerformed
         Parameter p = new Parameter();
         p.setValue(0.0d);
@@ -488,12 +553,12 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     }//GEN-LAST:event_descTextAreaCaretUpdate
 
     private void moveUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpButtonActionPerformed
-        ModelUtils.moveParamUp(current, parametersTable.getSelectedRow());
+        ModelUtils.moveParamDown(current, parametersTable.getSelectedRow());
         refresh();
     }//GEN-LAST:event_moveUpButtonActionPerformed
 
     private void moveDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownButtonActionPerformed
-        ModelUtils.moveParamDown(current, parametersTable.getSelectedRow());
+        ModelUtils.moveParamUp(current, parametersTable.getSelectedRow());
         refresh();
     }//GEN-LAST:event_moveDownButtonActionPerformed
 
@@ -504,6 +569,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private void customTypeTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_customTypeTextFieldCaretUpdate
         settingsModel.setModelType(current, customTypeTextField.getText(), isCustomModel);
         updatePrototype();
+        updateMessagePanel();
     }//GEN-LAST:event_customTypeTextFieldCaretUpdate
 
     private void editAssociatedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editAssociatedButtonActionPerformed
@@ -511,11 +577,27 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         settingsModel.selectUserModel(customModel);
     }//GEN-LAST:event_editAssociatedButtonActionPerformed
 
+    private void shareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareButtonActionPerformed
+        try {
+            ModelUtils.share(current);
+        } catch (IOException ex) {
+            FeedbackReport.openDialog(ex);
+        }
+    }//GEN-LAST:event_shareButtonActionPerformed
+
+    private void shortDescTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_shortDescTextFieldCaretUpdate
+        current.setShortdesc(shortDescTextField.getText());
+    }//GEN-LAST:event_shortDescTextFieldCaretUpdate
+
+    private void customTypeTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_customTypeTextFieldFocusLost
+        updateMessagePanel();
+    }//GEN-LAST:event_customTypeTextFieldFocusLost
+
     public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = parametersTable.getSelectedRow();
         final boolean hasSelection = selectedRow >= 0;
         delParamButton.setEnabled(hasSelection);
-        moveUpButton.setEnabled(hasSelection && selectedRow != current.getParameterCount());
+        moveUpButton.setEnabled(hasSelection && selectedRow != (current.getParameterCount() - 1));
         moveDownButton.setEnabled(hasSelection && selectedRow != 0);
     }
 
@@ -537,8 +619,23 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         sb.append("){");
         startingTextArea.setText(sb.toString());
     }
-
+    
     public void tableChanged(TableModelEvent e) {
         updatePrototype();
+    }
+
+    private void updateMessagePanel() {        
+        MessageContainer c = new MessageContainer();
+        
+        // add init message if any
+        c.addMessages(inUseMessageContainer);        
+        
+        // complete if actual type is not uniq
+        final boolean uniq = ModelUtils.isModelTypeUniq(settingsModel.getSupportedModels(), customTypeTextField.getText());
+        if (!uniq) {
+            c.addErrorMessage("Given type '"+customTypeTextField.getText()+"'is already defined.");            
+        }
+        
+        messagePanel1.update(c);
     }
 }
