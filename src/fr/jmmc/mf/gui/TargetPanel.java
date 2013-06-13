@@ -711,6 +711,10 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
         // Construct a new copy
         Model selectedModel = (Model) availableModelList.getSelectedValue();
+        // Check that usermodel is in the settings file        
+        rootSettingsModel.addUserModel(selectedModel);        
+        
+        // create and add new instance
         Model m = (Model) UtilsClass.clone(selectedModel);
         m.setCode(null);
         rootSettingsModel.addModel(current, m);
