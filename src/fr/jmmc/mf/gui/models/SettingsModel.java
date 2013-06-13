@@ -15,6 +15,7 @@ import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.ResourceUtils;
 import fr.jmmc.mf.LITpro;
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.*;
 import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIData;
@@ -57,7 +58,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** list of supported models   */
     private static List<Model> supportedModelsList = new LinkedList<Model>();
     /** list of supported models   */
-    private static GenericListModel supportedModels = new GenericListModel<Model>(supportedModelsList);
+    private static GenericListModel supportedModels  = null ;
     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
@@ -181,6 +182,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws ExecutionException thrown if execution exception occurs
      */
     public static GenericListModel<Model> getSupportedModels() {
+        
+        boolean created = supportedModels!=null;
+        if(!created){
+            supportedModels= new GenericListModel<Model>(supportedModelsList);
+        }
         // Fill modelTypeComboBox model if empty
         if (supportedModels.size() < 1) {
             Response r;
@@ -199,7 +205,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             } catch (IllegalStateException ex) {
                 throw new IllegalStateException("Can't get list of supported models", ex);
             } catch (ExecutionException ex) {
-                MessagePane.showErrorMessage("Model supported by remote server can't been properly retrieved\n", ex.getMessage());
+                final String msg = "Model supported by remote server can't been properly retrieved";
+                if(created){
+                    MessagePane.showErrorMessage(msg, ex.getMessage());
+                }else{
+                    logger.info(msg);
+                }
             }
         }
         return supportedModels;
@@ -237,9 +248,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         userModel.addParameter(x);
         userModel.addParameter(y);        
         
-        
-        getSupportedModels().add(userModel);
-        getUserCode().addModel(userModel);        
+        addUserModel(userModel);
         
         // Fire Change event and Select custom models in tree to be edited        
         fireTreeStructureChanged(rootSettings);
@@ -248,8 +257,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     
     public void addUserModel(java.io.File f) throws IOException{        
         Model m = (Model) UtilsClass.unmarshal(Settings.class, FileUtils.readFile(f));
-        getSupportedModels().add(m);
-        getUserCode().addModel(m);        
+        addUserModel(m);
+    }
+    
+    public void addUserModel(Model um){   
+        if( ! ModelUtils.hasModelOfType(getSupportedModels(), um.getType())){
+            getSupportedModels().add(um);
+        }                
+        if( ! ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())){
+            getUserCode().addModel(um);        
+        }
     }
     
     public void selectUserModel(Model userModel){
@@ -1807,14 +1824,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             return -1;
         } else if (parent == rootSettings.getTargets()) {
             Object[] elements = rootSettings.getTargets().getTarget();
-            for (int i = 0; i
-                    < elements.length; i++) {
+            for (int i = 0; i < elements.length; i++) {
                 if (child == elements[i]) {
                     return i;
                 }
             }
             // TODO fix that point!
-            logger.debug("parent:" + parent + " does not seem to contain:" + child);
+            logger.warn("parent:" + parent + " does not seem to contain:" + child);
+            return -1;
+        } else if (parent == rootSettings.getUsercode()) {
+            Object[] elements = rootSettings.getUsercode().getModel();
+            for (int i = 0; i < elements.length; i++) {
+                if (child == elements[i]) {
+                    return i;
+                }
+            }
+            // TODO fix that point!
+            logger.warn("parent:" + parent + " does not seem to contain:" + child);
             return -1;
         } else if (parent == rootSettings.getParameters()) {
             Object[] elements = rootSettings.getParameters().getParameter();
@@ -1873,7 +1899,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         }
         // TODO fix that point!
-        logger.debug("missing code for parent=" + parent + " and child=" + child);
+        logger.error("missing code for parent=" + parent + " and child=" + child, new Throwable());
         return 0;
     }
 
