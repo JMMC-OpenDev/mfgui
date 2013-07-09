@@ -616,7 +616,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             sb.append(param.getType()).append(", ");
         }
         sb.setLength(sb.length() - 2);
-        sb.append("){");
+        sb.append(") {");
         startingTextArea.setText(sb.toString());
     }
     
