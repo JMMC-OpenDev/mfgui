@@ -7,6 +7,7 @@ import fr.jmmc.jmal.model.gui.EditableRhoThetaParameter;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.service.BrowserLauncher;
 import fr.jmmc.jmcs.util.StringUtils;
+import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
@@ -258,10 +259,23 @@ public class ModelUtils {
         return result;
     }
 
+    /** 
+     * Forward the build model onto the user model web portal.
+     * @param model to share
+     * @throws IOException if uri can not be processed with xml serialisation
+     */
     public static void share(final Model model) throws IOException {
         final StringWriter strWriter = new StringWriter();
         UtilsClass.marshal(model, strWriter);
         String xmlstr = URIUtil.encodePath(strWriter.toString());
-        BrowserLauncher.openURL("http://apps.jmmc.fr/exist/apps/usermodels/add.html?xmlstr=" + xmlstr);
+        String umRepoUrl = Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL);
+        BrowserLauncher.openURL(umRepoUrl + "add.html?xmlstr=" + xmlstr);
+    }
+    
+    /**
+     * Open the browser on the index page of the usermodel repository.
+     */
+    public static void visitUsermodelsRepository(){
+        BrowserLauncher.openURL(Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL)+"index.html");
     }
 }

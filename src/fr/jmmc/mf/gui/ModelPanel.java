@@ -62,6 +62,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JTextField shortDescTextField;
     private javax.swing.JTextArea startingTextArea;
     private javax.swing.JButton validateButton;
+    private javax.swing.JButton visitUmRepositoryButton;
     // End of variables declaration//GEN-END:variables
     private boolean initStep = false;
     private boolean isCustomModel = false;
@@ -197,10 +198,11 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         startingTextArea = new javax.swing.JTextArea();
         customCodeTextArea = new javax.swing.JTextArea();
         closingTextArea = new javax.swing.JTextArea();
-        shareButton = new javax.swing.JButton();
-        validateButton = new javax.swing.JButton();
-        editAssociatedButton = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        validateButton = new javax.swing.JButton();
+        shareButton = new javax.swing.JButton();
+        visitUmRepositoryButton = new javax.swing.JButton();
+        editAssociatedButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         shortDescTextField = new javax.swing.JTextField();
         messagePanel1 = new fr.jmmc.jmcs.gui.component.MessagePanel();
@@ -363,25 +365,25 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints.weighty = 1.0;
         jPanel5.add(customCodePanel, gridBagConstraints);
 
+        validateButton.setText("Validate code");
+        validateButton.setEnabled(false);
+        jPanel7.add(validateButton);
+
         shareButton.setText("Share this model");
         shareButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 shareButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
-        jPanel5.add(shareButton, gridBagConstraints);
+        jPanel7.add(shareButton);
 
-        validateButton.setText("Validate code");
-        validateButton.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
-        jPanel5.add(validateButton, gridBagConstraints);
+        visitUmRepositoryButton.setText("Visit web repos...");
+        visitUmRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visitUmRepositoryButtonActionPerformed(evt);
+            }
+        });
+        jPanel7.add(visitUmRepositoryButton);
 
         editAssociatedButton.setText("Edit associated model");
         editAssociatedButton.addActionListener(new java.awt.event.ActionListener() {
@@ -389,11 +391,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
                 editAssociatedButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        jPanel5.add(editAssociatedButton, gridBagConstraints);
+        jPanel7.add(editAssociatedButton);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
@@ -592,6 +591,10 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private void customTypeTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_customTypeTextFieldFocusLost
         updateMessagePanel();
     }//GEN-LAST:event_customTypeTextFieldFocusLost
+
+    private void visitUmRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUmRepositoryButtonActionPerformed
+        ModelUtils.visitUsermodelsRepository();
+    }//GEN-LAST:event_visitUmRepositoryButtonActionPerformed
 
     public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = parametersTable.getSelectedRow();

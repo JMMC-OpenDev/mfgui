@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.service.BrowserLauncher;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -51,7 +52,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         settingsViewer = viewer;
         parametersTableModel = new ParametersTableModel();
         initComponents();
-
+        postInit(plotPanel);
+    }
+    
+    private void postInit(PlotPanel plotPanel){
         listenToFileSelection = false;
 
         modelList.setModel(models);
@@ -73,8 +77,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // build help button
         addModelHelpButton.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
-        availableModelList.addListSelectionListener(this);
-
+        availableModelList.addListSelectionListener(this);                        
     }
 
     /**
@@ -323,6 +326,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         addMyModelButton = new javax.swing.JButton();
         polarCheckBox = new javax.swing.JCheckBox();
         stretchedCheckBox = new javax.swing.JCheckBox();
+        visitUmRepositoryButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
@@ -549,7 +553,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel4.add(jScrollPane1, gridBagConstraints);
 
-        addMyModelButton.setText("create user model...");
+        addMyModelButton.setText("Create user model...");
         addMyModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMyModelButtonActionPerformed(evt);
@@ -584,6 +588,19 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         jPanel4.add(stretchedCheckBox, gridBagConstraints);
+
+        visitUmRepositoryButton.setText("Visit web repos...");
+        visitUmRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visitUmRepositoryButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        jPanel4.add(visitUmRepositoryButton, gridBagConstraints);
 
         jPanel7.add(jPanel4);
 
@@ -742,6 +759,10 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
 
     }//GEN-LAST:event_availableModelListMouseClicked
 
+    private void visitUmRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUmRepositoryButtonActionPerformed
+        ModelUtils.visitUsermodelsRepository();
+    }//GEN-LAST:event_visitUmRepositoryButtonActionPerformed
+
     private Model getSelectedModel() {
         if (modelList.getSelectedIndex() < 0) {
             return null;
@@ -780,5 +801,6 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JCheckBox vis2CheckBox;
     private javax.swing.JCheckBox visAmpCheckBox;
     private javax.swing.JCheckBox visPhiCheckBox;
+    private javax.swing.JButton visitUmRepositoryButton;
     // End of variables declaration//GEN-END:variables
 }

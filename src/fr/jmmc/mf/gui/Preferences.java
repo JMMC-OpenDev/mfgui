@@ -30,6 +30,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     public static final String YOGA_LOCAL_HOME = "yoga.local.home";
     public static final String YOGA_LOCAL_PROGNAME = "yoga.local.progname";
     public static final String YOGA_REMOTE_URL = "yoga.remote.url";
+    public static final String USERMODEL_REPO_URL = "usermodel.repo.url";
 
     /**
      * Privatized constructor that must be empty.
@@ -80,6 +81,9 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         } else {
             setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~swmgr/LITproWebService/run.php");
         }
+        
+        setDefaultPreference(USERMODEL_REPO_URL, "http://apps.jmmc.fr/exist/apps/usermodels/");
+        
     }
 
     /**
