@@ -18,6 +18,7 @@ import java.util.HashSet;
  * 
  */
 public class PlotModelPanel extends javax.swing.JPanel {
+
     public SettingsModel settingsModel = null;
     private PlotPanel plotPanel;
     private int startValue = 0;
@@ -170,6 +171,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        sameBoxCheckBox = new javax.swing.JCheckBox();
         plotImageButton = new javax.swing.JButton();
         targetLabel = new javax.swing.JLabel();
         targetComboBox = new javax.swing.JComboBox();
@@ -206,6 +208,12 @@ public class PlotModelPanel extends javax.swing.JPanel {
         ymaxFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel11 = new javax.swing.JLabel();
         pixscaleFormattedTextField1 = new javax.swing.JFormattedTextField();
+
+        sameBoxCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sameBoxCheckBoxActionPerformed(evt);
+            }
+        });
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot model panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -390,6 +398,11 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
         xminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         xminFormattedTextField.setText("-"+startValue);
+        xminFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xminFormattedTextFieldActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
@@ -559,6 +572,14 @@ public class PlotModelPanel extends javax.swing.JPanel {
                 plotRadialAngleFormattedTextField1.getText());
 }//GEN-LAST:event_plotRadialButtonActionPerformed
 
+    private void updateImageBounds() {
+        String v = xminFormattedTextField.getText().replace("-", "");
+        xminFormattedTextField.setText("-" + v);
+        xmaxFormattedTextField.setText(v);
+        yminFormattedTextField.setText("-" + v);
+        ymaxFormattedTextField.setText(v);
+    }
+
     private void targetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetComboBoxActionPerformed
         // We have to ensure that plot radial choices are consistent with fitter setup
         radialComboBox.removeAllItems();
@@ -584,6 +605,22 @@ public class PlotModelPanel extends javax.swing.JPanel {
             updateAvailableObservables();
         }
     }//GEN-LAST:event_radialComboBoxActionPerformed
+
+    private void sameBoxCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sameBoxCheckBoxActionPerformed
+        final boolean sameBounds = sameBoxCheckBox.isSelected();
+        yminFormattedTextField.setEnabled(sameBounds);
+        ymaxFormattedTextField.setEnabled(sameBounds);
+        xmaxFormattedTextField.setEnabled(sameBounds);
+        if (sameBounds) {
+            updateImageBounds();
+        }
+    }//GEN-LAST:event_sameBoxCheckBoxActionPerformed
+
+    private void xminFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xminFormattedTextFieldActionPerformed
+        if (sameBoxCheckBox.isSelected()) {
+            updateImageBounds();
+        }
+    }//GEN-LAST:event_xminFormattedTextFieldActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox addModelCheckBox;
     private javax.swing.JButton helpButton1;
@@ -611,6 +648,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private javax.swing.JButton plotUVMapButton;
     private javax.swing.JComboBox radialComboBox;
     private javax.swing.JCheckBox residualsCheckBox;
+    private javax.swing.JCheckBox sameBoxCheckBox;
     private javax.swing.JComboBox targetComboBox;
     private javax.swing.JLabel targetLabel;
     private javax.swing.JFormattedTextField xmaxFormattedTextField;
