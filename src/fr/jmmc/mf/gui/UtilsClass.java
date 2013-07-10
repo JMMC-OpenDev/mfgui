@@ -351,10 +351,10 @@ public class UtilsClass {
             logger.debug("End of unmarshal");
         } catch (MarshalException ex) {
             logger.warn(xml);
-            throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
+            throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, Math.min(xml.length(), HeadSizeToDisplayOnError)) + "...]", ex);
         } catch (ValidationException ex) {
             logger.warn(xml);
-            throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, HeadSizeToDisplayOnError) + "...]", ex);
+            throw new IllegalArgumentException("Can't read input data properly:\n[" + xml.substring(0, Math.min(xml.length(), HeadSizeToDisplayOnError)) + "...]", ex);
         } catch (MappingException ex) {
             throw new IllegalStateException("Can't use mapping object", ex);
         }
