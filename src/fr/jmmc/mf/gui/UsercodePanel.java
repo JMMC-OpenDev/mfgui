@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Usercode;
 
@@ -20,6 +21,7 @@ public class UsercodePanel extends javax.swing.JPanel {
     private javax.swing.JTextArea commonCodeTextArea;
     private javax.swing.JButton helpButton1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton visitUserModelReposButton;
     // End of variables declaration//GEN-END:variables
 
     /** Creates new form UsercodePanel */
@@ -46,12 +48,14 @@ public class UsercodePanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         commonCodeTextArea = new javax.swing.JTextArea();
         addMyModelButton = new javax.swing.JButton();
+        visitUserModelReposButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Usercode panel"));
         setLayout(new java.awt.GridBagLayout());
 
-        helpButton1.setText("jButton1");
+        helpButton1.setText("helpTBD");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(helpButton1, gridBagConstraints);
 
@@ -67,6 +71,7 @@ public class UsercodePanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.1;
@@ -83,6 +88,18 @@ public class UsercodePanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(addMyModelButton, gridBagConstraints);
+
+        visitUserModelReposButton.setText("visit web repository...");
+        visitUserModelReposButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visitUserModelReposButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(visitUserModelReposButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void commonCodeTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_commonCodeTextAreaCaretUpdate
@@ -92,4 +109,8 @@ public class UsercodePanel extends javax.swing.JPanel {
     private void addMyModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMyModelButtonActionPerformed
        settingsModel.addUserModel();
     }//GEN-LAST:event_addMyModelButtonActionPerformed
+
+    private void visitUserModelReposButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUserModelReposButtonActionPerformed
+        ModelUtils.visitUsermodelsRepository();
+    }//GEN-LAST:event_visitUserModelReposButtonActionPerformed
 }
