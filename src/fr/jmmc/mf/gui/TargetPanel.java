@@ -5,7 +5,6 @@ package fr.jmmc.mf.gui;
 
 import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.jmcs.service.BrowserLauncher;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -20,8 +19,6 @@ import javax.swing.JCheckBox;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +74,8 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // build help button
         addModelHelpButton.setAction(new ShowHelpAction(("BEG_AddModel_Bt")));
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
-        availableModelList.addListSelectionListener(this);                        
+        
+        availableModelList.addListSelectionListener(this);            
     }
 
     /**
@@ -317,16 +315,17 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         jPanel7 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        modelList = new javax.swing.JList();
+        modelList = new fr.jmmc.mf.gui.util.ModelList();
         addModelButton = new javax.swing.JButton();
         removeModelButton = new javax.swing.JButton();
         addModelHelpButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        availableModelList = new javax.swing.JList();
         addMyModelButton = new javax.swing.JButton();
         polarCheckBox = new javax.swing.JCheckBox();
         stretchedCheckBox = new javax.swing.JCheckBox();
         visitUmRepositoryButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        availableModelList = new fr.jmmc.mf.gui.util.ModelList();
+        refreshAvailableModelsButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         fileListScrollPane = new javax.swing.JScrollPane();
         subplotPanel = new javax.swing.JPanel();
@@ -509,7 +508,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.weighty = 1.0;
         jPanel4.add(jScrollPane2, gridBagConstraints);
 
-        addModelButton.setText("+");
+        addModelButton.setText(" + ");
         addModelButton.setEnabled(false);
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -519,9 +518,10 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel4.add(addModelButton, gridBagConstraints);
 
-        removeModelButton.setText("-");
+        removeModelButton.setText(" - ");
         removeModelButton.setEnabled(false);
         removeModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -531,27 +531,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         jPanel4.add(removeModelButton, gridBagConstraints);
 
         addModelHelpButton.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         jPanel4.add(addModelHelpButton, gridBagConstraints);
-
-        availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        availableModelList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                availableModelListMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(availableModelList);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel4.add(jScrollPane1, gridBagConstraints);
 
         addMyModelButton.setText("Create user model...");
         addMyModelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -560,7 +548,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         jPanel4.add(addMyModelButton, gridBagConstraints);
 
@@ -602,6 +590,30 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         jPanel4.add(visitUmRepositoryButton, gridBagConstraints);
 
+        availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        availableModelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                availableModelListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(availableModelList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel4.add(jScrollPane3, gridBagConstraints);
+
+        refreshAvailableModelsButton.setText("Refresh");
+        refreshAvailableModelsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshAvailableModelsButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        jPanel4.add(refreshAvailableModelsButton, gridBagConstraints);
+
         jPanel7.add(jPanel4);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected file list"));
@@ -636,14 +648,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
 private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_modelListMouseClicked
-        if (evt.getClickCount() == 2)
+        Object m = modelList.getSelectedValue();
+        if (m!=null && evt.getClickCount() == 2)
         {
             rootSettingsModel.setSelectionPath(
                     new TreePath(new Object[]{
                 rootSettingsModel,
                 rootSettingsModel.getRootSettings().getTargets(),
-                current,
-                modelList.getSelectedValue() } ));
+                current, m
+                 } ));
         }
     }//GEN-LAST:event_modelListMouseClicked
     
@@ -752,16 +765,19 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
         }
     }//GEN-LAST:event_stretchedCheckBoxActionPerformed
 
+    private void visitUmRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUmRepositoryButtonActionPerformed
+        ModelUtils.visitUsermodelsRepository();
+    }//GEN-LAST:event_visitUmRepositoryButtonActionPerformed
+
     private void availableModelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_availableModelListMouseClicked
         if (evt.getClickCount() == 2) {
             addModelButtonActionPerformed(null);
         }
-
     }//GEN-LAST:event_availableModelListMouseClicked
 
-    private void visitUmRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUmRepositoryButtonActionPerformed
-        ModelUtils.visitUsermodelsRepository();
-    }//GEN-LAST:event_visitUmRepositoryButtonActionPerformed
+    private void refreshAvailableModelsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAvailableModelsButtonActionPerformed
+        rootSettingsModel.refreshSupportedModels();
+    }//GEN-LAST:event_refreshAvailableModelsButtonActionPerformed
 
     private Model getSelectedModel() {
         if (modelList.getSelectedIndex() < 0) {
@@ -773,7 +789,7 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JButton addModelButton;
     private javax.swing.JButton addModelHelpButton;
     private javax.swing.JButton addMyModelButton;
-    private javax.swing.JList availableModelList;
+    private fr.jmmc.mf.gui.util.ModelList availableModelList;
     private javax.swing.JScrollPane fileListScrollPane;
     private javax.swing.JButton fitterSetupHelpButton;
     private javax.swing.JComboBox identComboBox;
@@ -787,12 +803,13 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList modelList;
+    private javax.swing.JScrollPane jScrollPane3;
+    private fr.jmmc.mf.gui.util.ModelList modelList;
     private javax.swing.JCheckBox normalizeCheckBox;
     private javax.swing.JTable parametersTable;
     private javax.swing.JCheckBox polarCheckBox;
+    private javax.swing.JButton refreshAvailableModelsButton;
     private javax.swing.JButton removeModelButton;
     private javax.swing.JCheckBox stretchedCheckBox;
     private javax.swing.JPanel subplotPanel;
