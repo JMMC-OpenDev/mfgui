@@ -105,8 +105,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodeTextArea.setVisible(isCustomModel);
         customCodeScrollPane.setVisible(isCustomModel);
         customCodePanel.setVisible(isCustomModel);
-        addParamButton.setVisible(!hasInstances);
-        delParamButton.setVisible(!hasInstances);
+        addParamButton.setVisible(!hasInstances && isCustomModel);
+        delParamButton.setVisible(!hasInstances && isCustomModel);
         startingTextArea.setVisible(isCustomModel);
         shareButton.setVisible(isCustomModel);
         validateButton.setVisible(isCustomModel);
