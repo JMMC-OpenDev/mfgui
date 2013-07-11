@@ -30,7 +30,7 @@ public class ModelUtils {
     public final static String STRETCHED_PARAMETER_NAME = "stretched_ratio";
 
     public static boolean isUserModel(Model model) {
-        return StringUtils.isEmpty(model.getCode());
+        return ! StringUtils.isEmpty(model.getCode());
     }
 
     public static void moveParamUp(Model model, int paramIndex) {
@@ -258,7 +258,7 @@ public class ModelUtils {
         }
         return result;
     }
-
+        
     /** 
      * Forward the build model onto the user model web portal.
      * @param model to share
@@ -277,5 +277,5 @@ public class ModelUtils {
      */
     public static void visitUsermodelsRepository(){
         BrowserLauncher.openURL(Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL)+"index.html");
-    }
+    }   
 }
