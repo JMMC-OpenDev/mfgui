@@ -13,7 +13,7 @@ import javax.swing.JList;
  * Model list that just have a special renderer and generate tooltip messages.
  * @author mella
  */
-public class ModelList extends JList<Model>{
+public class ModelList extends JList{
     
     /*
      * Constructor
@@ -28,7 +28,7 @@ public class ModelList extends JList<Model>{
         msg.append("<html>");
         int pointedIndex = locationToIndex(evt.getPoint());                
         if(pointedIndex!=-1){                        
-            Model pointedModel = getModel().getElementAt(pointedIndex);
+            Model pointedModel = (Model)getModel().getElementAt(pointedIndex);
             // TODO move this block in ModelUtils common area so we can use it in other widgets
             msg.append("<h1>");
             String shortDesc = pointedModel.getShortdesc();
