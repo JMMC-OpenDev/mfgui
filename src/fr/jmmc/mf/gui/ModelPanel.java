@@ -629,12 +629,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         updatePrototype();
     }
 
-    private void updateMessagePanel() {        
+    private void updateMessagePanel() {            
         MessageContainer c = new MessageContainer();
-        
-        // add init message if any
-        c.addMessages(inUseMessageContainer);        
-        
+                                
         if(isCustomModel){
             // complete if actual type is not uniq
             final boolean uniq = ModelUtils.isModelTypeUniq(settingsModel.getSupportedModels(), customTypeTextField.getText());
@@ -643,20 +640,23 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             }
         }
         
-        if(StringUtils.isEmpty(current.getCode())){
+        if(isCustomModel && StringUtils.isEmpty(current.getCode())){
             c.addErrorMessage("Code is missing");            
         }
         
-        if(StringUtils.isEmpty(current.getDesc())){
+        if(isCustomModel && StringUtils.isEmpty(current.getDesc())){
             c.addErrorMessage("Description is missing");            
         }
         
-        if(StringUtils.isEmpty(current.getShortdesc())){
+        if(isCustomModel && StringUtils.isEmpty(current.getShortdesc())){
             c.addErrorMessage("Short description is missing");            
         }
 
-        // do not allow to share before everything is ok
+        // do not allow to share before everything is ok (except following tests)
         shareButton.setEnabled(!c.hasMessages());
+        
+        // add init message if any
+        c.addMessages(inUseMessageContainer);
         
         messagePanel1.update(c);
     }
