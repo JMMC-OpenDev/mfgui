@@ -59,6 +59,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private static List<Model> supportedModelsList = new LinkedList<Model>();
     /** list of supported models   */
     private static GenericListModel supportedModels  = null ;
+    protected static final String CANT_GET_LIST_OF_SUPPORTED_MODELS = "Can't get list of supported models";
     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
     /** Reference onto the main castor root object */
@@ -176,6 +177,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
+     * Clear list of supported models and fill it again.
+     */
+    public static void refreshSupportedModels(){        
+        supportedModels.clear();
+        getSupportedModels();
+    }
+    
+    /**
      * Return the supported models. This method automatically make a request to get server
      * list if the current list is empty.
      * @return the supportedModelsModel
@@ -191,19 +200,36 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (supportedModels.size() < 1) {
             Response r;
             try {
-                r = LITpro.execMethod("getModelList", null);
-                // Search model into return result
-                Model newModel = UtilsClass.getModel(r);
+                // Search model from LITpro CLI
+                r = LITpro.execMethod("getModelList", null);                                
+                Model newModels = UtilsClass.getModel(r);
+                                
                 // update list of supported models
                 supportedModels.clear();
-                Model[] models = newModel.getModel();
+                Model[] models = newModels.getModel();
                 for (int i = 0; i < models.length; i++) {
                     Model model = models[i];
+                    // remove code if any so we do not consider them as usermodel
+                    //TODO we have to be able to distinguish... model.setCode(null);
+                    
                     supportedModels.add(model);
                     logger.debug("Adding supported model:" + model.getType());
                 }
+                
+                // and complete with user' repository
+                String xmlForModels = Http.download(new URI("http://apps.jmmc.fr/exist/apps/usermodels/models.xql"),false);
+                newModels = (Model)(UtilsClass.unmarshal(Model.class, xmlForModels));
+                
+                models = newModels.getModel();
+                for (int i = 0; i < models.length; i++) {
+                    Model model = models[i];                                        
+                    supportedModels.add(model);
+                    logger.debug("Adding supported model:" + model.getType());
+                }
+                
+                
             } catch (IllegalStateException ex) {
-                throw new IllegalStateException("Can't get list of supported models", ex);
+                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
             } catch (ExecutionException ex) {
                 final String msg = "Model supported by remote server can't been properly retrieved";
                 if(created){
@@ -211,6 +237,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }else{
                     logger.info(msg);
                 }
+            } catch (URISyntaxException ex) {
+                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
+            } catch (IOException ex) {
+                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
             }
         }
         return supportedModels;
@@ -264,13 +294,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if( ! ModelUtils.hasModelOfType(getSupportedModels(), um.getType())){
             getSupportedModels().add(um);
         }                
-        if( ! ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())){
-            getUserCode().addModel(um);        
+        if (!ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())) {
+            getUserCode().addModel(um);
+            fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getUsercode()},
+                    rootSettings.getUsercode().getModelCount()-1,
+                    um);
         }
     }
     
     public void selectUserModel(Model userModel){
-        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), getUserCode(), userModel}));
+        setSelectionPath(new TreePath(new Object[]{rootSettings, getUserCode(), userModel}));
     }
     
     
