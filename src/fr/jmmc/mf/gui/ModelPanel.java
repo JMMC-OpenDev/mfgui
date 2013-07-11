@@ -88,14 +88,14 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         current = m;
 
         // handle some widget config if custom model or not
-        isCustomModel = !StringUtils.isEmpty(m.getCode());
-        boolean isCustomInstance = !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), current.getType());
+        isCustomModel = ModelUtils.isUserModel(m);
+        final boolean isCustomInstance = !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), current.getType());
 
         // test that we are not in use
         final boolean hasInstances = isCustomModel && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), current.getType());
         
         if (hasInstances) {
-            inUseMessageContainer.addWarningMessage("model is currently in use, remove instance first to edit table of params. (WorkInProgress)");
+            inUseMessageContainer.addWarningMessage("Model is currently in use, remove instance first to edit table of params. (WorkInProgress)");
         }else{
             inUseMessageContainer.clear();
         }
@@ -105,8 +105,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodeTextArea.setVisible(isCustomModel);
         customCodeScrollPane.setVisible(isCustomModel);
         customCodePanel.setVisible(isCustomModel);
-        addParamButton.setVisible(isCustomModel);
-        delParamButton.setVisible(isCustomModel);
+        addParamButton.setVisible(!hasInstances);
+        delParamButton.setVisible(!hasInstances);
         startingTextArea.setVisible(isCustomModel);
         shareButton.setVisible(isCustomModel);
         validateButton.setVisible(isCustomModel);
@@ -549,6 +549,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
     private void descTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_descTextAreaCaretUpdate
         current.setDesc(descTextArea.getText());
+        updateMessagePanel();
     }//GEN-LAST:event_descTextAreaCaretUpdate
 
     private void moveUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpButtonActionPerformed
@@ -586,6 +587,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
     private void shortDescTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_shortDescTextFieldCaretUpdate
         current.setShortdesc(shortDescTextField.getText());
+        updateMessagePanel();
     }//GEN-LAST:event_shortDescTextFieldCaretUpdate
 
     private void customTypeTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_customTypeTextFieldFocusLost
@@ -640,6 +642,21 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
                 c.addErrorMessage("Given type '"+customTypeTextField.getText()+"'is already defined.");            
             }
         }
+        
+        if(StringUtils.isEmpty(current.getCode())){
+            c.addErrorMessage("Code is missing");            
+        }
+        
+        if(StringUtils.isEmpty(current.getDesc())){
+            c.addErrorMessage("Description is missing");            
+        }
+        
+        if(StringUtils.isEmpty(current.getShortdesc())){
+            c.addErrorMessage("Short description is missing");            
+        }
+
+        // do not allow to share before everything is ok
+        shareButton.setEnabled(!c.hasMessages());
         
         messagePanel1.update(c);
     }
