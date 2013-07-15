@@ -18,9 +18,10 @@ public class UsercodePanel extends javax.swing.JPanel {
     SettingsModel settingsModel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMyModelButton;
-    private javax.swing.JTextArea commonCodeTextArea;
+    private javax.swing.JButton checkSyntaxButton;
+    private fr.jmmc.mf.gui.util.YorickCodeEditor commonCodeEditor;
     private javax.swing.JButton helpButton1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton visitUserModelReposButton;
     // End of variables declaration//GEN-END:variables
 
@@ -36,7 +37,7 @@ public class UsercodePanel extends javax.swing.JPanel {
         current = u;
         if (u.getCommon()!= null)
         {
-            commonCodeTextArea.setText(u.getCommon().getContent());
+            commonCodeEditor.setText(u.getCommon().getContent());
         }        
     }
 
@@ -45,37 +46,20 @@ public class UsercodePanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         helpButton1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        commonCodeTextArea = new javax.swing.JTextArea();
         addMyModelButton = new javax.swing.JButton();
         visitUserModelReposButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        commonCodeEditor = new fr.jmmc.mf.gui.util.YorickCodeEditor();
+        checkSyntaxButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Usercode panel"));
         setLayout(new java.awt.GridBagLayout());
 
         helpButton1.setText("helpTBD");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(helpButton1, gridBagConstraints);
-
-        commonCodeTextArea.setColumns(20);
-        commonCodeTextArea.setRows(5);
-        commonCodeTextArea.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                commonCodeTextAreaCaretUpdate(evt);
-            }
-        });
-        jScrollPane2.setViewportView(commonCodeTextArea);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.1;
-        add(jScrollPane2, gridBagConstraints);
 
         addMyModelButton.setText("create user model...");
         addMyModelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -84,7 +68,7 @@ public class UsercodePanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(addMyModelButton, gridBagConstraints);
@@ -96,15 +80,36 @@ public class UsercodePanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(visitUserModelReposButton, gridBagConstraints);
-    }// </editor-fold>//GEN-END:initComponents
 
-    private void commonCodeTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_commonCodeTextAreaCaretUpdate
-        current.getCommon().setContent(commonCodeTextArea.getText());
-    }//GEN-LAST:event_commonCodeTextAreaCaretUpdate
+        commonCodeEditor.setColumns(20);
+        commonCodeEditor.setRows(5);
+        commonCodeEditor.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                commonCodeEditorCaretUpdate(evt);
+            }
+        });
+        jScrollPane1.setViewportView(commonCodeEditor);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        add(jScrollPane1, gridBagConstraints);
+
+        checkSyntaxButton.setText("check syntax");
+        checkSyntaxButton.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        add(checkSyntaxButton, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
 
     private void addMyModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMyModelButtonActionPerformed
        settingsModel.addUserModel();
@@ -113,4 +118,8 @@ public class UsercodePanel extends javax.swing.JPanel {
     private void visitUserModelReposButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUserModelReposButtonActionPerformed
         ModelUtils.visitUsermodelsRepository();
     }//GEN-LAST:event_visitUserModelReposButtonActionPerformed
+
+    private void commonCodeEditorCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_commonCodeEditorCaretUpdate
+         current.getCommon().setContent(commonCodeEditor.getText());
+    }//GEN-LAST:event_commonCodeEditorCaretUpdate
 }

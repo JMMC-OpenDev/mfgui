@@ -39,6 +39,9 @@
     <!-- ptolemy plots -->
     <jar href="@SHARED@/ptplot5.6.jar" />
 
+    <!-- RSyntaxTextArea http://fifesoft.com/rsyntaxtextarea/index.php -->
+    <jar href="@SHARED@/castor.jar"/>
+ 
     <!--  Xml binding (castor) -->
     <jar href="@SHARED@/castor.jar"/>
     

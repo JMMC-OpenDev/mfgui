@@ -11,6 +11,7 @@ import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.gui.util.YorickCodeEditor;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
@@ -21,6 +22,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 public class ModelPanel extends javax.swing.JPanel implements ListSelectionListener, TableModelListener {
 
@@ -35,7 +37,6 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JTextArea closingTextArea;
     private javax.swing.JPanel customCodePanel;
     private javax.swing.JScrollPane customCodeScrollPane;
-    private javax.swing.JTextArea customCodeTextArea;
     private javax.swing.JTextField customTypeTextField;
     private javax.swing.JButton delParamButton;
     private javax.swing.JTextArea descTextArea;
@@ -63,21 +64,40 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JTextArea startingTextArea;
     private javax.swing.JButton validateButton;
     private javax.swing.JButton visitUmRepositoryButton;
+    private javax.swing.JPanel yorickCodePanel;
     // End of variables declaration//GEN-END:variables
     private boolean initStep = false;
     private boolean isCustomModel = false;
     private MessageContainer inUseMessageContainer = new MessageContainer();
     private MessageContainer duplicatedMessageContainer = new MessageContainer();
     
+    private YorickCodeEditor customCodeEditor = new YorickCodeEditor();
+    
     /** Creates new form ModelPanel */
     public ModelPanel() {
         // first create our parameters table model
         parametersTableModel = new ParametersTableModel();
-        initComponents();
+        initComponents();        
+        postInit();
+    }
+    
+    private void postInit(){
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
         parametersTable.getSelectionModel().addListSelectionListener(this);
         parametersTable.getModel().addTableModelListener(this);
+        
+        
+        
+        // Code for the code textarea with syntax higlighter
+        customCodeEditor.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                current.setCode(customCodeEditor.getText());
+            }
+        });           
+        RTextScrollPane rsp = new RTextScrollPane(customCodeEditor);
+        rsp.setLineNumbersEnabled(true);
+        yorickCodePanel.add(rsp);                
     }
 
     public void show(Model m, SettingsModel s) {
@@ -102,7 +122,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // show only for custom models
         customTypeTextField.setVisible(isCustomModel);
-        customCodeTextArea.setVisible(isCustomModel);
+        customCodeEditor.setVisible(isCustomModel);
         customCodeScrollPane.setVisible(isCustomModel);
         customCodePanel.setVisible(isCustomModel);
         addParamButton.setVisible(!hasInstances && isCustomModel);
@@ -143,7 +163,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             customTypeTextField.setText(m.getType());
 
             // Fill code
-            customCodeTextArea.setText(m.getCode());
+            customCodeEditor.setText(m.getCode());
         }
 
         nameTextField.setText(m.getName());
@@ -196,7 +216,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodeScrollPane = new javax.swing.JScrollPane();
         jPanel6 = new javax.swing.JPanel();
         startingTextArea = new javax.swing.JTextArea();
-        customCodeTextArea = new javax.swing.JTextArea();
+        yorickCodePanel = new javax.swing.JPanel();
         closingTextArea = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
         validateButton = new javax.swing.JButton();
@@ -227,7 +247,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("<html>Description <a href=\"http://to.go\">[en]</a></html>"));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(254, 50));
 
         descTextArea.setEditable(false);
@@ -316,25 +336,22 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         startingTextArea.setRows(1);
         startingTextArea.setText("replaced by prototype");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel6.add(startingTextArea, gridBagConstraints);
 
-        customCodeTextArea.setColumns(20);
-        customCodeTextArea.setRows(4);
-        customCodeTextArea.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                customCodeTextAreaCaretUpdate(evt);
-            }
-        });
+        yorickCodePanel.setLayout(new java.awt.BorderLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        jPanel6.add(customCodeTextArea, gridBagConstraints);
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        jPanel6.add(yorickCodePanel, gridBagConstraints);
 
+        closingTextArea.setEditable(false);
         closingTextArea.setColumns(20);
         closingTextArea.setRows(1);
         closingTextArea.setText("}");
@@ -542,10 +559,6 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         current.removeParameter(current.getParameter(parametersTable.getSelectedRow()));
         refresh();
     }//GEN-LAST:event_delParamButtonActionPerformed
-
-    private void customCodeTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_customCodeTextAreaCaretUpdate
-        current.setCode(customCodeTextArea.getText());
-    }//GEN-LAST:event_customCodeTextAreaCaretUpdate
 
     private void descTextAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_descTextAreaCaretUpdate
         current.setDesc(descTextArea.getText());
