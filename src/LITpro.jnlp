@@ -40,7 +40,7 @@
     <jar href="@SHARED@/ptplot5.6.jar" />
 
     <!-- RSyntaxTextArea http://fifesoft.com/rsyntaxtextarea/index.php -->
-    <jar href="@SHARED@/castor.jar"/>
+    <jar href="@SHARED@/rsyntaxtextarea.jar"/>
  
     <!--  Xml binding (castor) -->
     <jar href="@SHARED@/castor.jar"/>
