@@ -34,6 +34,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JButton addParamButton;
     private javax.swing.JList availableModelList;
     private javax.swing.JScrollPane availableModelScrollPane;
+    private javax.swing.JButton cloneButton;
     private javax.swing.JTextArea closingTextArea;
     private javax.swing.JPanel customCodePanel;
     private javax.swing.JScrollPane customCodeScrollPane;
@@ -125,6 +126,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         customCodeEditor.setVisible(isCustomModel);
         customCodeScrollPane.setVisible(isCustomModel);
         customCodePanel.setVisible(isCustomModel);
+        cloneButton.setVisible(isCustomModel);
         addParamButton.setVisible(!hasInstances && isCustomModel);
         delParamButton.setVisible(!hasInstances && isCustomModel);
         startingTextArea.setVisible(isCustomModel);
@@ -223,6 +225,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         shareButton = new javax.swing.JButton();
         visitUmRepositoryButton = new javax.swing.JButton();
         editAssociatedButton = new javax.swing.JButton();
+        cloneButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         shortDescTextField = new javax.swing.JTextField();
         messagePanel1 = new fr.jmmc.jmcs.gui.component.MessagePanel();
@@ -409,6 +412,14 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
             }
         });
         jPanel7.add(editAssociatedButton);
+
+        cloneButton.setText("Clone");
+        cloneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cloneButtonActionPerformed(evt);
+            }
+        });
+        jPanel7.add(cloneButton);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -610,6 +621,10 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private void visitUmRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUmRepositoryButtonActionPerformed
         ModelUtils.visitUsermodelsRepository();
     }//GEN-LAST:event_visitUmRepositoryButtonActionPerformed
+
+    private void cloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cloneButtonActionPerformed
+        settingsModel.cloneUserModel(current);
+    }//GEN-LAST:event_cloneButtonActionPerformed
 
     public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = parametersTable.getSelectedRow();
