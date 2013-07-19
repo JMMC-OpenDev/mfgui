@@ -112,7 +112,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 fileListMouseClicked(evt);
             }
         });
-      
+        
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
 
         fileList.setModel(targetFiles);
@@ -167,15 +167,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         if ( e.getValueIsAdjusting()) {
             return;
         }
-        if(listenToFileSelection && e.getSource()==fileList){
+        if(listenToFileSelection && e.getSource()==fileList.getCheckBoxListSelectionModel()){
             fileListValueChanged(e);
         }
         //TODO add support for model selection
         if(e.getSource()==availableModelList){
             boolean hasSelection = availableModelList.getSelectedIndex()>=0;
             addModelButton.setEnabled(hasSelection);
-        }
-        
+        }                
     }
     
     public void fileListValueChanged(ListSelectionEvent e) {
@@ -661,15 +660,15 @@ private void modelListMouseClicked(java.awt.event.MouseEvent evt)
     }//GEN-LAST:event_modelListMouseClicked
     
     private void fileListMouseClicked(java.awt.event.MouseEvent evt)
-    {                                      
+    {              
+        // FIXME their is a bug when doubleclicked file is not part of this target
         if (evt.getClickCount() == 2)
-        {
+        {                        
             rootSettingsModel.setSelectionPath(
                     new TreePath(new Object[]{
                 rootSettingsModel,
-                rootSettingsModel.getRootSettings().getTargets(),
-                current,
-                fileList.getCheckBoxListSelectedValue() } ));
+                rootSettingsModel.getRootSettings().getFiles(),                
+                fileList.getSelectedValue()} ));
         }
 
     }                                     
