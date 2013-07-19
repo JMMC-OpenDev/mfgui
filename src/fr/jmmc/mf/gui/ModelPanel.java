@@ -52,6 +52,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private fr.jmmc.jmcs.gui.component.MessagePanel messagePanel1;
@@ -231,6 +232,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         messagePanel1 = new fr.jmmc.jmcs.gui.component.MessagePanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         parametersTable = new fr.jmmc.jmcs.gui.component.NumericJTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -463,7 +465,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         parametersTable.setModel(parametersTableModel);
         parametersTable.setToolTipText("Use right click to manage parameters");
         parametersTable.setAlignmentX(0.0F);
-        jPanel2.add(parametersTable, java.awt.BorderLayout.CENTER);
+        jScrollPane1.setViewportView(parametersTable);
+
+        jPanel2.add(jScrollPane1, java.awt.BorderLayout.PAGE_START);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -475,9 +479,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 1.0;
         jPanel4.add(jPanel3, gridBagConstraints);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
