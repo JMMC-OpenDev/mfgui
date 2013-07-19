@@ -58,7 +58,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /** list of supported models   */
     private static List<Model> supportedModelsList = new LinkedList<Model>();
     /** list of supported models   */
-    private static GenericListModel supportedModels  = null ;
+    private static GenericListModel supportedModels = null;
     protected static final String CANT_GET_LIST_OF_SUPPORTED_MODELS = "Can't get list of supported models";
     /** Vector of objects that want to listen tree modification */
     private Vector<TreeModelListener> treeModelListeners = new Vector();
@@ -179,11 +179,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Clear list of supported models and fill it again.
      */
-    public static void refreshSupportedModels(){        
+    public static void refreshSupportedModels() {
         supportedModels.clear();
         getSupportedModels();
     }
-    
+
     /**
      * Return the supported models. This method automatically make a request to get server
      * list if the current list is empty.
@@ -191,50 +191,51 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws ExecutionException thrown if execution exception occurs
      */
     public static GenericListModel<Model> getSupportedModels() {
-        
-        boolean created = supportedModels!=null;
-        if(!created){
-            supportedModels= new GenericListModel<Model>(supportedModelsList);
+
+        boolean created = supportedModels != null;
+        if (!created) {
+            supportedModels = new GenericListModel<Model>(supportedModelsList);
         }
         // Fill modelTypeComboBox model if empty
         if (supportedModels.size() < 1) {
             Response r;
             try {
                 // Search model from LITpro CLI
-                r = LITpro.execMethod("getModelList", null);                                
+                r = LITpro.execMethod("getModelList", null);
                 Model newModels = UtilsClass.getModel(r);
-                                
+
                 // update list of supported models
                 supportedModels.clear();
                 Model[] models = newModels.getModel();
                 for (int i = 0; i < models.length; i++) {
                     Model model = models[i];
                     // remove code if any so we do not consider them as usermodel
-                    //TODO we have to be able to distinguish... model.setCode(null);
-                    
+                    //TODO we have to be able to distinguish... model.setCode(null);                    
                     supportedModels.add(model);
                     logger.debug("Adding supported model:" + model.getType());
                 }
-                
+
                 // and complete with user' repository
-                String xmlForModels = Http.download(new URI("http://apps.jmmc.fr/exist/apps/usermodels/models.xql"),false);
-                newModels = (Model)(UtilsClass.unmarshal(Model.class, xmlForModels));
-                
+                String xmlForModels = Http.download(new URI("http://apps.jmmc.fr/exist/apps/usermodels/models.xql"), false);
+                newModels = (Model) (UtilsClass.unmarshal(Model.class, xmlForModels));
+
                 models = newModels.getModel();
                 for (int i = 0; i < models.length; i++) {
-                    Model model = models[i];                                        
-                    supportedModels.add(model);
+                    Model model = models[i];
+                    if (!ModelUtils.hasModelOfType(getSupportedModels(), model.getType())) {
+                        getSupportedModels().add(model);
+                    }
                     logger.debug("Adding supported model:" + model.getType());
                 }
-                
-                
+
+
             } catch (IllegalStateException ex) {
                 throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
             } catch (ExecutionException ex) {
                 final String msg = "Model supported by remote server can't been properly retrieved";
-                if(created){
+                if (created) {
                     MessagePane.showErrorMessage(msg, ex.getMessage());
-                }else{
+                } else {
                     logger.info(msg);
                 }
             } catch (URISyntaxException ex) {
@@ -245,8 +246,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         return supportedModels;
     }
+
+    public Model cloneUserModel (Model modelToClone){
+        Model clone = (Model)UtilsClass.clone(modelToClone);
+        
+        clone.setName(modelToClone.getName()+"_copy");
+        clone.setType(modelToClone.getType()+"_copy");
+        
+        addUserModel(clone);
+        
+        // Fire Change event and Select custom models in tree to be edited        
+        fireTreeStructureChanged(rootSettings);
+        selectUserModel(clone);
+        
+        return clone;
+    }
     
-    public void addUserModel(){
+    public Model addUserModel() {
         Model userModel = new Model();
         userModel.setType("custom");
         userModel.setCode(" ");
@@ -276,38 +292,38 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         userModel.addParameter(flux_weight);
         userModel.addParameter(x);
-        userModel.addParameter(y);        
-        
+        userModel.addParameter(y);
+
         addUserModel(userModel);
         
         // Fire Change event and Select custom models in tree to be edited        
         fireTreeStructureChanged(rootSettings);
-        selectUserModel(userModel);        
+        selectUserModel(userModel);
+        
+        return userModel;
     }
-    
-    public void addUserModel(java.io.File f) throws IOException{        
+
+    public void addUserModel(java.io.File f) throws IOException {
         Model m = (Model) UtilsClass.unmarshal(Settings.class, FileUtils.readFile(f));
         addUserModel(m);
     }
-    
-    public void addUserModel(Model um){   
-        if( ! ModelUtils.hasModelOfType(getSupportedModels(), um.getType())){
+
+    public void addUserModel(Model um) {
+        if (!ModelUtils.hasModelOfType(getSupportedModels(), um.getType())) {
             getSupportedModels().add(um);
-        }                
+        }
         if (!ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())) {
             getUserCode().addModel(um);
             fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getUsercode()},
-                    rootSettings.getUsercode().getModelCount()-1,
+                    rootSettings.getUsercode().getModelCount() - 1,
                     um);
         }
     }
-    
-    public void selectUserModel(Model userModel){
+
+    public void selectUserModel(Model userModel) {
         setSelectionPath(new TreePath(new Object[]{rootSettings, getUserCode(), userModel}));
     }
-    
-    
-    
+
     /**
      * Get the Model associated to the given model name     
      * @param type model type
@@ -561,7 +577,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param parentTarget
      * @param newModel
      */
-    public void addModel(Target parentTarget, Model newModel) {        
+    public void addModel(Target parentTarget, Model newModel) {
         // force another name with unique position
         String type = newModel.getType();
         int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings()) + 1;
@@ -590,7 +606,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
             if (p.getName().equals("flux_weight")) {
                 p.setValue(1);
-            }            
+            }
             p.setName(p.getType() + modelIdx);
             parameterComboBoxModel.addElement(p);
             parameterListModel.addElement(p);
@@ -600,7 +616,23 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         // add the new element to current target
         parentTarget.addModel(newModel);
-        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);               
+        fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
+    }
+
+    public void removeModel(Usercode parentUsercode, Model oldModel) {
+        if (parentUsercode == null) {
+            logger.warn("Something strange appears while trying to remove one model without associated target");
+            return;
+        }
+
+        setModified(true);
+
+        int idx = getIndexOfChild(parentUsercode, oldModel);
+        parentUsercode.removeModel(oldModel);
+        fireTreeNodesRemoved(this,
+                new Object[]{rootSettings, rootSettings.getUsercode()},
+                idx,
+                oldModel);
     }
 
     public void removeModel(Target parentTarget, Model oldModel) {
@@ -608,8 +640,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             logger.warn("Something strange appears while trying to remove one model without associated target");
             return;
         }
-        final Model[] models = parentTarget.getModel();
         setModified(true);
+        final Model[] models = parentTarget.getModel();
         for (int i = 0; i < models.length; i++) {
             final Model model = models[i];
             if (model == oldModel) {
@@ -647,7 +679,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeModel(Model oldModel) {
-        removeModel(getParent(oldModel), oldModel);
+        if (ModelUtils.isUserModel(oldModel)){
+         //(ModelUtils.hasModelOfType(rootSettings.getUsercode().getModel(), oldModel.getType())) {                        
+            removeModel(rootSettings.getUsercode(), oldModel);
+        } else { 
+            removeModel(getParent(oldModel), oldModel);
+        }
     }
 
     public Target addTarget(String targetIdent) {
@@ -761,12 +798,19 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             if (object instanceof ResultModel
                     || object instanceof Target
                     || object instanceof ResultModel
-                    || object instanceof Model
                     || object instanceof FrameTreeNode) {
                 return true;
             }
             if (object instanceof File) {
                 return !UtilsClass.containsFile(this, (File) object);
+            }
+            if (object instanceof Model) {
+                Model m = (Model) object;
+                if (ModelUtils.isUserModel(m)) {
+                    return !ModelUtils.hasModelOfType(rootSettings, m.getType());
+                } else {
+                    return true;
+                }
             }
         }
         return false;
@@ -843,8 +887,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         model.setType(newType);
         model.setName(newType);
         if (userModel) {
-            fireTreeNodesChanged(new Object[]{rootSettings,rootSettings.getUsercode()},
-                    getIndexOfChild(rootSettings.getUsercode(),model),
+            fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getUsercode()},
+                    getIndexOfChild(rootSettings.getUsercode(), model),
                     model);
         } else {
             Target parentTarget = getParent(model);
@@ -898,21 +942,22 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Return the UserCode associated object and creates if not present.
      * @return the user code element
      */
-    public Usercode getUserCode() {        
+    public Usercode getUserCode() {
         if (rootSettings.getUsercode() == null) {
             Usercode uc = new Usercode();
-            uc.setCommon(new Common());            
+            uc.setCommon(new Common());
             rootSettings.setUsercode(uc);
             setModified(true);
         }
         return rootSettings.getUsercode();
     }
+
     /**
      * Return the list of shared parameters.
      * This method ensures to get a container for shared parameters.
      * @return the list of shared parameters
      */
-    public Parameter[] getSharedParameters() {        
+    public Parameter[] getSharedParameters() {
         if (rootSettings.getParameters() == null) {
             rootSettings.setParameters(new Parameters());
             setModified(true);
@@ -935,13 +980,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Return the list of results
      * @return the list of results
      */
-    private Result[] getResults(){       
+    private Result[] getResults() {
         if (rootSettings.getResults() == null) {
             rootSettings.setResults(new Results());
         }
         return rootSettings.getResults().getResult();
     }
-    
+
     /**
      * Replace the parameterToLink parameter by a link onto the given sharedParameter.
      * @param parameterToLink param to replace by a link
@@ -1188,17 +1233,17 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-       
+
         // assert that usercode is created.
         getUserCode();
-        
+
         // add shared parameters to the parameter list containers
         Parameter[] params = getSharedParameters();
         for (int i = 0; i < params.length; i++) {
             parameterListModel.addElement(params[i]);
             parameterComboBoxModel.addElement(params[i]);
         }
-      
+
         // build model for every result child
         Result[] results = getResults();
         for (int i = 0; i < results.length; i++) {
@@ -1208,18 +1253,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         String desc = "This rootSettings contains " + rootSettings.getFiles().getFileCount()
                 + " files," + rootSettings.getTargets().getTargetCount() + " targets," + "User info: [ "
-                + rootSettings.getUserInfo() + " ]" +
-                " with "+getResults().length+"results section";
+                + rootSettings.getUserInfo() + " ]"
+                + " with " + getResults().length + "results section";
         logger.debug(desc);
-        
+
         // verify that user models are in the supported ones        
-        for (Model um : rootSettings.getUsercode().getModel()){
-            if(getSupportedModel(um.getType())==null){
+        for (Model um : rootSettings.getUsercode().getModel()) {
+            if (getSupportedModel(um.getType()) == null) {
                 getSupportedModels().add(um);
                 logger.info("Add usermodel as new available model : " + um.getType());
             }
         }
-                
+
         // fire general change event
         fireTreeStructureChanged(rootSettings);
 
@@ -1632,7 +1677,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         if (fileToSave.equals(associatedFile)) {
             setModified(false);
-        }        
+        }
     }
 
     /**
@@ -1765,7 +1810,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
         } else if (parent instanceof Usercode) {
             Usercode u = (Usercode) parent;
-            return u.getModel(index);            
+            return u.getModel(index);
         } else if (parent instanceof Results) {
             Result r = ((Results) parent).getResult(index);
             return getModel(r, false);
@@ -1952,7 +1997,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
         if (node instanceof TreeNode) {
             return ((TreeNode) node).isLeaf();
-        } else if (node instanceof Parameters 
+        } else if (node instanceof Parameters
                 || node instanceof File
                 || node instanceof FileLink
                 || node instanceof Model) {
