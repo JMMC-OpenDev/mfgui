@@ -237,7 +237,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel8, gridBagConstraints);
 
-        maxDataLimitTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        maxDataLimitTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
