@@ -632,8 +632,8 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         final int selectedRow = parametersTable.getSelectedRow();
         final boolean hasSelection = selectedRow >= 0;
         delParamButton.setEnabled(hasSelection);
-        moveUpButton.setEnabled(hasSelection && selectedRow != (current.getParameterCount() - 1));
-        moveDownButton.setEnabled(hasSelection && selectedRow != 0);
+        moveUpButton.setEnabled(hasSelection && selectedRow != 0);
+        moveDownButton.setEnabled(hasSelection && selectedRow != (current.getParameterCount() - 1));
     }
 
     private void refresh() {
