@@ -36,13 +36,13 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
     static Logger logger = LoggerFactory.getLogger(
             ParametersTableModel.class.getName());
-    public static final String TYPE_COLUMN_NAME = "Type";
     public static final String NAME_COLUMN_NAME = "Name";
+    public static final String TYPE_COLUMN_NAME = "Type";
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
     // Init columns titles and types
-    protected final String[] columnNames = new String[]{TYPE_COLUMN_NAME, NAME_COLUMN_NAME, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
+    protected final String[] columnNames = new String[]{NAME_COLUMN_NAME, TYPE_COLUMN_NAME, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
     protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
     protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
     private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
