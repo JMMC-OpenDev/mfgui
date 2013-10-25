@@ -3,7 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf;
 
-import fr.jmmc.jmal.model.gui.EditableRhoThetaParameter;
+import fr.jmmc.jmal.model.gui.EditableSepPosAngleParameter;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.service.BrowserLauncher;
 import fr.jmmc.jmcs.util.StringUtils;
@@ -16,7 +16,6 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.NumberFormat;
 import org.apache.commons.httpclient.util.URIUtil;
 
 /**
@@ -60,29 +59,29 @@ public class ModelUtils {
             // xy -> rho pa            
             Parameter p1 = getParameterOfType(model, "x");
             Parameter p2 = getParameterOfType(model, "y");
-            double rho = EditableRhoThetaParameter.getRho(p1.getValue(), p2.getValue());
-            double theta = EditableRhoThetaParameter.getTheta(p1.getValue(), p2.getValue());
-            p1.setName(p1.getName().replace("x", EditableRhoThetaParameter.Type.RHO.getName()));
-            p1.setValue(rho);
-            p1.setType(EditableRhoThetaParameter.Type.RHO.getName());
-            p1.setUnits(EditableRhoThetaParameter.Type.RHO.getUnits());
+            double sep = EditableSepPosAngleParameter.getSeparation(p1.getValue(), p2.getValue());
+            double pa = EditableSepPosAngleParameter.getPosAngle(p1.getValue(), p2.getValue());
+            p1.setName(p1.getName().replace("x", EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName()));
+            p1.setValue(sep);
+            p1.setType(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
+            p1.setUnits(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getUnits());
 
-            p2.setName(p2.getName().replace("y", EditableRhoThetaParameter.Type.THETA.getName()));
-            p2.setValue(theta);
-            p2.setType(EditableRhoThetaParameter.Type.THETA.getName());
-            p2.setUnits(EditableRhoThetaParameter.Type.THETA.getUnits());
+            p2.setName(p2.getName().replace("y", EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName()));
+            p2.setValue(pa);
+            p2.setType(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
+            p2.setUnits(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getUnits());
         } else {
             // rho pa -> xy            
-            Parameter p1 = getParameterOfType(model, EditableRhoThetaParameter.Type.RHO.getName());
-            Parameter p2 = getParameterOfType(model, EditableRhoThetaParameter.Type.THETA.getName());
-            double x = EditableRhoThetaParameter.getX(p1.getValue(), p2.getValue());
-            double y = EditableRhoThetaParameter.getY(p1.getValue(), p2.getValue());
-            p1.setName(p1.getName().replace(EditableRhoThetaParameter.Type.RHO.getName(), "x"));
+            Parameter p1 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
+            Parameter p2 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
+            double x = EditableSepPosAngleParameter.getX(p1.getValue(), p2.getValue());
+            double y = EditableSepPosAngleParameter.getY(p1.getValue(), p2.getValue());
+            p1.setName(p1.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName(), "x"));
             p1.setValue(x);
             p1.setType("x");
             p1.setUnits("mas");
 
-            p2.setName(p2.getName().replace(EditableRhoThetaParameter.Type.THETA.getName(), "y"));
+            p2.setName(p2.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName(), "y"));
             p2.setValue(y);
             p2.setType("y");
             p2.setUnits("mas");
@@ -214,47 +213,35 @@ public class ModelUtils {
         // compute rho theta from x y parameters
         double x = 0;
         double y = 0;
-        double rho = 0;
+        double sep = 0;
         double pa = 0;
-        boolean cartesianInput = true;
+        boolean cartesianInput = true;        
         Parameter[] params = m.getParameter();
-        for (int i = 0; i < params.length; i++) {
-            Parameter parameter = params[i];
+        ParameterLink[] paramLinks = m.getParameterLink();
+        for (int i = 0; i < (params.length+paramLinks.length); i++) {
+            Parameter parameter;
+            if(i < params.length){
+                parameter = params[i];
+            }else{
+                parameter = (Parameter) paramLinks[i-params.length].getParameterRef();
+            }            
             if (parameter.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
             } else if (parameter.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            } else if (parameter.getType().equalsIgnoreCase("rho")) {
-                rho = parameter.getValue();
+            } else if ( parameter.getType().equalsIgnoreCase("rho") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName()) ) {
+                sep = parameter.getValue();
                 cartesianInput = false;
-            } else if (parameter.getType().equalsIgnoreCase("pa")) {
+            } else if ( parameter.getType().equalsIgnoreCase("pa") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName()) ) {
                 pa = parameter.getValue();
                 cartesianInput = false;
             }
-        }
-        ParameterLink[] paramLinks = m.getParameterLink();
-        for (int i = 0; i < paramLinks.length; i++) {
-            ParameterLink parameterLink = paramLinks[i];
-            Parameter parameter = (Parameter) parameterLink.getParameterRef();
-            if (parameterLink.getType().equalsIgnoreCase("x")) {
-                x = parameter.getValue();
-            } else if (parameterLink.getType().equalsIgnoreCase("y")) {
-                y = parameter.getValue();
-            } else if (parameter.getType().equalsIgnoreCase("rho")) {
-                rho = parameter.getValue();
-                cartesianInput = false;
-            } else if (parameter.getType().equalsIgnoreCase("pa")) {
-                pa = parameter.getValue();
-                cartesianInput = false;
-            }
-        }
-        String result = null;
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(3);
+        }        
+        String result;
         if (cartesianInput) {
-            result = "rho='" + nf.format(EditableRhoThetaParameter.getRho(x, y)) + "' PA='" + nf.format(EditableRhoThetaParameter.getTheta(x, y)) + "'";
+            result = EditableSepPosAngleParameter.getSepPosAngleCoords(x, y);
         } else {
-            result = "x='" + nf.format(EditableRhoThetaParameter.getX(rho, pa)) + "' y='" + nf.format(EditableRhoThetaParameter.getY(rho, pa)) + "'";
+            result = EditableSepPosAngleParameter.getXYCoords(sep, pa);
         }
         return result;
     }
