@@ -8,7 +8,7 @@ import fr.jmmc.jmcs.Bootstrapper;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
-import fr.jmmc.jmcs.network.Http;
+import fr.jmmc.jmcs.network.http.Http;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
 import fr.jmmc.jmcs.util.FileUtils;
@@ -413,7 +413,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
             }
         };
 
-         // Add handler to load one new oifits
+        // Add handler to load one new oifits
         new SampMessageHandler(SampCapability.LITPRO_LOAD_USERMODEL) {
             @Override
             protected void processMessage(final String senderId, final Message message) throws SampException {

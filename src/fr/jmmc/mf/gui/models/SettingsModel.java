@@ -8,7 +8,7 @@ import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.network.Http;
+import fr.jmmc.jmcs.network.http.Http;
 import fr.jmmc.jmcs.service.RecentFilesManager;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
@@ -247,21 +247,21 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return supportedModels;
     }
 
-    public Model cloneUserModel (Model modelToClone){
-        Model clone = (Model)UtilsClass.clone(modelToClone);
-        
-        clone.setName(modelToClone.getName()+"_copy");
-        clone.setType(modelToClone.getType()+"_copy");
-        
+    public Model cloneUserModel(Model modelToClone) {
+        Model clone = (Model) UtilsClass.clone(modelToClone);
+
+        clone.setName(modelToClone.getName() + "_copy");
+        clone.setType(modelToClone.getType() + "_copy");
+
         addUserModel(clone);
-        
+
         // Fire Change event and Select custom models in tree to be edited        
         fireTreeStructureChanged(rootSettings);
         selectUserModel(clone);
-        
+
         return clone;
     }
-    
+
     public Model addUserModel() {
         Model userModel = new Model();
         userModel.setType("custom");
@@ -295,11 +295,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         userModel.addParameter(y);
 
         addUserModel(userModel);
-        
+
         // Fire Change event and Select custom models in tree to be edited        
         fireTreeStructureChanged(rootSettings);
         selectUserModel(userModel);
-        
+
         return userModel;
     }
 
@@ -679,10 +679,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void removeModel(Model oldModel) {
-        if (ModelUtils.isUserModel(oldModel)){
-         //(ModelUtils.hasModelOfType(rootSettings.getUsercode().getModel(), oldModel.getType())) {                        
+        if (ModelUtils.isUserModel(oldModel)) {
+            //(ModelUtils.hasModelOfType(rootSettings.getUsercode().getModel(), oldModel.getType())) {                        
             removeModel(rootSettings.getUsercode(), oldModel);
-        } else { 
+        } else {
             removeModel(getParent(oldModel), oldModel);
         }
     }
