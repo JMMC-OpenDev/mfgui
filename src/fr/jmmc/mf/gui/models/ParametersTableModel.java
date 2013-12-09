@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayDeque;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -55,7 +54,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     public ParametersTableModel() {
         super();
         // next static line should be replaced by a preference listener
-        recursive = true;
+        recursive = true;        
     }
 
     /**
@@ -147,7 +146,6 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
 
         // notify observers
         fireTableDataChanged();
-        return;
     }
 
     protected void addParamsFor(Model model, Vector paramContainer, Vector<Model> modelContainer, boolean recursive) {
@@ -279,13 +277,15 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Object o = parametersOrParameterLinksToPresent[rowIndex];
-        Parameter p;
+        Parameter pprime, p;
         if (isParameterLink(o)) {
             p = (Parameter) ((ParameterLink) o).getParameterRef();
         } else {
             p = (Parameter) o;
         }
-
+        
+        pprime=(Parameter)UtilsClass.clone(p); 
+        
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
         // and most of parameter ones accept double only :(
@@ -345,10 +345,12 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 throw new IllegalStateException("Can't set data onto setting", ex);
             }
         }
-
-        // Notify a model change        
-        settingsModel.notifyObservers();
-        fireTableDataChanged();
+        
+        if(!ModelUtils.areEquals(p, pprime)){        
+            settingsModel.setModified();
+            settingsModel.notifyObservers();                    
+            fireTableDataChanged();
+        }                
     }
 
     private void checkPopupMenu(java.awt.event.MouseEvent evt) {

@@ -13,6 +13,8 @@ import fr.jmmc.oitools.model.OIFitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
 import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -24,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Display GUI for Target elements */
-public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener {
+public class TargetPanel extends javax.swing.JPanel implements ListSelectionListener, Observer {
 
     final static String className = TargetPanel.class.getName();
     /** Class logger */
@@ -89,6 +91,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         this.rootSettingsModel = settingsModel;
         this.rootSettings = settingsModel.getRootSettings();
 
+        // look for parameter changes
+        settingsModel.addObserver(this);
+        
         parametersTableModel.setModel(rootSettingsModel, current, true);
         if (!mouseListeners.contains(parametersTableModel)) {
             parametersTable.addMouseListener(parametersTableModel);
@@ -143,7 +148,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         fixFitterSetup();
 
         plotModelImagePanel.show(settingsModel, current);
-        plotChi2Panel.show(settingsModel);                
+        plotChi2Panel.show(settingsModel);     
     }
 
     private void updateModels() {
@@ -153,7 +158,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             models.addElement(current.getModel(i));
         }
         parametersTableModel.setModel(rootSettingsModel, current, true);
-        UtilsClass.initColumnSizes(parametersTable, 330);
+        UtilsClass.initColumnSizes(parametersTable, MFGui.TABLE_MAX_WIDTH);
     }
     
     private void updateModels(Model modelToSelect) {
@@ -819,4 +824,8 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private javax.swing.JCheckBox visPhiCheckBox;
     private javax.swing.JButton visitUmRepositoryButton;
     // End of variables declaration//GEN-END:variables
+
+    public void update(Observable o, Object arg) {       
+        updateModels();
+    }
 }

@@ -49,6 +49,7 @@ public final class MFGui extends JFrame {
     private static final long serialVersionUID = 1L;
     /* Minimal size of main component */
     private static final Dimension INITIAL_DIMENSION = new java.awt.Dimension(1000, 700);
+    public static final int TABLE_MAX_WIDTH = 330;
 
     /** Creates new form MFGui */
     public MFGui(String[] filenames) {

@@ -91,7 +91,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     };
     // Use a delegate that will trigger listener on this model changes
     private ObservableDelegate observableDelegate;
-
+    /** Store a version number increased by modifications */
+    private long version;
+        
     /**
      * Creates a new empty SettingsModel object.
      */
@@ -134,6 +136,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public final void init() throws ExecutionException {
         observableDelegate = new ObservableDelegate(this);
+        version=0;
 
         // Init members
         allFilesListModel = new DefaultListModel();
@@ -153,7 +156,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setRootSettings(rootSettings);
 
         //assert that list has been inited
-        getSupportedModels();
+        getSupportedModels();        
     }
 
     public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
@@ -176,6 +179,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
     }
 
+    /** Return the version number */
+    public long getVersion() {
+        return version;
+    }
+    
     /**
      * Clear list of supported models and fill it again.
      */
@@ -1064,9 +1072,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Call setModified(true) to declare that something internally changed.
      * setModified(false) should be called only after a disk save.
+     * if flag is true, this also increase the version number
      */
     private void setModified(boolean flag) {
         isModified = flag;
+        version++;
+    }
+    
+    /**
+     * Can be called by modifier objects
+     */
+    public void setModified(){
+        setModified(true);
     }
 
     public java.io.File getTempFile(boolean keepResult) {

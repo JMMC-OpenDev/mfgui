@@ -6,6 +6,7 @@ package fr.jmmc.mf;
 import fr.jmmc.jmal.model.gui.EditableSepPosAngleParameter;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.service.BrowserLauncher;
+import fr.jmmc.jmcs.util.ObjectUtils;
 import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -29,7 +30,7 @@ public class ModelUtils {
     public final static String STRETCHED_PARAMETER_NAME = "stretched_ratio";
 
     public static boolean isUserModel(Model model) {
-        return ! StringUtils.isEmpty(model.getCode());
+        return !StringUtils.isEmpty(model.getCode());
     }
 
     public static void moveParamUp(Model model, int paramIndex) {
@@ -54,7 +55,6 @@ public class ModelUtils {
         }
 
         // TODO add some tests to avoid duplicated types
-
         if (flag) {
             // xy -> rho pa            
             Parameter p1 = getParameterOfType(model, "x");
@@ -175,7 +175,7 @@ public class ModelUtils {
                 count++;
             }
         }
-        return count==1;
+        return count == 1;
     }
 
     public static boolean hasModelOfType(final GenericListModel<Model> models, String type) {
@@ -184,15 +184,13 @@ public class ModelUtils {
                 return true;
             }
         }
-        return false;        
+        return false;
     }
 
-    
     public static boolean hasModelOfType(Model[] models, String type) {
         return getModelOfType(models, type) != null;
     }
 
-    
     public static Model getModelOfType(Model[] models, String type) {
         for (Model m : models) {
             if (m.getType().equals(type)) {
@@ -215,28 +213,28 @@ public class ModelUtils {
         double y = 0;
         double sep = 0;
         double pa = 0;
-        boolean cartesianInput = true;        
+        boolean cartesianInput = true;
         Parameter[] params = m.getParameter();
         ParameterLink[] paramLinks = m.getParameterLink();
-        for (int i = 0; i < (params.length+paramLinks.length); i++) {
+        for (int i = 0; i < (params.length + paramLinks.length); i++) {
             Parameter parameter;
-            if(i < params.length){
+            if (i < params.length) {
                 parameter = params[i];
-            }else{
-                parameter = (Parameter) paramLinks[i-params.length].getParameterRef();
-            }            
+            } else {
+                parameter = (Parameter) paramLinks[i - params.length].getParameterRef();
+            }
             if (parameter.getType().equalsIgnoreCase("x")) {
                 x = parameter.getValue();
             } else if (parameter.getType().equalsIgnoreCase("y")) {
                 y = parameter.getValue();
-            } else if ( parameter.getType().equalsIgnoreCase("rho") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName()) ) {
+            } else if (parameter.getType().equalsIgnoreCase("rho") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName())) {
                 sep = parameter.getValue();
                 cartesianInput = false;
-            } else if ( parameter.getType().equalsIgnoreCase("pa") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName()) ) {
+            } else if (parameter.getType().equalsIgnoreCase("pa") | parameter.getType().equalsIgnoreCase(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName())) {
                 pa = parameter.getValue();
                 cartesianInput = false;
             }
-        }        
+        }
         String result;
         if (cartesianInput) {
             result = EditableSepPosAngleParameter.getSepPosAngleCoords(x, y);
@@ -245,7 +243,7 @@ public class ModelUtils {
         }
         return result;
     }
-        
+
     /** 
      * Forward the build model onto the user model web portal.
      * @param model to share
@@ -258,11 +256,39 @@ public class ModelUtils {
         String umRepoUrl = Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL);
         BrowserLauncher.openURL(umRepoUrl + "add.html?xmlstr=" + xmlstr);
     }
-    
+
     /**
      * Open the browser on the index page of the usermodel repository.
      */
-    public static void visitUsermodelsRepository(){
-        BrowserLauncher.openURL(Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL)+"index.html");
-    }   
+    public static void visitUsermodelsRepository() {
+        BrowserLauncher.openURL(Preferences.getInstance().getPreference(Preferences.USERMODEL_REPO_URL) + "index.html");
+    }
+
+    public static boolean areEquals(final Parameter p1, final Parameter p2) {
+        boolean areEquals;
+        if (ObjectUtils.areEquals(p1, p2)) {
+            areEquals = true;
+        } else if (p1.getValue() == p2.getValue()
+                && p1.getEditable() == p2.getEditable()
+                && p1.getHasFixedValue() == p2.getHasFixedValue()
+                && p1.hasEditable() == p2.hasEditable()
+                && p1.hasHasFixedValue() == p2.hasHasFixedValue()
+                && p1.hasMaxValue() == p2.hasMaxValue()
+                && p1.hasMinValue() == p2.hasMinValue()
+                && p1.hasScale() == p2.hasScale()
+                && p1.hasValue() == p2.hasValue()
+                && ObjectUtils.areEquals(p1.getDesc(), p2.getDesc())
+                && ObjectUtils.areEquals(p1.getId(), p2.getId())
+                && p1.getMaxValue() == p2.getMaxValue()
+                && p1.getMinValue() == p2.getMinValue()
+                && ObjectUtils.areEquals(p1.getName(), p2.getName())
+                && p1.getScale() == p2.getScale()
+                && ObjectUtils.areEquals(p1.getType(), p2.getType())
+                && ObjectUtils.areEquals(p1.getUnits(), p2.getUnits())) {
+            areEquals = true;
+        } else {
+            areEquals = false;
+        }
+        return areEquals;
+    }
 }

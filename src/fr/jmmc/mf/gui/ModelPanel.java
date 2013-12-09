@@ -174,7 +174,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         parametersTableModel.setModel(s, m, false);
 
         jPanel2.add(parametersTable.getTableHeader(), BorderLayout.NORTH);
-        UtilsClass.initColumnSizes(parametersTable, 330);
+        UtilsClass.initColumnSizes(parametersTable, MFGui.TABLE_MAX_WIDTH);
 
         if (!mouseListeners.contains(parametersTableModel)) {
             parametersTable.addMouseListener(parametersTableModel);
@@ -183,9 +183,12 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // Fill short and full description 
         final Model parentModel = settingsModel.getSupportedModel(current.getType());
-        descTextArea.setText(parentModel.getDesc());
-        descTextArea.setCaretPosition(0);
-        shortDescTextField.setText(parentModel.getShortdesc());
+        
+        if(parentModel!=null){
+            descTextArea.setText(parentModel.getDesc());        
+            descTextArea.setCaretPosition(0);
+            shortDescTextField.setText(parentModel.getShortdesc());
+        }
 
         // init param related buttons
         valueChanged(null);

@@ -510,7 +510,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
         } else {
             logger.debug("No parameter to use for chi2map");
         }
-        UtilsClass.initColumnSizes(jTable1, 400);
+        UtilsClass.initColumnSizes(jTable1, MFGui.TABLE_MAX_WIDTH);
     }
 
     private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
