@@ -4,6 +4,6 @@ Implementation-Title: LITpro
 Implementation-Version: ${program.version}
 Implementation-Vendor: www.jmmc.fr
 Implementation-URL: http://www.jmmc.fr/litpro
-Application-Name: Aspro 2
+Application-Name: LITpro
 Permissions: all-permissions
 Codebase: http://apps.jmmc.fr
