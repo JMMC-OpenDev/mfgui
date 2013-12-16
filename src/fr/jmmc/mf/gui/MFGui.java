@@ -8,7 +8,7 @@ import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.action.internal.InternalActionFactory;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.resource.image.ResourceImage;
+import fr.jmmc.jmcs.gui.util.ResourceImage;
 import fr.jmmc.mf.gui.actions.*;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;

@@ -6,7 +6,7 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.jmcs.gui.component.MessageContainer;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
-import fr.jmmc.jmcs.resource.image.ResourceImage;
+import fr.jmmc.jmcs.gui.util.ResourceImage;
 import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
