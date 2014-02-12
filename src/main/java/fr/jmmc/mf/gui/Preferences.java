@@ -75,7 +75,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         setDefaultPreference(YOGA_LOCAL_PROGNAME, "/bin/yoga.sh");
         // our actual convention tells that a beta version ends with b1...bN
         if (ApplicationDescription.isAlphaVersion()) {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~mella/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~mellag/LITproWebService/run.php");
         } else if (ApplicationDescription.isBetaVersion()) {
             setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
         } else {
@@ -139,7 +139,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     private boolean updateFromVersion1ToVersion2() {
 
         String[] preferencesToReset = new String[]{"save.results", "yoga.remote.use", "yoga.remote.url"};
-        String[] defaultValues = new String[]{"true", "true", "http://jmmc.fr/~mella/LITproWebService/run.php"};
+        String[] defaultValues = new String[]{"true", "true", "http://jmmc.fr/~swmgr/LITproWebService/run.php"};
         try {
             for (int i = 0; i < preferencesToReset.length; i++) {
                 String preferenceName = preferencesToReset[i];

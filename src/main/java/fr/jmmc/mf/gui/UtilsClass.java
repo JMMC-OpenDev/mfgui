@@ -51,7 +51,9 @@ import ptolemy.plot.plotml.PlotMLParser;
  * jmmc.mcs.* package
  */
 public class UtilsClass {
-
+    /** Constrains castor mapping rules */
+    public static final String CastorXmlMappingFile = "fr/jmmc/mf/gui/mapping.xml";
+    
     static final String className = UtilsClass.class.getName();
     static final Logger logger = LoggerFactory.getLogger(className);
     /**
@@ -273,7 +275,7 @@ public class UtilsClass {
      */
     private static synchronized Mapping getMapping() throws IllegalStateException {
         if (mapping == null) {
-            URL mappingURL = UtilsClass.class.getClassLoader().getResource("fr/jmmc/mf/gui/mapping.xml");
+            URL mappingURL = UtilsClass.class.getClassLoader().getResource(CastorXmlMappingFile);
             try {
                 logger.debug("Unmarshal will use mapping file :{}", mappingURL);
                 // old simple code sometimes break xml elements order then use a mapping file
@@ -287,6 +289,7 @@ public class UtilsClass {
         }
         return mapping;
     }
+    
 
     /**
      * Marshal the given object into the given writer.

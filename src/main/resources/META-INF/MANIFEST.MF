@@ -1,5 +1,5 @@
 Built-By: JMMC (jmmc-tech-group@ujf-grenoble.fr)
-Built-Date: ${build.date}
+Built-Date: ${timestamp}
 Implementation-Title: LITpro
 Implementation-Version: ${program.version}
 Implementation-Vendor: www.jmmc.fr
@@ -7,3 +7,4 @@ Implementation-URL: http://www.jmmc.fr/litpro
 Application-Name: LITpro
 Permissions: all-permissions
 Codebase: http://apps.jmmc.fr
+Main-Class: fr.jmmc.mf.LITpro
