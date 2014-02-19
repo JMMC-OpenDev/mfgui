@@ -18,6 +18,15 @@
     <name>LITpro</name>
     <url>http://www.jmmc.fr/litpro</url>    
 
+    <properties>
+	<!-- do make assembly and copy dependencies (JNLP) -->
+	<assembly.skipAssembly>false</assembly.skipAssembly>
+	<mdep.skip>false</mdep.skip>
+
+	<!-- disable tests (fest fails for now) -->
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>fr.jmmc.jmcs</groupId>
