@@ -23,14 +23,10 @@
         <j2se version="1.6+" initial-heap-size="512m" max-heap-size="1024m"/>
 
         <!-- Application module first (main class) -->
-        <jar href="jar/mfgui.jar" />
+        <jar href="jar/mfgui-TRUNK.jar" />
 
         <!-- JMMC modules -->
-        <jar href="jar/jmcs-1.0-SNAPSHOT.jar" />
-        <jar href="jar/jmal.jar" />
-        <jar href="jar/oitools.jar" />
-        <jar href="jar/oiexplorer_core.jar" />
-        <jar href="jar/mfgui-doc.jar" />
+        <!-- TODO <jar href="jar/mfgui-doc.jar" /> -->
 
         <!-- JMMC libs -->
         <extension href="../JmcsLibs/JmcsLibs.jnlp"/>
