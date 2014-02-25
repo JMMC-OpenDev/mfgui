@@ -55,5 +55,5 @@
 
     </resources>
 
-    <component-desc/>
+    <application-desc main-class="fr.jmmc.mf.LITpro"/>
 </jnlp>
