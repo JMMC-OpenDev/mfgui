@@ -37,7 +37,6 @@ public final class MFGui extends JFrame {
     static final Logger logger = LoggerFactory.getLogger(className);
     protected static Preferences myPreferences = Preferences.getInstance();
     protected static JToolBar toolBar;
-    protected static StatusBar statusBar;
     // Application actions
     static Action getYogaVersionAction;
     public static Action saveSettingsAction;
@@ -98,8 +97,7 @@ public final class MFGui extends JFrame {
 
 
         // Handle status bar
-        statusBar = new StatusBar();
-        getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(StatusBar.getInstance(), java.awt.BorderLayout.SOUTH);
 
         String title = ApplicationDescription.getInstance().getProgramName();
         if (ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion()) {
