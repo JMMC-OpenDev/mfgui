@@ -18,7 +18,7 @@
     <program name="LITpro" version="1.0.14 beta 3"/>
     <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
-    <authors>CRAL, IPAG and FIZEAU laboratories, and the JMMC Technical Group</authors>
+    <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
     <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
 
@@ -789,7 +789,7 @@ feature is set to true.
     </releasenotes>
 
     <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{LITpro} service
-    co-developped by CRAL, LAOG and FIZEAU.
+    co-developped by CRAL, IPAG and LAGRANGE.
 \footnote{LITpro software available at http://www.jmmc.fr/litpro}
 
 @INPROCEEDINGS{2008SPIE.7013E..44T,
