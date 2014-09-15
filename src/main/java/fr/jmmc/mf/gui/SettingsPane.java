@@ -3,13 +3,22 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.actions.RunFitAction;
 import fr.jmmc.mf.gui.models.ResultModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.*;
+import fr.jmmc.mf.models.File;
+import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Files;
+import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Parameter;
+import fr.jmmc.mf.models.Parameters;
+import fr.jmmc.mf.models.Results;
+import fr.jmmc.mf.models.Settings;
+import fr.jmmc.mf.models.Target;
+import fr.jmmc.mf.models.Targets;
+import fr.jmmc.mf.models.Usercode;
 import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
