@@ -8,6 +8,7 @@ import fr.jmmc.jmcs.gui.component.MessageContainer;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.util.ResourceImage;
 import fr.jmmc.jmcs.util.StringUtils;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -74,6 +75,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private MessageContainer duplicatedMessageContainer = new MessageContainer();
     
     private YorickCodeEditor customCodeEditor = new YorickCodeEditor();
+
+    // helps to ignore event generated during the show call (no user request for model change)
+    private boolean ignoreReplacement=false;
     
     /** Creates new form ModelPanel */
     public ModelPanel() {
@@ -99,7 +103,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         });           
         RTextScrollPane rsp = new RTextScrollPane(customCodeEditor);
         rsp.setLineNumbersEnabled(true);
-        yorickCodePanel.add(rsp);                
+        yorickCodePanel.add(rsp);
+
+        visitUmRepositoryButton.setVisible(LITpro.USE_USERMODELS);
     }
 
     public void show(Model m, SettingsModel s) {
@@ -111,7 +117,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // handle some widget config if custom model or not
         isCustomModel = ModelUtils.isUserModel(m);
-        final boolean isCustomInstance = !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), current.getType());
+        final boolean isCustomInstance = LITpro.USE_USERMODELS && !isCustomModel && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), current.getType());
 
         // test that we are not in use
         final boolean hasInstances = isCustomModel && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), current.getType());
@@ -157,8 +163,11 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         editAssociatedButton.setVisible(isCustomInstance);
 
         if (!isCustomModel) {
+            boolean old = ignoreReplacement;
+            ignoreReplacement = true;
             availableModelList.setModel(settingsModel.getSupportedModels());
             availableModelList.setSelectedValue(s.getSupportedModel(m.getType()), true);
+            ignoreReplacement = old;
         } else {
             updatePrototype();
 
@@ -307,6 +316,11 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         jPanel5.add(nameLabel, gridBagConstraints);
 
         availableModelList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        availableModelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                availableModelListValueChanged(evt);
+            }
+        });
         availableModelScrollPane.setViewportView(availableModelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -630,6 +644,14 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private void cloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cloneButtonActionPerformed
         settingsModel.cloneUserModel(current);
     }//GEN-LAST:event_cloneButtonActionPerformed
+
+    private void availableModelListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_availableModelListValueChanged
+        Model newModel  = (Model) availableModelList.getSelectedValue();
+        if (ignoreReplacement || current.equals(newModel)) {
+            return; 
+        }
+        settingsModel.replaceModel(current, newModel);        
+    }//GEN-LAST:event_availableModelListValueChanged
 
     public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = parametersTable.getSelectedRow();

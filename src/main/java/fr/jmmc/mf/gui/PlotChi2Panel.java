@@ -10,8 +10,6 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Observable;
@@ -63,6 +61,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
 
     public void show(SettingsModel s) {
         settingsModel = s;
+
+        // set edit mode on parameters
+        jTable1.setEnabled(!settingsModel.isLocked());
 
         isIniting = true;
 

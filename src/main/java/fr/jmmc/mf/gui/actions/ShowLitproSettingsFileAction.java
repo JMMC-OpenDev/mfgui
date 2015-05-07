@@ -11,7 +11,12 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +60,8 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
             return;
         }
         this.setEnabled(settingsModel.isValid());
-        if(!settingsModelListener.contains(settingsModel)){
+        if (!settingsModelListener.contains(settingsModel)) {
+            // TODO solve/check this source of memory leak
             settingsModel.addTreeSelectionListener(this);
             settingsModel.addTreeModelListener(this);
         }

@@ -3,21 +3,48 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import com.jidesoft.dialog.JideOptionPane;
+import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
+import fr.jmmc.jmcs.gui.task.TaskSwingWorkerExecutor;
 import fr.jmmc.jmcs.network.http.Http;
 import fr.jmmc.jmcs.service.RecentFilesManager;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.util.ImageUtils;
 import fr.jmmc.jmcs.util.ObservableDelegate;
 import fr.jmmc.jmcs.util.ResourceUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.ModelUtils;
-import fr.jmmc.mf.gui.*;
-import fr.jmmc.mf.models.*;
+import fr.jmmc.mf.gui.FrameTreeNode;
+import fr.jmmc.mf.gui.MFGui;
+import fr.jmmc.mf.gui.ModifyAndSaveObject;
+import fr.jmmc.mf.gui.PlotPanel;
+import fr.jmmc.mf.gui.Preferences;
+import fr.jmmc.mf.gui.UtilsClass;
+import fr.jmmc.mf.gui.actions.RunFitAction;
+import fr.jmmc.mf.models.Common;
+import fr.jmmc.mf.models.File;
+import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Files;
+import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Oitarget;
+import fr.jmmc.mf.models.Parameter;
+import fr.jmmc.mf.models.ParameterLink;
+import fr.jmmc.mf.models.Parameters;
+import fr.jmmc.mf.models.Residual;
+import fr.jmmc.mf.models.Residuals;
+import fr.jmmc.mf.models.Response;
+import fr.jmmc.mf.models.Result;
+import fr.jmmc.mf.models.Results;
+import fr.jmmc.mf.models.Settings;
+import fr.jmmc.mf.models.Target;
+import fr.jmmc.mf.models.Targets;
+import fr.jmmc.mf.models.Usercode;
 import fr.jmmc.oitools.model.OIData;
 import fr.jmmc.oitools.model.OIFitsChecker;
 import fr.jmmc.oitools.model.OIFitsFile;
@@ -30,15 +57,28 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observer;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +88,11 @@ import org.slf4j.LoggerFactory;
  * It implements:
  *  - the tree model to be used by the settingsPane tree
  *  - the modifyAndSaveObject to ensure that application save user modification on application exit
- *
+ * Modification requests should come from EDT.
  */
 public class SettingsModel extends DefaultTreeSelectionModel implements TreeModel, ModifyAndSaveObject {
+
+    final RunFitAction runFitAction;
 
     public final static String className = SettingsModel.class.getName();
     /** Class logger */
@@ -74,8 +116,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private DefaultListModel parameterListModel;
     private DefaultComboBoxModel targetComboBoxModel;
     private DefaultComboBoxModel parameterComboBoxModel;
-    /** flag used to respond for the ModifyAndSaveObject interface */
-    private boolean isModified = false;
     /** flag used to tell that the model is self consistent (not the case during update) */
     private boolean isSelfConsistent = true;
     /** Store a reference over the associated local file */
@@ -91,14 +131,24 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     };
     // Use a delegate that will trigger listener on this model changes
     private ObservableDelegate observableDelegate;
+
     /** Store a version number increased by modifications */
     private long version;
+
+    /** State flag : readonly or editable */
+    private boolean locked;
+    /** Running state flag */
+    private boolean running;
+    /** flag used to respond for the ModifyAndSaveObject interface */
+    private boolean isModified = false;
+
         
     /**
      * Creates a new empty SettingsModel object.
      */
     public SettingsModel() throws ExecutionException {
         logger.info("Creating one new Settings");
+        runFitAction = new RunFitAction(this);
         init();
     }
 
@@ -108,6 +158,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public SettingsModel(java.io.File fileToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
+        runFitAction = new RunFitAction(this);
         init(FileUtils.readFile(fileToLoad));
         setAssociatedFile(fileToLoad, true);
     }
@@ -118,6 +169,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public SettingsModel(String url) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from : " + url);
+        runFitAction = new RunFitAction(this);
         URI uriToLoad;
         try {
             uriToLoad = new URI(url);
@@ -134,7 +186,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setAssociatedFile(tmpFile, false);
     }
 
-    public final void init() throws ExecutionException {
+    private final void init() throws ExecutionException {
         observableDelegate = new ObservableDelegate(this);
         version=0;
 
@@ -159,7 +211,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         getSupportedModels();        
     }
 
-    public final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
+    private final void init(String modelInXml) throws IllegalArgumentException, IOException, FitsException, ExecutionException {
         try {
             // perform default init 
             init();
@@ -183,7 +235,33 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public long getVersion() {
         return version;
     }
-    
+
+    /** Tell if model is readonly or not */
+    public boolean isLocked() {
+        return locked;
+    }
+
+    /** Set in readonly or not*/
+    private void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    /** Called by the runFitAction to update running state and lock the model before launching a run fit process */
+    public void setRunning(boolean running) {
+        this.running = running;
+        // TODO assert that every calls are performed from EDT
+        runFitAction.putValue(Action.NAME, (running) ? "Cancel" : runFitAction.getInitialActionName());
+        runFitAction.putValue(Action.LARGE_ICON_KEY, running ? ImageUtils.loadResourceIcon("fr/jmmc/mf/gui/icons/spinner.gif") : null);
+        // TODO fix the icon display shown only if the user change the focus.
+
+        /* prevent user to edit model while running process */        
+        setLocked(running);
+    }
+
     /**
      * Clear list of supported models and fill it again.
      */
@@ -193,7 +271,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Return the supported models. This method automatically make a request to get server
+     * Return the supported models.      
+     * This method automatically makes a remote request to get the server
      * list if the current list is empty.
      * @return the supportedModelsModel
      * @throws ExecutionException thrown if execution exception occurs
@@ -203,10 +282,12 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         boolean created = supportedModels != null;
         if (!created) {
             supportedModels = new GenericListModel<Model>(supportedModelsList);
-        }
+        }        
+
         // Fill modelTypeComboBox model if empty
         if (supportedModels.size() < 1) {
             Response r;
+            Exception e = null;
             try {
                 // Search model from LITpro CLI
                 r = LITpro.execMethod("getModelList", null);
@@ -223,6 +304,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     logger.debug("Adding supported model:" + model.getType());
                 }
 
+                if (LITpro.USE_USERMODELS) {
                 // and complete with user' repository
                 String xmlForModels = Http.download(new URI("http://apps.jmmc.fr/exist/apps/usermodels/models.xql"), false);
                 newModels = (Model) (UtilsClass.unmarshal(Model.class, xmlForModels));
@@ -234,23 +316,28 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                         getSupportedModels().add(model);
                     }
                     logger.debug("Adding supported model:" + model.getType());
+                    }
                 }
 
 
             } catch (IllegalStateException ex) {
-                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
-            } catch (ExecutionException ex) {
-                final String msg = "Model supported by remote server can't been properly retrieved";
-                if (created) {
-                    MessagePane.showErrorMessage(msg, ex.getMessage());
-                } else {
-                    logger.info(msg);
-                }
+                e = ex;
             } catch (URISyntaxException ex) {
-                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
+                e = ex;
             } catch (IOException ex) {
-                throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, ex);
+                e = ex;
             }
+            // display error message the first time that one exception occurs
+            if (e != null) {
+                final String msg = "Cannot retrieve the list of models supported by the remote server.";
+                if (!created) {
+                    MessagePane.showErrorMessage(msg, e.getMessage());
+                } else {
+                logger.info(msg);
+                }
+                // throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, e);
+            }
+
         }
         return supportedModels;
     }
@@ -320,7 +407,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (!ModelUtils.hasModelOfType(getSupportedModels(), um.getType())) {
             getSupportedModels().add(um);
         }
-        if (!ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())) {
+        if (LITpro.USE_USERMODELS && !ModelUtils.hasModelOfType(getUserCode().getModel(), um.getType())) {
             getUserCode().addModel(um);
             fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getUsercode()},
                     rootSettings.getUsercode().getModelCount() - 1,
@@ -465,10 +552,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     /**
      * Replace one model of the given target.
      * The model should keep as many parameters as possible.
-     * @param parentTarget
-     * @param newModel
+     * Nothing is performed if newModel is null.
+     * @param parentTarget parent target of the model to be replaced
+     * @param currentModel model to be replaced
+     * @param newModel replacing model
      */
     public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
+        if (newModel == null) {
+            return; //skip this case
+        }
+
         parentTarget.removeModel(currentModel);
 
         int modelIdx = UtilsClass.parseModelUniqueIndex(currentModel);
@@ -586,6 +679,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param newModel
      */
     public void addModel(Target parentTarget, Model newModel) {
+        assertWritable();
+
         // force another name with unique position
         String type = newModel.getType();
         int modelIdx = UtilsClass.findModelMaxUniqueIndex(getRootSettings()) + 1;
@@ -876,13 +971,46 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /** 
-     * Tell if the inner model is well filled and consistent 
+     * Tell if the inner model is well filled, consistent and has parameters to adjust
      * @return true if valid, else false
      */
     public boolean isValid() {
         boolean isValid = rootSettings.isValid();
-        logger.trace("isValid=" + isValid);
-        return isValid && isSelfConsistent;
+        logger.debug("isValid.rootSettings=" + isValid);
+
+        boolean hasFreeParam = false;
+        // walk throug every parameters and set hasOneFreeParam to true on first free one
+        Parameter params[] = getSharedParameters();
+        for (int i = 0; i < params.length && !hasFreeParam; i++) {
+            Parameter parameter = params[i];
+            if (!parameter.getHasFixedValue()) {
+                hasFreeParam = true;
+            }
+        }
+        Target targets[] = getRootSettings().getTargets().getTarget();
+        for (int i = 0; i < targets.length && !hasFreeParam; i++) {
+            Target target = targets[i];
+            Model models[] = target.getModel();
+            for (int j = 0; j < models.length && !hasFreeParam; j++) {
+                Model model = models[j];
+                params = model.getParameter();
+                for (int k = 0; k < params.length && !hasFreeParam; k++) {
+                    Parameter parameter = params[k];
+                    if (!parameter.getHasFixedValue()) {
+                        hasFreeParam = true;
+                    }
+                }
+            }
+        }
+        logger.debug("isValid.hasFreeParam=" + isValid);
+        logger.debug("isValid.isSelfConsitent=" + isValid);
+
+        boolean flag = isValid && hasFreeParam && isSelfConsistent;
+
+        // sync runFitAction state
+        runFitAction.setEnabled(isValid);
+
+        return flag;
     }
 
     /**
@@ -951,7 +1079,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @return the user code element
      */
     public Usercode getUserCode() {
-        if (rootSettings.getUsercode() == null) {
+        if (LITpro.USE_USERMODELS && rootSettings.getUsercode() == null) {
             Usercode uc = new Usercode();
             uc.setCommon(new Common());
             rootSettings.setUsercode(uc);
@@ -1098,9 +1226,27 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      *  @param s Settings to grab informations into.
      */
     public void updateWithNewSettings(Response newResponse) {
-        isSelfConsistent = false;
 
         Settings newSettings = UtilsClass.getSettings(newResponse);
+        StatusBar.show("Fitting response received, creating result node...");
+        if (newSettings == null) {
+            logger.warn("no settings present in result message");
+            if (UtilsClass.getErrorMsg(newResponse).length() == 0) {
+                final StringBuilder sb = new StringBuilder();
+                sb.append("Sorry a problem occured on server side without error message.\n");
+                sb.append("No result has been returned\n");
+                sb.append("Please send this bug report (with email)");
+                sb.append("and you will be contacted if the data are needed to repeat the problem");
+                logger.warn(toLITproDesc());
+                logger.warn(Preferences.getInstance().dumpCurrentProperties());
+                throw new IllegalStateException(sb.toString());
+            }
+            // TODO display error message moving code from LITpro.execMethod
+            return;
+        }
+
+        isSelfConsistent = false;
+        
         // we can ignore all but:
         //  parameters, result
         parameterComboBoxModel.removeAllElements();
@@ -1166,10 +1312,21 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1, r);
-                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), r}));
+                selectInTree(r);
             } else {
                 logger.warn("found null result while updating with new settings");
             }
+        }
+        StatusBar.show("Model updated");
+    }
+
+    public void selectInTree(Object o) {
+        if (o instanceof ResultModel) {
+            setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), o}));
+        } else if (o instanceof Results) {
+            setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}));
+        } else {
+            throw new IllegalStateException("This part of code should not be reached, please report.\nObject to select : " + o);
         }
 
     }
@@ -1274,11 +1431,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 + " with " + getResults().length + "results section";
         logger.debug(desc);
 
-        // verify that user models are in the supported ones        
-        for (Model um : rootSettings.getUsercode().getModel()) {
-            if (getSupportedModel(um.getType()) == null) {
+        // verify that user models are in the supported ones
+        final Usercode usercode = rootSettings.getUsercode();
+        if (usercode != null) {
+            for (Model um : usercode.getModel()) {
+                if (getSupportedModel(um.getType()) == null) {
                 getSupportedModels().add(um);
                 logger.info("Add usermodel as new available model : " + um.getType());
+                }
             }
         }
 
@@ -1396,6 +1556,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws FitsException if file io errors occurs
      */
     public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
+
+        if (userPrefersToCancelRunning()) {
+            return;
+        }
+        System.out.println("fileToAdd = " + fileToAdd);
 
         // Zip file if it is not the case to embedd in base64.
         if (!FitsUtil.isCompressed(fileToAdd)) {
@@ -1783,7 +1948,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
-     * Returns the child of parent at index index in the parent's child array.
+     * Returns the child of parent at index in the parent's child array.
      */
     public Object getChild(Object parent, int index) {
         if (parent instanceof TreeNode) {
@@ -1796,6 +1961,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
             if (index == 1) {
                 return s.getTargets();
+            }
+            // Skip usercode if not present
+            if (s.getUsercode() == null) {
+                index++;
             }
             if (index == 2) {
                 return s.getUsercode();
@@ -1844,8 +2013,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (parent instanceof TreeNode) {
             return ((TreeNode) parent).getChildCount();
         } else if (parent instanceof Settings) {
-            // return files, targets, usercode, parameters, results, plots
-            return 6;
+            Settings s = (Settings) parent;
+            // return files, targets, <usercode>, parameters, results, plots
+            if (s.getUsercode() == null) {
+                return 5;
+            } else {
+                return 6;
+            }
         } else if (parent instanceof Files) {
             Files f = (Files) parent;
             return f.getFileCount();
@@ -2059,5 +2233,51 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     public String toLITproDesc() {
         return XslTransform.transform(toXml(), "fr/jmmc/mf/settingsToLITproDesc.xsl");
+    }
+
+    /*
+     * Get the runFitAction.
+     * It state is synchronise during isValid() call.
+     * @return the associated runfit action
+     */
+    public RunFitAction getRunFitAction() {
+        return runFitAction;
+    }
+
+    /**
+     * Ask the user to abort its request or stop the running task to accept 
+     * the new request. 
+     * This method has to be placed before model modification code. 
+     * Such method should be reachable because the SettingsPane still present 
+     * some writable panel even if the settingsModel is locked
+     * 
+     * Use assertWritable method call in functions that do not have to be 
+     * used while the model is locked. 
+     * Again, the settingPane should not present the panels that
+     * must not modify the model during lock state
+     @return 
+     */
+    private boolean userPrefersToCancelRunning() {
+        // always pass when model is not locked or state not running
+        if (!isLocked() || !isRunning()) {
+            return false;
+        }
+
+        int r = JideOptionPane.showConfirmDialog(App.getFrame(), "Stop process to continue ?", "Run fit is performed!", JideOptionPane.YES_NO_OPTION, JideOptionPane.WARNING_MESSAGE);
+        if (r == JideOptionPane.NO_OPTION) {
+            return false;
+        }
+
+        // cancel run fit task
+        TaskSwingWorkerExecutor.cancelTask(runFitAction.getTask());
+        setRunning(false);
+
+        return true;
+    }
+
+    private void assertWritable() {
+        if (isLocked()) {
+            throw new IllegalStateException("The model is locked but receive a modification request");
+        }
     }
 }

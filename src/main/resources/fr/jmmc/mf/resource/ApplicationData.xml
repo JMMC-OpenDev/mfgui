@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.14 beta 3"/>
+    <program name="LITpro" version="1.0.14beta4"/>
     <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
@@ -176,30 +176,33 @@
     </menubar>
 
     <releasenotes>        
-            <release version="1.0.14 beta 3">
+        <release version="1.0.14beta4">
+            <change type="CHANGE">Model names can nott be renamed anylonger (so that numbering in param label should stay consistent)</change>
+            <change type="CHANGE">Run fit action can now be cancelled</change>
+
+            <!-- not yet done:
+            <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
+            <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
+            FIXME
+              * Leave resource in MFGui.closeSettings()
+            TODO
+              * add link for futur "ENDtt_Usercode" doc in UserCodePanel
+              * Always edit the master custom model: ie do not only edit the custom model of a settings file.
+              * Finish PlotImage bounds shortcut
+              * Finish plotImage with decimal bounds
+            -->
+            <!--
                 <prerelease version="1.0.14 beta 3">                                
-                    <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>                              
-                    <!-- not yet done: 
-                    <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>                
-                    <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>            
-                    FIXME 
-                      * Leave resource in MFGui.closeSettings()                                            
-                    TODO  
-                      * add link for futur "ENDtt_Usercode" doc in UserCodePanel
-                      * Always edit the master custom model: ie do not only edit the custom model of a settings file.
-                      * Finish PlotImage bounds shortcut
-                      * Finish plotImage with decimal bounds
-                    -->                                                                                                                                          
+                    <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>                                                                                                                                                                                
                 </prerelease>
                 <prerelease version="1.0.14 beta 2">                                
                     <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>                              
-                    <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>                              
-
-                    <change type="CHANGE">Model names can't be renamed (so that numbering in param label should stay consistent)</change>                                                                                                                             
+                    <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>
                 </prerelease>
                 <prerelease version="1.0.14 beta 1">                                
                     <change type="FEATURE">Basic support for user models</change>                                                                                                                 
                 </prerelease>
+                -->
             </release>
             <release version="1.0.13">
             <prerelease version="1.0.13 beta 7">                                

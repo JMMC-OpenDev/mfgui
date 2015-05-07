@@ -12,9 +12,9 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.*;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -188,7 +188,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         try {
             response = LITpro.execMethod(methodName,
                     settingsModel.getTempFile(false), methodArgs);
-        } catch (ExecutionException ex) {
+        } catch (IOException ex) {
             MessagePane.showErrorMessage("Can't plot data", ex);
             return;
         }

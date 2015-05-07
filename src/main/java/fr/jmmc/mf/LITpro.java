@@ -7,12 +7,15 @@ import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.Bootstrapper;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
+import fr.jmmc.jmcs.gui.task.TaskSwingWorkerExecutor;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.network.http.Http;
+import fr.jmmc.jmcs.network.http.PostQueryProcessor;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampMessageHandler;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.jmcs.util.ResourceUtils;
+import fr.jmmc.jmcs.util.runner.LocalLauncher;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -25,15 +28,10 @@ import fr.nom.tam.fits.FitsException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
@@ -41,7 +39,6 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.astrogrid.samp.Message;
 import org.astrogrid.samp.client.SampException;
-import fr.jmmc.jmcs.util.runner.LocalLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +59,8 @@ public class LITpro extends fr.jmmc.jmcs.App {
     static HttpClient client_ = null;
     /** Title of message pane shown after reception of message/error from the remote service */
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
+    /** Avoid use of user model until server side is ready for it */
+    public static final boolean USE_USERMODELS = true;
 
     /**
      * Creates a new LITpro object.
@@ -86,6 +85,10 @@ public class LITpro extends fr.jmmc.jmcs.App {
         // Create OIFitsCollectionManager at startup (JAXB factory, event queues and PlotDefinitionFactory ...)
         // to avoid OpenJDK classloader issues (ie use main thread):
         OIFitsCollectionManager.getInstance();
+
+        // Accept multiple thread for worker to enable jobs distribution from the GUI
+        TaskSwingWorkerExecutor.start(4);
+
     }
 
     /**
@@ -159,7 +162,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *  @throws ExecutionException thrown if local execution fails
      *  @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile) throws ExecutionException {
+    public static Response execMethod(String methodName, java.io.File xmlFile) throws IOException {
         return execMethod(methodName, xmlFile, "");
     }
 
@@ -172,14 +175,10 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *  @throws ExecutionException if the local execution fails
      *  @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws ExecutionException {
+    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
-            try {
                 xmlResult = doPost(methodName, xmlFile, methodArg);
-            } catch (IOException ex) {
-                throw new ExecutionException(ex);
-            }
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }
@@ -210,19 +209,20 @@ public class LITpro extends fr.jmmc.jmcs.App {
      * @throws ExecutionException thrown if process launching fails
      * @throws IllegalStateException if one unexpected (bad) things occurs 
      */
-    private static String doExec(String methodName, java.io.File xmlFile, String methodArg) throws ExecutionException {
+    private static String doExec(final String methodName, final java.io.File xmlFile, final String methodArg) {
+        final String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
+        final String filename;
+
+        // Run main application waiting for end of cat process
+        // TODO use jmcs material to
+        final fr.jmmc.mcs.util.ProcessHandler ph;
+
         try {
-            String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
-            String filename = null;
-            // Run main application waiting for end of cat process
-            fr.jmmc.mcs.util.ProcessHandler ph;
-            if (xmlFile != null) {
-                filename = xmlFile.getAbsolutePath();
-            }
             if (xmlFile == null) {
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
                 logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
             } else {
+                filename = xmlFile.getAbsolutePath();
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename, methodArg});
                 logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
             }
@@ -230,14 +230,15 @@ public class LITpro extends fr.jmmc.jmcs.App {
             ph.setProcessManager(pm);
             ph.start();
             ph.waitFor();
-            String result = pm.getContent();
+            final String result = pm.getContent();
             logger.trace("exec result=\n" + result);
             return result;
-        } catch (IOException ex) {
-            throw new ExecutionException("Can't execute LITpro local service", ex);
-        } catch (InterruptedException ex) {
-            throw new ExecutionException("LITpro local service have been interrupted", ex);
+        } catch (final IOException ex) {
+            throw new IllegalStateException("Can't execute " + yogaProgram, ex);
+        } catch (final InterruptedException ex) {
+            // Consider that we have been canceled from a user request
         }
+        return null;
     }
 
     /**
@@ -255,20 +256,20 @@ public class LITpro extends fr.jmmc.jmcs.App {
         return doExec(methodName, xmlFile, "");
     }
 
-    /** Execute given command over an HTTP POST 
+    /** Execute given command over an HTTP POST
      *
      * @param methodName name of method to call
      * @param xmlFile setting file
      * @param methodArg argument
      *
      * @return the output of the process
-     * @throws IOException if IO problems occurs 
+     * @throws IOException if IO problems occurs
      */
     public static String doPost(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String result = "";
 
         // Build parts of request
-        Part[] parts;
+        final Part[] parts;
         if (methodArg != null && methodArg.length() == 0) {
             methodArg = null;
         }
@@ -298,48 +299,41 @@ public class LITpro extends fr.jmmc.jmcs.App {
         // Try to perform post operation
         String targetURL = myPreferences.getPreference("yoga.remote.url");
 
-        // TO BE REMOVED
-        targetURL = "http://jmmc.obs.ujf-grenoble.fr/~mellag/LITproWebService/run.php";
+        if (USE_USERMODELS) {
+            // overwrite url to get a server that support usermodels
+            // TODO remove as soon as server side have been upgraded
+            targetURL = "http://jmmc.obs.ujf-grenoble.fr/~mellag/LITproWebService/run.php";
+        }
 
-        final PostMethod myPost = new PostMethod(targetURL);
         try {
-            myPost.setRequestEntity(new MultipartRequestEntity(parts, myPost.getParams()));
+            final URI uri = Http.validateURL(targetURL);
 
-            if (client_ == null) {
-                client_ = Http.getHttpClient();
-            }
-
-            int status = client_.executeMethod(myPost);
-            if (status == HttpStatus.SC_OK) {
-                final Reader reader = new InputStreamReader(myPost.getResponseBodyAsStream(), myPost.getResponseCharSet());
-
-                // TODO : define initialSize correctly (get http content length ?) :
-                final StringWriter sw = new StringWriter(65535);
-                char cbuf[] = new char[1024];
-                int len = reader.read(cbuf);
-                while (len > 0) {
-                    sw.write(cbuf, 0, len);
-                    len = reader.read(cbuf);
+            // use the multi threaded HTTP client
+            result = Http.post(uri, false, new PostQueryProcessor() {
+                /**
+                 * Process the given post method to define its HTTP input fields
+                 *
+                 * @param method post method to complete
+                 * @throws IOException if any IO error occurs
+                 */
+                @Override
+                public void process(final PostMethod method) throws IOException {
+                    method.setRequestEntity(new MultipartRequestEntity(parts, method.getParams()));
                 }
-                result = sw.toString();
+            });
 
+            if (result != null) {
                 logger.debug("Post for '{} {}' ok", methodName, methodArg);
-
             } else {
                 logger.debug("Post for '{} {}' failed", methodName, methodArg);
                 throw new IllegalStateException(
                         "Can't query LITpro remote webservice\nurl: '"
-                        + targetURL
-                        + "'\nHTTP status:"
-                        + HttpStatus.getStatusText(status));
+                        + targetURL);
             }
 
-        } catch (HttpException ex) {
+        } catch (IOException ioe) {
             throw new IllegalStateException("Can't query LITpro remote webservice\nurl: '"
-                    + targetURL + "'", ex);
-        } finally {
-            // Release the connection.
-            myPost.releaseConnection();
+                    + targetURL + "'", ioe);
         }
 
         logger.trace("post result='{}'\n", result);
@@ -390,7 +384,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         try {
                             final URI uri = new URI(url);
                             File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, true)) {
+                            if (Http.download(uri, tmpFile, false)) {
                                 sm.addFile(tmpFile);
                             } else {
                                 e = new IOException();

@@ -6,14 +6,14 @@ package fr.jmmc.mf.gui;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.Parameter;
-import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Parameters;
-
+import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -52,8 +52,11 @@ public class ParametersPanel extends javax.swing.JPanel {
         current = p;
         parameterListModel.clear();
         Parameter[] params = s.getSharedParameters();
-        sharedTableModel.setModel(s, params, false);
+        sharedTableModel.setModel(s, params, false);       
         tablePanel.add(sharedParametersTable.getTableHeader(), BorderLayout.NORTH);
+
+        // set edit mode on parameters
+        sharedParametersTable.setEnabled(!settingsModel.isLocked());
 
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Here comes the list of models that get one or more shared parameters");
         for (int spIndex = 0; spIndex < params.length; spIndex++) {

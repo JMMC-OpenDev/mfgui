@@ -223,7 +223,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                     return model.getName() + "." + p.getName();
                 } else {
                     // there is no parent: it is probably a shared parameter
-                    return "???." + p.getName();
+                    return p.getName();
                 }
             } else {
                 return p.getName();

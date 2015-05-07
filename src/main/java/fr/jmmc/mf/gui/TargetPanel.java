@@ -5,10 +5,18 @@ package fr.jmmc.mf.gui;
 
 import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.*;
+import fr.jmmc.mf.models.File;
+import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Residual;
+import fr.jmmc.mf.models.Residuals;
+import fr.jmmc.mf.models.Settings;
+import fr.jmmc.mf.models.Target;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
@@ -54,7 +62,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         postInit(plotPanel);
     }
     
-    private void postInit(PlotPanel plotPanel){
+    private void postInit(PlotPanel plotPanel) {
+
+        refreshAvailableModelsButton.setVisible(LITpro.USE_USERMODELS);
+        addMyModelButton.setVisible(LITpro.USE_USERMODELS);
+        visitUmRepositoryButton.setVisible(LITpro.USE_USERMODELS);
+        stretchedCheckBox.setVisible(LITpro.USE_USERMODELS);
+        polarCheckBox.setVisible(LITpro.USE_USERMODELS);
+
         listenToFileSelection = false;
 
         modelList.setModel(models);
@@ -158,7 +173,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             models.addElement(current.getModel(i));
         }
         parametersTableModel.setModel(rootSettingsModel, current, true);
-        UtilsClass.initColumnSizes(parametersTable, MFGui.TABLE_MAX_WIDTH);
+        SwingUtils.invokeLaterEDT(new Runnable() {
+            /**
+             * update table column layout
+             */
+            @Override
+            public void run() {
+                UtilsClass.initColumnSizes(parametersTable, MFGui.TABLE_MAX_WIDTH);
+            }
+        });
     }
     
     private void updateModels(Model modelToSelect) {
@@ -745,8 +768,12 @@ private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
         // Construct a new copy
         Model selectedModel = (Model) availableModelList.getSelectedValue();
-        // Check that usermodel is in the settings file        
-        rootSettingsModel.addUserModel(selectedModel);        
+        
+        // If candidate to add is a user model,
+        // check that it already exists in the settings file
+        if (ModelUtils.isUserModel(selectedModel)) {
+            rootSettingsModel.addUserModel(selectedModel);
+        }
         
         // create and add new instance
         Model m = (Model) UtilsClass.clone(selectedModel);

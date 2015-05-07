@@ -35,6 +35,6 @@ public class NewModelAction extends RegisteredAction {
            return;
         }
         logger.info("New settings created and loaded into the GUI");
-        fr.jmmc.jmcs.gui.component.StatusBar.show("New model ready for modifications");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("New model ready for modifications! Please load oifits files, select target to fit and build your model.");
     }
 }

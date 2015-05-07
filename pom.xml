@@ -39,6 +39,16 @@
             <artifactId>oiexplorer-core</artifactId>
             <version>TRUNK</version>
         </dependency>
+
+        <!-- TODO: use latex to helpset for the documentation -->
+        <dependency>
+            <!-- Requires you to install manually the artifact:
+            mvn install:install-file -Dfile=lib/mfgui-doc.jar -DgroupId=fr.jmmc.mfgui -DartifactId=mfgui-doc -Dversion=TRUNK -Dpackaging=jar
+            -->
+            <groupId>fr.jmmc.mfgui</groupId>
+            <artifactId>mfgui-doc</artifactId>
+            <version>TRUNK</version>
+        </dependency>
         
         <dependency>
             <groupId>org.codehaus.castor</groupId>

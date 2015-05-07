@@ -10,18 +10,42 @@ import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.*;
+import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Message;
+import fr.jmmc.mf.models.Model;
+import fr.jmmc.mf.models.Parameter;
+import fr.jmmc.mf.models.ParameterLink;
+import fr.jmmc.mf.models.Response;
+import fr.jmmc.mf.models.ResponseItem;
+import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.models.Settings;
+import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -29,7 +53,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
@@ -235,9 +260,9 @@ public class UtilsClass {
                         column.getHeaderValue(), false, false, 0, j);
                 headerWidth = comp.getPreferredSize().width;
 
-                comp = table.getDefaultRenderer(model.getColumnClass(j)).getTableCellRendererComponent(table,
+                    comp = table.getDefaultRenderer(model.getColumnClass(j)).getTableCellRendererComponent(table,
                         model.getValueAt(i, j), false, false, i, j);
-                cellWidth = comp.getPreferredSize().width;
+                    cellWidth = comp.getPreferredSize().width;
 
                 column.setPreferredWidth(Math.min(maxWidth, Math.max(headerWidth, cellWidth)));
             }

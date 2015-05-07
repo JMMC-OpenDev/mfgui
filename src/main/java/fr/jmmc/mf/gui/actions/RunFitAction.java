@@ -8,46 +8,47 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.task.Task;
 import fr.jmmc.jmcs.gui.task.TaskSwingWorker;
+import fr.jmmc.jmcs.gui.task.TaskSwingWorkerExecutor;
 import fr.jmmc.mf.LITpro;
-import fr.jmmc.mf.gui.Preferences;
-import fr.jmmc.mf.gui.SettingsViewerInterface;
-import fr.jmmc.mf.gui.UtilsClass;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResponseItem;
-import fr.jmmc.mf.models.Settings;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 import javax.swing.Action;
 import javax.swing.ButtonModel;
-import javax.swing.SwingWorker;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RunFitAction extends ResourcedAction {
 
-    /** Main logger */
-    static Logger logger = LoggerFactory.getLogger(RunFitAction.class.getName());
+    final SettingsModel settingsModel;
 
-    String methodName = "runFit";
+    /** Main logger */
+    static final Logger logger = LoggerFactory.getLogger(RunFitAction.class.getName());
+
+    static final String methodName = "runFit";
+
     ButtonModel iTMaxButtonModel = null;
     Document iTMaxDocument = null;
     ButtonModel skipPlotDocument = null;
-    SettingsViewerInterface settingsViewer = null;
-    TaskSwingWorker<Response> worker = null;
-    Task task = new Task("task_RunFitAction");
-    String initialName = null;
 
-    public RunFitAction(SettingsViewerInterface settingsViewer) {
+    String initialActionName = null;
+    //boolean running = false;
+    private Task task;
+
+    public RunFitAction(SettingsModel settingsModel) {
         super("runFit");
-        this.settingsViewer = settingsViewer;
-        worker = new RunFitActionWorker(this);
-        initialName = (String) this.getValue(Action.NAME);
+        this.settingsModel = settingsModel;
+        initialActionName = (String) this.getValue(Action.NAME);
+        task = new Task("runFit_" + settingsModel.hashCode());
     }
 
     public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument, ButtonModel skipPlotDocument) {
@@ -64,134 +65,118 @@ public class RunFitAction extends ResourcedAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        final SwingWorker.StateValue state = worker.getState();
-        if (state == SwingWorker.StateValue.PENDING) {
-            worker.executeTask();
-        } else if (state == SwingWorker.StateValue.DONE) {
-            worker = new RunFitActionWorker(this);
-            worker.executeTask();
+
+        if (settingsModel.isRunning()) {
+            // cancel job
+            TaskSwingWorkerExecutor.cancelTask(getTask());
+            settingsModel.setRunning(false);
         } else {
-            // interrup if running because network connection can have long duration
-            // TODO handle cancel signal in callee code for data integrity and memory leak
-            // TODO check behaviour of remote service
-            // good news, the 'context' is  insulated through a tmp file
-            // killer option would be to set the LITpro web service asynchronous and interruptible.
-            worker.cancel(true);
+            // display non writable panel and launch new job
+            settingsModel.selectInTree(settingsModel.getRootSettings().getResults());
+
+            StringBuffer args = new StringBuffer();
+            if (shouldSkipPlots()) {
+                args.append("-s ");
+            }
+
+            if (iTMaxButtonModel.isSelected() && (iTMaxDocument.getLength() > 0)) {
+                try {
+                    args.append("itmax=").append(iTMaxDocument.getText(0, iTMaxDocument.getLength()));
+                } catch (BadLocationException ble) {
+                    throw new IllegalStateException("Can't read ITMax document", ble);
+                }
+            }
+
+            // change model state to lock it and extract its snapshot
+            settingsModel.setRunning(true);
+            File tmpFile = settingsModel.getTempFile(false);
+            StatusBar.show("Running fitting process of" + settingsModel.getAssociatedFilename());
+
+            new RunFitActionWorker(getTask(), tmpFile, args.toString(), settingsModel).executeTask();
         }
-        updateUI();
     }
 
-    /**
-     * Helper function to update UI related elements.
-     * The action name is set depending on the associated worker state to update
-     * text of associated swing elements.
-     * TODO update menu entry
-     * update mouse icon ?
-     */
-    private void updateUI() {
-        final SwingWorker.StateValue state = worker.getState();
+    public Task getTask() {
+        return task;
+    }
 
-        System.out.println("update for state = " + state );
-        //setCursor(null);
-        if (state == SwingWorker.StateValue.PENDING) {
-            putValue(Action.NAME, "Cancel");
-        } else if (state == SwingWorker.StateValue.DONE) {
-            putValue(Action.NAME, initialName);
-        } else {
-            putValue(Action.NAME, initialName);
-            //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        }
-    }    
+    public String getInitialActionName() {
+        return initialActionName;
+    }
 
-    class RunFitActionWorker extends TaskSwingWorker<Response> {
+    static class RunFitActionWorker extends TaskSwingWorker<Response> {
 
-        RunFitAction parentAction = null;
+        final java.io.File xmlFile;
+        final String methodArg;
+        final SettingsModel parent;
 
-        public RunFitActionWorker(RunFitAction parent) {
+        public RunFitActionWorker(Task task, java.io.File xmlFile, String methodArg, SettingsModel sm) {
             super(task);
-            parentAction = parent;
+            this.xmlFile = xmlFile;
+            this.methodArg = methodArg;
+            this.parent = sm; // only for callback
         }
 
         @Override
         public Response computeInBackground() {
+
             if (false) {
-                logger.info("skip remote call for testing purpose. Just do a pause");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                java.util.logging.Logger.getLogger(RunFitAction.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                updateUI();
+                logger.info("skip remote call for testing purpose. Just loop for pause");
+                try {
+                    for (int i = 0; i < 200; i++) {
+                        Thread.sleep(100);
+                        System.out.print(" " + i);
+                        System.out.flush();
+                    }                    
+                } catch (InterruptedException ex) {
+                    logger.info("interruped during loop", ex);
+                }
                 Message m = new Message();
                 m.setContent("test");
                 m.setType("ERROR");
                 ResponseItem ri = new ResponseItem();
-                ri.setMessage(m);                
+                ri.setMessage(m);
                 Response r = new Response();
                 r.addResponseItem(ri);
                 return r;
             }
 
-            String args = "";
-            if (shouldSkipPlots()) {
-                args = "-s ";
-            }
-
-            if (iTMaxButtonModel.isSelected() && (iTMaxDocument.getLength() > 0)) {
-                try {
-                    args = args + "itmax=" + iTMaxDocument.getText(0, iTMaxDocument.getLength());
-                } catch (BadLocationException ble) {
-                    throw new IllegalStateException("Can't read ITMax document", ble);
-                }
-            }
-            SettingsModel settingsModel = settingsViewer.getSettingsModel();
-
-            File tmpFile = settingsModel.getTempFile(false);
-            StatusBar.show("Running fitting process");
-
-            Response r;
             try {
-                r = LITpro.execMethod(methodName, tmpFile, args);
-            } catch (IllegalStateException ise) {
-                MessagePane.showErrorMessage("Can't perform operation for " + methodName, ise);
-                return null;
-            } catch (ExecutionException ex) {
-                MessagePane.showErrorMessage("Can't perform operation for " + methodName, ex);
-                return null;
+                return LITpro.execMethod(methodName, xmlFile, methodArg);
+            } catch (IOException ex) {
+                // should only come from http io execption 
+                throw new RuntimeException(ex);
             }
-
-            return r;
-
         }
 
         @Override
         public void refreshUI(Response r) {
-
-            SettingsModel settingsModel = settingsViewer.getSettingsModel();
-            Settings newModel = UtilsClass.getSettings(r);
-            StatusBar.show("Fitting response received, creating result node...");
-            if (newModel == null) {
-                logger.warn("no settings present in result message");
-                if (UtilsClass.getErrorMsg(r).length() == 0) {
-                    final StringBuilder sb = new StringBuilder();
-                    sb.append("Sorry a problem occured on server side without error message.\n");
-                    sb.append("No result has been returned\n");
-                    sb.append("Please send this bug report (with email)");
-                    sb.append("and you will be contacted if the data are needed to repeat the problem");
-                    logger.warn(settingsModel.toLITproDesc());
-                    logger.warn(Preferences.getInstance().dumpCurrentProperties());
-                    updateUI();
-                    throw new IllegalStateException(sb.toString());
-                } else {
-                    // TODO display error message ;
-                }
-
-                return;
-            }
-            // TODO display error message here : move code from LITpro.execMethod
-            settingsModel.updateWithNewSettings(r);
+            // action finished, we can change state and update model just after.
+            this.parent.setRunning(false);
+            this.parent.updateWithNewSettings(r);
             StatusBar.show("GUI updated with fitting results");
-            updateUI();
+        }
+
+        @Override
+        public void handleException(ExecutionException ee) {
+            // notify that process is finished
+            this.parent.setRunning(false);
+
+            // filter some exceptions to avoid feedback report
+            if (filter(ee)) {
+                MessagePane.showErrorMessage("Please check your network setup", ee);
+            } else {
+                super.handleException(ee);
+            }
+
+            StatusBar.show("Error occured during fitting process");
+        }
+
+        public boolean filter(Exception e) {
+            Throwable c = e.getCause();
+            return c != null
+                    && (c instanceof UnknownHostException
+                    || c instanceof ConnectTimeoutException);
         }
     }
 }

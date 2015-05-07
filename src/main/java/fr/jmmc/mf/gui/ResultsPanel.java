@@ -24,7 +24,7 @@ public class ResultsPanel extends javax.swing.JPanel {
 
   public void show(Results r, SettingsModel s) {
     current = r;
-    settingsModel = s;
+      settingsModel = s;      
   }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -12,7 +12,6 @@ import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
 import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.Parameters;
 import fr.jmmc.mf.models.Results;
 import fr.jmmc.mf.models.Settings;
@@ -27,7 +26,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
-import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeModelListener;
@@ -44,15 +42,20 @@ import org.slf4j.LoggerFactory;
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
         TreeModelListener, SettingsViewerInterface, Observer {
 
+    /** Model reference */
+    final private SettingsModel settingsModel;
+
     final static String className = SettingsPane.class.getName();
+
+    final static MsgPanel msgPanel = new MsgPanel();
+
     /** Main logger */
     final static Logger logger = LoggerFactory.getLogger(className);
     // Application actions
-    public static RunFitAction runFitAction;
-    public Action saveSettingsAction;
-    public Action closeSettingsAction;
-    /** Model reference */
-    private SettingsModel rootSettingsModel = null;
+    
+    Action saveSettingsAction;
+    Action closeSettingsAction;
+    
     // List of viewer panel used to display sub components
     TargetsPanel targetsPanel;
     FilesPanel filesPanel;
@@ -73,27 +76,23 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     protected boolean modified;
 
     /** Creates new form SettingsPane */
-    public SettingsPane(SettingsModel settingsModel) {
-        init(settingsModel);
-        showElement(rootSettingsModel.getRootSettings());
+    public SettingsPane() throws ExecutionException {
+        this(new SettingsModel());
     }
 
     /** Creates new form SettingsPane */
-    public SettingsPane() throws ExecutionException {
-        init(new SettingsModel());
-    }
-
-    private void init(SettingsModel settingsModel) {
-        // instanciate actions
-        runFitAction = new RunFitAction(this);
-
+    public SettingsPane(SettingsModel settingsModel) {
         // Because settingsTree has rootSettingsModel as tree model,
         // we need to init rootSettingsModel before entering initComponents
-        rootSettingsModel = settingsModel;
+        this.settingsModel = settingsModel;
 
+        init();
+        showElement(settingsModel.getRootSettings());
+    }
+
+    private void init() {
+        // instanciate actions        
         initComponents();
-
-        runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument(), skipPlotResultsCheckBox.getModel());
 
         settingsTree = new JTree();
         settingsTreeScrollPane.getViewport().add(settingsTree);
@@ -121,24 +120,23 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         
         skipPlotResultsButton.setAction(actionRegistrar.getPreferenceAction());
 
-        settingsTree.setModel(rootSettingsModel);
-        settingsTree.setSelectionModel(rootSettingsModel);
+        settingsTree.setModel(settingsModel);
+        settingsTree.setSelectionModel(settingsModel);
         // register as treeSelectionListener to permit modifier panel changes
         settingsTree.addTreeSelectionListener(this);
         settingsTree.setCellRenderer(new MyCellRenderer());
         // to be notified of settingsModel changes
         // register as treeModelListener and observer
-        rootSettingsModel.addTreeModelListener(this);
-        rootSettingsModel.addObserver(this);
+        settingsModel.addTreeModelListener(this);
+        settingsModel.addObserver(this);
         // finaly ask to show top level element
-        showElement(rootSettingsModel.getRootSettings());
+        showElement(settingsModel.getRootSettings());
 
         // help to fix userobject that will be given to be shown by the Mutable TreeNode
-        settingsModel.setPlotPanel(plotPanel);
-        runFitButton.setAction(runFitAction);
+        settingsModel.setPlotPanel(plotPanel);        
 
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));                      
+        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));        
     }
 
     /**
@@ -166,60 +164,85 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         logger.trace("object to show is : {}",o);
         modifierPanel.removeAll();
 
-        if (o instanceof ResultModel) {
+        // always update runfit subpanel
+        updateRunFitPanel();
+
+        
+        
+        if (o instanceof DefaultMutableTreeNode && !(o instanceof ResultModel || o instanceof FrameTreeNode)) {
+            // dereference most objects if they are mutableTreeNode
+            showElement(((DefaultMutableTreeNode) o).getUserObject());
+        } else if (stopModifierPanels(o)) {
+            // prevent the display of some modifiers
+            // set a fixed message for locked setting cases
+            msgPanel.setMessage("<html>Run fit in progress!\nThis part of the setting can't be modified.\n You may abort the running job using the <em>Cancel</em> button</html>");
+            modifierPanel.add(msgPanel);
+        } else if (o instanceof ResultModel) {
             // ResultModel must not be dereferenced as it is a DefaultMutableNode
-            resultPanel.show((ResultModel) o, rootSettingsModel);
+            resultPanel.show((ResultModel) o, settingsModel);
             modifierPanel.add(resultPanel);
         } else if (o instanceof FrameTreeNode) {
             // ResultModel must not be dereferenced as it is a DefaultMutableNode
-            framePanel.show((FrameTreeNode) o, rootSettingsModel);
+            framePanel.show((FrameTreeNode) o, settingsModel);
             modifierPanel.add(framePanel);
-        } else if (o instanceof DefaultMutableTreeNode) {
-            // dereference object if it isa contained by a mutableTreeNode
-            showElement(((DefaultMutableTreeNode) o).getUserObject());
         } else if (o instanceof PlotPanel) {
-            plotPanel.show(rootSettingsModel);
+            plotPanel.show(settingsModel);
             modifierPanel.add(plotPanel);
         } else if (o instanceof Settings) {
-            settingsPanel.show(rootSettingsModel.getRootSettings(), rootSettingsModel);
+            settingsPanel.show(settingsModel.getRootSettings(), settingsModel);
             modifierPanel.add(settingsPanel);
         } else if (o instanceof Targets) {
-            targetsPanel.show((Targets) o, rootSettingsModel);
+            targetsPanel.show((Targets) o, settingsModel);
             modifierPanel.add(targetsPanel);
         } else if (o instanceof Files) {
-            filesPanel.show((Files) o, rootSettingsModel);
+            filesPanel.show((Files) o, settingsModel);
             modifierPanel.add(filesPanel);
         } else if (o instanceof Target) {
-            targetPanel.show((Target) o, rootSettingsModel);
+            targetPanel.show((Target) o, settingsModel);
             modifierPanel.add(targetPanel);
         } else if (o instanceof Model) {
-            modelPanel.show((Model) o, rootSettingsModel);
+            modelPanel.show((Model) o, settingsModel);
             modifierPanel.add(modelPanel);
         } else if (o instanceof File) {
-            filePanel.show((File) o, rootSettingsModel);
+            filePanel.show((File) o, settingsModel);
             modifierPanel.add(filePanel);
         } else if (o instanceof FileLink) {
             FileLink link = (FileLink) o;
-            filePanel.show((File) link.getFileRef(), rootSettingsModel);
+            filePanel.show((File) link.getFileRef(), settingsModel);
             modifierPanel.add(filePanel);
         } else if (o instanceof Usercode) {
-            usercodePanel.show(rootSettingsModel, (Usercode) o);
+            usercodePanel.show(settingsModel, (Usercode) o);
             modifierPanel.add(usercodePanel);
         } else if (o instanceof Parameters) {
-            parametersPanel.show(rootSettingsModel, (Parameters) o);
+            parametersPanel.show(settingsModel, (Parameters) o);
             modifierPanel.add(parametersPanel);
         } else if (o instanceof Results) {
-            resultsPanel.show((Results) o, rootSettingsModel);
+            resultsPanel.show((Results) o, settingsModel);
             modifierPanel.add(resultsPanel);
         } else {
-            modifierPanel.add(new JLabel("missing modifier panel for '" + o.getClass()
-                    + "' objects " + o));
+            msgPanel.setMessage("Missing modifier panel for '" + o.getClass()
+                    + "' objects " + o  );
+            modifierPanel.add(msgPanel);
             logger.error("missing modifier panel for {}", o, new Throwable());
-        }
+        }        
         modifierPanel.revalidate();
         modifierPanel.repaint();
         // check one more time that GUI view is up to date
         checkValidSettings();
+    }
+
+    private boolean stopModifierPanels(Object o) {
+        boolean acceptPanelDuringLock = o instanceof PlotPanel
+                || o instanceof File
+                || o instanceof Files
+                || o instanceof FileLink
+                || o instanceof FrameTreeNode
+                || o instanceof Parameters
+                || o instanceof PlotPanel
+                || o instanceof Results
+                || o instanceof ResultModel;
+
+        return settingsModel.isLocked() && !acceptPanelDuringLock;
     }
 
     /**
@@ -264,7 +287,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     private void treeChanged(javax.swing.event.TreeModelEvent e) {
         logger.debug("Listening for settingsModel tree event {}", e);
         if (e.getSource() instanceof SettingsModel) {
-            if (rootSettingsModel.isModified()) {
+            if (settingsModel.isModified()) {
                 //tabbedPane.setTitleAt(0, "Settings *");
                 logger.debug("tree changed and setting model modified");
             } else {
@@ -281,37 +304,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
      * will not be enabled.
      */
     protected void checkValidSettings() {
-        boolean validSettingsModel = rootSettingsModel.isValid();
-        boolean hasOneFreeParam = false;
+        // get valid state (that also updates runFitAction state)
+        boolean validSettingsModel = settingsModel.isValid();
         
-        // TODO do we have to move following code into the settingModel or utilClass ?
-        // walk throug every parameters and set hasOneFreeParam to true on first free one
-        Parameter params[] = rootSettingsModel.getSharedParameters();
-        for (int i = 0; i < params.length && !hasOneFreeParam ; i++) {
-            Parameter parameter = params[i];
-            if (!parameter.getHasFixedValue()) {
-                hasOneFreeParam = true;
-            }
-        }
-        Target targets[] = rootSettingsModel.getRootSettings().getTargets().getTarget();
-        for (int i = 0; i < targets.length && !hasOneFreeParam ; i++) {
-            Target target = targets[i];
-            Model models[] = target.getModel();
-            for (int j = 0; j < models.length && !hasOneFreeParam ; j++) {
-                Model model = models[j];
-                params = model.getParameter();
-                for (int k = 0; k < params.length && !hasOneFreeParam ; k++) {
-                    Parameter parameter = params[k];
-                    if (!parameter.getHasFixedValue()) {
-                        hasOneFreeParam = true;
-                    }
-                }
-            }
-        }
-        
-        runFitAction.setEnabled(validSettingsModel && hasOneFreeParam);
-        
-        int nbMeasurements = rootSettingsModel.getNbMeasurements();
+        int nbMeasurements = settingsModel.getNbMeasurements();
         int prefLimit = Preferences.getInstance().getPreferenceAsInt(Preferences.USER_UVPOINT_LIMITFORPLOT);
         boolean limitReached = nbMeasurements > prefLimit;
         if(limitReached){
@@ -325,7 +321,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     public SettingsModel getSettingsModel() {
-        return rootSettingsModel;
+        return settingsModel;
     }
 
     public SettingsPane getSettingsPane() {
@@ -496,7 +492,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         gridBagConstraints.weighty = 1.0;
         add(jSplitPane1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-    
+
+    private void updateRunFitPanel() {        
+        RunFitAction runFitAction = settingsModel.getRunFitAction();
+        runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument(), skipPlotResultsCheckBox.getModel());
+        runFitButton.setAction(runFitAction);
+    }
+
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
     protected class MyCellRenderer extends DefaultTreeCellRenderer {
