@@ -4,9 +4,10 @@
 #*******************************************************************************
 
 # generate model java source from xml schema
-echo "Generating classes for $MODEL_SCHEMA"
-#java org.exolab.castor.builder.SourceGenerator -types j2 -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  -verbose $*
-#mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources
+if ! mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources
+then 
+    exit
+fi
 
 for f in src/main/java/fr/jmmc/mf/models/*.java
 do
