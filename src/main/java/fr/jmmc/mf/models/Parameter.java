@@ -1,25 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * A common representation of every model parameters.
@@ -27,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Parameter implements java.io.Serializable {
 
 
@@ -35,32 +22,32 @@ public class Parameter implements java.io.Serializable {
     //--------------------------/
 
     /**
-     * Field _name
+     * Field _name.
      */
     private java.lang.String _name;
 
     /**
-     * Field _type
+     * Field _type.
      */
     private java.lang.String _type;
 
     /**
-     * Field _id
+     * Field _id.
      */
     private java.lang.String _id;
 
     /**
-     * Field _desc
+     * Field _desc.
      */
     private java.lang.String _desc;
 
     /**
-     * Field _units
+     * Field _units.
      */
     private java.lang.String _units;
 
     /**
-     * Field _value
+     * Field _value.
      */
     private double _value;
 
@@ -70,7 +57,7 @@ public class Parameter implements java.io.Serializable {
     private boolean _has_value;
 
     /**
-     * Field _minValue
+     * Field _minValue.
      */
     private double _minValue;
 
@@ -80,7 +67,7 @@ public class Parameter implements java.io.Serializable {
     private boolean _has_minValue;
 
     /**
-     * Field _maxValue
+     * Field _maxValue.
      */
     private double _maxValue;
 
@@ -90,7 +77,7 @@ public class Parameter implements java.io.Serializable {
     private boolean _has_maxValue;
 
     /**
-     * Field _scale
+     * Field _scale.
      */
     private double _scale;
 
@@ -100,7 +87,7 @@ public class Parameter implements java.io.Serializable {
     private boolean _has_scale;
 
     /**
-     * Field _hasFixedValue
+     * Field _hasFixedValue.
      */
     private boolean _hasFixedValue;
 
@@ -110,7 +97,7 @@ public class Parameter implements java.io.Serializable {
     private boolean _has_hasFixedValue;
 
     /**
-     * Field _editable
+     * Field _editable.
      */
     private boolean _editable;
 
@@ -126,7 +113,7 @@ public class Parameter implements java.io.Serializable {
 
     public Parameter() {
         super();
-    } //-- fr.jmmc.mf.models.Parameter()
+    }
 
 
       //-----------/
@@ -134,369 +121,427 @@ public class Parameter implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method deleteEditable
      */
-    public void deleteEditable()
-    {
+    public void deleteEditable(
+    ) {
         this._has_editable= false;
-    } //-- void deleteEditable() 
+    }
 
     /**
-     * Method deleteMaxValue
      */
-    public void deleteMaxValue()
-    {
+    public void deleteHasFixedValue(
+    ) {
+        this._has_hasFixedValue= false;
+    }
+
+    /**
+     */
+    public void deleteMaxValue(
+    ) {
         this._has_maxValue= false;
-    } //-- void deleteMaxValue() 
+    }
 
     /**
-     * Method deleteMinValue
      */
-    public void deleteMinValue()
-    {
+    public void deleteMinValue(
+    ) {
         this._has_minValue= false;
-    } //-- void deleteMinValue() 
+    }
 
     /**
-     * Method deleteScale
      */
-    public void deleteScale()
-    {
+    public void deleteScale(
+    ) {
         this._has_scale= false;
-    } //-- void deleteScale() 
+    }
+
+    /**
+     */
+    public void deleteValue(
+    ) {
+        this._has_value= false;
+    }
 
     /**
      * Returns the value of field 'desc'.
      * 
-     * @return the value of field 'desc'.
+     * @return the value of field 'Desc'.
      */
-    public java.lang.String getDesc()
-    {
+    public java.lang.String getDesc(
+    ) {
         return this._desc;
-    } //-- java.lang.String getDesc() 
+    }
 
     /**
      * Returns the value of field 'editable'.
      * 
-     * @return the value of field 'editable'.
+     * @return the value of field 'Editable'.
      */
-    public boolean getEditable()
-    {
+    public boolean getEditable(
+    ) {
         return this._editable;
-    } //-- boolean getEditable() 
+    }
 
     /**
      * Returns the value of field 'hasFixedValue'.
      * 
-     * @return the value of field 'hasFixedValue'.
+     * @return the value of field 'HasFixedValue'.
      */
-    public boolean getHasFixedValue()
-    {
+    public boolean getHasFixedValue(
+    ) {
         return this._hasFixedValue;
-    } //-- boolean getHasFixedValue() 
+    }
 
     /**
      * Returns the value of field 'id'.
      * 
-     * @return the value of field 'id'.
+     * @return the value of field 'Id'.
      */
-    public java.lang.String getId()
-    {
+    public java.lang.String getId(
+    ) {
         return this._id;
-    } //-- java.lang.String getId() 
+    }
 
     /**
      * Returns the value of field 'maxValue'.
      * 
-     * @return the value of field 'maxValue'.
+     * @return the value of field 'MaxValue'.
      */
-    public double getMaxValue()
-    {
+    public double getMaxValue(
+    ) {
         return this._maxValue;
-    } //-- double getMaxValue() 
+    }
 
     /**
      * Returns the value of field 'minValue'.
      * 
-     * @return the value of field 'minValue'.
+     * @return the value of field 'MinValue'.
      */
-    public double getMinValue()
-    {
+    public double getMinValue(
+    ) {
         return this._minValue;
-    } //-- double getMinValue() 
+    }
 
     /**
      * Returns the value of field 'name'.
      * 
-     * @return the value of field 'name'.
+     * @return the value of field 'Name'.
      */
-    public java.lang.String getName()
-    {
+    public java.lang.String getName(
+    ) {
         return this._name;
-    } //-- java.lang.String getName() 
+    }
 
     /**
      * Returns the value of field 'scale'.
      * 
-     * @return the value of field 'scale'.
+     * @return the value of field 'Scale'.
      */
-    public double getScale()
-    {
+    public double getScale(
+    ) {
         return this._scale;
-    } //-- double getScale() 
+    }
 
     /**
      * Returns the value of field 'type'.
      * 
-     * @return the value of field 'type'.
+     * @return the value of field 'Type'.
      */
-    public java.lang.String getType()
-    {
+    public java.lang.String getType(
+    ) {
         return this._type;
-    } //-- java.lang.String getType() 
+    }
 
     /**
      * Returns the value of field 'units'.
      * 
-     * @return the value of field 'units'.
+     * @return the value of field 'Units'.
      */
-    public java.lang.String getUnits()
-    {
+    public java.lang.String getUnits(
+    ) {
         return this._units;
-    } //-- java.lang.String getUnits() 
+    }
 
     /**
      * Returns the value of field 'value'.
      * 
-     * @return the value of field 'value'.
+     * @return the value of field 'Value'.
      */
-    public double getValue()
-    {
+    public double getValue(
+    ) {
         return this._value;
-    } //-- double getValue() 
+    }
 
     /**
-     * Method hasEditable
+     * Method hasEditable.
+     * 
+     * @return true if at least one Editable has been added
      */
-    public boolean hasEditable()
-    {
+    public boolean hasEditable(
+    ) {
         return this._has_editable;
-    } //-- boolean hasEditable() 
+    }
 
     /**
-     * Method hasHasFixedValue
+     * Method hasHasFixedValue.
+     * 
+     * @return true if at least one HasFixedValue has been added
      */
-    public boolean hasHasFixedValue()
-    {
+    public boolean hasHasFixedValue(
+    ) {
         return this._has_hasFixedValue;
-    } //-- boolean hasHasFixedValue() 
+    }
 
     /**
-     * Method hasMaxValue
+     * Method hasMaxValue.
+     * 
+     * @return true if at least one MaxValue has been added
      */
-    public boolean hasMaxValue()
-    {
+    public boolean hasMaxValue(
+    ) {
         return this._has_maxValue;
-    } //-- boolean hasMaxValue() 
+    }
 
     /**
-     * Method hasMinValue
+     * Method hasMinValue.
+     * 
+     * @return true if at least one MinValue has been added
      */
-    public boolean hasMinValue()
-    {
+    public boolean hasMinValue(
+    ) {
         return this._has_minValue;
-    } //-- boolean hasMinValue() 
+    }
 
     /**
-     * Method hasScale
+     * Method hasScale.
+     * 
+     * @return true if at least one Scale has been added
      */
-    public boolean hasScale()
-    {
+    public boolean hasScale(
+    ) {
         return this._has_scale;
-    } //-- boolean hasScale() 
+    }
 
     /**
-     * Method hasValue
+     * Method hasValue.
+     * 
+     * @return true if at least one Value has been added
      */
-    public boolean hasValue()
-    {
+    public boolean hasValue(
+    ) {
         return this._has_value;
-    } //-- boolean hasValue() 
+    }
 
     /**
-     * Method isValid
+     * Returns the value of field 'editable'.
+     * 
+     * @return the value of field 'Editable'.
      */
-    public boolean isValid()
-    {
+    public boolean isEditable(
+    ) {
+        return this._editable;
+    }
+
+    /**
+     * Returns the value of field 'hasFixedValue'.
+     * 
+     * @return the value of field 'HasFixedValue'.
+     */
+    public boolean isHasFixedValue(
+    ) {
+        return this._hasFixedValue;
+    }
+
+    /**
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
+     */
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
      * Sets the value of field 'desc'.
      * 
      * @param desc the value of field 'desc'.
      */
-    public void setDesc(java.lang.String desc)
-    {
+    public void setDesc(
+            final java.lang.String desc) {
         this._desc = desc;
-    } //-- void setDesc(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'editable'.
      * 
      * @param editable the value of field 'editable'.
      */
-    public void setEditable(boolean editable)
-    {
+    public void setEditable(
+            final boolean editable) {
         this._editable = editable;
         this._has_editable = true;
-    } //-- void setEditable(boolean) 
+    }
 
     /**
      * Sets the value of field 'hasFixedValue'.
      * 
      * @param hasFixedValue the value of field 'hasFixedValue'.
      */
-    public void setHasFixedValue(boolean hasFixedValue)
-    {
+    public void setHasFixedValue(
+            final boolean hasFixedValue) {
         this._hasFixedValue = hasFixedValue;
         this._has_hasFixedValue = true;
-    } //-- void setHasFixedValue(boolean) 
+    }
 
     /**
      * Sets the value of field 'id'.
      * 
      * @param id the value of field 'id'.
      */
-    public void setId(java.lang.String id)
-    {
+    public void setId(
+            final java.lang.String id) {
         this._id = id;
-    } //-- void setId(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'maxValue'.
      * 
      * @param maxValue the value of field 'maxValue'.
      */
-    public void setMaxValue(double maxValue)
-    {
+    public void setMaxValue(
+            final double maxValue) {
         this._maxValue = maxValue;
         this._has_maxValue = true;
-    } //-- void setMaxValue(double) 
+    }
 
     /**
      * Sets the value of field 'minValue'.
      * 
      * @param minValue the value of field 'minValue'.
      */
-    public void setMinValue(double minValue)
-    {
+    public void setMinValue(
+            final double minValue) {
         this._minValue = minValue;
         this._has_minValue = true;
-    } //-- void setMinValue(double) 
+    }
 
     /**
      * Sets the value of field 'name'.
      * 
      * @param name the value of field 'name'.
      */
-    public void setName(java.lang.String name)
-    {
+    public void setName(
+            final java.lang.String name) {
         this._name = name;
-    } //-- void setName(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'scale'.
      * 
      * @param scale the value of field 'scale'.
      */
-    public void setScale(double scale)
-    {
+    public void setScale(
+            final double scale) {
         this._scale = scale;
         this._has_scale = true;
-    } //-- void setScale(double) 
+    }
 
     /**
      * Sets the value of field 'type'.
      * 
      * @param type the value of field 'type'.
      */
-    public void setType(java.lang.String type)
-    {
+    public void setType(
+            final java.lang.String type) {
         this._type = type;
-    } //-- void setType(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'units'.
      * 
      * @param units the value of field 'units'.
      */
-    public void setUnits(java.lang.String units)
-    {
+    public void setUnits(
+            final java.lang.String units) {
         this._units = units;
-    } //-- void setUnits(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'value'.
      * 
      * @param value the value of field 'value'.
      */
-    public void setValue(double value)
-    {
+    public void setValue(
+            final double value) {
         this._value = value;
         this._has_value = true;
-    } //-- void setValue(double) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Parameter
      */
-    public static fr.jmmc.mf.models.Parameter unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Parameter) Unmarshaller.unmarshal(fr.jmmc.mf.models.Parameter.class, reader);
-    } //-- fr.jmmc.mf.models.Parameter unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Parameter unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Parameter) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Parameter.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Parameter["+getName()+"]"; } 
 }

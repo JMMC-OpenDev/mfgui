@@ -1,27 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Contains parameters.
@@ -29,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Parameters implements java.io.Serializable {
 
 
@@ -40,7 +25,7 @@ public class Parameters implements java.io.Serializable {
      * A common representation of every model parameters.
      *  
      */
-    private java.util.ArrayList _parameterList;
+    private java.util.List<fr.jmmc.mf.models.Parameter> _parameterList;
 
 
       //----------------/
@@ -49,8 +34,8 @@ public class Parameters implements java.io.Serializable {
 
     public Parameters() {
         super();
-        _parameterList = new ArrayList();
-    } //-- fr.jmmc.mf.models.Parameters()
+        this._parameterList = new java.util.ArrayList<fr.jmmc.mf.models.Parameter>();
+    }
 
 
       //-----------/
@@ -58,180 +43,240 @@ public class Parameters implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method addParameter
+     * 
      * 
      * @param vParameter
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addParameter(fr.jmmc.mf.models.Parameter vParameter)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _parameterList.add(vParameter);
-    } //-- void addParameter(fr.jmmc.mf.models.Parameter) 
+    public void addParameter(
+            final fr.jmmc.mf.models.Parameter vParameter)
+    throws java.lang.IndexOutOfBoundsException {
+        this._parameterList.add(vParameter);
+    }
 
     /**
-     * Method addParameter
+     * 
      * 
      * @param index
      * @param vParameter
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addParameter(int index, fr.jmmc.mf.models.Parameter vParameter)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _parameterList.add(index, vParameter);
-    } //-- void addParameter(int, fr.jmmc.mf.models.Parameter) 
+    public void addParameter(
+            final int index,
+            final fr.jmmc.mf.models.Parameter vParameter)
+    throws java.lang.IndexOutOfBoundsException {
+        this._parameterList.add(index, vParameter);
+    }
 
     /**
-     * Method clearParameter
+     * Method enumerateParameter.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public void clearParameter()
-    {
-        _parameterList.clear();
-    } //-- void clearParameter() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.Parameter> enumerateParameter(
+    ) {
+        return java.util.Collections.enumeration(this._parameterList);
+    }
 
     /**
-     * Method enumerateParameter
-     */
-    public java.util.Enumeration enumerateParameter()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_parameterList.iterator());
-    } //-- java.util.Enumeration enumerateParameter() 
-
-    /**
-     * Method getParameter
+     * Method getParameter.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.Parameter at the
+     * given index
      */
-    public fr.jmmc.mf.models.Parameter getParameter(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _parameterList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.Parameter getParameter(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._parameterList.size()) {
+            throw new IndexOutOfBoundsException("getParameter: Index value '" + index + "' not in range [0.." + (this._parameterList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.Parameter) _parameterList.get(index);
-    } //-- fr.jmmc.mf.models.Parameter getParameter(int) 
+    }
 
     /**
-     * Method getParameter
+     * Method getParameter.Returns the contents of the collection
+     * in an Array.  <p>Note:  Just in case the collection contents
+     * are changing in another thread, we pass a 0-length Array of
+     * the correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.Parameter[] getParameter()
-    {
-        int size = _parameterList.size();
-        fr.jmmc.mf.models.Parameter[] mArray = new fr.jmmc.mf.models.Parameter[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.Parameter) _parameterList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.Parameter[] getParameter() 
+    public fr.jmmc.mf.models.Parameter[] getParameter(
+    ) {
+        fr.jmmc.mf.models.Parameter[] array = new fr.jmmc.mf.models.Parameter[0];
+        return (fr.jmmc.mf.models.Parameter[]) this._parameterList.toArray(array);
+    }
 
     /**
-     * Method getParameterCount
+     * Method getParameterCount.
+     * 
+     * @return the size of this collection
      */
-    public int getParameterCount()
-    {
-        return _parameterList.size();
-    } //-- int getParameterCount() 
+    public int getParameterCount(
+    ) {
+        return this._parameterList.size();
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * Method iterateParameter.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.Parameter> iterateParameter(
+    ) {
+        return this._parameterList.iterator();
+    }
+
+    /**
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
-     * Method removeParameter
+     */
+    public void removeAllParameter(
+    ) {
+        this._parameterList.clear();
+    }
+
+    /**
+     * Method removeParameter.
      * 
      * @param vParameter
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeParameter(fr.jmmc.mf.models.Parameter vParameter)
-    {
+    public boolean removeParameter(
+            final fr.jmmc.mf.models.Parameter vParameter) {
         boolean removed = _parameterList.remove(vParameter);
         return removed;
-    } //-- boolean removeParameter(fr.jmmc.mf.models.Parameter) 
+    }
 
     /**
-     * Method setParameter
+     * Method removeParameterAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.Parameter removeParameterAt(
+            final int index) {
+        java.lang.Object obj = this._parameterList.remove(index);
+        return (fr.jmmc.mf.models.Parameter) obj;
+    }
+
+    /**
+     * 
      * 
      * @param index
      * @param vParameter
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setParameter(int index, fr.jmmc.mf.models.Parameter vParameter)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _parameterList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setParameter(
+            final int index,
+            final fr.jmmc.mf.models.Parameter vParameter)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._parameterList.size()) {
+            throw new IndexOutOfBoundsException("setParameter: Index value '" + index + "' not in range [0.." + (this._parameterList.size() - 1) + "]");
         }
-        _parameterList.set(index, vParameter);
-    } //-- void setParameter(int, fr.jmmc.mf.models.Parameter) 
+
+        this._parameterList.set(index, vParameter);
+    }
 
     /**
-     * Method setParameter
      * 
-     * @param parameterArray
+     * 
+     * @param vParameterArray
      */
-    public void setParameter(fr.jmmc.mf.models.Parameter[] parameterArray)
-    {
+    public void setParameter(
+            final fr.jmmc.mf.models.Parameter[] vParameterArray) {
         //-- copy array
         _parameterList.clear();
-        for (int i = 0; i < parameterArray.length; i++) {
-            _parameterList.add(parameterArray[i]);
+
+        for (int i = 0; i < vParameterArray.length; i++) {
+                this._parameterList.add(vParameterArray[i]);
         }
-    } //-- void setParameter(fr.jmmc.mf.models.Parameter) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Parameters
      */
-    public static fr.jmmc.mf.models.Parameters unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Parameters) Unmarshaller.unmarshal(fr.jmmc.mf.models.Parameters.class, reader);
-    } //-- fr.jmmc.mf.models.Parameters unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Parameters unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Parameters) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Parameters.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Shared parameters["+getParameterCount()+"]"; } 
 }

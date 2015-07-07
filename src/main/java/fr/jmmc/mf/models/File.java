@@ -1,27 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * File description.
@@ -29,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class File implements java.io.Serializable {
 
 
@@ -37,17 +22,17 @@ public class File implements java.io.Serializable {
     //--------------------------/
 
     /**
-     * Field _name
+     * Field _name.
      */
     private java.lang.String _name;
 
     /**
-     * Field _id
+     * Field _id.
      */
     private java.lang.String _id;
 
     /**
-     * Field _href
+     * Field _href.
      */
     private java.lang.String _href;
 
@@ -55,7 +40,7 @@ public class File implements java.io.Serializable {
      * oitarget representation.
      *  
      */
-    private java.util.ArrayList _oitargetList;
+    private java.util.List<fr.jmmc.mf.models.Oitarget> _oitargetList;
 
 
       //----------------/
@@ -64,8 +49,8 @@ public class File implements java.io.Serializable {
 
     public File() {
         super();
-        _oitargetList = new ArrayList();
-    } //-- fr.jmmc.mf.models.File()
+        this._oitargetList = new java.util.ArrayList<fr.jmmc.mf.models.Oitarget>();
+    }
 
 
       //-----------/
@@ -73,240 +58,300 @@ public class File implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method addOitarget
+     * 
      * 
      * @param vOitarget
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addOitarget(fr.jmmc.mf.models.Oitarget vOitarget)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _oitargetList.add(vOitarget);
-    } //-- void addOitarget(fr.jmmc.mf.models.Oitarget) 
+    public void addOitarget(
+            final fr.jmmc.mf.models.Oitarget vOitarget)
+    throws java.lang.IndexOutOfBoundsException {
+        this._oitargetList.add(vOitarget);
+    }
 
     /**
-     * Method addOitarget
+     * 
      * 
      * @param index
      * @param vOitarget
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addOitarget(int index, fr.jmmc.mf.models.Oitarget vOitarget)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _oitargetList.add(index, vOitarget);
-    } //-- void addOitarget(int, fr.jmmc.mf.models.Oitarget) 
+    public void addOitarget(
+            final int index,
+            final fr.jmmc.mf.models.Oitarget vOitarget)
+    throws java.lang.IndexOutOfBoundsException {
+        this._oitargetList.add(index, vOitarget);
+    }
 
     /**
-     * Method clearOitarget
+     * Method enumerateOitarget.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public void clearOitarget()
-    {
-        _oitargetList.clear();
-    } //-- void clearOitarget() 
-
-    /**
-     * Method enumerateOitarget
-     */
-    public java.util.Enumeration enumerateOitarget()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_oitargetList.iterator());
-    } //-- java.util.Enumeration enumerateOitarget() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.Oitarget> enumerateOitarget(
+    ) {
+        return java.util.Collections.enumeration(this._oitargetList);
+    }
 
     /**
      * Returns the value of field 'href'.
      * 
-     * @return the value of field 'href'.
+     * @return the value of field 'Href'.
      */
-    public java.lang.String getHref()
-    {
+    public java.lang.String getHref(
+    ) {
         return this._href;
-    } //-- java.lang.String getHref() 
+    }
 
     /**
      * Returns the value of field 'id'.
      * 
-     * @return the value of field 'id'.
+     * @return the value of field 'Id'.
      */
-    public java.lang.String getId()
-    {
+    public java.lang.String getId(
+    ) {
         return this._id;
-    } //-- java.lang.String getId() 
+    }
 
     /**
      * Returns the value of field 'name'.
      * 
-     * @return the value of field 'name'.
+     * @return the value of field 'Name'.
      */
-    public java.lang.String getName()
-    {
+    public java.lang.String getName(
+    ) {
         return this._name;
-    } //-- java.lang.String getName() 
+    }
 
     /**
-     * Method getOitarget
+     * Method getOitarget.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.Oitarget at the
+     * given index
      */
-    public fr.jmmc.mf.models.Oitarget getOitarget(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _oitargetList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.Oitarget getOitarget(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._oitargetList.size()) {
+            throw new IndexOutOfBoundsException("getOitarget: Index value '" + index + "' not in range [0.." + (this._oitargetList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.Oitarget) _oitargetList.get(index);
-    } //-- fr.jmmc.mf.models.Oitarget getOitarget(int) 
+    }
 
     /**
-     * Method getOitarget
+     * Method getOitarget.Returns the contents of the collection in
+     * an Array.  <p>Note:  Just in case the collection contents
+     * are changing in another thread, we pass a 0-length Array of
+     * the correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.Oitarget[] getOitarget()
-    {
-        int size = _oitargetList.size();
-        fr.jmmc.mf.models.Oitarget[] mArray = new fr.jmmc.mf.models.Oitarget[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.Oitarget) _oitargetList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.Oitarget[] getOitarget() 
+    public fr.jmmc.mf.models.Oitarget[] getOitarget(
+    ) {
+        fr.jmmc.mf.models.Oitarget[] array = new fr.jmmc.mf.models.Oitarget[0];
+        return (fr.jmmc.mf.models.Oitarget[]) this._oitargetList.toArray(array);
+    }
 
     /**
-     * Method getOitargetCount
+     * Method getOitargetCount.
+     * 
+     * @return the size of this collection
      */
-    public int getOitargetCount()
-    {
-        return _oitargetList.size();
-    } //-- int getOitargetCount() 
+    public int getOitargetCount(
+    ) {
+        return this._oitargetList.size();
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * Method iterateOitarget.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.Oitarget> iterateOitarget(
+    ) {
+        return this._oitargetList.iterator();
+    }
+
+    /**
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
-     * Method removeOitarget
+     */
+    public void removeAllOitarget(
+    ) {
+        this._oitargetList.clear();
+    }
+
+    /**
+     * Method removeOitarget.
      * 
      * @param vOitarget
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeOitarget(fr.jmmc.mf.models.Oitarget vOitarget)
-    {
+    public boolean removeOitarget(
+            final fr.jmmc.mf.models.Oitarget vOitarget) {
         boolean removed = _oitargetList.remove(vOitarget);
         return removed;
-    } //-- boolean removeOitarget(fr.jmmc.mf.models.Oitarget) 
+    }
+
+    /**
+     * Method removeOitargetAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.Oitarget removeOitargetAt(
+            final int index) {
+        java.lang.Object obj = this._oitargetList.remove(index);
+        return (fr.jmmc.mf.models.Oitarget) obj;
+    }
 
     /**
      * Sets the value of field 'href'.
      * 
      * @param href the value of field 'href'.
      */
-    public void setHref(java.lang.String href)
-    {
+    public void setHref(
+            final java.lang.String href) {
         this._href = href;
-    } //-- void setHref(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'id'.
      * 
      * @param id the value of field 'id'.
      */
-    public void setId(java.lang.String id)
-    {
+    public void setId(
+            final java.lang.String id) {
         this._id = id;
-    } //-- void setId(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'name'.
      * 
      * @param name the value of field 'name'.
      */
-    public void setName(java.lang.String name)
-    {
+    public void setName(
+            final java.lang.String name) {
         this._name = name;
-    } //-- void setName(java.lang.String) 
+    }
 
     /**
-     * Method setOitarget
+     * 
      * 
      * @param index
      * @param vOitarget
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setOitarget(int index, fr.jmmc.mf.models.Oitarget vOitarget)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _oitargetList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setOitarget(
+            final int index,
+            final fr.jmmc.mf.models.Oitarget vOitarget)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._oitargetList.size()) {
+            throw new IndexOutOfBoundsException("setOitarget: Index value '" + index + "' not in range [0.." + (this._oitargetList.size() - 1) + "]");
         }
-        _oitargetList.set(index, vOitarget);
-    } //-- void setOitarget(int, fr.jmmc.mf.models.Oitarget) 
+
+        this._oitargetList.set(index, vOitarget);
+    }
 
     /**
-     * Method setOitarget
      * 
-     * @param oitargetArray
+     * 
+     * @param vOitargetArray
      */
-    public void setOitarget(fr.jmmc.mf.models.Oitarget[] oitargetArray)
-    {
+    public void setOitarget(
+            final fr.jmmc.mf.models.Oitarget[] vOitargetArray) {
         //-- copy array
         _oitargetList.clear();
-        for (int i = 0; i < oitargetArray.length; i++) {
-            _oitargetList.add(oitargetArray[i]);
+
+        for (int i = 0; i < vOitargetArray.length; i++) {
+                this._oitargetList.add(vOitargetArray[i]);
         }
-    } //-- void setOitarget(fr.jmmc.mf.models.Oitarget) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.File
      */
-    public static fr.jmmc.mf.models.File unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.File) Unmarshaller.unmarshal(fr.jmmc.mf.models.File.class, reader);
-    } //-- fr.jmmc.mf.models.File unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.File unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.File) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.File.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "File["+getName()+"]"; } 
 }

@@ -80,4 +80,52 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+
+            <!--  generate code using Castor -->
+            <!-- mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>castor-maven-plugin</artifactId>
+                <version>2.0</version>
+                <!--  however setting dependencie to 1.2 throw an error -->
+                <!-- dependencies> 
+                    <dependency> 
+                        <groupId>org.codehaus.castor</groupId>
+                        <artifactId>castor</artifactId>
+                        <version>1.2</version>
+                    </dependency>
+                </dependencies -->
+                <configuration>
+                    <!-- have a look on every parameters using -->
+                    <!--  mvn castor:help  -Ddetail=true -Dgoal=generate -->
+                    <!-- and overide calling mvn ... -Dcastor.prop=val castor:generate -->
+                    <castor.bindingfile>${castor.bindingfile}</castor.bindingfile>
+                    <castor.classGenerationMode>${castor.classGenerationMode}</castor.classGenerationMode>
+                    <castor.createJdoDescriptors>${castor.createJdoDescriptors}</castor.createJdoDescriptors> 
+                    <castor.descriptors>${castor.descriptors}</castor.descriptors>
+                    <castor.dest>${castor.dest}</castor.dest>
+                    <castor.generateImportedSchemas>${castor.generateImportedSchemas}</castor.generateImportedSchemas>
+                    <castor.generateMappings>${castor.generateMappings}</castor.generateMappings>
+                    <castor.lineSeparator>${castor.lineSeparator}</castor.lineSeparator>
+                    <castor.marshal>${castor.marshal}</castor.marshal>
+                    <castor.packaging>${castor.packaging}</castor.packaging>
+                    <castor.project>${castor.project}</castor.project>
+                    <castor.properties>${castor.properties}</castor.properties>
+                    <castor.packaging>${castor.packaging}</castor.packaging>
+                    <castor.resourceDestination>${castor.resourceDestination}</castor.resourceDestination>
+                    <castor.schema>${castor.schema}</castor.schema>
+                    <castor.schemaDirectory>${castor.schemaDirectory}</castor.schemaDirectory>
+                    <castor.staleMillis>${castor.staleMillis}</castor.staleMillis>
+                    <castor.tstamp>${castor.tstamp}</castor.tstamp>
+                    <castor.types>${castor.types}</castor.types>
+                    <castor.verbose>${castor.verbose}</castor.verbose> 
+                    <castor.warnings>${castor.warnings}</castor.warnings>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
 </project>

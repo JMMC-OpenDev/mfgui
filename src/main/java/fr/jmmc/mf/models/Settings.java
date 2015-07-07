@@ -1,25 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Highest element of settings.
@@ -27,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Settings implements java.io.Serializable {
 
 
@@ -53,7 +40,7 @@ public class Settings implements java.io.Serializable {
     private fr.jmmc.mf.models.Parameters _parameters;
 
     /**
-     * Field _fitter
+     * Field _fitter.
      */
     private java.lang.String _fitter;
 
@@ -70,7 +57,7 @@ public class Settings implements java.io.Serializable {
     private fr.jmmc.mf.models.Results _results;
 
     /**
-     * Field _userInfo
+     * Field _userInfo.
      */
     private java.lang.String _userInfo;
 
@@ -87,7 +74,7 @@ public class Settings implements java.io.Serializable {
 
     public Settings() {
         super();
-    } //-- fr.jmmc.mf.models.Settings()
+    }
 
 
       //-----------/
@@ -99,22 +86,22 @@ public class Settings implements java.io.Serializable {
      * the following description: Contains files.
      *  
      * 
-     * @return the value of field 'files'.
+     * @return the value of field 'Files'.
      */
-    public fr.jmmc.mf.models.Files getFiles()
-    {
+    public fr.jmmc.mf.models.Files getFiles(
+    ) {
         return this._files;
-    } //-- fr.jmmc.mf.models.Files getFiles() 
+    }
 
     /**
      * Returns the value of field 'fitter'.
      * 
-     * @return the value of field 'fitter'.
+     * @return the value of field 'Fitter'.
      */
-    public java.lang.String getFitter()
-    {
+    public java.lang.String getFitter(
+    ) {
         return this._fitter;
-    } //-- java.lang.String getFitter() 
+    }
 
     /**
      * Returns the value of field 'parameters'. The field
@@ -122,12 +109,12 @@ public class Settings implements java.io.Serializable {
      * parameters.
      *  
      * 
-     * @return the value of field 'parameters'.
+     * @return the value of field 'Parameters'.
      */
-    public fr.jmmc.mf.models.Parameters getParameters()
-    {
+    public fr.jmmc.mf.models.Parameters getParameters(
+    ) {
         return this._parameters;
-    } //-- fr.jmmc.mf.models.Parameters getParameters() 
+    }
 
     /**
      * Returns the value of field 'responses'. The field
@@ -135,46 +122,46 @@ public class Settings implements java.io.Serializable {
      * responses.
      *  
      * 
-     * @return the value of field 'responses'.
+     * @return the value of field 'Responses'.
      */
-    public fr.jmmc.mf.models.Responses getResponses()
-    {
+    public fr.jmmc.mf.models.Responses getResponses(
+    ) {
         return this._responses;
-    } //-- fr.jmmc.mf.models.Responses getResponses() 
+    }
 
     /**
      * Returns the value of field 'results'. The field 'results'
      * has the following description: Contains results.
      *  
      * 
-     * @return the value of field 'results'.
+     * @return the value of field 'Results'.
      */
-    public fr.jmmc.mf.models.Results getResults()
-    {
+    public fr.jmmc.mf.models.Results getResults(
+    ) {
         return this._results;
-    } //-- fr.jmmc.mf.models.Results getResults() 
+    }
 
     /**
      * Returns the value of field 'targets'. The field 'targets'
      * has the following description: Contains target elements.
      *  
      * 
-     * @return the value of field 'targets'.
+     * @return the value of field 'Targets'.
      */
-    public fr.jmmc.mf.models.Targets getTargets()
-    {
+    public fr.jmmc.mf.models.Targets getTargets(
+    ) {
         return this._targets;
-    } //-- fr.jmmc.mf.models.Targets getTargets() 
+    }
 
     /**
      * Returns the value of field 'userInfo'.
      * 
-     * @return the value of field 'userInfo'.
+     * @return the value of field 'UserInfo'.
      */
-    public java.lang.String getUserInfo()
-    {
+    public java.lang.String getUserInfo(
+    ) {
         return this._userInfo;
-    } //-- java.lang.String getUserInfo() 
+    }
 
     /**
      * Returns the value of field 'usercode'. The field 'usercode'
@@ -182,50 +169,59 @@ public class Settings implements java.io.Serializable {
      * code element) and user functions.
      *  
      * 
-     * @return the value of field 'usercode'.
+     * @return the value of field 'Usercode'.
      */
-    public fr.jmmc.mf.models.Usercode getUsercode()
-    {
+    public fr.jmmc.mf.models.Usercode getUsercode(
+    ) {
         return this._usercode;
-    } //-- fr.jmmc.mf.models.Usercode getUsercode() 
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
      * Sets the value of field 'files'. The field 'files' has the
@@ -234,20 +230,20 @@ public class Settings implements java.io.Serializable {
      * 
      * @param files the value of field 'files'.
      */
-    public void setFiles(fr.jmmc.mf.models.Files files)
-    {
+    public void setFiles(
+            final fr.jmmc.mf.models.Files files) {
         this._files = files;
-    } //-- void setFiles(fr.jmmc.mf.models.Files) 
+    }
 
     /**
      * Sets the value of field 'fitter'.
      * 
      * @param fitter the value of field 'fitter'.
      */
-    public void setFitter(java.lang.String fitter)
-    {
+    public void setFitter(
+            final java.lang.String fitter) {
         this._fitter = fitter;
-    } //-- void setFitter(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'parameters'. The field 'parameters'
@@ -256,10 +252,10 @@ public class Settings implements java.io.Serializable {
      * 
      * @param parameters the value of field 'parameters'.
      */
-    public void setParameters(fr.jmmc.mf.models.Parameters parameters)
-    {
+    public void setParameters(
+            final fr.jmmc.mf.models.Parameters parameters) {
         this._parameters = parameters;
-    } //-- void setParameters(fr.jmmc.mf.models.Parameters) 
+    }
 
     /**
      * Sets the value of field 'responses'. The field 'responses'
@@ -268,10 +264,10 @@ public class Settings implements java.io.Serializable {
      * 
      * @param responses the value of field 'responses'.
      */
-    public void setResponses(fr.jmmc.mf.models.Responses responses)
-    {
+    public void setResponses(
+            final fr.jmmc.mf.models.Responses responses) {
         this._responses = responses;
-    } //-- void setResponses(fr.jmmc.mf.models.Responses) 
+    }
 
     /**
      * Sets the value of field 'results'. The field 'results' has
@@ -280,10 +276,10 @@ public class Settings implements java.io.Serializable {
      * 
      * @param results the value of field 'results'.
      */
-    public void setResults(fr.jmmc.mf.models.Results results)
-    {
+    public void setResults(
+            final fr.jmmc.mf.models.Results results) {
         this._results = results;
-    } //-- void setResults(fr.jmmc.mf.models.Results) 
+    }
 
     /**
      * Sets the value of field 'targets'. The field 'targets' has
@@ -292,20 +288,20 @@ public class Settings implements java.io.Serializable {
      * 
      * @param targets the value of field 'targets'.
      */
-    public void setTargets(fr.jmmc.mf.models.Targets targets)
-    {
+    public void setTargets(
+            final fr.jmmc.mf.models.Targets targets) {
         this._targets = targets;
-    } //-- void setTargets(fr.jmmc.mf.models.Targets) 
+    }
 
     /**
      * Sets the value of field 'userInfo'.
      * 
      * @param userInfo the value of field 'userInfo'.
      */
-    public void setUserInfo(java.lang.String userInfo)
-    {
+    public void setUserInfo(
+            final java.lang.String userInfo) {
         this._userInfo = userInfo;
-    } //-- void setUserInfo(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'usercode'. The field 'usercode' has
@@ -315,31 +311,38 @@ public class Settings implements java.io.Serializable {
      * 
      * @param usercode the value of field 'usercode'.
      */
-    public void setUsercode(fr.jmmc.mf.models.Usercode usercode)
-    {
+    public void setUsercode(
+            final fr.jmmc.mf.models.Usercode usercode) {
         this._usercode = usercode;
-    } //-- void setUsercode(fr.jmmc.mf.models.Usercode) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Settings
      */
-    public static fr.jmmc.mf.models.Settings unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Settings) Unmarshaller.unmarshal(fr.jmmc.mf.models.Settings.class, reader);
-    } //-- fr.jmmc.mf.models.Settings unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Settings unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Settings) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Settings.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Settings"; } 
 }

@@ -1,27 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Contains files.
@@ -29,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Files implements java.io.Serializable {
 
 
@@ -40,7 +25,7 @@ public class Files implements java.io.Serializable {
      * File description.
      *  
      */
-    private java.util.ArrayList _fileList;
+    private java.util.List<fr.jmmc.mf.models.File> _fileList;
 
 
       //----------------/
@@ -49,8 +34,8 @@ public class Files implements java.io.Serializable {
 
     public Files() {
         super();
-        _fileList = new ArrayList();
-    } //-- fr.jmmc.mf.models.Files()
+        this._fileList = new java.util.ArrayList<fr.jmmc.mf.models.File>();
+    }
 
 
       //-----------/
@@ -58,180 +43,240 @@ public class Files implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method addFile
+     * 
      * 
      * @param vFile
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addFile(fr.jmmc.mf.models.File vFile)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _fileList.add(vFile);
-    } //-- void addFile(fr.jmmc.mf.models.File) 
+    public void addFile(
+            final fr.jmmc.mf.models.File vFile)
+    throws java.lang.IndexOutOfBoundsException {
+        this._fileList.add(vFile);
+    }
 
     /**
-     * Method addFile
+     * 
      * 
      * @param index
      * @param vFile
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addFile(int index, fr.jmmc.mf.models.File vFile)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _fileList.add(index, vFile);
-    } //-- void addFile(int, fr.jmmc.mf.models.File) 
+    public void addFile(
+            final int index,
+            final fr.jmmc.mf.models.File vFile)
+    throws java.lang.IndexOutOfBoundsException {
+        this._fileList.add(index, vFile);
+    }
 
     /**
-     * Method clearFile
+     * Method enumerateFile.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public void clearFile()
-    {
-        _fileList.clear();
-    } //-- void clearFile() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.File> enumerateFile(
+    ) {
+        return java.util.Collections.enumeration(this._fileList);
+    }
 
     /**
-     * Method enumerateFile
-     */
-    public java.util.Enumeration enumerateFile()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_fileList.iterator());
-    } //-- java.util.Enumeration enumerateFile() 
-
-    /**
-     * Method getFile
+     * Method getFile.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.File at the given
+     * index
      */
-    public fr.jmmc.mf.models.File getFile(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _fileList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.File getFile(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._fileList.size()) {
+            throw new IndexOutOfBoundsException("getFile: Index value '" + index + "' not in range [0.." + (this._fileList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.File) _fileList.get(index);
-    } //-- fr.jmmc.mf.models.File getFile(int) 
+    }
 
     /**
-     * Method getFile
+     * Method getFile.Returns the contents of the collection in an
+     * Array.  <p>Note:  Just in case the collection contents are
+     * changing in another thread, we pass a 0-length Array of the
+     * correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.File[] getFile()
-    {
-        int size = _fileList.size();
-        fr.jmmc.mf.models.File[] mArray = new fr.jmmc.mf.models.File[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.File) _fileList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.File[] getFile() 
+    public fr.jmmc.mf.models.File[] getFile(
+    ) {
+        fr.jmmc.mf.models.File[] array = new fr.jmmc.mf.models.File[0];
+        return (fr.jmmc.mf.models.File[]) this._fileList.toArray(array);
+    }
 
     /**
-     * Method getFileCount
+     * Method getFileCount.
+     * 
+     * @return the size of this collection
      */
-    public int getFileCount()
-    {
-        return _fileList.size();
-    } //-- int getFileCount() 
+    public int getFileCount(
+    ) {
+        return this._fileList.size();
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * Method iterateFile.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.File> iterateFile(
+    ) {
+        return this._fileList.iterator();
+    }
+
+    /**
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
-     * Method removeFile
+     */
+    public void removeAllFile(
+    ) {
+        this._fileList.clear();
+    }
+
+    /**
+     * Method removeFile.
      * 
      * @param vFile
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeFile(fr.jmmc.mf.models.File vFile)
-    {
+    public boolean removeFile(
+            final fr.jmmc.mf.models.File vFile) {
         boolean removed = _fileList.remove(vFile);
         return removed;
-    } //-- boolean removeFile(fr.jmmc.mf.models.File) 
+    }
 
     /**
-     * Method setFile
+     * Method removeFileAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.File removeFileAt(
+            final int index) {
+        java.lang.Object obj = this._fileList.remove(index);
+        return (fr.jmmc.mf.models.File) obj;
+    }
+
+    /**
+     * 
      * 
      * @param index
      * @param vFile
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setFile(int index, fr.jmmc.mf.models.File vFile)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _fileList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setFile(
+            final int index,
+            final fr.jmmc.mf.models.File vFile)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._fileList.size()) {
+            throw new IndexOutOfBoundsException("setFile: Index value '" + index + "' not in range [0.." + (this._fileList.size() - 1) + "]");
         }
-        _fileList.set(index, vFile);
-    } //-- void setFile(int, fr.jmmc.mf.models.File) 
+
+        this._fileList.set(index, vFile);
+    }
 
     /**
-     * Method setFile
      * 
-     * @param fileArray
+     * 
+     * @param vFileArray
      */
-    public void setFile(fr.jmmc.mf.models.File[] fileArray)
-    {
+    public void setFile(
+            final fr.jmmc.mf.models.File[] vFileArray) {
         //-- copy array
         _fileList.clear();
-        for (int i = 0; i < fileArray.length; i++) {
-            _fileList.add(fileArray[i]);
+
+        for (int i = 0; i < vFileArray.length; i++) {
+                this._fileList.add(vFileArray[i]);
         }
-    } //-- void setFile(fr.jmmc.mf.models.File) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Files
      */
-    public static fr.jmmc.mf.models.Files unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Files) Unmarshaller.unmarshal(fr.jmmc.mf.models.Files.class, reader);
-    } //-- fr.jmmc.mf.models.Files unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Files unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Files) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Files.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Files"; } 
 }

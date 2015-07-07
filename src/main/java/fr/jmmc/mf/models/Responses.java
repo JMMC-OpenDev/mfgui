@@ -1,27 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Contains responses.
@@ -29,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Responses implements java.io.Serializable {
 
 
@@ -41,7 +26,7 @@ public class Responses implements java.io.Serializable {
      * LITpro wrapper.
      *  
      */
-    private java.util.ArrayList _responseList;
+    private java.util.List<fr.jmmc.mf.models.Response> _responseList;
 
 
       //----------------/
@@ -50,8 +35,8 @@ public class Responses implements java.io.Serializable {
 
     public Responses() {
         super();
-        _responseList = new ArrayList();
-    } //-- fr.jmmc.mf.models.Responses()
+        this._responseList = new java.util.ArrayList<fr.jmmc.mf.models.Response>();
+    }
 
 
       //-----------/
@@ -59,180 +44,240 @@ public class Responses implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method addResponse
+     * 
      * 
      * @param vResponse
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addResponse(fr.jmmc.mf.models.Response vResponse)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _responseList.add(vResponse);
-    } //-- void addResponse(fr.jmmc.mf.models.Response) 
+    public void addResponse(
+            final fr.jmmc.mf.models.Response vResponse)
+    throws java.lang.IndexOutOfBoundsException {
+        this._responseList.add(vResponse);
+    }
 
     /**
-     * Method addResponse
+     * 
      * 
      * @param index
      * @param vResponse
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addResponse(int index, fr.jmmc.mf.models.Response vResponse)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _responseList.add(index, vResponse);
-    } //-- void addResponse(int, fr.jmmc.mf.models.Response) 
+    public void addResponse(
+            final int index,
+            final fr.jmmc.mf.models.Response vResponse)
+    throws java.lang.IndexOutOfBoundsException {
+        this._responseList.add(index, vResponse);
+    }
 
     /**
-     * Method clearResponse
+     * Method enumerateResponse.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public void clearResponse()
-    {
-        _responseList.clear();
-    } //-- void clearResponse() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.Response> enumerateResponse(
+    ) {
+        return java.util.Collections.enumeration(this._responseList);
+    }
 
     /**
-     * Method enumerateResponse
-     */
-    public java.util.Enumeration enumerateResponse()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_responseList.iterator());
-    } //-- java.util.Enumeration enumerateResponse() 
-
-    /**
-     * Method getResponse
+     * Method getResponse.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.Response at the
+     * given index
      */
-    public fr.jmmc.mf.models.Response getResponse(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _responseList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.Response getResponse(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._responseList.size()) {
+            throw new IndexOutOfBoundsException("getResponse: Index value '" + index + "' not in range [0.." + (this._responseList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.Response) _responseList.get(index);
-    } //-- fr.jmmc.mf.models.Response getResponse(int) 
+    }
 
     /**
-     * Method getResponse
+     * Method getResponse.Returns the contents of the collection in
+     * an Array.  <p>Note:  Just in case the collection contents
+     * are changing in another thread, we pass a 0-length Array of
+     * the correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.Response[] getResponse()
-    {
-        int size = _responseList.size();
-        fr.jmmc.mf.models.Response[] mArray = new fr.jmmc.mf.models.Response[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.Response) _responseList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.Response[] getResponse() 
+    public fr.jmmc.mf.models.Response[] getResponse(
+    ) {
+        fr.jmmc.mf.models.Response[] array = new fr.jmmc.mf.models.Response[0];
+        return (fr.jmmc.mf.models.Response[]) this._responseList.toArray(array);
+    }
 
     /**
-     * Method getResponseCount
+     * Method getResponseCount.
+     * 
+     * @return the size of this collection
      */
-    public int getResponseCount()
-    {
-        return _responseList.size();
-    } //-- int getResponseCount() 
+    public int getResponseCount(
+    ) {
+        return this._responseList.size();
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * Method iterateResponse.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.Response> iterateResponse(
+    ) {
+        return this._responseList.iterator();
+    }
+
+    /**
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
-     * Method removeResponse
+     */
+    public void removeAllResponse(
+    ) {
+        this._responseList.clear();
+    }
+
+    /**
+     * Method removeResponse.
      * 
      * @param vResponse
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeResponse(fr.jmmc.mf.models.Response vResponse)
-    {
+    public boolean removeResponse(
+            final fr.jmmc.mf.models.Response vResponse) {
         boolean removed = _responseList.remove(vResponse);
         return removed;
-    } //-- boolean removeResponse(fr.jmmc.mf.models.Response) 
+    }
 
     /**
-     * Method setResponse
+     * Method removeResponseAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.Response removeResponseAt(
+            final int index) {
+        java.lang.Object obj = this._responseList.remove(index);
+        return (fr.jmmc.mf.models.Response) obj;
+    }
+
+    /**
+     * 
      * 
      * @param index
      * @param vResponse
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setResponse(int index, fr.jmmc.mf.models.Response vResponse)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _responseList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setResponse(
+            final int index,
+            final fr.jmmc.mf.models.Response vResponse)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._responseList.size()) {
+            throw new IndexOutOfBoundsException("setResponse: Index value '" + index + "' not in range [0.." + (this._responseList.size() - 1) + "]");
         }
-        _responseList.set(index, vResponse);
-    } //-- void setResponse(int, fr.jmmc.mf.models.Response) 
+
+        this._responseList.set(index, vResponse);
+    }
 
     /**
-     * Method setResponse
      * 
-     * @param responseArray
+     * 
+     * @param vResponseArray
      */
-    public void setResponse(fr.jmmc.mf.models.Response[] responseArray)
-    {
+    public void setResponse(
+            final fr.jmmc.mf.models.Response[] vResponseArray) {
         //-- copy array
         _responseList.clear();
-        for (int i = 0; i < responseArray.length; i++) {
-            _responseList.add(responseArray[i]);
+
+        for (int i = 0; i < vResponseArray.length; i++) {
+                this._responseList.add(vResponseArray[i]);
         }
-    } //-- void setResponse(fr.jmmc.mf.models.Response) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Responses
      */
-    public static fr.jmmc.mf.models.Responses unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Responses) Unmarshaller.unmarshal(fr.jmmc.mf.models.Responses.class, reader);
-    } //-- fr.jmmc.mf.models.Responses unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Responses unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Responses) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Responses.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Plots"; } 
 }

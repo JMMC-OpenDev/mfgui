@@ -1,31 +1,29 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
 
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.Serializable;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-
 /**
  * Class ResponseItem.
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class ResponseItem implements java.io.Serializable {
 
 
       //--------------------------/
      //- Class/Member Variables -/
     //--------------------------/
+
+    /**
+     * Internal choice value storage
+     */
+    private java.lang.Object _choiceValue;
 
     /**
      * Define a message to be displayed.
@@ -58,7 +56,7 @@ public class ResponseItem implements java.io.Serializable {
 
     public ResponseItem() {
         super();
-    } //-- fr.jmmc.mf.models.ResponseItem()
+    }
 
 
       //-----------/
@@ -66,17 +64,29 @@ public class ResponseItem implements java.io.Serializable {
     //-----------/
 
     /**
+     * Returns the value of field 'choiceValue'. The field
+     * 'choiceValue' has the following description: Internal choice
+     * value storage
+     * 
+     * @return the value of field 'ChoiceValue'.
+     */
+    public java.lang.Object getChoiceValue(
+    ) {
+        return this._choiceValue;
+    }
+
+    /**
      * Returns the value of field 'message'. The field 'message'
      * has the following description: Define a message to be
      * displayed.
      *  
      * 
-     * @return the value of field 'message'.
+     * @return the value of field 'Message'.
      */
-    public fr.jmmc.mf.models.Message getMessage()
-    {
+    public fr.jmmc.mf.models.Message getMessage(
+    ) {
         return this._message;
-    } //-- fr.jmmc.mf.models.Message getMessage() 
+    }
 
     /**
      * Returns the value of field 'model'. The field 'model' has
@@ -84,12 +94,12 @@ public class ResponseItem implements java.io.Serializable {
      * models.
      *  
      * 
-     * @return the value of field 'model'.
+     * @return the value of field 'Model'.
      */
-    public fr.jmmc.mf.models.Model getModel()
-    {
+    public fr.jmmc.mf.models.Model getModel(
+    ) {
         return this._model;
-    } //-- fr.jmmc.mf.models.Model getModel() 
+    }
 
     /**
      * Returns the value of field 'resultFile'. The field
@@ -97,24 +107,24 @@ public class ResponseItem implements java.io.Serializable {
      * description.
      *  
      * 
-     * @return the value of field 'resultFile'.
+     * @return the value of field 'ResultFile'.
      */
-    public fr.jmmc.mf.models.ResultFile getResultFile()
-    {
+    public fr.jmmc.mf.models.ResultFile getResultFile(
+    ) {
         return this._resultFile;
-    } //-- fr.jmmc.mf.models.ResultFile getResultFile() 
+    }
 
     /**
      * Returns the value of field 'settings'. The field 'settings'
      * has the following description: Highest element of settings.
      *  
      * 
-     * @return the value of field 'settings'.
+     * @return the value of field 'Settings'.
      */
-    public fr.jmmc.mf.models.Settings getSettings()
-    {
+    public fr.jmmc.mf.models.Settings getSettings(
+    ) {
         return this._settings;
-    } //-- fr.jmmc.mf.models.Settings getSettings() 
+    }
 
     /**
      * Sets the value of field 'message'. The field 'message' has
@@ -123,10 +133,11 @@ public class ResponseItem implements java.io.Serializable {
      * 
      * @param message the value of field 'message'.
      */
-    public void setMessage(fr.jmmc.mf.models.Message message)
-    {
+    public void setMessage(
+            final fr.jmmc.mf.models.Message message) {
         this._message = message;
-    } //-- void setMessage(fr.jmmc.mf.models.Message) 
+        this._choiceValue = message;
+    }
 
     /**
      * Sets the value of field 'model'. The field 'model' has the
@@ -136,10 +147,11 @@ public class ResponseItem implements java.io.Serializable {
      * 
      * @param model the value of field 'model'.
      */
-    public void setModel(fr.jmmc.mf.models.Model model)
-    {
+    public void setModel(
+            final fr.jmmc.mf.models.Model model) {
         this._model = model;
-    } //-- void setModel(fr.jmmc.mf.models.Model) 
+        this._choiceValue = model;
+    }
 
     /**
      * Sets the value of field 'resultFile'. The field 'resultFile'
@@ -148,10 +160,11 @@ public class ResponseItem implements java.io.Serializable {
      * 
      * @param resultFile the value of field 'resultFile'.
      */
-    public void setResultFile(fr.jmmc.mf.models.ResultFile resultFile)
-    {
+    public void setResultFile(
+            final fr.jmmc.mf.models.ResultFile resultFile) {
         this._resultFile = resultFile;
-    } //-- void setResultFile(fr.jmmc.mf.models.ResultFile) 
+        this._choiceValue = resultFile;
+    }
 
     /**
      * Sets the value of field 'settings'. The field 'settings' has
@@ -160,10 +173,10 @@ public class ResponseItem implements java.io.Serializable {
      * 
      * @param settings the value of field 'settings'.
      */
-    public void setSettings(fr.jmmc.mf.models.Settings settings)
-    {
+    public void setSettings(
+            final fr.jmmc.mf.models.Settings settings) {
         this._settings = settings;
-    } //-- void setSettings(fr.jmmc.mf.models.Settings) 
+        this._choiceValue = settings;
+    }
 
-    public String toString(){ return "ResponseItem"; } 
 }

@@ -1,27 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Target representation.
@@ -29,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class Target implements java.io.Serializable {
 
 
@@ -37,7 +22,7 @@ public class Target implements java.io.Serializable {
     //--------------------------/
 
     /**
-     * Field _ident
+     * Field _ident.
      */
     private java.lang.String _ident;
 
@@ -45,16 +30,16 @@ public class Target implements java.io.Serializable {
      * File link.
      *  
      */
-    private java.util.ArrayList _fileLinkList;
+    private java.util.List<fr.jmmc.mf.models.FileLink> _fileLinkList;
 
     /**
      * A common representation of every models.
      *  
      */
-    private java.util.ArrayList _modelList;
+    private java.util.List<fr.jmmc.mf.models.Model> _modelList;
 
     /**
-     * Field _normalize
+     * Field _normalize.
      */
     private boolean _normalize;
 
@@ -76,9 +61,9 @@ public class Target implements java.io.Serializable {
 
     public Target() {
         super();
-        _fileLinkList = new ArrayList();
-        _modelList = new ArrayList();
-    } //-- fr.jmmc.mf.models.Target()
+        this._fileLinkList = new java.util.ArrayList<fr.jmmc.mf.models.FileLink>();
+        this._modelList = new java.util.ArrayList<fr.jmmc.mf.models.Model>();
+    }
 
 
       //-----------/
@@ -86,184 +71,199 @@ public class Target implements java.io.Serializable {
     //-----------/
 
     /**
-     * Method addFileLink
+     * 
      * 
      * @param vFileLink
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addFileLink(fr.jmmc.mf.models.FileLink vFileLink)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _fileLinkList.add(vFileLink);
-    } //-- void addFileLink(fr.jmmc.mf.models.FileLink) 
+    public void addFileLink(
+            final fr.jmmc.mf.models.FileLink vFileLink)
+    throws java.lang.IndexOutOfBoundsException {
+        this._fileLinkList.add(vFileLink);
+    }
 
     /**
-     * Method addFileLink
+     * 
      * 
      * @param index
      * @param vFileLink
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addFileLink(int index, fr.jmmc.mf.models.FileLink vFileLink)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _fileLinkList.add(index, vFileLink);
-    } //-- void addFileLink(int, fr.jmmc.mf.models.FileLink) 
+    public void addFileLink(
+            final int index,
+            final fr.jmmc.mf.models.FileLink vFileLink)
+    throws java.lang.IndexOutOfBoundsException {
+        this._fileLinkList.add(index, vFileLink);
+    }
 
     /**
-     * Method addModel
+     * 
      * 
      * @param vModel
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addModel(fr.jmmc.mf.models.Model vModel)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _modelList.add(vModel);
-    } //-- void addModel(fr.jmmc.mf.models.Model) 
+    public void addModel(
+            final fr.jmmc.mf.models.Model vModel)
+    throws java.lang.IndexOutOfBoundsException {
+        this._modelList.add(vModel);
+    }
 
     /**
-     * Method addModel
+     * 
      * 
      * @param index
      * @param vModel
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void addModel(int index, fr.jmmc.mf.models.Model vModel)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        _modelList.add(index, vModel);
-    } //-- void addModel(int, fr.jmmc.mf.models.Model) 
+    public void addModel(
+            final int index,
+            final fr.jmmc.mf.models.Model vModel)
+    throws java.lang.IndexOutOfBoundsException {
+        this._modelList.add(index, vModel);
+    }
 
     /**
-     * Method clearFileLink
      */
-    public void clearFileLink()
-    {
-        _fileLinkList.clear();
-    } //-- void clearFileLink() 
-
-    /**
-     * Method clearModel
-     */
-    public void clearModel()
-    {
-        _modelList.clear();
-    } //-- void clearModel() 
-
-    /**
-     * Method deleteNormalize
-     */
-    public void deleteNormalize()
-    {
+    public void deleteNormalize(
+    ) {
         this._has_normalize= false;
-    } //-- void deleteNormalize() 
+    }
 
     /**
-     * Method enumerateFileLink
+     * Method enumerateFileLink.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public java.util.Enumeration enumerateFileLink()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_fileLinkList.iterator());
-    } //-- java.util.Enumeration enumerateFileLink() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.FileLink> enumerateFileLink(
+    ) {
+        return java.util.Collections.enumeration(this._fileLinkList);
+    }
 
     /**
-     * Method enumerateModel
+     * Method enumerateModel.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
      */
-    public java.util.Enumeration enumerateModel()
-    {
-        return new org.exolab.castor.util.IteratorEnumeration(_modelList.iterator());
-    } //-- java.util.Enumeration enumerateModel() 
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.Model> enumerateModel(
+    ) {
+        return java.util.Collections.enumeration(this._modelList);
+    }
 
     /**
-     * Method getFileLink
+     * Method getFileLink.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.FileLink at the
+     * given index
      */
-    public fr.jmmc.mf.models.FileLink getFileLink(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _fileLinkList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.FileLink getFileLink(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._fileLinkList.size()) {
+            throw new IndexOutOfBoundsException("getFileLink: Index value '" + index + "' not in range [0.." + (this._fileLinkList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.FileLink) _fileLinkList.get(index);
-    } //-- fr.jmmc.mf.models.FileLink getFileLink(int) 
+    }
 
     /**
-     * Method getFileLink
+     * Method getFileLink.Returns the contents of the collection in
+     * an Array.  <p>Note:  Just in case the collection contents
+     * are changing in another thread, we pass a 0-length Array of
+     * the correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.FileLink[] getFileLink()
-    {
-        int size = _fileLinkList.size();
-        fr.jmmc.mf.models.FileLink[] mArray = new fr.jmmc.mf.models.FileLink[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.FileLink) _fileLinkList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.FileLink[] getFileLink() 
+    public fr.jmmc.mf.models.FileLink[] getFileLink(
+    ) {
+        fr.jmmc.mf.models.FileLink[] array = new fr.jmmc.mf.models.FileLink[0];
+        return (fr.jmmc.mf.models.FileLink[]) this._fileLinkList.toArray(array);
+    }
 
     /**
-     * Method getFileLinkCount
+     * Method getFileLinkCount.
+     * 
+     * @return the size of this collection
      */
-    public int getFileLinkCount()
-    {
-        return _fileLinkList.size();
-    } //-- int getFileLinkCount() 
+    public int getFileLinkCount(
+    ) {
+        return this._fileLinkList.size();
+    }
 
     /**
      * Returns the value of field 'ident'.
      * 
-     * @return the value of field 'ident'.
+     * @return the value of field 'Ident'.
      */
-    public java.lang.String getIdent()
-    {
+    public java.lang.String getIdent(
+    ) {
         return this._ident;
-    } //-- java.lang.String getIdent() 
+    }
 
     /**
-     * Method getModel
+     * Method getModel.
      * 
      * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.Model at the
+     * given index
      */
-    public fr.jmmc.mf.models.Model getModel(int index)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _modelList.size())) {
-            throw new IndexOutOfBoundsException();
+    public fr.jmmc.mf.models.Model getModel(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._modelList.size()) {
+            throw new IndexOutOfBoundsException("getModel: Index value '" + index + "' not in range [0.." + (this._modelList.size() - 1) + "]");
         }
-        
+
         return (fr.jmmc.mf.models.Model) _modelList.get(index);
-    } //-- fr.jmmc.mf.models.Model getModel(int) 
+    }
 
     /**
-     * Method getModel
+     * Method getModel.Returns the contents of the collection in an
+     * Array.  <p>Note:  Just in case the collection contents are
+     * changing in another thread, we pass a 0-length Array of the
+     * correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
      */
-    public fr.jmmc.mf.models.Model[] getModel()
-    {
-        int size = _modelList.size();
-        fr.jmmc.mf.models.Model[] mArray = new fr.jmmc.mf.models.Model[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (fr.jmmc.mf.models.Model) _modelList.get(index);
-        }
-        return mArray;
-    } //-- fr.jmmc.mf.models.Model[] getModel() 
+    public fr.jmmc.mf.models.Model[] getModel(
+    ) {
+        fr.jmmc.mf.models.Model[] array = new fr.jmmc.mf.models.Model[0];
+        return (fr.jmmc.mf.models.Model[]) this._modelList.toArray(array);
+    }
 
     /**
-     * Method getModelCount
+     * Method getModelCount.
+     * 
+     * @return the size of this collection
      */
-    public int getModelCount()
-    {
-        return _modelList.size();
-    } //-- int getModelCount() 
+    public int getModelCount(
+    ) {
+        return this._modelList.size();
+    }
 
     /**
      * Returns the value of field 'normalize'.
      * 
-     * @return the value of field 'normalize'.
+     * @return the value of field 'Normalize'.
      */
-    public boolean getNormalize()
-    {
+    public boolean getNormalize(
+    ) {
         return this._normalize;
-    } //-- boolean getNormalize() 
+    }
 
     /**
      * Returns the value of field 'residuals'. The field
@@ -271,161 +271,254 @@ public class Target implements java.io.Serializable {
      * configuration.
      *  
      * 
-     * @return the value of field 'residuals'.
+     * @return the value of field 'Residuals'.
      */
-    public fr.jmmc.mf.models.Residuals getResiduals()
-    {
+    public fr.jmmc.mf.models.Residuals getResiduals(
+    ) {
         return this._residuals;
-    } //-- fr.jmmc.mf.models.Residuals getResiduals() 
+    }
 
     /**
-     * Method hasNormalize
+     * Method hasNormalize.
+     * 
+     * @return true if at least one Normalize has been added
      */
-    public boolean hasNormalize()
-    {
+    public boolean hasNormalize(
+    ) {
         return this._has_normalize;
-    } //-- boolean hasNormalize() 
+    }
 
     /**
-     * Method isValid
+     * Returns the value of field 'normalize'.
+     * 
+     * @return the value of field 'Normalize'.
      */
-    public boolean isValid()
-    {
+    public boolean isNormalize(
+    ) {
+        return this._normalize;
+    }
+
+    /**
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
+     */
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * Method iterateFileLink.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.FileLink> iterateFileLink(
+    ) {
+        return this._fileLinkList.iterator();
+    }
+
+    /**
+     * Method iterateModel.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.Model> iterateModel(
+    ) {
+        return this._modelList.iterator();
+    }
+
+    /**
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
-     * Method removeFileLink
+     */
+    public void removeAllFileLink(
+    ) {
+        this._fileLinkList.clear();
+    }
+
+    /**
+     */
+    public void removeAllModel(
+    ) {
+        this._modelList.clear();
+    }
+
+    /**
+     * Method removeFileLink.
      * 
      * @param vFileLink
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeFileLink(fr.jmmc.mf.models.FileLink vFileLink)
-    {
+    public boolean removeFileLink(
+            final fr.jmmc.mf.models.FileLink vFileLink) {
         boolean removed = _fileLinkList.remove(vFileLink);
         return removed;
-    } //-- boolean removeFileLink(fr.jmmc.mf.models.FileLink) 
+    }
 
     /**
-     * Method removeModel
+     * Method removeFileLinkAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.FileLink removeFileLinkAt(
+            final int index) {
+        java.lang.Object obj = this._fileLinkList.remove(index);
+        return (fr.jmmc.mf.models.FileLink) obj;
+    }
+
+    /**
+     * Method removeModel.
      * 
      * @param vModel
+     * @return true if the object was removed from the collection.
      */
-    public boolean removeModel(fr.jmmc.mf.models.Model vModel)
-    {
+    public boolean removeModel(
+            final fr.jmmc.mf.models.Model vModel) {
         boolean removed = _modelList.remove(vModel);
         return removed;
-    } //-- boolean removeModel(fr.jmmc.mf.models.Model) 
+    }
 
     /**
-     * Method setFileLink
+     * Method removeModelAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.Model removeModelAt(
+            final int index) {
+        java.lang.Object obj = this._modelList.remove(index);
+        return (fr.jmmc.mf.models.Model) obj;
+    }
+
+    /**
+     * 
      * 
      * @param index
      * @param vFileLink
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setFileLink(int index, fr.jmmc.mf.models.FileLink vFileLink)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _fileLinkList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setFileLink(
+            final int index,
+            final fr.jmmc.mf.models.FileLink vFileLink)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._fileLinkList.size()) {
+            throw new IndexOutOfBoundsException("setFileLink: Index value '" + index + "' not in range [0.." + (this._fileLinkList.size() - 1) + "]");
         }
-        _fileLinkList.set(index, vFileLink);
-    } //-- void setFileLink(int, fr.jmmc.mf.models.FileLink) 
+
+        this._fileLinkList.set(index, vFileLink);
+    }
 
     /**
-     * Method setFileLink
      * 
-     * @param fileLinkArray
+     * 
+     * @param vFileLinkArray
      */
-    public void setFileLink(fr.jmmc.mf.models.FileLink[] fileLinkArray)
-    {
+    public void setFileLink(
+            final fr.jmmc.mf.models.FileLink[] vFileLinkArray) {
         //-- copy array
         _fileLinkList.clear();
-        for (int i = 0; i < fileLinkArray.length; i++) {
-            _fileLinkList.add(fileLinkArray[i]);
+
+        for (int i = 0; i < vFileLinkArray.length; i++) {
+                this._fileLinkList.add(vFileLinkArray[i]);
         }
-    } //-- void setFileLink(fr.jmmc.mf.models.FileLink) 
+    }
 
     /**
      * Sets the value of field 'ident'.
      * 
      * @param ident the value of field 'ident'.
      */
-    public void setIdent(java.lang.String ident)
-    {
+    public void setIdent(
+            final java.lang.String ident) {
         this._ident = ident;
-    } //-- void setIdent(java.lang.String) 
+    }
 
     /**
-     * Method setModel
+     * 
      * 
      * @param index
      * @param vModel
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setModel(int index, fr.jmmc.mf.models.Model vModel)
-        throws java.lang.IndexOutOfBoundsException
-    {
-        //-- check bounds for index
-        if ((index < 0) || (index > _modelList.size())) {
-            throw new IndexOutOfBoundsException();
+    public void setModel(
+            final int index,
+            final fr.jmmc.mf.models.Model vModel)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._modelList.size()) {
+            throw new IndexOutOfBoundsException("setModel: Index value '" + index + "' not in range [0.." + (this._modelList.size() - 1) + "]");
         }
-        _modelList.set(index, vModel);
-    } //-- void setModel(int, fr.jmmc.mf.models.Model) 
+
+        this._modelList.set(index, vModel);
+    }
 
     /**
-     * Method setModel
      * 
-     * @param modelArray
+     * 
+     * @param vModelArray
      */
-    public void setModel(fr.jmmc.mf.models.Model[] modelArray)
-    {
+    public void setModel(
+            final fr.jmmc.mf.models.Model[] vModelArray) {
         //-- copy array
         _modelList.clear();
-        for (int i = 0; i < modelArray.length; i++) {
-            _modelList.add(modelArray[i]);
+
+        for (int i = 0; i < vModelArray.length; i++) {
+                this._modelList.add(vModelArray[i]);
         }
-    } //-- void setModel(fr.jmmc.mf.models.Model) 
+    }
 
     /**
      * Sets the value of field 'normalize'.
      * 
      * @param normalize the value of field 'normalize'.
      */
-    public void setNormalize(boolean normalize)
-    {
+    public void setNormalize(
+            final boolean normalize) {
         this._normalize = normalize;
         this._has_normalize = true;
-    } //-- void setNormalize(boolean) 
+    }
 
     /**
      * Sets the value of field 'residuals'. The field 'residuals'
@@ -434,31 +527,38 @@ public class Target implements java.io.Serializable {
      * 
      * @param residuals the value of field 'residuals'.
      */
-    public void setResiduals(fr.jmmc.mf.models.Residuals residuals)
-    {
+    public void setResiduals(
+            final fr.jmmc.mf.models.Residuals residuals) {
         this._residuals = residuals;
-    } //-- void setResiduals(fr.jmmc.mf.models.Residuals) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.Target
      */
-    public static fr.jmmc.mf.models.Target unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.Target) Unmarshaller.unmarshal(fr.jmmc.mf.models.Target.class, reader);
-    } //-- fr.jmmc.mf.models.Target unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.Target unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.Target) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.Target.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "Target["+getIdent()+"]"; } 
 }

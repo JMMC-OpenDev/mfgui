@@ -1,25 +1,11 @@
 /*
  * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * <a href="http://www.castor.org">Castor 1.3.0.1</a>, using an XML
  * Schema.
  * $Id$
  */
 
 package fr.jmmc.mf.models;
-
-  //---------------------------------/
- //- Imported classes and packages -/
-//---------------------------------/
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Result file description.
@@ -27,6 +13,7 @@ import org.xml.sax.ContentHandler;
  * 
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("serial")
 public class ResultFile implements java.io.Serializable {
 
 
@@ -35,22 +22,22 @@ public class ResultFile implements java.io.Serializable {
     //--------------------------/
 
     /**
-     * Field _name
+     * Field _name.
      */
     private java.lang.String _name;
 
     /**
-     * Field _id
+     * Field _id.
      */
     private java.lang.String _id;
 
     /**
-     * Field _href
+     * Field _href.
      */
     private java.lang.String _href;
 
     /**
-     * Field _description
+     * Field _description.
      */
     private java.lang.String _description;
 
@@ -61,7 +48,7 @@ public class ResultFile implements java.io.Serializable {
 
     public ResultFile() {
         super();
-    } //-- fr.jmmc.mf.models.ResultFile()
+    }
 
 
       //-----------/
@@ -71,141 +58,157 @@ public class ResultFile implements java.io.Serializable {
     /**
      * Returns the value of field 'description'.
      * 
-     * @return the value of field 'description'.
+     * @return the value of field 'Description'.
      */
-    public java.lang.String getDescription()
-    {
+    public java.lang.String getDescription(
+    ) {
         return this._description;
-    } //-- java.lang.String getDescription() 
+    }
 
     /**
      * Returns the value of field 'href'.
      * 
-     * @return the value of field 'href'.
+     * @return the value of field 'Href'.
      */
-    public java.lang.String getHref()
-    {
+    public java.lang.String getHref(
+    ) {
         return this._href;
-    } //-- java.lang.String getHref() 
+    }
 
     /**
      * Returns the value of field 'id'.
      * 
-     * @return the value of field 'id'.
+     * @return the value of field 'Id'.
      */
-    public java.lang.String getId()
-    {
+    public java.lang.String getId(
+    ) {
         return this._id;
-    } //-- java.lang.String getId() 
+    }
 
     /**
      * Returns the value of field 'name'.
      * 
-     * @return the value of field 'name'.
+     * @return the value of field 'Name'.
      */
-    public java.lang.String getName()
-    {
+    public java.lang.String getName(
+    ) {
         return this._name;
-    } //-- java.lang.String getName() 
+    }
 
     /**
-     * Method isValid
+     * Method isValid.
+     * 
+     * @return true if this object is valid according to the schema
      */
-    public boolean isValid()
-    {
+    public boolean isValid(
+    ) {
         try {
             validate();
-        }
-        catch (org.exolab.castor.xml.ValidationException vex) {
+        } catch (org.exolab.castor.xml.ValidationException vex) {
             return false;
         }
         return true;
-    } //-- boolean isValid() 
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param out
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void marshal(java.io.Writer out)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, out);
-    } //-- void marshal(java.io.Writer) 
+    public void marshal(
+            final java.io.Writer out)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, out);
+    }
 
     /**
-     * Method marshal
+     * 
      * 
      * @param handler
+     * @throws java.io.IOException if an IOException occurs during
+     * marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
      */
-    public void marshal(org.xml.sax.ContentHandler handler)
-        throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        
-        Marshaller.marshal(this, handler);
-    } //-- void marshal(org.xml.sax.ContentHandler) 
+    public void marshal(
+            final org.xml.sax.ContentHandler handler)
+    throws java.io.IOException, org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        org.exolab.castor.xml.Marshaller.marshal(this, handler);
+    }
 
     /**
      * Sets the value of field 'description'.
      * 
      * @param description the value of field 'description'.
      */
-    public void setDescription(java.lang.String description)
-    {
+    public void setDescription(
+            final java.lang.String description) {
         this._description = description;
-    } //-- void setDescription(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'href'.
      * 
      * @param href the value of field 'href'.
      */
-    public void setHref(java.lang.String href)
-    {
+    public void setHref(
+            final java.lang.String href) {
         this._href = href;
-    } //-- void setHref(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'id'.
      * 
      * @param id the value of field 'id'.
      */
-    public void setId(java.lang.String id)
-    {
+    public void setId(
+            final java.lang.String id) {
         this._id = id;
-    } //-- void setId(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'name'.
      * 
      * @param name the value of field 'name'.
      */
-    public void setName(java.lang.String name)
-    {
+    public void setName(
+            final java.lang.String name) {
         this._name = name;
-    } //-- void setName(java.lang.String) 
+    }
 
     /**
-     * Method unmarshal
+     * Method unmarshal.
      * 
      * @param reader
+     * @throws org.exolab.castor.xml.MarshalException if object is
+     * null or if any SAXException is thrown during marshaling
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
+     * @return the unmarshaled fr.jmmc.mf.models.ResultFile
      */
-    public static fr.jmmc.mf.models.ResultFile unmarshal(java.io.Reader reader)
-        throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException
-    {
-        return (fr.jmmc.mf.models.ResultFile) Unmarshaller.unmarshal(fr.jmmc.mf.models.ResultFile.class, reader);
-    } //-- fr.jmmc.mf.models.ResultFile unmarshal(java.io.Reader) 
+    public static fr.jmmc.mf.models.ResultFile unmarshal(
+            final java.io.Reader reader)
+    throws org.exolab.castor.xml.MarshalException, org.exolab.castor.xml.ValidationException {
+        return (fr.jmmc.mf.models.ResultFile) org.exolab.castor.xml.Unmarshaller.unmarshal(fr.jmmc.mf.models.ResultFile.class, reader);
+    }
 
     /**
-     * Method validate
+     * 
+     * 
+     * @throws org.exolab.castor.xml.ValidationException if this
+     * object is an invalid instance according to the schema
      */
-    public void validate()
-        throws org.exolab.castor.xml.ValidationException
-    {
+    public void validate(
+    )
+    throws org.exolab.castor.xml.ValidationException {
         org.exolab.castor.xml.Validator validator = new org.exolab.castor.xml.Validator();
         validator.validate(this);
-    } //-- void validate() 
+    }
 
-    public String toString(){ return "ResultFile"; } 
 }
