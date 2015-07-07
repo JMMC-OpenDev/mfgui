@@ -171,4 +171,5 @@ public class CommonDescriptor extends org.exolab.castor.xml.util.XMLClassDescrip
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "CommonDescriptor"; } 
+    public String toString(){ return "CommonDescriptor"; } 
 }

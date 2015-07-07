@@ -509,4 +509,5 @@ public class ModelDescriptor extends org.exolab.castor.xml.util.XMLClassDescript
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ModelDescriptor"; } 
+    public String toString(){ return "ModelDescriptor"; } 
 }

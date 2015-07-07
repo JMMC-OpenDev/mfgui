@@ -309,4 +309,5 @@ public class Usercode implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Usercode"; } 
 }

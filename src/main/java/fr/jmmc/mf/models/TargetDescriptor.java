@@ -322,4 +322,5 @@ public class TargetDescriptor extends org.exolab.castor.xml.util.XMLClassDescrip
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "TargetDescriptor"; } 
+    public String toString(){ return "TargetDescriptor"; } 
 }

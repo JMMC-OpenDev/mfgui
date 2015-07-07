@@ -179,4 +179,5 @@ public class ResponseItem implements java.io.Serializable {
         this._choiceValue = settings;
     }
 
+    public String toString(){ return "ResponseItem"; } 
 }

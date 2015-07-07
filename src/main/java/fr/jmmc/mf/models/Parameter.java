@@ -544,4 +544,5 @@ public class Parameter implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Parameter["+getName()+"]"; } 
 }

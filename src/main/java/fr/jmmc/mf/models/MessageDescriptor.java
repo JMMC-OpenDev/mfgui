@@ -207,4 +207,5 @@ public class MessageDescriptor extends org.exolab.castor.xml.util.XMLClassDescri
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "MessageDescriptor"; } 
+    public String toString(){ return "MessageDescriptor"; } 
 }

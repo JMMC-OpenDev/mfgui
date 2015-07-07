@@ -570,4 +570,5 @@ public class ParameterDescriptor extends org.exolab.castor.xml.util.XMLClassDesc
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ParameterDescriptor"; } 
+    public String toString(){ return "ParameterDescriptor"; } 
 }

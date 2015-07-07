@@ -168,4 +168,5 @@ public class FileLinkDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "FileLinkDescriptor"; } 
+    public String toString(){ return "FileLinkDescriptor"; } 
 }

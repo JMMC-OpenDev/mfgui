@@ -211,4 +211,5 @@ public class Result implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Result"; } 
 }

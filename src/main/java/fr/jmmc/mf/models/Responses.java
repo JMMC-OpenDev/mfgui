@@ -280,4 +280,5 @@ public class Responses implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Plots"; } 
 }

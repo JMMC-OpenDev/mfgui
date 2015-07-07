@@ -279,4 +279,5 @@ public class Parameters implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Shared parameters["+getParameterCount()+"]"; } 
 }

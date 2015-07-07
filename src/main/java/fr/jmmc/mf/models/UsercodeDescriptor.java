@@ -205,4 +205,5 @@ public class UsercodeDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "UsercodeDescriptor"; } 
+    public String toString(){ return "UsercodeDescriptor"; } 
 }

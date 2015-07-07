@@ -173,4 +173,5 @@ public class FilesDescriptor extends org.exolab.castor.xml.util.XMLClassDescript
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "FilesDescriptor"; } 
+    public String toString(){ return "FilesDescriptor"; } 
 }

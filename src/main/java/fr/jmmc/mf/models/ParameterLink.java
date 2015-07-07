@@ -161,4 +161,5 @@ public class ParameterLink implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "ParameterLink["+((Parameter)getParameterRef()).getName()+"]"; } 
 }

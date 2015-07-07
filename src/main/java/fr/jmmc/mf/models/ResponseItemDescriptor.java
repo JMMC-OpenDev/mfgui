@@ -270,4 +270,5 @@ public class ResponseItemDescriptor extends org.exolab.castor.xml.util.XMLClassD
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ResponseItemDescriptor"; } 
+    public String toString(){ return "ResponseItemDescriptor"; } 
 }

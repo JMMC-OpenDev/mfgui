@@ -3,30 +3,12 @@
 # JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
 #*******************************************************************************
 
-#/**
-# @file
-# brief Generates classes from xsd using castor.
-# 
-# */
-
-
-# signal trap (if any)
-
-
-
-#___oOo___
-#!/bin/bash
-
-
-# Generate the class path for Java
-
-#MODEL_SCHEMA=$(miscLocateFile mfmdl.xsd)
-MODEL_SCHEMA=fr/jmmc/mf/mfmdl.xsd
 # generate model java source from xml schema
 echo "Generating classes for $MODEL_SCHEMA"
-java org.exolab.castor.builder.SourceGenerator -types j2 -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  -verbose $*
+#java org.exolab.castor.builder.SourceGenerator -types j2 -i ${MODEL_SCHEMA} -f -package fr.jmmc.mf.models  -verbose $*
+#mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources
 
-for f in fr/jmmc/mf/models/*.java
+for f in src/main/java/fr/jmmc/mf/models/*.java
 do
     tmp=${f%%.java}
     className=${tmp##*/}

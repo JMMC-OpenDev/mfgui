@@ -214,4 +214,5 @@ public class OitargetDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "OitargetDescriptor"; } 
+    public String toString(){ return "OitargetDescriptor"; } 
 }

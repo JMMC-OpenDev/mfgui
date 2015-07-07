@@ -136,4 +136,5 @@ public class FileLink implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "File["+((File)getFileRef()).getName()+"]"; } 
 }

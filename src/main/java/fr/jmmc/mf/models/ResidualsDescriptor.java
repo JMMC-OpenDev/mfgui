@@ -173,4 +173,5 @@ public class ResidualsDescriptor extends org.exolab.castor.xml.util.XMLClassDesc
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ResidualsDescriptor"; } 
+    public String toString(){ return "ResidualsDescriptor"; } 
 }

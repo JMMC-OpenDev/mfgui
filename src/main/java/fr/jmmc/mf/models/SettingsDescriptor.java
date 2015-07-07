@@ -416,4 +416,5 @@ public class SettingsDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "SettingsDescriptor"; } 
+    public String toString(){ return "SettingsDescriptor"; } 
 }

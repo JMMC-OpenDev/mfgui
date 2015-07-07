@@ -147,4 +147,5 @@ public class Common implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Common"; } 
 }

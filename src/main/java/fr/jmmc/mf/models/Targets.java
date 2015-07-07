@@ -279,4 +279,5 @@ public class Targets implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Targets"; } 
 }

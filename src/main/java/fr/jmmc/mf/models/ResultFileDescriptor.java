@@ -280,4 +280,5 @@ public class ResultFileDescriptor extends org.exolab.castor.xml.util.XMLClassDes
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ResultFileDescriptor"; } 
+    public String toString(){ return "ResultFileDescriptor"; } 
 }

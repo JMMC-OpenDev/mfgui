@@ -206,4 +206,5 @@ public class ParameterLinkDescriptor extends org.exolab.castor.xml.util.XMLClass
     } //-- java.lang.String getXMLName() 
 
     public String toString(){ return "ParameterLinkDescriptor"; } 
+    public String toString(){ return "ParameterLinkDescriptor"; } 
 }

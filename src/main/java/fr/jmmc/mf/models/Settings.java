@@ -345,4 +345,5 @@ public class Settings implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Settings"; } 
 }

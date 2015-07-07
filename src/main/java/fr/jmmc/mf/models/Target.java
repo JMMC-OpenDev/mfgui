@@ -561,4 +561,5 @@ public class Target implements java.io.Serializable {
         validator.validate(this);
     }
 
+    public String toString(){ return "Target["+getIdent()+"]"; } 
 }
