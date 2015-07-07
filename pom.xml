@@ -19,11 +19,11 @@
     <url>http://www.jmmc.fr/litpro</url>    
 
     <properties>
-	<!-- do make assembly and copy dependencies (JNLP) -->
-	<assembly.skipAssembly>false</assembly.skipAssembly>
-	<mdep.skip>false</mdep.skip>
+        <!-- do make assembly and copy dependencies (JNLP) -->
+        <assembly.skipAssembly>false</assembly.skipAssembly>
+        <mdep.skip>false</mdep.skip>
 
-	<!-- disable tests (fest fails for now) -->
+        <!-- disable tests (fest fails for now) -->
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
@@ -97,32 +97,43 @@
                         <version>1.2</version>
                     </dependency>
                 </dependencies -->
-                <configuration>
                     <!-- have a look on every parameters using -->
                     <!--  mvn castor:help  -Ddetail=true -Dgoal=generate -->
                     <!-- and overide calling mvn ... -Dcastor.prop=val castor:generate -->
+                <configuration>
+                    <schemaDirectory>${castor.schemaDirectory}</schemaDirectory>
+                    <dest>${castor.dest}</dest>
+                    <packaging>${castor.packaging}</packaging>
+                    <types>${castor.types}</types>
+                    <verbose>${castor.verbose}</verbose> 
+                    <createJdoDescriptors>${castor.createJdoDescriptors}</createJdoDescriptors> 
+                </configuration>
+                <!-- 
                     <castor.bindingfile>${castor.bindingfile}</castor.bindingfile>
                     <castor.classGenerationMode>${castor.classGenerationMode}</castor.classGenerationMode>
-                    <castor.createJdoDescriptors>${castor.createJdoDescriptors}</castor.createJdoDescriptors> 
                     <castor.descriptors>${castor.descriptors}</castor.descriptors>
-                    <castor.dest>${castor.dest}</castor.dest>
                     <castor.generateImportedSchemas>${castor.generateImportedSchemas}</castor.generateImportedSchemas>
                     <castor.generateMappings>${castor.generateMappings}</castor.generateMappings>
                     <castor.lineSeparator>${castor.lineSeparator}</castor.lineSeparator>
                     <castor.marshal>${castor.marshal}</castor.marshal>
-                    <castor.packaging>${castor.packaging}</castor.packaging>
                     <castor.project>${castor.project}</castor.project>
                     <castor.properties>${castor.properties}</castor.properties>
                     <castor.packaging>${castor.packaging}</castor.packaging>
                     <castor.resourceDestination>${castor.resourceDestination}</castor.resourceDestination>
                     <castor.schema>${castor.schema}</castor.schema>
-                    <castor.schemaDirectory>${castor.schemaDirectory}</castor.schemaDirectory>
                     <castor.staleMillis>${castor.staleMillis}</castor.staleMillis>
                     <castor.tstamp>${castor.tstamp}</castor.tstamp>
-                    <castor.types>${castor.types}</castor.types>
-                    <castor.verbose>${castor.verbose}</castor.verbose> 
                     <castor.warnings>${castor.warnings}</castor.warnings>
-                </configuration>
+
+                please use ./src/mfguiGenerateClasses.sh instead of next phase
+                 <executions>
+                 <execution>
+                 <goals>
+                 <goal>generate</goal>
+                 </goals>
+                 </execution>
+                 </executions>
+                -->
             </plugin>
 
 

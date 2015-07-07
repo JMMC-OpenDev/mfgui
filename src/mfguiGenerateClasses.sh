@@ -4,7 +4,7 @@
 #*******************************************************************************
 
 # generate model java source from xml schema
-if ! mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources
+if ! mvn -Dcastor.schemaDirectory=src/main/resources/fr/jmmc/mf -Dcastor.createJdoDescriptors=false  -Dcastor.packaging=fr.jmmc.mf.models  -Dcastor.dest=src/main/java/ -Dcastor.types=j2 -X castor:generate
 then 
     exit
 fi
