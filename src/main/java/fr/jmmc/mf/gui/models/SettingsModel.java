@@ -1640,7 +1640,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private boolean populate(File fileToPopulate, String filename) throws IllegalArgumentException, IOException, FitsException {
         OIFitsFile fits;
         // Populate the boundFile with oifits content
-        fileToPopulate.clearOitarget();
+        fileToPopulate.removeAllOitarget();
         // file extension can be *fits or *fits.gz
         OIFitsChecker checker = new OIFitsChecker();
         try {
