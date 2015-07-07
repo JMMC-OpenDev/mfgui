@@ -49,7 +49,7 @@ do
     fi
     echo "'$className' class uses toString: $toString" 
     
-    tmp=$(mktemp tmpXX)
+    tmp=$(mktemp tmpXXXXX)
     nbLines=( $( wc -l $f ))
     let b1=$nbLines-1
     head -$b1 $f > $tmp
