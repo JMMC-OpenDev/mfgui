@@ -60,7 +60,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     /** Title of message pane shown after reception of message/error from the remote service */
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
     /** Avoid use of user model until server side is ready for it */
-    public static final boolean USE_USERMODELS = true;
+    public static final boolean USE_USERMODELS = false;
 
     /**
      * Creates a new LITpro object.

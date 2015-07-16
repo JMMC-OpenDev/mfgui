@@ -15,8 +15,8 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.14beta4"/>
-    <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
+    <program name="LITpro" version="1.0.14"/>
+    <compilation date="16/07/2015" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
@@ -176,8 +176,8 @@
     </menubar>
 
     <releasenotes>        
-        <release version="1.0.14beta4">
-            <change type="CHANGE">Model names can nott be renamed anylonger (so that numbering in param label should stay consistent)</change>
+        <release version="1.0.14">
+            <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
 
             <!-- not yet done:
