@@ -29,7 +29,7 @@
 
 
         <!-- doc module -->
-        <!-- TODO <jar href="jar/mfgui-doc.jar" /> -->
+        <jar href="jar/mfgui-doc.jar" />
 
 
         <!-- JMMC modules -->
