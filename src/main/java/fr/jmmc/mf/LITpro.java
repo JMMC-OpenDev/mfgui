@@ -178,7 +178,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
-                xmlResult = doPost(methodName, xmlFile, methodArg);
+            xmlResult = doPost(methodName, xmlFile, methodArg);
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }
@@ -220,18 +220,22 @@ public class LITpro extends fr.jmmc.jmcs.App {
         try {
             if (xmlFile == null) {
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
-                logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
+                }
             } else {
                 filename = xmlFile.getAbsolutePath();
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename, methodArg});
-                logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
+                }
             }
             YogaExec pm = new YogaExec();
             ph.setProcessManager(pm);
             ph.start();
             ph.waitFor();
             final String result = pm.getContent();
-            logger.trace("exec result=\n" + result);
+            logger.trace("exec result=\n{}", result);
             return result;
         } catch (final IOException ex) {
             throw new IllegalStateException("Can't execute " + yogaProgram, ex);
@@ -457,7 +461,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
             protected void processMessage(final String senderId,
-                    final Message message) throws SampException {
+                                          final Message message) throws SampException {
 
                 final String xmlModel = (String) message.getParam("model");
                 final String filename = (String) message.getParam("filename");
