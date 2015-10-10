@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<!-- Application specific configuration -->
-<included>
-
-    <!-- LITpro -->
-    <logger name="fr.jmmc.mf" level="INFO"/>
-
-</included>
