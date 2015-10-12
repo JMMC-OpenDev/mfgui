@@ -20,6 +20,7 @@ import fr.jmmc.mf.models.Targets;
 import fr.jmmc.mf.models.Usercode;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
@@ -95,6 +96,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         initComponents();
 
         settingsTree = new JTree();
+        settingsTree.setScrollsOnExpand(true);
         settingsTreeScrollPane.getViewport().add(settingsTree);
 
         ToolTipManager.sharedInstance().registerComponent(settingsTree);
@@ -276,6 +278,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     public void treeNodesInserted(javax.swing.event.TreeModelEvent e) {
         treeChanged(e);
         expandAll(settingsTree, e.getTreePath(), true);
+        // assert that selection is visible Fix #710
+        //settingsTree.scrollPathToVisible(e.getTreePath());
+        settingsTree.fireTreeExpanded(e.getTreePath());
+
+        // mimic settingsTree.scrollPathToVisible(e.getTreePath());
+        // but add height so the node does not stay behind the horizontal scrollbar
+        Rectangle b = settingsTree.getPathBounds(e.getTreePath());
+        b.y = b.y + b.height;
+        settingsTree.scrollRectToVisible(b);
     }
 
     /** Use to listen tree model elements that can indicate changes*/

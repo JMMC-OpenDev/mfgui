@@ -13,6 +13,7 @@ import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -40,6 +41,15 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
 
         if (files == null) {
             return;
+        }
+
+        if (settingsModel == null) {
+            try {
+                settingsModel = new SettingsModel();
+            } catch (ExecutionException ex) {
+                return;
+            }
+            mfgui.addSettings(settingsModel);
         }
 
         for (int i = 0; i < files.length; i++) {

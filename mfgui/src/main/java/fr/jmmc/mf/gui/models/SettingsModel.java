@@ -159,8 +159,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public SettingsModel(java.io.File fileToLoad) throws IllegalStateException, IOException, FitsException, ExecutionException {
         logger.info("Loading new Settings from file" + fileToLoad.getAbsolutePath());
         runFitAction = new RunFitAction(this);
-        init(FileUtils.readFile(fileToLoad));
-        setAssociatedFile(fileToLoad, true);
+
+        try {
+            init(FileUtils.readFile(fileToLoad));
+            setAssociatedFile(fileToLoad, true);
+        } catch (ExecutionException e) {
+            // fallback that try to open an oifits file for a new settings #713
+            init();
+            addFile(fileToLoad);
+        }
+
     }
 
     /**

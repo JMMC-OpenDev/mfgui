@@ -57,6 +57,10 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
             // tf.addActionListener(this);
             tf.addFocusListener(this);
         }
+
+        // Fix #714 (still requires a preference setup?)
+        xSamplingFormattedTextField.setText("100");
+        ySamplingFormattedTextField.setText("100");
     }
 
     public void show(SettingsModel s) {
