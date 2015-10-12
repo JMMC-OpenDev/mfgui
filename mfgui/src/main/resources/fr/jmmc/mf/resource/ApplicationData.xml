@@ -180,9 +180,10 @@
 
     <releasenotes>        
         <release version="1.0.14">
+            <prerelease version="1.0.14 beta ">
             <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
-            <change type="CHANGE">The load oifits file added in the menu entry and toolbar. User can start from scratch just loading data.</change>
+            <change type="CHANGE">Add load oifits file action in the menu entry and toolbar. User can start from scratch just loading data.</change>
             <change type="CHANGE">Use huge tooltips for model that includes it's description</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/710">Set inserted nodes visible in the main Settings tree (move scrollbar)</change>
             <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/714">Increase default sampling values for chi2 maps and model image</change>
@@ -208,7 +209,8 @@
                 <prerelease version="1.0.14 beta 1">                                
                     <change type="FEATURE">Basic support for user models</change>                                                                                                                 
                 </prerelease>
-                -->
+            -->
+            </prerelease>
             </release>
             <release version="1.0.13">
             <prerelease version="1.0.13 beta 7">                                
