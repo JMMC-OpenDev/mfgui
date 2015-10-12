@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.data.app.ApplicationDescription;
 import fr.jmmc.jmcs.data.preference.PreferencesException;
+import fr.jmmc.jmcs.network.NetworkSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,11 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     public static final String YOGA_REMOTE_URL = "yoga.remote.url";
     public static final String USERMODEL_REPO_URL = "usermodel.repo.url";
 
+    /** JMMC application server to detect DNS */
+    private final static String JMMC_APPS_SERVER_HOST = "apps.jmmc.fr";
+    /** JMMC application server IP (hard-coded) */
+    private final static String JMMC_APPS_SERVER_IP = "152.77.114.210";
+
     /**
      * Privatized constructor that must be empty.
      */
@@ -56,9 +62,9 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     }
 
     /**
-     * DOCUMENT ME!
+     * Set default preferences
      *
-     * @throws PreferencesException DOCUMENT ME!
+     * @throws PreferencesException 
      */
     @Override
     protected void setDefaultPreferences() throws PreferencesException {
@@ -73,16 +79,19 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         setDefaultPreference(YOGA_REMOTE_USE, "true");
         setDefaultPreference(YOGA_LOCAL_HOME, "../ys");
         setDefaultPreference(YOGA_LOCAL_PROGNAME, "/bin/yoga.sh");
+        // Use JMMC server IP (ESO constraint):
+        final String serverIP = NetworkSettings.getHostIP(JMMC_APPS_SERVER_HOST, JMMC_APPS_SERVER_IP);
+        final String httpPref = "http://" + serverIP;
         // our actual convention tells that a beta version ends with b1...bN
         if (ApplicationDescription.isAlphaVersion()) {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~mellag/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, httpPref + "/~mellag/LITproWebService/run.php");
         } else if (ApplicationDescription.isBetaVersion()) {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, httpPref + "/~betaswmgr/LITproWebService/run.php");
         } else {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~swmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, httpPref + "/~swmgr/LITproWebService/run.php");
         }
         
-        setDefaultPreference(USERMODEL_REPO_URL, "http://apps.jmmc.fr/exist/apps/usermodels/");
+        setDefaultPreference(USERMODEL_REPO_URL, httpPref + "/exist/apps/usermodels/");
         
     }
 
