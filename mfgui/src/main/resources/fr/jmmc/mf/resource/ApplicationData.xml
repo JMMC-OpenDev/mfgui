@@ -179,10 +179,12 @@
     </menubar>
 
     <releasenotes>        
-        <release version="1.0.14">
+        <release version="1.0.14"><pubDate>Mon, 08 Apr 2013 16:48:52 GMT</pubDate>
             <prerelease version="1.0.14 beta ">
-            <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
+            <change type="CHANGE">The model library now provides blackbody models : background_BB, disk_BB, gaussian_BB, punct_BB, stretched_disk_BB, stretched_gaussian_BB</change>
+<change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
+			
             <change type="CHANGE">Add load oifits file action in the menu entry and toolbar. User can start from scratch just loading data.</change>
             <change type="CHANGE">Use huge tooltips for model that includes it's description</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/710">Set inserted nodes visible in the main Settings tree (move scrollbar)</change>
@@ -212,7 +214,7 @@
             -->
             </prerelease>
             </release>
-            <release version="1.0.13">
+            <release version="1.0.13"><pubDate>Moon, 08 Apr 2013 16:48:52 GMT</pubDate>
             <prerelease version="1.0.13 beta 7">                                
             <!-- restore default preferences for yoga webservice url -->                
             </prerelease><prerelease version="1.0.13 beta 6">                                                
