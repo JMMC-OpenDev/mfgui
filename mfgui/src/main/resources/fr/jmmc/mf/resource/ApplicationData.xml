@@ -15,8 +15,8 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.14"/>
-    <compilation date="09/10/2015" compiler="JDK 1.6.0_24"/>
+    <program name="LITpro" version="1.0.15"/>
+    <compilation date="15/10/2015" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
@@ -179,7 +179,13 @@
     </menubar>
 
     <releasenotes>        
-        <release version="1.0.14"><pubDate>Mon, 08 Apr 2013 16:48:52 GMT</pubDate>
+      <release version="1.0.15"><pubDate>Thu, 15 Oct 2015 20:47:00 GMT</pubDate>
+            <prerelease version="1.0.15 beta ">
+              <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/718">Fix loading of oifits through samp from local files</change>
+          </prerelease>
+        </release>
+         
+        <release version="1.0.14"><pubDate>Tue, 13 Oct 2015 17:30:00 GMT</pubDate>
             <prerelease version="1.0.14 beta ">
             <change type="CHANGE">The model library now provides blackbody models : background_BB, disk_BB, gaussian_BB, punct_BB, stretched_disk_BB, stretched_gaussian_BB</change>
 <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
