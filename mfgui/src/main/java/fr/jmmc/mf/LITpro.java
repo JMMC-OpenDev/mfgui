@@ -178,7 +178,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
-                xmlResult = doPost(methodName, xmlFile, methodArg);
+            xmlResult = doPost(methodName, xmlFile, methodArg);
         } else {
             xmlResult = doExec(methodName, xmlFile, methodArg);
         }
@@ -382,13 +382,20 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         }
 
                         try {
-                            final URI uri = new URI(url);
-                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, false)) {
-                                sm.addFile(tmpFile);
+
+                            if (FileUtils.isRemote(url)) {
+                                final URI uri = new URI(url);
+                                File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
+                                if (Http.download(uri, tmpFile, false)) {
+                                    sm.addFile(tmpFile);
+                                } else {
+                                    e = new IOException();
+                                }
+
                             } else {
-                                e = new IOException();
+                                sm.addFile(new File(new URI(url)));
                             }
+
                         } catch (IllegalArgumentException ex) {
                             e = ex;
                         } catch (FitsException ex) {
@@ -430,12 +437,23 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         }
 
                         try {
-                            final URI uri = new URI(url);
-                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, true)) {
-                                sm.addUserModel(tmpFile);
+
+                            if (FileUtils.isRemote(url)) {
+
+                                final URI uri = new URI(url);
+                                File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
+                                if (Http.download(uri, tmpFile, true)) {
+                                    sm.addUserModel(tmpFile);
+                                } else {
+                                    e = new IOException();
+                                }
+
                             } else {
-                                e = new IOException();
+                                try {
+                                    sm.addUserModel(new File(new URI(url)));
+                                } catch (IOException ex) {
+                                    e = ex;
+                                }
                             }
                         } catch (IllegalArgumentException ex) {
                             e = ex;
