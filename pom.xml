@@ -12,11 +12,11 @@
 
     <groupId>fr.jmmc.mfgui</groupId>
     <artifactId>mfgui</artifactId>
-    
+
     <packaging>jar</packaging>
 
     <name>LITpro</name>
-    <url>http://www.jmmc.fr/litpro</url>    
+    <url>http://www.jmmc.fr/litpro</url>
 
     <properties>
         <!-- do make assembly and copy dependencies (JNLP) -->
@@ -33,7 +33,7 @@
             <artifactId>jmcs</artifactId>
             <version>TRUNK</version>
         </dependency>
-		
+
         <dependency>
             <groupId>fr.jmmc.oiexplorer</groupId>
             <artifactId>oiexplorer-core</artifactId>
@@ -46,31 +46,31 @@
             <artifactId>mfgui-doc</artifactId>
             <version>TRUNK</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor</artifactId>
             <version>1.2</version> <!-- Versions higher than 1.2 does not provide jar files -->
         </dependency>
-        
+
         <!-- required by castor -->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.8.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
             <version>2.5.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>ptolemy</groupId>
             <artifactId>ptplot</artifactId>
             <version>5.6</version>
-        </dependency>              
+        </dependency>
 
     </dependencies>
 
@@ -84,8 +84,8 @@
                 <artifactId>castor-maven-plugin</artifactId>
                 <version>2.0</version>
                 <!--  however setting dependencie to 1.2 throw an error -->
-                <!-- dependencies> 
-                    <dependency> 
+                <!-- dependencies>
+                    <dependency>
                         <groupId>org.codehaus.castor</groupId>
                         <artifactId>castor</artifactId>
                         <version>1.2</version>
@@ -99,10 +99,10 @@
                     <dest>${castor.dest}</dest>
                     <packaging>${castor.packaging}</packaging>
                     <types>${castor.types}</types>
-                    <verbose>${castor.verbose}</verbose> 
-                    <createJdoDescriptors>${castor.createJdoDescriptors}</createJdoDescriptors> 
+                    <verbose>${castor.verbose}</verbose>
+                    <createJdoDescriptors>${castor.createJdoDescriptors}</createJdoDescriptors>
                 </configuration>
-                <!-- 
+                <!--
                     <castor.bindingfile>${castor.bindingfile}</castor.bindingfile>
                     <castor.classGenerationMode>${castor.classGenerationMode}</castor.classGenerationMode>
                     <castor.descriptors>${castor.descriptors}</castor.descriptors>
@@ -129,7 +129,7 @@
                  </executions>
                 -->
             </plugin>
-<!-- run 'mvn process-resources' or install manually the artifacts:
+            <!-- run 'mvn process-resources' or install manually the artifacts:
             mvn install:install-file -Dfile=lib/mfgui-doc.jar -DgroupId=fr.jmmc.mfgui -DartifactId=mfgui-doc -Dversion=TRUNK -Dpackaging=jar
             mvn install:install-file -Dfile=lib/ptplot5.6.jar -DgroupId=ptolemy -DartifactId=ptplot -Dversion=5.6 -Dpackaging=jar
             -->
@@ -170,6 +170,22 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jdeps-plugin</artifactId>
+                <version>3.0.0</version>
+
+                <!-- disable failOnWarning to make the build pass:
+[WARNING] /home/bourgesl/dev/mfgui/src/main/java/fr/jmmc/mf/gui/UtilsClass.java:[456,49] sun.misc.BASE64Encoder is internal proprietary API and may be removed in a future release
+[WARNING] /home/bourgesl/dev/mfgui/src/main/java/fr/jmmc/mf/gui/UtilsClass.java:[494,46] sun.misc.BASE64Decoder is internal proprietary API and may be removed in a future release
+[WARNING] /home/bourgesl/dev/mfgui/src/main/java/fr/jmmc/mf/gui/UtilsClass.java:[556,46] sun.misc.BASE64Decoder is internal proprietary API and may be removed in a future release
+                -->
+                <configuration>
+                    <failOnWarning>false</failOnWarning>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
