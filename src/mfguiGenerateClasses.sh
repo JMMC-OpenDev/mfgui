@@ -56,23 +56,23 @@ do
     else
         toString="\"$className\";"
     fi
-    echo "'$className' class uses toString: $toString" 
 
-    if grep -v "toString(){" $f &> /dev/null
+    if grep "String toString" $f &> /dev/null
     then
-    tmp=$(mktemp tmpXXXXX)
-    nbLines=( $( wc -l $f ))
-    let b1=$nbLines-1
-    head -$b1 $f > $tmp
-    echo "    public String toString(){ return $toString } " >> $tmp
-    echo "}" >> $tmp
-    if ! cp -af $tmp $f
-    then
-        cp -pf $tmp $f
-    fi
-    rm $tmp
-    else
         echo "toString already appended to $f"
+    else
+        tmp=$(mktemp tmpXXXXX)
+        nbLines=( $( wc -l $f ))
+        let b1=$nbLines-1
+        head -$b1 $f > $tmp
+        echo "    public String toString(){ return $toString } " >> $tmp
+        echo "}" >> $tmp
+        if ! cp -af $tmp $f
+        then
+            cp -pf $tmp $f
+        fi
+        rm $tmp
+        echo "'$className' class uses toString: $toString" 
     fi
 done
 
