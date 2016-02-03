@@ -3,13 +3,22 @@
 # JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
 #*******************************************************************************
 
+SCRIPTNAME=$(basename $0)
+# if this file is sourced it does return the caller program name
+SCRIPTBASE=$(dirname $0)/..
+#make SCRIPTBASE fully qualified
+SCRIPTBASE=$( cd $SCRIPTBASE && pwd )
+
+cd $SCRIPTBASE
+
 # generate model java source from xml schema
-if ! mvn -Dcastor.schemaDirectory=src/main/resources/fr/jmmc/mf -Dcastor.createJdoDescriptors=true  -Dcastor.packaging=fr.jmmc.mf.models  -Dcastor.dest=src/main/java/ -Dcastor.types=j2 -X castor:generate
+if ! mvn -Dcastor.schemaDirectory=$SCRIPTBASE/src/main/resources/fr/jmmc/mf -Dcastor.createJdoDescriptors=true  -Dcastor.packaging=fr.jmmc.mf.models  -Dcastor.dest=$SCRIPTBASE/src/main/java/ -Dcastor.types=j2 -X castor:generate
 then 
     exit
 fi
 
-for f in src/main/java/fr/jmmc/mf/models/*.java
+
+for f in $SCRIPTBASE/src/main/java/fr/jmmc/mf/models/*.java
 do
     tmp=${f%%.java}
     className=${tmp##*/}
@@ -48,7 +57,9 @@ do
         toString="\"$className\";"
     fi
     echo "'$className' class uses toString: $toString" 
-    
+
+    if grep -v "toString(){" $f &> /dev/null
+    then
     tmp=$(mktemp tmpXXXXX)
     nbLines=( $( wc -l $f ))
     let b1=$nbLines-1
@@ -60,6 +71,9 @@ do
         cp -pf $tmp $f
     fi
     rm $tmp
+    else
+        echo "toString already appended to $f"
+    fi
 done
 
 cat << EOM
@@ -89,3 +103,5 @@ cat << EOM
 , Cloneable
 
 EOM
+
+cd -

@@ -77,8 +77,7 @@
     <build>
         <plugins>
 
-            <!--  generate code using Castor -->
-            <!-- mvn -DschemaDirectory=src/main/resources/fr/jmmc/mf -Dpackaging=fr.jmmc.mf.models  -Dverbose -Ddest=src/main/java/ -Dtypes=j2 castor:generate -X generate-sources -->
+            <!-- generate code using Castor ( at the present time, avoid generate execution phase but prefer to call it manually using ./src/mfguiGenerateClasses.sh ) -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>castor-maven-plugin</artifactId>
@@ -120,6 +119,7 @@
                     <castor.warnings>${castor.warnings}</castor.warnings>
 
                 please use ./src/mfguiGenerateClasses.sh instead of next phase
+                to keep toString concatenation
                  <executions>
                  <execution>
                  <goals>
