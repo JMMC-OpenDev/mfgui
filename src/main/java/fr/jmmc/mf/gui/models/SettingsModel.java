@@ -33,7 +33,6 @@ import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Oitarget;
-import fr.jmmc.mf.models.Operator;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Parameters;
@@ -2296,8 +2295,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         return parameterListModel.toArray();
     }
 
-    public static ListModel<Operator> getSupportedOperators() {
-        return new AbstractListModel<Operator>() {
+//    public static ListModel<Operator> getSupportedOperators() {
+    public static ListModel getSupportedOperators() {
+        return new AbstractListModel() {
 
             @Override
             public int getSize() {
@@ -2305,7 +2305,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             }
 
             @Override
-            public Operator getElementAt(int index) {
+            public Object getElementAt(int index) {
                 return null;
             }
         };

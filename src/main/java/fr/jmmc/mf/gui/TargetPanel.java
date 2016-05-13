@@ -13,7 +13,6 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Model;
-import fr.jmmc.mf.models.Operator;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Residuals;
 import fr.jmmc.mf.models.Settings;
@@ -158,7 +157,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         availableModelList.setModel(rootSettingsModel.getSupportedModels());
         //availableOperatorList.setModel(rootSettingsModel.getSupportedOperators());
-        ListModel<Operator> operators = rootSettingsModel.getSupportedOperators();
+        ListModel operators = rootSettingsModel.getSupportedOperators();
 
         updateModels();
 

@@ -38,9 +38,9 @@ public class OperatorSelector extends JToolBar {
         this.removeAll();
 
         // get list of supported operators
-        ListModel<Operator> operators = SettingsModel.getSupportedOperators();
+        ListModel operators = SettingsModel.getSupportedOperators();
         for (int i = 0; i < operators.getSize(); i++) {
-            final Operator operator = operators.getElementAt(i);
+            final Operator operator = (Operator) operators.getElementAt(i);
             // associated on toggle button per operator
             JToggleButton b = new JToggleButton(operator.getName());
             b.setToolTipText(operator.getDesc());
