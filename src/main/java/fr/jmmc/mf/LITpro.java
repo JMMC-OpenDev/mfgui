@@ -60,7 +60,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
     /** Title of message pane shown after reception of message/error from the remote service */
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
     /** Avoid use of user model until server side is ready for it */
-    public static final boolean USE_USERMODELS = true;
+    public static final boolean USE_USERMODELS = false;
 
     /**
      * Creates a new LITpro object.
@@ -386,13 +386,20 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         }
 
                         try {
-                            final URI uri = new URI(url);
-                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, false)) {
-                                sm.addFile(tmpFile);
+
+                            if (FileUtils.isRemote(url)) {
+                                final URI uri = new URI(url);
+                                File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
+                                if (Http.download(uri, tmpFile, false)) {
+                                    sm.addFile(tmpFile);
+                                } else {
+                                    e = new IOException();
+                                }
+
                             } else {
-                                e = new IOException();
+                                sm.addFile(new File(new URI(url)));
                             }
+
                         } catch (IllegalArgumentException ex) {
                             e = ex;
                         } catch (FitsException ex) {
@@ -434,12 +441,23 @@ public class LITpro extends fr.jmmc.jmcs.App {
                         }
 
                         try {
-                            final URI uri = new URI(url);
-                            File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
-                            if (Http.download(uri, tmpFile, true)) {
-                                sm.addUserModel(tmpFile);
+
+                            if (FileUtils.isRemote(url)) {
+
+                                final URI uri = new URI(url);
+                                File tmpFile = FileUtils.getTempFile(ResourceUtils.filenameFromResourcePath(url));
+                                if (Http.download(uri, tmpFile, true)) {
+                                    sm.addUserModel(tmpFile);
+                                } else {
+                                    e = new IOException();
+                                }
+
                             } else {
-                                e = new IOException();
+                                try {
+                                    sm.addUserModel(new File(new URI(url)));
+                                } catch (IOException ex) {
+                                    e = ex;
+                                }
                             }
                         } catch (IllegalArgumentException ex) {
                             e = ex;
