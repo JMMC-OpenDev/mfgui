@@ -13,7 +13,6 @@ import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.ResponseItem;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -134,10 +133,8 @@ public class RunFitAction extends ResourcedAction {
                 Message m = new Message();
                 m.setContent("test");
                 m.setType("ERROR");
-                ResponseItem ri = new ResponseItem();
-                ri.setMessage(m);
                 Response r = new Response();
-                r.addResponseItem(ri);
+                r.addMessage(m);
                 return r;
             }
 
