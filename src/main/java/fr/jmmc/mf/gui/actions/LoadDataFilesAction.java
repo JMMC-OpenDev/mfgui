@@ -3,16 +3,17 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -40,6 +41,16 @@ public class LoadDataFilesAction extends RegisteredAction implements TreeSelecti
 
         if (files == null) {
             return;
+        }
+
+        if (settingsModel == null) {
+            try {
+                settingsModel = new SettingsModel();
+            } catch (ExecutionException ex) {
+                MessagePane.showErrorMessage("Could not load data", ex);
+                return;
+            }
+            mfgui.addSettings(settingsModel);
         }
 
         for (int i = 0; i < files.length; i++) {

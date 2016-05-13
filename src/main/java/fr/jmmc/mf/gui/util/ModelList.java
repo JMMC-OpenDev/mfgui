@@ -14,16 +14,26 @@ import javax.swing.JList;
  * @author mella
  */
 public class ModelList extends JList{
-    
+    private boolean displayTooltips;
+
     /*
      * Constructor
      */
-    public ModelList(){
+    public ModelList() {
         this.setCellRenderer(new ModelListRenderer());
     }
+
+    public void displayTooltips(boolean displayTooltips) {
+        this.displayTooltips = displayTooltips;
+    }
+   
     
     @Override
     public String getToolTipText(final MouseEvent evt) {
+        if (!displayTooltips) {
+            return null;
+        }
+
         StringBuffer msg=new StringBuffer(256);
         msg.append("<html>");
         int pointedIndex = locationToIndex(evt.getPoint());                

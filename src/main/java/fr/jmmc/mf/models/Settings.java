@@ -22,6 +22,13 @@ public class Settings implements java.io.Serializable {
     //--------------------------/
 
     /**
+     * This element contains the minimum version of the LITpro
+     * application that should support the setting file.
+     *  
+     */
+    private java.lang.String _minVersion;
+
+    /**
      * Contains files.
      *  
      */
@@ -101,6 +108,20 @@ public class Settings implements java.io.Serializable {
     public java.lang.String getFitter(
     ) {
         return this._fitter;
+    }
+
+    /**
+     * Returns the value of field 'minVersion'. The field
+     * 'minVersion' has the following description: This element
+     * contains the minimum version of the LITpro application that
+     * should support the setting file.
+     *  
+     * 
+     * @return the value of field 'MinVersion'.
+     */
+    public java.lang.String getMinVersion(
+    ) {
+        return this._minVersion;
     }
 
     /**
@@ -243,6 +264,20 @@ public class Settings implements java.io.Serializable {
     public void setFitter(
             final java.lang.String fitter) {
         this._fitter = fitter;
+    }
+
+    /**
+     * Sets the value of field 'minVersion'. The field 'minVersion'
+     * has the following description: This element contains the
+     * minimum version of the LITpro application that should
+     * support the setting file.
+     *  
+     * 
+     * @param minVersion the value of field 'minVersion'.
+     */
+    public void setMinVersion(
+            final java.lang.String minVersion) {
+        this._minVersion = minVersion;
     }
 
     /**

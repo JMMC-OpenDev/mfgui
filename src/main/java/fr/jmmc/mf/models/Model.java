@@ -32,26 +32,6 @@ public class Model implements java.io.Serializable {
     private java.lang.String _type;
 
     /**
-     * Field _polar.
-     */
-    private boolean _polar;
-
-    /**
-     * keeps track of state for field: _polar
-     */
-    private boolean _has_polar;
-
-    /**
-     * Field _stretched.
-     */
-    private boolean _stretched;
-
-    /**
-     * keeps track of state for field: _stretched
-     */
-    private boolean _has_stretched;
-
-    /**
      * A common representation of every models.
      *  
      */
@@ -84,6 +64,17 @@ public class Model implements java.io.Serializable {
      */
     private java.util.List<fr.jmmc.mf.models.ParameterLink> _parameterLinkList;
 
+    /**
+     * A common representation of every model operators.
+     *  
+     */
+    private java.util.List<fr.jmmc.mf.models.Operator> _operatorList;
+
+    /**
+     * Field _skipOperatorList.
+     */
+    private java.util.List<java.lang.String> _skipOperatorList;
+
 
       //----------------/
      //- Constructors -/
@@ -94,6 +85,8 @@ public class Model implements java.io.Serializable {
         this._modelList = new java.util.ArrayList<fr.jmmc.mf.models.Model>();
         this._parameterList = new java.util.ArrayList<fr.jmmc.mf.models.Parameter>();
         this._parameterLinkList = new java.util.ArrayList<fr.jmmc.mf.models.ParameterLink>();
+        this._operatorList = new java.util.ArrayList<fr.jmmc.mf.models.Operator>();
+        this._skipOperatorList = new java.util.ArrayList<java.lang.String>();
     }
 
 
@@ -127,6 +120,34 @@ public class Model implements java.io.Serializable {
             final fr.jmmc.mf.models.Model vModel)
     throws java.lang.IndexOutOfBoundsException {
         this._modelList.add(index, vModel);
+    }
+
+    /**
+     * 
+     * 
+     * @param vOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     */
+    public void addOperator(
+            final fr.jmmc.mf.models.Operator vOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        this._operatorList.add(vOperator);
+    }
+
+    /**
+     * 
+     * 
+     * @param index
+     * @param vOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     */
+    public void addOperator(
+            final int index,
+            final fr.jmmc.mf.models.Operator vOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        this._operatorList.add(index, vOperator);
     }
 
     /**
@@ -186,17 +207,31 @@ public class Model implements java.io.Serializable {
     }
 
     /**
+     * 
+     * 
+     * @param vSkipOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void deletePolar(
-    ) {
-        this._has_polar= false;
+    public void addSkipOperator(
+            final java.lang.String vSkipOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        this._skipOperatorList.add(vSkipOperator);
     }
 
     /**
+     * 
+     * 
+     * @param index
+     * @param vSkipOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void deleteStretched(
-    ) {
-        this._has_stretched= false;
+    public void addSkipOperator(
+            final int index,
+            final java.lang.String vSkipOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        this._skipOperatorList.add(index, vSkipOperator);
     }
 
     /**
@@ -208,6 +243,17 @@ public class Model implements java.io.Serializable {
     public java.util.Enumeration<? extends fr.jmmc.mf.models.Model> enumerateModel(
     ) {
         return java.util.Collections.enumeration(this._modelList);
+    }
+
+    /**
+     * Method enumerateOperator.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
+     */
+    public java.util.Enumeration<? extends fr.jmmc.mf.models.Operator> enumerateOperator(
+    ) {
+        return java.util.Collections.enumeration(this._operatorList);
     }
 
     /**
@@ -230,6 +276,17 @@ public class Model implements java.io.Serializable {
     public java.util.Enumeration<? extends fr.jmmc.mf.models.ParameterLink> enumerateParameterLink(
     ) {
         return java.util.Collections.enumeration(this._parameterLinkList);
+    }
+
+    /**
+     * Method enumerateSkipOperator.
+     * 
+     * @return an Enumeration over all possible elements of this
+     * collection
+     */
+    public java.util.Enumeration<? extends java.lang.String> enumerateSkipOperator(
+    ) {
+        return java.util.Collections.enumeration(this._skipOperatorList);
     }
 
     /**
@@ -305,6 +362,51 @@ public class Model implements java.io.Serializable {
     public java.lang.String getName(
     ) {
         return this._name;
+    }
+
+    /**
+     * Method getOperator.
+     * 
+     * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the fr.jmmc.mf.models.Operator at the
+     * given index
+     */
+    public fr.jmmc.mf.models.Operator getOperator(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._operatorList.size()) {
+            throw new IndexOutOfBoundsException("getOperator: Index value '" + index + "' not in range [0.." + (this._operatorList.size() - 1) + "]");
+        }
+
+        return (fr.jmmc.mf.models.Operator) _operatorList.get(index);
+    }
+
+    /**
+     * Method getOperator.Returns the contents of the collection in
+     * an Array.  <p>Note:  Just in case the collection contents
+     * are changing in another thread, we pass a 0-length Array of
+     * the correct type into the API call.  This way we <i>know</i>
+     * that the Array returned is of exactly the correct length.
+     * 
+     * @return this collection as an Array
+     */
+    public fr.jmmc.mf.models.Operator[] getOperator(
+    ) {
+        fr.jmmc.mf.models.Operator[] array = new fr.jmmc.mf.models.Operator[0];
+        return (fr.jmmc.mf.models.Operator[]) this._operatorList.toArray(array);
+    }
+
+    /**
+     * Method getOperatorCount.
+     * 
+     * @return the size of this collection
+     */
+    public int getOperatorCount(
+    ) {
+        return this._operatorList.size();
     }
 
     /**
@@ -399,16 +501,6 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Returns the value of field 'polar'.
-     * 
-     * @return the value of field 'Polar'.
-     */
-    public boolean getPolar(
-    ) {
-        return this._polar;
-    }
-
-    /**
      * Returns the value of field 'shortdesc'.
      * 
      * @return the value of field 'Shortdesc'.
@@ -419,13 +511,48 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Returns the value of field 'stretched'.
+     * Method getSkipOperator.
      * 
-     * @return the value of field 'Stretched'.
+     * @param index
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     * @return the value of the java.lang.String at the given index
      */
-    public boolean getStretched(
+    public java.lang.String getSkipOperator(
+            final int index)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._skipOperatorList.size()) {
+            throw new IndexOutOfBoundsException("getSkipOperator: Index value '" + index + "' not in range [0.." + (this._skipOperatorList.size() - 1) + "]");
+        }
+
+        return (java.lang.String) _skipOperatorList.get(index);
+    }
+
+    /**
+     * Method getSkipOperator.Returns the contents of the
+     * collection in an Array.  <p>Note:  Just in case the
+     * collection contents are changing in another thread, we pass
+     * a 0-length Array of the correct type into the API call. 
+     * This way we <i>know</i> that the Array returned is of
+     * exactly the correct length.
+     * 
+     * @return this collection as an Array
+     */
+    public java.lang.String[] getSkipOperator(
     ) {
-        return this._stretched;
+        java.lang.String[] array = new java.lang.String[0];
+        return (java.lang.String[]) this._skipOperatorList.toArray(array);
+    }
+
+    /**
+     * Method getSkipOperatorCount.
+     * 
+     * @return the size of this collection
+     */
+    public int getSkipOperatorCount(
+    ) {
+        return this._skipOperatorList.size();
     }
 
     /**
@@ -436,46 +563,6 @@ public class Model implements java.io.Serializable {
     public java.lang.String getType(
     ) {
         return this._type;
-    }
-
-    /**
-     * Method hasPolar.
-     * 
-     * @return true if at least one Polar has been added
-     */
-    public boolean hasPolar(
-    ) {
-        return this._has_polar;
-    }
-
-    /**
-     * Method hasStretched.
-     * 
-     * @return true if at least one Stretched has been added
-     */
-    public boolean hasStretched(
-    ) {
-        return this._has_stretched;
-    }
-
-    /**
-     * Returns the value of field 'polar'.
-     * 
-     * @return the value of field 'Polar'.
-     */
-    public boolean isPolar(
-    ) {
-        return this._polar;
-    }
-
-    /**
-     * Returns the value of field 'stretched'.
-     * 
-     * @return the value of field 'Stretched'.
-     */
-    public boolean isStretched(
-    ) {
-        return this._stretched;
     }
 
     /**
@@ -505,6 +592,17 @@ public class Model implements java.io.Serializable {
     }
 
     /**
+     * Method iterateOperator.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends fr.jmmc.mf.models.Operator> iterateOperator(
+    ) {
+        return this._operatorList.iterator();
+    }
+
+    /**
      * Method iterateParameter.
      * 
      * @return an Iterator over all possible elements in this
@@ -524,6 +622,17 @@ public class Model implements java.io.Serializable {
     public java.util.Iterator<? extends fr.jmmc.mf.models.ParameterLink> iterateParameterLink(
     ) {
         return this._parameterLinkList.iterator();
+    }
+
+    /**
+     * Method iterateSkipOperator.
+     * 
+     * @return an Iterator over all possible elements in this
+     * collection
+     */
+    public java.util.Iterator<? extends java.lang.String> iterateSkipOperator(
+    ) {
+        return this._skipOperatorList.iterator();
     }
 
     /**
@@ -567,6 +676,13 @@ public class Model implements java.io.Serializable {
 
     /**
      */
+    public void removeAllOperator(
+    ) {
+        this._operatorList.clear();
+    }
+
+    /**
+     */
     public void removeAllParameter(
     ) {
         this._parameterList.clear();
@@ -577,6 +693,13 @@ public class Model implements java.io.Serializable {
     public void removeAllParameterLink(
     ) {
         this._parameterLinkList.clear();
+    }
+
+    /**
+     */
+    public void removeAllSkipOperator(
+    ) {
+        this._skipOperatorList.clear();
     }
 
     /**
@@ -601,6 +724,30 @@ public class Model implements java.io.Serializable {
             final int index) {
         java.lang.Object obj = this._modelList.remove(index);
         return (fr.jmmc.mf.models.Model) obj;
+    }
+
+    /**
+     * Method removeOperator.
+     * 
+     * @param vOperator
+     * @return true if the object was removed from the collection.
+     */
+    public boolean removeOperator(
+            final fr.jmmc.mf.models.Operator vOperator) {
+        boolean removed = _operatorList.remove(vOperator);
+        return removed;
+    }
+
+    /**
+     * Method removeOperatorAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public fr.jmmc.mf.models.Operator removeOperatorAt(
+            final int index) {
+        java.lang.Object obj = this._operatorList.remove(index);
+        return (fr.jmmc.mf.models.Operator) obj;
     }
 
     /**
@@ -649,6 +796,30 @@ public class Model implements java.io.Serializable {
             final int index) {
         java.lang.Object obj = this._parameterLinkList.remove(index);
         return (fr.jmmc.mf.models.ParameterLink) obj;
+    }
+
+    /**
+     * Method removeSkipOperator.
+     * 
+     * @param vSkipOperator
+     * @return true if the object was removed from the collection.
+     */
+    public boolean removeSkipOperator(
+            final java.lang.String vSkipOperator) {
+        boolean removed = _skipOperatorList.remove(vSkipOperator);
+        return removed;
+    }
+
+    /**
+     * Method removeSkipOperatorAt.
+     * 
+     * @param index
+     * @return the element removed from the collection
+     */
+    public java.lang.String removeSkipOperatorAt(
+            final int index) {
+        java.lang.Object obj = this._skipOperatorList.remove(index);
+        return (java.lang.String) obj;
     }
 
     /**
@@ -714,6 +885,41 @@ public class Model implements java.io.Serializable {
     public void setName(
             final java.lang.String name) {
         this._name = name;
+    }
+
+    /**
+     * 
+     * 
+     * @param index
+     * @param vOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
+     */
+    public void setOperator(
+            final int index,
+            final fr.jmmc.mf.models.Operator vOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._operatorList.size()) {
+            throw new IndexOutOfBoundsException("setOperator: Index value '" + index + "' not in range [0.." + (this._operatorList.size() - 1) + "]");
+        }
+
+        this._operatorList.set(index, vOperator);
+    }
+
+    /**
+     * 
+     * 
+     * @param vOperatorArray
+     */
+    public void setOperator(
+            final fr.jmmc.mf.models.Operator[] vOperatorArray) {
+        //-- copy array
+        _operatorList.clear();
+
+        for (int i = 0; i < vOperatorArray.length; i++) {
+                this._operatorList.add(vOperatorArray[i]);
+        }
     }
 
     /**
@@ -787,17 +993,6 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Sets the value of field 'polar'.
-     * 
-     * @param polar the value of field 'polar'.
-     */
-    public void setPolar(
-            final boolean polar) {
-        this._polar = polar;
-        this._has_polar = true;
-    }
-
-    /**
      * Sets the value of field 'shortdesc'.
      * 
      * @param shortdesc the value of field 'shortdesc'.
@@ -808,14 +1003,38 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Sets the value of field 'stretched'.
      * 
-     * @param stretched the value of field 'stretched'.
+     * 
+     * @param index
+     * @param vSkipOperator
+     * @throws java.lang.IndexOutOfBoundsException if the index
+     * given is outside the bounds of the collection
      */
-    public void setStretched(
-            final boolean stretched) {
-        this._stretched = stretched;
-        this._has_stretched = true;
+    public void setSkipOperator(
+            final int index,
+            final java.lang.String vSkipOperator)
+    throws java.lang.IndexOutOfBoundsException {
+        // check bounds for index
+        if (index < 0 || index >= this._skipOperatorList.size()) {
+            throw new IndexOutOfBoundsException("setSkipOperator: Index value '" + index + "' not in range [0.." + (this._skipOperatorList.size() - 1) + "]");
+        }
+
+        this._skipOperatorList.set(index, vSkipOperator);
+    }
+
+    /**
+     * 
+     * 
+     * @param vSkipOperatorArray
+     */
+    public void setSkipOperator(
+            final java.lang.String[] vSkipOperatorArray) {
+        //-- copy array
+        _skipOperatorList.clear();
+
+        for (int i = 0; i < vSkipOperatorArray.length; i++) {
+                this._skipOperatorList.add(vSkipOperatorArray[i]);
+        }
     }
 
     /**

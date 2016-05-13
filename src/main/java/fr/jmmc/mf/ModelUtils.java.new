@@ -33,9 +33,6 @@ public class ModelUtils {
     static Logger logger = LoggerFactory.getLogger(
             ModelUtils.class.getName());
 
-    public final static String ROTATION_PARAMETER_NAME = "rotation";
-    public final static String STRETCHED_PARAMETER_NAME = "stretched_ratio";
-
     public static boolean isUserModel(Model model) {
         return !StringUtils.isEmpty(model.getCode());
     }
@@ -55,84 +52,81 @@ public class ModelUtils {
         params[paramIndex - 1] = p;
         model.setParameter(params);
     }
-    /* not used anylonger with this method : will be replaced by operators
+    /*
      public static boolean setPolarModel(Model model, boolean flag) {
-        if (model.getPolar() == flag) {
-            return false;
-        }
+     if (model.getPolar() == flag) {            return false;
+     }
 
-        // TODO add some tests to avoid duplicated types
-        if (flag) {
-            // xy -> rho pa            
-            Parameter p1 = getParameterOfType(model, "x");
-            Parameter p2 = getParameterOfType(model, "y");
-            double sep = EditableSepPosAngleParameter.getSeparation(p1.getValue(), p2.getValue());
-            double pa = EditableSepPosAngleParameter.getPosAngle(p1.getValue(), p2.getValue());
-            p1.setName(p1.getName().replace("x", EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName()));
-            p1.setValue(sep);
-            p1.setType(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
-            p1.setUnits(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getUnits());
+     // TODO add some tests to avoid duplicated types
+     if (flag) {
+     // xy -> rho pa
+     Parameter p1 = getParameterOfType(model, "x");
+     Parameter p2 = getParameterOfType(model, "y");
+     double sep = EditableSepPosAngleParameter.getSeparation(p1.getValue(), p2.getValue());
+     double pa = EditableSepPosAngleParameter.getPosAngle(p1.getValue(), p2.getValue());
+     p1.setName(p1.getName().replace("x", EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName()));
+     p1.setValue(sep);
+     p1.setType(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
+     p1.setUnits(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getUnits());
 
-            p2.setName(p2.getName().replace("y", EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName()));
-            p2.setValue(pa);
-            p2.setType(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
-            p2.setUnits(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getUnits());
-        } else {
-            // rho pa -> xy            
-            Parameter p1 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
-            Parameter p2 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
-            double x = EditableSepPosAngleParameter.getX(p1.getValue(), p2.getValue());
-            double y = EditableSepPosAngleParameter.getY(p1.getValue(), p2.getValue());
-            p1.setName(p1.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName(), "x"));
-            p1.setValue(x);
-            p1.setType("x");
-            p1.setUnits("mas");
+     p2.setName(p2.getName().replace("y", EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName()));
+     p2.setValue(pa);
+     p2.setType(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
+     p2.setUnits(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getUnits());
+     } else {
+     // rho pa -> xy
+     Parameter p1 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName());
+     Parameter p2 = getParameterOfType(model, EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName());
+     double x = EditableSepPosAngleParameter.getX(p1.getValue(), p2.getValue());
+     double y = EditableSepPosAngleParameter.getY(p1.getValue(), p2.getValue());
+     p1.setName(p1.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.SEPARATION.getName(), "x"));
+     p1.setValue(x);
+     p1.setType("x");
+     p1.setUnits("mas");
 
-            p2.setName(p2.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName(), "y"));
-            p2.setValue(y);
-            p2.setType("y");
-            p2.setUnits("mas");
-        }
-        // TODO add min max / fixed values conversions
+     p2.setName(p2.getName().replace(EditableSepPosAngleParameter.SepPosAngleType.POS_ANGLE.getName(), "y"));
+     p2.setValue(y);
+     p2.setType("y");
+     p2.setUnits("mas");
+     }
+     // TODO add min max / fixed values conversions
 
-        model.setPolar(flag);
-        return true;
-    }
+     model.setPolar(flag);        return true;
+     }
 
-    public static boolean setStretchedModel(Model model, boolean flag) {
-        if (model.getStretched() == flag) {
-            return false;
-        }
-        if (flag) {
-            // add rotation            
-            final Parameter s = new Parameter();
-            s.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
-            s.setType(STRETCHED_PARAMETER_NAME);
-            s.setValue(1.0);
-            s.setHasFixedValue(true);
-            s.setHasFixedValue(false);
-            model.addParameter(s);
+     public static boolean setStretchedModel(Model model, boolean flag) {
+     if (model.getStretched() == flag) {            return false;
+     }
 
-            // add rotation            
-            final Parameter r = new Parameter();
-            r.setName(ROTATION_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
-            r.setType(ROTATION_PARAMETER_NAME);
-            r.setValue(0);
-            r.setUnits("deg");
-            r.setHasFixedValue(true);
-            r.setHasFixedValue(false);
-            model.addParameter(r);
-        } else {
-            // remove rotation parameter
-            model.removeParameter(getParameterOfType(model, ROTATION_PARAMETER_NAME));
+     if (flag) {
+     // add rotation
+     final Parameter s = new Parameter();
+     s.setName(STRETCHED_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
+     s.setType(STRETCHED_PARAMETER_NAME);
+     s.setValue(1.0);
+     s.setHasFixedValue(true);
+     s.setHasFixedValue(false);
+     model.addParameter(s);
 
-            // remove rotation parameter
-            model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
-        }
+     // add rotation
+     final Parameter r = new Parameter();
+     r.setName(ROTATION_PARAMETER_NAME + model.getName().replace(model.getType(), ""));
+     r.setType(ROTATION_PARAMETER_NAME);
+     r.setValue(0);
+     r.setUnits("deg");
+     r.setHasFixedValue(true);
+     r.setHasFixedValue(false);
+     model.addParameter(r);
+     } else {
+     // remove rotation parameter
+     model.removeParameter(getParameterOfType(model, ROTATION_PARAMETER_NAME));
 
-        model.setStretched(flag);
-        return true;
-    }
+     // remove rotation parameter
+     model.removeParameter(getParameterOfType(model, STRETCHED_PARAMETER_NAME));
+     }
+
+     model.setStretched(flag);        return true;
+     }
      */
 
     public static boolean hasPosition(Model selectedModel) {

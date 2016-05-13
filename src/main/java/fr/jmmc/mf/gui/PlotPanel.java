@@ -9,7 +9,11 @@ import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.models.*;
+import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Residual;
+import fr.jmmc.mf.models.Response;
+import fr.jmmc.mf.models.ResultFile;
+import fr.jmmc.mf.models.Target;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
 import java.io.IOException;
@@ -90,6 +94,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     /** Return the syntax used by yorick code to describe a list of targets */
     private String getGroupValue(Target target) {
         return Integer.toString(settingsModel.getTargetListModel().indexOf(target) + 1);
+        //return Integer.toString(Arrays.asList(settingsModel.getTargets()).indexOf(target) + 1);
     }
 
     private String getGroupValue(Object[] targets) {
@@ -192,7 +197,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
             MessagePane.showErrorMessage("Can't plot data", ex);
             return;
         }
-        ResultFile[] resultFiles = UtilsClass.getResultFiles(response);        
+        ResultFile[] resultFiles = response.getResultFile();
         if (resultFiles.length == 0) {
             String errors = UtilsClass.getErrorMsg(response);
             if (errors.length() > 1) {

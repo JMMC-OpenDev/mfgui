@@ -69,7 +69,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
 
         Object[] params;
 
-        params = s.getParameterListModel().toArray();
+        params = s.getAllParameters();
 
         // we want to listen model change events
         if (!knownSettingsModels.contains(settingsModel)) {

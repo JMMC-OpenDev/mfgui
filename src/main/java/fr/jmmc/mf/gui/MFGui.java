@@ -9,18 +9,33 @@ import fr.jmmc.jmcs.gui.action.internal.InternalActionFactory;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.util.ResourceImage;
-import fr.jmmc.mf.gui.actions.*;
+import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
+import fr.jmmc.mf.gui.actions.CloseModelAction;
+import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
+import fr.jmmc.mf.gui.actions.GetYogaVersionAction;
+import fr.jmmc.mf.gui.actions.LoadDataFilesAction;
+import fr.jmmc.mf.gui.actions.LoadDemoModelAction;
+import fr.jmmc.mf.gui.actions.LoadModelAction;
+import fr.jmmc.mf.gui.actions.LoadRemoteModelAction;
+import fr.jmmc.mf.gui.actions.NewModelAction;
+import fr.jmmc.mf.gui.actions.SaveSettingsAction;
+import fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction;
+import fr.jmmc.mf.gui.actions.ShowPrefAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +65,8 @@ public final class MFGui extends JFrame {
     private static final Dimension INITIAL_DIMENSION = new java.awt.Dimension(1000, 700);
     public static final int TABLE_MAX_WIDTH = 330;
 
+    public static JPanel welcomePanel = null;
+
     /** Creates new form MFGui */
     public MFGui(String[] filenames) {
         instance = this;
@@ -61,6 +78,7 @@ public final class MFGui extends JFrame {
         new CloseModelAction(this);
         new LoadModelAction(this);
         new LoadRemoteModelAction(this);
+        new LoadDataFilesAction(this);
         // @todo use a preference to choose from one of the two following for default saveaction
         saveSettingsAction = new SaveSettingsAction(this, "saveSettings");
 
@@ -80,6 +98,8 @@ public final class MFGui extends JFrame {
         // Build demo action into initMenuBar
         initMenuBar();
 
+        initTabbedPane();
+
         // Handle toolbar
 
         toolBar = new JToolBar();
@@ -88,6 +108,8 @@ public final class MFGui extends JFrame {
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction", "newModel"));
         toolBar.add(registrar.get(LoadModelAction.className, LoadModelAction.actionName));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings"));
+        toolBar.addSeparator();
+        toolBar.add(registrar.get(LoadDataFilesAction.className, LoadDataFilesAction.actionName));
         toolBar.addSeparator();
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
         toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
@@ -143,6 +165,10 @@ public final class MFGui extends JFrame {
     }
 
     public void addSettings(SettingsModel settingsModel) {
+        if (welcomePanel != null) {
+            tabbedPane_.remove(welcomePanel);
+            welcomePanel = null;
+        }
         SettingsPane p = new SettingsPane(settingsModel);
         tabbedPane_.add(p, p.getSettingsModel().getAssociatedFilename());
         tabbedPane_.setSelectedComponent(p);
@@ -171,13 +197,36 @@ public final class MFGui extends JFrame {
             sp = (SettingsPane) tabbedPane_.getComponentAt(idx);
             tabbedPane_.setTitleAt(idx, sp.getSettingsModel().getAssociatedFilename());
             logger.debug("Selected settingsPane name: {}", sp.getSettingsModel().getAssociatedFilename());
+            return sp.getSettingsModel();
         }
 
-        return sp.getSettingsModel();
+        return null;
     }
 
     public static void closeTab(java.awt.Component c) {
         tabbedPane_.remove(c);
+        if (tabbedPane_.getComponentCount() == 0) {
+            initTabbedPane();
+        }
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the wizard/welcome panel.
+     */
+    public static void initTabbedPane() {
+        welcomePanel = new JPanel();
+        welcomePanel.setLayout(new GridBagLayout());
+        JPanel thewelcomePanel = new JPanel();
+
+        thewelcomePanel.setLayout(new BoxLayout(thewelcomePanel, BoxLayout.Y_AXIS));
+        ActionRegistrar registrar = ActionRegistrar.getInstance();
+        thewelcomePanel.add(new JButton(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction", "newModel")));
+        thewelcomePanel.add(new JButton(registrar.get(LoadDataFilesAction.className, LoadDataFilesAction.actionName)));
+
+        welcomePanel.add(thewelcomePanel);
+
+        //tabbedPane_.add(welcomePanel);
+        //tabbedPane_.setTitleAt(0, "Starting LITpro");
     }
 
     /** This method is called from within the constructor to
@@ -212,6 +261,10 @@ public final class MFGui extends JFrame {
      * @return true if App can quit or false.
      */
     public boolean finish() {
+        if (welcomePanel != null) {
+            return true;
+        }
+
         java.awt.Component[] components = tabbedPane_.getComponents();
         ModifyAndSaveObject[] objs = new ModifyAndSaveObject[components.length];
         for (int i = 0; i < objs.length; i++) {

@@ -54,7 +54,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     public ParametersTableModel() {
         super();
         // next static line should be replaced by a preference listener
-        recursive = true;        
+        recursive = true;
     }
 
     /**
@@ -87,9 +87,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         this.modelToPresent = model;
         this.parametersOrParameterLinksToPresent = parametersAndParameterLinks;
         this.recursive = recursive;
-        
+
         // do not allow edition of param type by default
-        editForCustomModel=false;
+        editForCustomModel = false;
 
         if (targetToPresent != null) {
             parametersOrParameterLinksToPresent = new Parameter[]{};
@@ -101,6 +101,7 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 Model m = array[i];
                 addParamsFor(m, params, models, recursive);
             }
+            // second stage: fill parameter and model 'rows'
             parametersOrParameterLinksToPresent = new Object[params.size()];
             modelOfParameters = new Model[params.size()];
             for (int i = 0; i < parametersOrParameterLinksToPresent.length; i++) {
@@ -109,10 +110,10 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
             }
         } else if (modelToPresent != null) {
             // accept to edit only for custom models that have no instance
-            editForCustomModel = StringUtils.isSet(modelToPresent.getCode()) 
-                    && settingsModel != null 
+            editForCustomModel = StringUtils.isSet(modelToPresent.getCode())
+                    && settingsModel != null
                     && ModelUtils.hasModelOfType(settingsModel.getUserCode().getModel(), modelToPresent.getType())
-                    && ! ModelUtils.hasModelOfType(settingsModel.getRootSettings(), modelToPresent.getType());
+                    && !ModelUtils.hasModelOfType(settingsModel.getRootSettings(), modelToPresent.getType());
             parametersOrParameterLinksToPresent = new Parameter[]{};
             // get list , create array and init array with content list
             Vector params = new Vector();
@@ -149,31 +150,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     protected void addParamsFor(Model model, Vector paramContainer, Vector<Model> modelContainer, boolean recursive) {
-        // Start to append model parameters
-        Parameter[] params = model.getParameter();
-        int nbOfParams = params.length;
-        // Create with initial data
-        for (int i = 0; i < nbOfParams; i++) {
-            Parameter p = params[i];
-            paramContainer.add(p);
-            modelContainer.add(model);
-        }
-        // Then append model parameters that are linked
-        ParameterLink[] paramLinks = model.getParameterLink();
-        int nbOfSharedParams = paramLinks.length;
-        logger.debug("Adding {} normal params and {} shared parameters for {}", nbOfParams, nbOfSharedParams, model);
-        // Create with initial data
-        for (int i = 0; i < nbOfSharedParams; i++) {
-            ParameterLink link = paramLinks[i];
-            paramContainer.add(link);
-            modelContainer.add(model);
-        }
-        if (recursive) {
-            Model[] models = model.getModel();
-            for (int i = 0; i < models.length; i++) {
-                addParamsFor(models[i], paramContainer, modelContainer, true);
-            }
-        }
+
+        ModelUtils.addParamsFor(model, paramContainer, modelContainer, recursive, true, true);
+
     }
 
     // Next parts makes respond to the full TableModel interface
@@ -283,9 +262,9 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         } else {
             p = (Parameter) o;
         }
-        
-        pprime=(Parameter)UtilsClass.clone(p); 
-        
+
+        pprime = (Parameter) UtilsClass.clone(p);
+
         // Check all methods that accept something else than a String as param
         // introspection can't be used because Objects are given as parmaeter
         // and most of parameter ones accept double only :(
@@ -345,12 +324,12 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 throw new IllegalStateException("Can't set data onto setting", ex);
             }
         }
-        
-        if(!ModelUtils.areEquals(p, pprime)){        
+
+        if (!ModelUtils.areEquals(p, pprime)) {
             settingsModel.setModified();
-            settingsModel.notifyObservers();                    
+            settingsModel.notifyObservers();
             fireTableDataChanged();
-        }                
+        }
     }
 
     private void checkPopupMenu(java.awt.event.MouseEvent evt) {

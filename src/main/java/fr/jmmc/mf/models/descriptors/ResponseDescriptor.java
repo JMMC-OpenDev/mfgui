@@ -58,7 +58,10 @@ public class ResponseDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
     public ResponseDescriptor() {
         super();
         _xmlName = "response";
-        _elementDefinition = false;
+        _elementDefinition = true;
+
+        //-- set grouping compositor
+        setCompositorAsSequence();
         org.exolab.castor.xml.util.XMLFieldDescriptorImpl  desc           = null;
         org.exolab.castor.mapping.FieldHandler             handler        = null;
         org.exolab.castor.xml.FieldValidator               fieldValidator = null;
@@ -108,15 +111,15 @@ public class ResponseDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
         desc.setValidator(fieldValidator);
         //-- initialize element descriptors
 
-        //-- _items
-        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.ResponseItem.class, "_items", (java.lang.String) null, org.exolab.castor.xml.NodeType.Element);
+        //-- _messageList
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Message.class, "_messageList", "message", org.exolab.castor.xml.NodeType.Element);
         handler = new org.exolab.castor.xml.XMLFieldHandler() {
             @Override
             public java.lang.Object getValue( java.lang.Object object ) 
                 throws IllegalStateException
             {
                 Response target = (Response) object;
-                return target.getResponseItem();
+                return target.getMessage();
             }
             @Override
             public void setValue( java.lang.Object object, java.lang.Object value) 
@@ -124,7 +127,7 @@ public class ResponseDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
             {
                 try {
                     Response target = (Response) object;
-                    target.addResponseItem( (fr.jmmc.mf.models.ResponseItem) value);
+                    target.addMessage( (fr.jmmc.mf.models.Message) value);
                 } catch (java.lang.Exception ex) {
                     throw new IllegalStateException(ex.toString());
                 }
@@ -132,7 +135,7 @@ public class ResponseDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
             public void resetValue(Object object) throws IllegalStateException, IllegalArgumentException {
                 try {
                     Response target = (Response) object;
-                    target.removeAllResponseItem();
+                    target.removeAllMessage();
                 } catch (java.lang.Exception ex) {
                     throw new IllegalStateException(ex.toString());
                 }
@@ -140,21 +143,181 @@ public class ResponseDescriptor extends org.exolab.castor.xml.util.XMLClassDescr
             @Override
             @SuppressWarnings("unused")
             public java.lang.Object newInstance(java.lang.Object parent) {
-                return new fr.jmmc.mf.models.ResponseItem();
+                return new fr.jmmc.mf.models.Message();
             }
         };
         desc.setSchemaType("list");
-        desc.setComponentType("fr.jmmc.mf.models.ResponseItem");
+        desc.setComponentType("fr.jmmc.mf.models.Message");
         desc.setHandler(handler);
-        desc.setContainer(true);
-        desc.setClassDescriptor(new fr.jmmc.mf.models.descriptors.ResponseItemDescriptor());
         desc.setMultivalued(true);
         addFieldDescriptor(desc);
         addSequenceElement(desc);
 
-        //-- validation code for: _items
+        //-- validation code for: _messageList
         fieldValidator = new org.exolab.castor.xml.FieldValidator();
         fieldValidator.setMinOccurs(0);
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
+        //-- _resultFileList
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.ResultFile.class, "_resultFileList", "resultFile", org.exolab.castor.xml.NodeType.Element);
+        handler = new org.exolab.castor.xml.XMLFieldHandler() {
+            @Override
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Response target = (Response) object;
+                return target.getResultFile();
+            }
+            @Override
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Response target = (Response) object;
+                    target.addResultFile( (fr.jmmc.mf.models.ResultFile) value);
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            public void resetValue(Object object) throws IllegalStateException, IllegalArgumentException {
+                try {
+                    Response target = (Response) object;
+                    target.removeAllResultFile();
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            @Override
+            @SuppressWarnings("unused")
+            public java.lang.Object newInstance(java.lang.Object parent) {
+                return new fr.jmmc.mf.models.ResultFile();
+            }
+        };
+        desc.setSchemaType("list");
+        desc.setComponentType("fr.jmmc.mf.models.ResultFile");
+        desc.setHandler(handler);
+        desc.setMultivalued(true);
+        addFieldDescriptor(desc);
+        addSequenceElement(desc);
+
+        //-- validation code for: _resultFileList
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        fieldValidator.setMinOccurs(0);
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
+        //-- _settings
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Settings.class, "_settings", "settings", org.exolab.castor.xml.NodeType.Element);
+        handler = new org.exolab.castor.xml.XMLFieldHandler() {
+            @Override
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Response target = (Response) object;
+                return target.getSettings();
+            }
+            @Override
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Response target = (Response) object;
+                    target.setSettings( (fr.jmmc.mf.models.Settings) value);
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            @Override
+            @SuppressWarnings("unused")
+            public java.lang.Object newInstance(java.lang.Object parent) {
+                return new fr.jmmc.mf.models.Settings();
+            }
+        };
+        desc.setSchemaType("fr.jmmc.mf.models.Settings");
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        addSequenceElement(desc);
+
+        //-- validation code for: _settings
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
+        //-- _model
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Model.class, "_model", "model", org.exolab.castor.xml.NodeType.Element);
+        handler = new org.exolab.castor.xml.XMLFieldHandler() {
+            @Override
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Response target = (Response) object;
+                return target.getModel();
+            }
+            @Override
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Response target = (Response) object;
+                    target.setModel( (fr.jmmc.mf.models.Model) value);
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            @Override
+            @SuppressWarnings("unused")
+            public java.lang.Object newInstance(java.lang.Object parent) {
+                return new fr.jmmc.mf.models.Model();
+            }
+        };
+        desc.setSchemaType("fr.jmmc.mf.models.Model");
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        addSequenceElement(desc);
+
+        //-- validation code for: _model
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
+        //-- _fitters
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Fitters.class, "_fitters", "fitters", org.exolab.castor.xml.NodeType.Element);
+        handler = new org.exolab.castor.xml.XMLFieldHandler() {
+            @Override
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Response target = (Response) object;
+                return target.getFitters();
+            }
+            @Override
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Response target = (Response) object;
+                    target.setFitters( (fr.jmmc.mf.models.Fitters) value);
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            @Override
+            @SuppressWarnings("unused")
+            public java.lang.Object newInstance(java.lang.Object parent) {
+                return new fr.jmmc.mf.models.Fitters();
+            }
+        };
+        desc.setSchemaType("fr.jmmc.mf.models.Fitters");
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        addSequenceElement(desc);
+
+        //-- validation code for: _fitters
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
         { //-- local scope
         }
         desc.setValidator(fieldValidator);

@@ -31,6 +31,9 @@ public class PlotModelPanel extends javax.swing.JPanel {
         initComponents();
         // Set default value for angle
         plotRadialAngleFormattedTextField1.setValue(0);
+        // Fix #714 (still requires a preference setup?)
+        pixscaleFormattedTextField.setText("0.10");
+        pixscaleFormattedTextField1.setText("1");
 
         // build help button
         //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
@@ -53,7 +56,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     public void show(SettingsModel s) {
         settingsModel = s;
-        Object[] targets = s.getTargetListModel().toArray();
+        Object[] targets = s.getTargets();
         targetComboBox.removeAllItems();
         for (int i = 0; i < targets.length; i++) {
             Object object = targets[i];

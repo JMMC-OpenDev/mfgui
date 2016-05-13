@@ -65,6 +65,12 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     public void update(Observable o, Object arg) {
 
         toolTipManager.setEnabled(myPreferences.getPreferenceAsBoolean(Preferences.HELP_TOOLTIPS_SHOW));
+
+        // override JMcs SwingSettings.setSwingDefaults()
+        // help to solve #709
+        // we could imagine to use a  specificTooltipsmanager.registerComponent on model list widgets
+        toolTipManager.setInitialDelay(750);
+
         MFGui.showToolbar(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));        
 
         /*

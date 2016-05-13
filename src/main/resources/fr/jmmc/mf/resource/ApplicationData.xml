@@ -15,8 +15,8 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.14beta4"/>
-    <compilation date="21/02/2013" compiler="JDK 1.5.0_16"/>
+    <program name="LITpro" version="1.0.15"/>
+    <compilation date="13/05/2016" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
@@ -151,10 +151,13 @@
         <menu label="File">
             <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
                 icon="fr/jmmc/mf/gui/icons/filenew.png"/>
-            <menu/>
+                <menu/>
+                <menu label="Load OIFits files..." classpath="fr.jmmc.mf.gui.actions.LoadDataFilesAction" action="loadDataFiles"
+                  icon="fr/jmmc/jmcs/resource/image/file_add.png"/>
+                <menu/> <!-- menu separator -->
             <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
-                icon="fr/jmmc/mf/gui/icons/fileopen.png"/>
-            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
+                  icon="fr/jmmc/mf/gui/icons/fileopen.png"/>                
+                <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>                
@@ -176,10 +179,50 @@
     </menubar>
 
     <releasenotes>        
-        <release version="1.0.14beta4">
-            <change type="CHANGE">Model names can nott be renamed anylonger (so that numbering in param label should stay consistent)</change>
+        <release version="1.0.15">
+            <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
 
+            <!-- not yet done:
+            <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
+            <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
+            FIXME
+              * Leave resource in MFGui.closeSettings()
+            TODO
+              * add link for futur "ENDtt_Usercode" doc in UserCodePanel
+              * Always edit the master custom model: ie do not only edit the custom model of a settings file.
+              * Finish PlotImage bounds shortcut
+              * Finish plotImage with decimal bounds
+            -->
+            <!--
+            <prerelease version="1.0.14 beta 3">
+                <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>
+            </prerelease>
+            <prerelease version="1.0.14 beta 2">
+                <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>
+                <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>
+            </prerelease>
+            <prerelease version="1.0.14 beta 1">
+                <change type="FEATURE">Basic support for user models</change>
+            </prerelease>
+            -->
+        </release>
+       <release version="1.0.15"><pubDate>Thu, 15 Oct 2015 20:47:00 GMT</pubDate>
+            <prerelease version="1.0.15 beta ">
+              <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/718">Fix loading of oifits through samp from local files</change>
+          </prerelease>
+        </release>
+         
+        <release version="1.0.14"><pubDate>Tue, 13 Oct 2015 17:30:00 GMT</pubDate>
+            <prerelease version="1.0.14 beta ">
+            <change type="CHANGE">The model library now provides blackbody models : background_BB, disk_BB, gaussian_BB, punct_BB, stretched_disk_BB, stretched_gaussian_BB</change>
+<change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
+            <change type="CHANGE">Run fit action can now be cancelled</change>
+			
+            <change type="CHANGE">Add load oifits file action in the menu entry and toolbar. User can start from scratch just loading data.</change>
+            <change type="CHANGE">Use huge tooltips for model that includes it's description</change>
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/710">Set inserted nodes visible in the main Settings tree (move scrollbar)</change>
+            <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/714">Increase default sampling values for chi2 maps and model image</change>
             <!-- not yet done:
             <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
             <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -202,9 +245,10 @@
                 <prerelease version="1.0.14 beta 1">                                
                     <change type="FEATURE">Basic support for user models</change>                                                                                                                 
                 </prerelease>
-                -->
+            -->
+            </prerelease>
             </release>
-            <release version="1.0.13">
+        <release version="1.0.13"><pubDate>Mon, 08 Apr 2013 16:48:52 GMT</pubDate>
             <prerelease version="1.0.13 beta 7">                                
             <!-- restore default preferences for yoga webservice url -->                
             </prerelease><prerelease version="1.0.13 beta 6">                                                
@@ -231,7 +275,7 @@
             </prerelease><prerelease version="1.0.13 beta 1">                              
             <change type="CHANGE">Inline documentation updated.</change>                                        
             </prerelease>       
-            </release>
+        </release>
         <release version="1.0.12"><pubDate>Fri, 26 Oct 2012 10:40:56 GMT</pubDate>
             <prerelease version="1.0.12 beta 6">               
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>                

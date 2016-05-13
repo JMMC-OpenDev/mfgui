@@ -55,18 +55,31 @@ public class ModelListRenderer extends DefaultListCellRenderer {
             val = null;
         } else if (value instanceof Model) {
             Model m = (Model) value;
-
-            // Handle polar and stretched attributes
-            if (!m.getPolar() && !m.getStretched()) {
+            if (m.getOperatorCount() == 0) {
                 val = m.getType();
-            } else if (m.getPolar() && m.getStretched()) {
-                val = m.getType() + " (polar, stretched)";
-            } else if (m.getPolar()) {
-                val = m.getType() + " (polar)";
             } else {
-                val = m.getType() + " (stretched)";
+                StringBuilder sb = new StringBuilder(32);
+                sb.append("( ");
+                for (int i = 0; i < m.getOperatorCount(); i++) {
+                    sb.append(m.getOperator(i).getName());
+                    sb.append(" ");
+                }
+                sb.append(")");
+                val = m.getType() + sb.toString();
             }
 
+            /* TODO change name depending of operators
+             // Handle polar and stretched attributes
+             if (!m.getPolar() && !m.getStretched()) {
+             val = m.getType();
+             } else if (m.getPolar() && m.getStretched()) {
+             val = m.getType() + " (polar, stretched)";
+             } else if (m.getPolar()) {
+             val = m.getType() + " (polar)";
+             } else {
+             val = m.getType() + " (stretched)";
+             }
+             */
         } else {
             val = value.toString();
         }
@@ -75,17 +88,16 @@ public class ModelListRenderer extends DefaultListCellRenderer {
                 list, val, index,
                 isSelected, cellHasFocus);
 
-        
         if (value instanceof Model) {
             Model m = (Model) value;
             // put custom in italics
             if (ModelUtils.isUserModel(m)) {
                 this.setFont(this.getFont().deriveFont(Font.ITALIC + Font.BOLD));
             }
-        
+
             /* TODO set Icon : setIcon(this, (Model) value); */
         }
-        
+
         return this;
     }
 }

@@ -16,8 +16,6 @@ import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Parameter;
 import fr.jmmc.mf.models.ParameterLink;
 import fr.jmmc.mf.models.Response;
-import fr.jmmc.mf.models.ResponseItem;
-import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import java.awt.BorderLayout;
@@ -76,9 +74,10 @@ import ptolemy.plot.plotml.PlotMLParser;
  * jmmc.mcs.* package
  */
 public class UtilsClass {
+
     /** Constrains castor mapping rules */
     public static final String CastorXmlMappingFile = "fr/jmmc/mf/gui/mapping.xml";
-    
+
     static final String className = UtilsClass.class.getName();
     static final Logger logger = LoggerFactory.getLogger(className);
     /**
@@ -164,7 +163,6 @@ public class UtilsClass {
         logger.debug("end xslt from ptolemy xml to TSV");
 
         // TODO use stream
-
         // Write content into a temporary file
         File f = FileUtils.getTempFile("tsvPlot", ".tsv");
         try {
@@ -260,9 +258,9 @@ public class UtilsClass {
                         column.getHeaderValue(), false, false, 0, j);
                 headerWidth = comp.getPreferredSize().width;
 
-                    comp = table.getDefaultRenderer(model.getColumnClass(j)).getTableCellRendererComponent(table,
+                comp = table.getDefaultRenderer(model.getColumnClass(j)).getTableCellRendererComponent(table,
                         model.getValueAt(i, j), false, false, i, j);
-                    cellWidth = comp.getPreferredSize().width;
+                cellWidth = comp.getPreferredSize().width;
 
                 column.setPreferredWidth(Math.min(maxWidth, Math.max(headerWidth, cellWidth)));
             }
@@ -314,7 +312,6 @@ public class UtilsClass {
         }
         return mapping;
     }
-    
 
     /**
      * Marshal the given object into the given writer.
@@ -700,89 +697,33 @@ public class UtilsClass {
      * Following section give accesses to response content.
      *
      */
-    /**
-     * Returns first setting element of given response.
-     *
-     * @param r response used to find settings into
-     * @return the first found settings or null
-     */
-    public static Settings getSettings(Response r) {
-        ResponseItem[] responseItems = r.getResponseItem();
-        for (int i = 0; i < responseItems.length; i++) {
-            ResponseItem responseItem = responseItems[i];
-            if (responseItem.getSettings() != null) {
-                return responseItem.getSettings();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns first setting element of given response.
-     *
-     * @param r response used to find settings into
-     * @return the first found settings or null
-     */
-    public static Model getModel(Response r) {
-        ResponseItem[] responseItems = r.getResponseItem();
-        for (int i = 0; i < responseItems.length; i++) {
-            ResponseItem responseItem = responseItems[i];
-            if (responseItem.getModel() != null) {
-                return responseItem.getModel();
-            }
-        }
-        return null;
-    }
-
-    public static ResultFile[] getResultFiles(Response r) {
-        ResponseItem[] responseItems = r.getResponseItem();
-        Vector<ResultFile> v = new Vector();
-        for (int i = 0; i < responseItems.length; i++) {
-            ResponseItem responseItem = responseItems[i];
-            if (responseItem.getResultFile() != null) {
-                v.add(responseItem.getResultFile());
-            }
-        }
-        return v.toArray(new ResultFile[]{});
-    }
-
     //@todo add list of supported message types actually
     // empty, INFO, MESSAGE, ERROR, WARNING
     public static String getOutputMsg(Response r) {
-        String str = "";
-        ResponseItem[] responseItems = r.getResponseItem();
-        for (int i = 0; i < responseItems.length; i++) {
-            ResponseItem responseItem = responseItems[i];
-            Message m = responseItem.getMessage();
-            if (m != null) {
-                if (m.getType() == null
-                        || m.getType().equalsIgnoreCase("INFO")
-                        || m.getType().equalsIgnoreCase("MESSAGE")) {
-                    str = str + "\n" + m.getContent();
-                }
+        StringBuffer strBuff = new StringBuffer(512);
+        for (Message m : r.getMessage()) {
+            if (m.getType() == null
+                    || m.getType().equalsIgnoreCase("INFO")
+                    || m.getType().equalsIgnoreCase("MESSAGE")) {
+                strBuff.append("\n").append(m.getContent());
             }
         }
-        return str;
+        return strBuff.toString();
     }
 
     public static String getErrorMsg(Response r) {
-        String str = "";
-        ResponseItem[] responseItems = r.getResponseItem();
-        for (int i = 0; i < responseItems.length; i++) {
-            ResponseItem responseItem = responseItems[i];
-            Message m = responseItem.getMessage();
-            if (m != null) {
-                if (m.getType() != null) {
+        StringBuffer strBuff = new StringBuffer(512);
+        for (Message m : r.getMessage()) {
+            if (m.getType() != null) {
                     if ((m.getType().equalsIgnoreCase("ERROR"))
                             || m.getType().equalsIgnoreCase("USAGE")
                             || m.getType().equalsIgnoreCase("WARNING")) {
-                        str = str + "\n" + m.getContent();
+                        strBuff.append("\n").append(m.getContent());
                         logger.debug("getErrorMsg find a message of type: {}", m.getType());
                     }
                 }
             }
-        }
-        return str;
+        return strBuff.toString();
     }
 
     /**
@@ -840,7 +781,6 @@ public class UtilsClass {
             }
         }
 
-
         return v.toArray(new Model[0]);
     }
 
@@ -852,21 +792,21 @@ public class UtilsClass {
      * 
      * @return true if settings contains one or more model of given type, else false
      */
-    public static boolean hasModel(final Settings s,final String modelType) {
+    public static boolean hasModel(final Settings s, final String modelType) {
 
         // Test target's models and their parameters
         for (Target t : s.getTargets().getTarget()) {
             final Model[] models = t.getModel();
-            for (Model m : models) {                
-                if(m.getType().equals(modelType)){
+            for (Model m : models) {
+                if (m.getType().equals(modelType)) {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Return the maximum value of the model unique index found recursively using the given model and child models
      *
