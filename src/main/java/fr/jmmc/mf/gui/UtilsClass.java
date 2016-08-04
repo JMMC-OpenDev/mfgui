@@ -578,7 +578,6 @@ public class UtilsClass {
      */
     public static File saveBASE64ToFile(String b64, String type) {
         java.io.File outputFile = FileUtils.getTempFile("tmpB64File", "." + type);
-        outputFile.deleteOnExit();
         if (saveBASE64ToFile(b64, outputFile) == null) {
             return null;
         }
