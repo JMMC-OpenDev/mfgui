@@ -6,7 +6,7 @@
  -->
 
 <ApplicationData link="http://www.jmmc.fr/litpro">
-    
+
     <company>
         <short_name>JMMC</short_name>
         <legal_name>Jean-Marie Mariotti Center</legal_name>
@@ -22,7 +22,14 @@
     <jnlp>http://apps.jmmc.fr/~swmgr/LITpro/LITpro.jnlp</jnlp>
     <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
 
-    <dependences>      
+    <distribution>
+        <application_data_file>ApplicationRelease.xml</application_data_file>
+        <public_url>http://apps.jmmc.fr/~swmgr/LITpro/</public_url>
+        <beta_url>http://apps.jmmc.fr/~betaswmgr/LITpro/</beta_url>
+        <alpha_url>http://apps.jmmc.fr/~mellag/LITpro/</alpha_url>
+    </distribution>
+
+    <dependences>
 
         <!-- JMMC -->
 
@@ -31,7 +38,7 @@
             description="JMMC library to provide common astronomical computations (coordinate conversion, SIMBAD star resolver and analytical object models in interferometry)"
             link="http://www.jmmc.fr/dev/jmal/"
             jars="jmal.jar"
-            license="CECILL-B ???"/>     
+            license="CECILL-B ???"/>
 
         <!-- Java Mariotti OIfitsExplorer-core -->
         <package name="OIFits Explorer core"
@@ -45,7 +52,7 @@
             description="OITools is the JMMC library dedicated to OIFits manipulation (load, save and validation)"
             link="http://www.jmmc.fr/dev/oitools/"
             jars="oitools.jar"
-            license="CECILL-B ???"/>     
+            license="CECILL-B ???"/>
 
 
         <!-- 1. Science / VO libraries (always on top for better visibility) -->
@@ -88,14 +95,14 @@
 
 
         <!-- 2. Swing -->
-        
+
         <!-- LITpro dependencies -->
 
         <package name="Ptolemy plots"
             description="2D plots"
             link="http://ptolemy.eecs.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/index.htm"
             jars="ptplot5.6.jar"/>
-        
+
         <package name="RSyntaxTextArea"
             description="Text components with syntax highlighting"
             link="http://fifesoft.com/rsyntaxtextarea/index.php"
@@ -127,10 +134,10 @@
             (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
             SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         -->
-        
+
 
         <!-- 3. Tools -->
-        
+
         <!-- LITpro dependencies -->
 
         <!--  Xml binding (castor) -->
@@ -138,7 +145,7 @@
             description="Create Java classes from XSD schema"
             link="http://www.castor.org/"
             jars="castor.jar"/>
-            
+
         <!-- castor dependency -->
         <package name="xercesImpl"
             description="XML validation"
@@ -146,7 +153,7 @@
             jars="xercesImpl.jar xmlParserAPIs.jar"/>
 
     </dependences>
-    
+
     <menubar>
         <menu label="File">
             <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
@@ -156,17 +163,17 @@
                   icon="fr/jmmc/jmcs/resource/image/file_add.png"/>
                 <menu/> <!-- menu separator -->
             <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
-                  icon="fr/jmmc/mf/gui/icons/fileopen.png"/>                
+                  icon="fr/jmmc/mf/gui/icons/fileopen.png"/>
                 <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
-                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>                
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
-                icon="fr/jmmc/mf/gui/icons/filesaveas.png"/>            
+                icon="fr/jmmc/mf/gui/icons/filesaveas.png"/>
         </menu>
         <menu label="Edit">
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
@@ -178,7 +185,7 @@
         </menu>
     </menubar>
 
-    <releasenotes>        
+    <releasenotes>
         <release version="1.0.17"><pubDate>Fri, 13 May 2016 13:13:13 GMT</pubDate>
             <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
@@ -217,13 +224,13 @@
               <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/718">Fix loading of oifits through samp from local files</change>
           </prerelease>
         </release>
-         
+
         <release version="1.0.14"><pubDate>Tue, 13 Oct 2015 17:30:00 GMT</pubDate>
             <prerelease version="1.0.14 beta ">
             <change type="CHANGE">The model library now provides blackbody models : background_BB, disk_BB, gaussian_BB, punct_BB, stretched_disk_BB, stretched_gaussian_BB</change>
 <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
             <change type="CHANGE">Run fit action can now be cancelled</change>
-			
+
             <change type="CHANGE">Add load oifits file action in the menu entry and toolbar. User can start from scratch just loading data.</change>
             <change type="CHANGE">Use huge tooltips for model that includes it's description</change>
             <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/710">Set inserted nodes visible in the main Settings tree (move scrollbar)</change>
@@ -240,104 +247,104 @@
               * Finish plotImage with decimal bounds
             -->
             <!--
-                <prerelease version="1.0.14 beta 3">                                
-                    <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>                                                                                                                                                                                
+                <prerelease version="1.0.14 beta 3">
+                    <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>
                 </prerelease>
-                <prerelease version="1.0.14 beta 2">                                
-                    <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>                              
+                <prerelease version="1.0.14 beta 2">
+                    <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>
                     <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>
                 </prerelease>
-                <prerelease version="1.0.14 beta 1">                                
-                    <change type="FEATURE">Basic support for user models</change>                                                                                                                 
+                <prerelease version="1.0.14 beta 1">
+                    <change type="FEATURE">Basic support for user models</change>
                 </prerelease>
             -->
             </prerelease>
             </release>
         <release version="1.0.13"><pubDate>Mon, 08 Apr 2013 16:48:52 GMT</pubDate>
-            <prerelease version="1.0.13 beta 7">                                
-            <!-- restore default preferences for yoga webservice url -->                
-            </prerelease><prerelease version="1.0.13 beta 6">                                                
+            <prerelease version="1.0.13 beta 7">
+            <!-- restore default preferences for yoga webservice url -->
+            </prerelease><prerelease version="1.0.13 beta 6">
                 <change type="CHANGE">Target panels sub-components moved to save space</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/450">Chi2 cuts bounds are now reported immediatly if entered out of parameter's bounds</change>
-                                              
-            </prerelease><prerelease version="1.0.13 beta 5"> 
-                <change type="FEATURE">Chi2 map can be performed in probe mode (use 'run fit' check box)</change>                              
-                <change type="FEATURE">Provide a checkbox to skip very long (and sometimes non working) processing inside the GUI - should be improved</change>                    
+
+            </prerelease><prerelease version="1.0.13 beta 5">
+                <change type="FEATURE">Chi2 map can be performed in probe mode (use 'run fit' check box)</change>
+                <change type="FEATURE">Provide a checkbox to skip very long (and sometimes non working) processing inside the GUI - should be improved</change>
                 <change type="CHANGE">Fix 'bad case' blocking error loading in the GUI some oifits</change>
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Fix support of running fit with a max iteration value over 1000</change>                
-            </prerelease><prerelease version="1.0.13 beta 4"> 
-            <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>                                      
-            <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>                                                  
-            </prerelease><prerelease version="1.0.13 beta 3">            
-            <change type="CHANGE"  url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>                                             
-            <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>            
-            <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>            
-            </prerelease><prerelease version="1.0.13 beta 2">               
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Fix support of running fit with a max iteration value over 1000</change>
+            </prerelease><prerelease version="1.0.13 beta 4">
+            <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>
+            <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>
+            </prerelease><prerelease version="1.0.13 beta 3">
+            <change type="CHANGE"  url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>
+            <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>
+            <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>
+            </prerelease><prerelease version="1.0.13 beta 2">
             <change type="DEVELOPPER">Use common XmlFactory for xslt transformations.</change>
             <change type="DEVELOPPER">Use use jide checkboxLists.</change>
-            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>                                        
-            </prerelease><prerelease version="1.0.13 beta 1">                              
-            <change type="CHANGE">Inline documentation updated.</change>                                        
-            </prerelease>       
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>
+            </prerelease><prerelease version="1.0.13 beta 1">
+            <change type="CHANGE">Inline documentation updated.</change>
+            </prerelease>
         </release>
         <release version="1.0.12"><pubDate>Fri, 26 Oct 2012 10:40:56 GMT</pubDate>
-            <prerelease version="1.0.12 beta 6">               
-            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>                
-            <change type="CHANGE">Uncompressed OIFits files are now always zipped before beeing embedded in the xml setting.</change>                                        
-            </prerelease>       
-            <prerelease version="1.0.12 beta 5">               
-            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/340">Fix support of '*' in fits loaded filenames</change>                
-            <!-- <change type="BUGFIX">fix App.isAlpha() for the beta versions</change>-->                
-            </prerelease>       
-            <prerelease version="1.0.12 beta 4">                               
-            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/338">Fix NPE in loss of focus from the empty cells of the parameters tables</change>                
-            </prerelease>            
-            <prerelease version="1.0.12b2">                
+            <prerelease version="1.0.12 beta 6">
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>
+            <change type="CHANGE">Uncompressed OIFits files are now always zipped before beeing embedded in the xml setting.</change>
+            </prerelease>
+            <prerelease version="1.0.12 beta 5">
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/340">Fix support of '*' in fits loaded filenames</change>
+            <!-- <change type="BUGFIX">fix App.isAlpha() for the beta versions</change>-->
+            </prerelease>
+            <prerelease version="1.0.12 beta 4">
+            <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/338">Fix NPE in loss of focus from the empty cells of the parameters tables</change>
+            </prerelease>
+            <prerelease version="1.0.12b2">
                 <change type="CHANGE">Use default file chooser on Mac OS X (excepted for multiselection choosers)</change>
                 <change type="CHANGE">Save action now save by default result nodes (use preferences to change behaviour)</change>
                 <change type="FEATURE">Accept oifits through samp message table.load.fits (visit http://jmmc.fr/oidb)</change>
-                <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>                
-            </prerelease> 
+                <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>
+            </prerelease>
             </release>
-       <release version="1.0.11"><pubDate>Wed, 18 Apr 2012 15:46:03 GMT</pubDate>            
-            <prerelease version="1.0.11b11">               
+       <release version="1.0.11"><pubDate>Wed, 18 Apr 2012 15:46:03 GMT</pubDate>
+            <prerelease version="1.0.11b11">
                 <!-- use jide checkboxList -->
                 <!-- restore default preferences for yoga webservice url -->
                 <!--<change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/303">Fix error handling</change> -->
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/292">Handle oifits flags encoded as integer/short/char (0 indicates false else true)</change>
-            </prerelease> 
-            <prerelease version="1.0.11b10">               
-                <change type="CHANGE">... and many other things provided by the shared code between JMMC applications!!</change>                
+            </prerelease>
+            <prerelease version="1.0.11b10">
+                <change type="CHANGE">... and many other things provided by the shared code between JMMC applications!!</change>
                 <change type="CHANGE">Interactive plots get proper range to display amplitudes or phases</change>
-                <change type="CHANGE">LITpro web service urls are reset and not shown in the preference window anylonger.</change>                                
-                <change type="CHANGE">Magnified images produced by LITpro web service (yorick core)</change>                                
+                <change type="CHANGE">LITpro web service urls are reset and not shown in the preference window anylonger.</change>
+                <change type="CHANGE">Magnified images produced by LITpro web service (yorick core)</change>
             </prerelease>
-            <prerelease version="1.0.11b9">               
-                <!-- add a combobox to select fits viewer application in filePanel --> 
-            </prerelease>            
-            <prerelease version="1.0.11b8">               
-                <change type="FEATURE">Model UV maps are now displayed as an animation of images to highlight differences between the model and data</change>                
+            <prerelease version="1.0.11b9">
+                <!-- add a combobox to select fits viewer application in filePanel -->
             </prerelease>
-            <prerelease version="1.0.11b7">               
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/272">Fix error values in tsv export of some plots (with format change)</change>                
+            <prerelease version="1.0.11b8">
+                <change type="FEATURE">Model UV maps are now displayed as an animation of images to highlight differences between the model and data</change>
             </prerelease>
-            <prerelease version="1.0.11b6">                
-                <change type="BUGFIX">Fix java look and feel on some platforms</change>                
+            <prerelease version="1.0.11b7">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/272">Fix error values in tsv export of some plots (with format change)</change>
             </prerelease>
-            <prerelease version="1.0.11a3">                
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>                
-                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>                
+            <prerelease version="1.0.11b6">
+                <change type="BUGFIX">Fix java look and feel on some platforms</change>
+            </prerelease>
+            <prerelease version="1.0.11a3">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>
                 <change type="BUGFIX">Enhancement for multiple removals in the left settings tree</change>
-                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>                                
+                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>
             </prerelease>
             <prerelease version="1.0.11a2">
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
                 <change type="BUGFIX">Fix Null Pointer Exception setting the proper state of the 'Add new Target' button in the Targets Panel</change>
-                <change type="BUGFIX">Improve error handling on the LITpro server side</change>                
+                <change type="BUGFIX">Improve error handling on the LITpro server side</change>
             </prerelease>
-            <prerelease version="1.0.11a1">                
-                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>                
+            <prerelease version="1.0.11a1">
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>
                 <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages easier to understand</change>
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
                 <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require topcat separate startup)</change>
@@ -366,7 +373,7 @@
             </prerelease>
             <prerelease version="1.0.9b2">
                 <change type="BUGFIX">Use new oifits library that fixes bug loading data tables with only one wavelength and using TDIM keywords (1)</change>
-                <change type="BUGFIX">Use new oifits library that fixes several bugs related to ASCII character encoding / decoding and ASCII_NULL support</change>                
+                <change type="BUGFIX">Use new oifits library that fixes several bugs related to ASCII character encoding / decoding and ASCII_NULL support</change>
                 <change type="BUGFIX">Fix residual sign while plotting residual. (M-D)/sigma was plotted instead of (D-M)/sigma.</change>
                 <change type="BUGFIX">Avoid error for radial plots data in T3 residuals cases</change>
                 <change type="CHANGE">Set 'weigthed residuals' instead of 'residuals' in some radial plot titles</change>
@@ -374,12 +381,12 @@
                 <change type="FEATURE">Display version number in the application title bar for Alpha or Beta releases</change>
             </prerelease>
             <prerelease version="1.0.9b1">
-                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>               
-                <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>                
+                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
+                <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>
             </prerelease>
        </release>
         <release version="1.0.8"><pubDate>Tue, 23 Nov 2010 09:58:17 GMT</pubDate>
-            <prerelease version="1.0.8b1">                
+            <prerelease version="1.0.8b1">
                 <change type="BUGFIX">Fix UV coverage plots in the file panel for t3data</change>
             </prerelease>
        </release>
@@ -431,7 +438,7 @@ feature is set to true.
         </prerelease>
       </release>
         <release version="1.0.5"><pubDate>Wed, 21 Jul 2010 16:14:38 GMT</pubDate>
-            <prerelease version="1.0.5b3">                
+            <prerelease version="1.0.5b3">
                 <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
                 <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
                 <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive and chi2 can be plotted in log</change><!-- DOCUPDATE -->
@@ -486,7 +493,7 @@ feature is set to true.
         <!--
         <release version="0.31">
             <prerelease version="0.31beta1000">
-               
+
                 <li>
                 Add one format version of all xml settings files
                 (Future revision will be able to check format validity
@@ -542,7 +549,7 @@ feature is set to true.
             </prerelease>
         </release>
         <release version="0.25">
-            <prerelease version="0.25beta1000">                                
+            <prerelease version="0.25beta1000">
             </prerelease>
             <prerelease version="0.25beta3">
                 <change type="BUGFIX">Fix long latency on preference changes</change>
@@ -741,7 +748,7 @@ feature is set to true.
                 <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
                 <change type="FEATURE">Window closing button now quits application</change>
                 <change type="FEATURE">User can plot image or uv map of model for multiple targets</change>
-                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>            
+                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
             </prerelease>
             <prerelease version="0.11beta1">
                 <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
