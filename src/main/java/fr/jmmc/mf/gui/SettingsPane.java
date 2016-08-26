@@ -53,10 +53,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     /** Main logger */
     final static Logger logger = LoggerFactory.getLogger(className);
     // Application actions
-    
+
     Action saveSettingsAction;
     Action closeSettingsAction;
-    
+
     // List of viewer panel used to display sub components
     TargetsPanel targetsPanel;
     FilesPanel filesPanel;
@@ -92,7 +92,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
 
     private void init() {
-        // instanciate actions        
+        // instanciate actions
         initComponents();
 
         settingsTree = new JTree();
@@ -119,7 +119,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         ActionRegistrar actionRegistrar = ActionRegistrar.getInstance();
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings");
         closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
-        
+
         skipPlotResultsButton.setAction(actionRegistrar.getPreferenceAction());
 
         settingsTree.setModel(settingsModel);
@@ -135,15 +135,15 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         showElement(settingsModel.getRootSettings());
 
         // help to fix userobject that will be given to be shown by the Mutable TreeNode
-        settingsModel.setPlotPanel(plotPanel);        
+        settingsModel.setPlotPanel(plotPanel);
 
         // build help button
-        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));        
+        helpButton1.setAction(new ShowHelpAction(("BEG_RunFit_Bt")));
     }
 
     /**
      * Responds to tree selection events and try to show the element
-     * in the right panel; 
+     * in the right panel;
      */
     public void valueChanged(TreeSelectionEvent e) {
         Object o = e.getPath().getLastPathComponent();
@@ -156,21 +156,19 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     public void update(Observable o, Object arg) {
         checkValidSettings();
     }
-    
+
     private void showElement(Object o) {
 
         if (o == null) {
             return;
         }
 
-        logger.trace("object to show is : {}",o);
+        logger.trace("object to show is : {}", o);
         modifierPanel.removeAll();
 
         // always update runfit subpanel
         updateRunFitPanel();
 
-        
-        
         if (o instanceof DefaultMutableTreeNode && !(o instanceof ResultModel || o instanceof FrameTreeNode)) {
             // dereference most objects if they are mutableTreeNode
             showElement(((DefaultMutableTreeNode) o).getUserObject());
@@ -223,10 +221,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
             modifierPanel.add(resultsPanel);
         } else {
             msgPanel.setMessage("Missing modifier panel for '" + o.getClass()
-                    + "' objects " + o  );
+                    + "' objects " + o);
             modifierPanel.add(msgPanel);
             logger.error("missing modifier panel for {}", o, new Throwable());
-        }        
+        }
         modifierPanel.revalidate();
         modifierPanel.repaint();
         // check one more time that GUI view is up to date
@@ -317,17 +315,17 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     protected void checkValidSettings() {
         // get valid state (that also updates runFitAction state)
         boolean validSettingsModel = settingsModel.isValid();
-        
+
         int nbMeasurements = settingsModel.getNbMeasurements();
         int prefLimit = Preferences.getInstance().getPreferenceAsInt(Preferences.USER_UVPOINT_LIMITFORPLOT);
         boolean limitReached = nbMeasurements > prefLimit;
-        if(limitReached){
-            skipPlotResultsLabel.setText(""+nbMeasurements+" UV points > "+prefLimit+" : skip plots");
+        if (limitReached) {
+            skipPlotResultsLabel.setText("" + nbMeasurements + " UV points > " + prefLimit + " : skip plots");
         }
         skipPlotResultsButton.setVisible(limitReached);
         skipPlotResultsLabel.setVisible(limitReached);
         skipPlotResultsCheckBox.setSelected(limitReached);
-        
+
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
@@ -429,6 +427,12 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         jPanel1.setMinimumSize(new java.awt.Dimension(232, 57));
         jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        runFitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runFitButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -504,7 +508,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         add(jSplitPane1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void updateRunFitPanel() {        
+    private void runFitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runFitButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_runFitButtonActionPerformed
+
+    private void updateRunFitPanel() {
         RunFitAction runFitAction = settingsModel.getRunFitAction();
         runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument(), skipPlotResultsCheckBox.getModel());
         runFitButton.setAction(runFitAction);
