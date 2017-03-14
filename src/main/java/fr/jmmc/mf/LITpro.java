@@ -119,6 +119,8 @@ public class LITpro extends fr.jmmc.jmcs.App {
             @Override
             public void run() {
                 logger.debug("ModelFitting.execute() handler called.");
+                Preferences p = Preferences.getInstance();
+                logger.info("Remote webservice url is '{}' (active={})", p.getPreference(Preferences.YOGA_REMOTE_URL), p.getPreference(Preferences.YOGA_REMOTE_USE));
 
                 getFrame().setVisible(true);
             }
@@ -160,7 +162,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      *  @throws ExecutionException thrown if local execution fails
-     *  @throws IllegalStateException if one unexpected (bad) things occurs 
+     *  @throws IllegalStateException if one unexpected (bad) things occurs
      */
     public static Response execMethod(String methodName, java.io.File xmlFile) throws IOException {
         return execMethod(methodName, xmlFile, "");
@@ -173,7 +175,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
      *  @throws ExecutionException if the local execution fails
-     *  @throws IllegalStateException if one unexpected (bad) things occurs 
+     *  @throws IllegalStateException if one unexpected (bad) things occurs
      */
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
         String xmlResult = null;
@@ -207,7 +209,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *
      * @return the output of the process
      * @throws ExecutionException thrown if process launching fails
-     * @throws IllegalStateException if one unexpected (bad) things occurs 
+     * @throws IllegalStateException if one unexpected (bad) things occurs
      */
     private static String doExec(final String methodName, final java.io.File xmlFile, final String methodArg) {
         final String yogaProgram = myPreferences.getPreference("yoga.local.home") + myPreferences.getPreference("yoga.local.progname");
@@ -253,7 +255,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *
      * @return the output of the process
      * @throws ExecutionException thrown if process launching fails
-     * @throws IllegalStateException if one unexpected (bad) things occurs 
+     * @throws IllegalStateException if one unexpected (bad) things occurs
      */
     private static String doExec(String methodName, java.io.File xmlFile)
             throws ExecutionException {
@@ -344,13 +346,13 @@ public class LITpro extends fr.jmmc.jmcs.App {
         return result;
     }
 
-    /** Execute given command over an HTTP POST 
+    /** Execute given command over an HTTP POST
      *
      * @param methodName name of method to call
      * @param xmlFile setting file
      *
      * @return the output of the process
-     * @throws IOException if IO problems occurs 
+     * @throws IOException if IO problems occurs
      */
     public static String doPost(String methodName, java.io.File xmlFile)
             throws Exception {
@@ -479,7 +481,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
             protected void processMessage(final String senderId,
-                                          final Message message) throws SampException {
+                    final Message message) throws SampException {
 
                 final String xmlModel = (String) message.getParam("model");
                 final String filename = (String) message.getParam("filename");
@@ -566,10 +568,10 @@ public class LITpro extends fr.jmmc.jmcs.App {
             logger.trace("new output line occured: {}", line);
         }
 
-        /** 
+        /**
          * Return the data coming from the stdout of associated process.
-         * 
-         * @return output of command execution 
+         *
+         * @return output of command execution
          */
         public String getContent() {
             return sb.toString();
