@@ -308,7 +308,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         if (USE_USERMODELS) {
             // overwrite url to get a server that support usermodels
             // TODO remove as soon as server side have been upgraded
-            targetURL = "http://jmmc.obs.ujf-grenoble.fr/~mellag/LITproWebService/run.php";
+            targetURL = "http://apps.jmmc.fr/~mellag/LITproWebService/run.php";
         }
 
         try {
