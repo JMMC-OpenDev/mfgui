@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * @author  mella
  */
 public final class MFGui extends JFrame {
@@ -101,22 +101,20 @@ public final class MFGui extends JFrame {
         initTabbedPane();
 
         // Handle toolbar
-
         toolBar = new JToolBar();
         getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
         ActionRegistrar registrar = ActionRegistrar.getInstance();
-        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction", "newModel"));
-        toolBar.add(registrar.get(LoadModelAction.className, LoadModelAction.actionName));
-        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings"));
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction", "newModel")).setHideActionText(true);;
+        toolBar.add(registrar.get(LoadModelAction.className, LoadModelAction.actionName)).setHideActionText(true);;
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings")).setHideActionText(true);;
         toolBar.addSeparator();
-        toolBar.add(registrar.get(LoadDataFilesAction.className, LoadDataFilesAction.actionName));
+        toolBar.add(registrar.get(LoadDataFilesAction.className, LoadDataFilesAction.actionName)).setHideActionText(true);;
         toolBar.addSeparator();
-        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection"));
-        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection"));
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction", "deleteTreeSelection")).setHideActionText(true);;
+        toolBar.add(registrar.get("fr.jmmc.mf.gui.actions.AttachDetachFrameAction", "toggleFrameTreeSelection")).setHideActionText(true);;
         toolBar.addSeparator();
-        toolBar.add(InternalActionFactory.showHelpAction());
+        toolBar.add(InternalActionFactory.showHelpAction()).setHideActionText(true);;
         toolBar.setVisible(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));
-
 
         // Handle status bar
         getContentPane().add(StatusBar.getInstance(), java.awt.BorderLayout.SOUTH);
