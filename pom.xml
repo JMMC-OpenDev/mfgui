@@ -136,7 +136,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
                 <executions>
                     <execution>
                         <id>mfgui-doc</id>
@@ -174,8 +173,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jdeps-plugin</artifactId>
-                <version>3.0.0</version>
-
                 <!-- disable failOnWarning to make the build pass:
 [WARNING] /home/bourgesl/dev/mfgui/src/main/java/fr/jmmc/mf/gui/UtilsClass.java:[456,49] sun.misc.BASE64Encoder is internal proprietary API and may be removed in a future release
 [WARNING] /home/bourgesl/dev/mfgui/src/main/java/fr/jmmc/mf/gui/UtilsClass.java:[494,46] sun.misc.BASE64Decoder is internal proprietary API and may be removed in a future release
