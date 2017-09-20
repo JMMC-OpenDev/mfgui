@@ -68,7 +68,7 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         imageSlider.setMajorTickSpacing(1);
 
         /* Set one iconImage on the swing component which will load the images */
-        if (images[0] != null && false) {
+        if (images[0] != null) {
             imageLabel.setText(null);
             imageIcon = new ImageIcon(images[0]);
             imageLabel.setIcon(imageIcon);
