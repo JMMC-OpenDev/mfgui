@@ -15,10 +15,10 @@ import javax.swing.event.ChangeListener;
 /**
  * Show one frame able to show a list of images files.
  * FIXME check that timer referenced by swing does not leak s.a. LogbackGui
- * 
+ *
  * @author mella
  */
-public class AnimationPanel extends javax.swing.JPanel  implements ActionListener, ChangeListener{
+public class AnimationPanel extends javax.swing.JPanel implements ActionListener, ChangeListener {
 
     /** Timer used for animation */
     Timer timer;
@@ -33,22 +33,22 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
     /** index of displayed image */
     int imageIndex = 0;
     /** Component which handles image */
-    ImageIcon imageIcon=null;
+    ImageIcon imageIcon = null;
 
     /** Creates new form AnimationPanel */
     public AnimationPanel(String description, File[] inputFiles, String[] descriptions) {
-        initComponents();                
-        
+        initComponents();
+
         /* Init and launch the timer that will throw actionEvent */
         timer = new Timer(REFRESH_PERIOD, this);
         timer.setInitialDelay(0);
         timer.start();
 
         /* Init the description label if any desc are given */
-        if(description!=null){
+        if (description != null) {
             descriptionLabel.setText(description);
         }
-        
+
         /* Init the images related arrays */
         files = new File[inputFiles.length];
         images = new Image[inputFiles.length];
@@ -68,16 +68,20 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
         imageSlider.setMajorTickSpacing(1);
 
         /* Set one iconImage on the swing component which will load the images */
-        imageIcon = new ImageIcon(images[0]);
-        imageLabel.setIcon(imageIcon);
-        
+        if (images[0] != null && false) {
+            imageLabel.setText(null);
+            imageIcon = new ImageIcon(images[0]);
+            imageLabel.setIcon(imageIcon);
+        } else {
+            imageLabel.setText("Oups, can't retrieve a valid image for first result file. Please submit a feedback report if you think that this should not occurs.");
+        }
         /* throw actionEvent for changes on some swing elements*/
         animateCheckBox.addActionListener(this);
-        imageSlider.addChangeListener(this);        
+        imageSlider.addChangeListener(this);
     }
-    
+
     /**
-     * Handle event comming from swing components or timer     
+     * Handle event comming from swing components or timer
      * @param e the action event
      */
     public void actionPerformed(ActionEvent e) {
@@ -98,13 +102,15 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
 
     /**
      * Handle Change event of the slider. This method perform image change/update.
-     * 
+     *
      * @param e the change event
      */
-    public void stateChanged(ChangeEvent e) {        
+    public void stateChanged(ChangeEvent e) {
         imageIndex = imageSlider.getValue();
         /* Update and redraw image */
-        imageIcon.setImage(images[imageIndex]);
+        if (images[imageIndex] != null && imageIcon != null) {
+            imageIcon.setImage(images[imageIndex]);
+        }
         filenameLabel.setText(descriptions[imageIndex]);
         imageLabel.repaint();
     }
@@ -170,5 +176,5 @@ public class AnimationPanel extends javax.swing.JPanel  implements ActionListene
     private javax.swing.JLabel imageLabel;
     private javax.swing.JSlider imageSlider;
     // End of variables declaration//GEN-END:variables
-    
+
 }
