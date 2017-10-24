@@ -12,9 +12,9 @@
             <icon href="@GENERATED@/LITpro.jpg"/>
             <description>LITpro settings files</description>
         </association>
-        <shortcut online="true" install="false">
+        <shortcut online="true" install="true">
             <desktop/>
-            <menu submenu="JMMC"/>
+            <menu/>
         </shortcut>
     </information>
     <security>
