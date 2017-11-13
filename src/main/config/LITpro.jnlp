@@ -12,9 +12,8 @@
             <icon href="@GENERATED@/LITpro.jpg"/>
             <description>LITpro settings files</description>
         </association>
-        <shortcut online="true" install="true">
+        <shortcut>
             <desktop/>
-            <menu/>
         </shortcut>
     </information>
     <security>
