@@ -9,6 +9,8 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.MessagePane.ConfirmSaveChanges;
 import fr.jmmc.jmcs.service.XslTransform;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.jmcs.util.codecs.BASE64Decoder;
+import fr.jmmc.jmcs.util.codecs.BASE64Encoder;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Message;
@@ -26,12 +28,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
@@ -361,7 +367,7 @@ public class UtilsClass {
     public static Object unmarshal(Class c, String xml) throws IllegalStateException, IllegalArgumentException {
         // TODO do not instantiate mapping on each call
         Object o = null;
-        Reader reader = new java.io.StringReader(xml);
+        Reader reader = new StringReader(xml);
         try {
             // Do marshalling   
             Unmarshaller unmarshaller = new Unmarshaller();
@@ -431,7 +437,7 @@ public class UtilsClass {
      */
     public static String getBase64Href(String filenameToEncode, String dataType)
             throws IllegalStateException {
-        java.io.File fileToEncode = new java.io.File(filenameToEncode);
+        File fileToEncode = new File(filenameToEncode);
         return getBase64Href(fileToEncode, dataType);
     }
 
@@ -443,16 +449,30 @@ public class UtilsClass {
      * @return the base64 buffer
      * @throws IllegalStateException if one io occurs or converter fails
      */
-    public static String getBase64Href(java.io.File fileToEncode, String dataType)
+    public static String getBase64Href(File fileToEncode, String dataType)
             throws IllegalStateException {
+
+        RandomAccessFile raf = null;
         try {
-            String base64DataType = "data:" + dataType + ";base64,";
+            final String base64DataType = "data:" + dataType + ";base64,";
+
             // Create a read-only memory-mapped file
-            java.nio.channels.FileChannel roChannel = new java.io.RandomAccessFile(fileToEncode, "r").getChannel();
-            java.nio.ByteBuffer roBuf = roChannel.map(java.nio.channels.FileChannel.MapMode.READ_ONLY, 0, (int) roChannel.size());
-            return base64DataType + new sun.misc.BASE64Encoder().encode(roBuf);
+            raf = new RandomAccessFile(fileToEncode, "r");
+            FileChannel roChannel = raf.getChannel();
+            ByteBuffer roBuf = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, roChannel.size());
+
+            // Use (openjdk7) Base64 encoder:
+            return base64DataType + new BASE64Encoder().encode(roBuf);
         } catch (IOException ex) {
             throw new IllegalStateException("Can't encode file '" + fileToEncode.getAbsolutePath() + "' in base64", ex);
+        } finally {
+            if (raf != null) {
+                try {
+                    raf.close();
+                } catch (IOException ioe) {
+                    logger.error("Close file", ioe);
+                }
+            }
         }
     }
 
@@ -463,7 +483,6 @@ public class UtilsClass {
      *
      * @return The original file content. @ todo do cleanup with probably
      * duplicated mime type constants...
-     * @throws IOException
      */
     public static String saveBASE64ToString(String b64) {
         String[] dataTypes = new String[]{
@@ -479,7 +498,7 @@ public class UtilsClass {
 
             if (b64.startsWith(base64DataType)) {
                 logger.debug("start of decoding '{}'", base64DataType);
-                java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
+                StringTokenizer st = new StringTokenizer(b64.substring(base64DataType.length()));
 
                 StringBuilder sb = new StringBuilder(base64DataType.length());
                 while (st.hasMoreTokens()) {
@@ -488,13 +507,15 @@ public class UtilsClass {
                 ByteArrayOutputStream out = null;
                 GZIPInputStream gzipInputStream = null;
                 try {
-                    byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                    // Use (openjdk7) Base64 decoder:
+                    byte[] buf = new BASE64Decoder().decodeBuffer(sb.toString());
+                    out = new ByteArrayOutputStream(buf.length);
+
                     if (base64DataType.contains("x-gzip")) {
                         logger.debug("base64 file was gzipped, unzipping '{}'", base64DataType);
                         gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buf));
-                        out = new ByteArrayOutputStream(base64DataType.length());
                         // Transfer bytes from the compressed file to the output file
-                        byte[] b = new byte[1024];
+                        final byte[] b = new byte[1024];
                         int len;
                         while ((len = gzipInputStream.read(b)) > 0) {
                             out.write(b, 0, len);
@@ -529,7 +550,7 @@ public class UtilsClass {
      *
      */
     public static File saveBASE64ToFile(String b64, File outputFile) {
-        String[] dataTypes = new String[]{
+        final String[] dataTypes = new String[]{
             IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
         };
         for (int i = 0; i <= dataTypes.length; i++) {
@@ -542,7 +563,7 @@ public class UtilsClass {
 
             if (b64.startsWith(base64DataType)) {
                 logger.debug("start of decoding '{}' file into {}", base64DataType, outputFile.getAbsolutePath());
-                java.util.StringTokenizer st = new java.util.StringTokenizer(b64.substring(base64DataType.length()));
+                StringTokenizer st = new StringTokenizer(b64.substring(base64DataType.length()));
                 StringBuilder sb = new StringBuilder(base64DataType.length());
                 while (st.hasMoreTokens()) {
                     sb.append(st.nextToken());
@@ -550,7 +571,8 @@ public class UtilsClass {
                 // This should not occur because data should have been computed by software only
                 FileOutputStream out = null;
                 try {
-                    byte[] buf = new sun.misc.BASE64Decoder().decodeBuffer(sb.toString());
+                    // Use (openjdk7) Base64 decoder:
+                    byte[] buf = new BASE64Decoder().decodeBuffer(sb.toString());
                     out = new FileOutputStream(outputFile);
                     out.write(buf);
                 } catch (IOException ioe) {
@@ -577,7 +599,7 @@ public class UtilsClass {
      * @throws IOException
      */
     public static File saveBASE64ToFile(String b64, String type) {
-        java.io.File outputFile = FileUtils.getTempFile("tmpB64File", "." + type);
+        File outputFile = FileUtils.getTempFile("tmpB64File", "." + type);
         if (saveBASE64ToFile(b64, outputFile) == null) {
             return null;
         }
@@ -668,7 +690,7 @@ public class UtilsClass {
      */
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
-            SAXException, IOException {
+                   SAXException, IOException {
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
@@ -714,14 +736,14 @@ public class UtilsClass {
         StringBuffer strBuff = new StringBuffer(512);
         for (Message m : r.getMessage()) {
             if (m.getType() != null) {
-                    if ((m.getType().equalsIgnoreCase("ERROR"))
-                            || m.getType().equalsIgnoreCase("USAGE")
-                            || m.getType().equalsIgnoreCase("WARNING")) {
-                        strBuff.append("\n").append(m.getContent());
-                        logger.debug("getErrorMsg find a message of type: {}", m.getType());
-                    }
+                if ((m.getType().equalsIgnoreCase("ERROR"))
+                        || m.getType().equalsIgnoreCase("USAGE")
+                        || m.getType().equalsIgnoreCase("WARNING")) {
+                    strBuff.append("\n").append(m.getContent());
+                    logger.debug("getErrorMsg find a message of type: {}", m.getType());
                 }
             }
+        }
         return strBuff.toString();
     }
 
