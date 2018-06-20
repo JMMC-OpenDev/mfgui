@@ -187,7 +187,7 @@
 
     <releasenotes>
         <release version="1.0.18">
-            <prerelease version="1.0.18 alpha 1"></prerelease>
+            <prerelease version="1.0.18 alpha 1">
             <!-- not yet done:
             <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
             <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
