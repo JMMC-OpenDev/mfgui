@@ -3,9 +3,9 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;
@@ -26,12 +26,12 @@ public class LoadRemoteModelAction extends RegisteredAction {
 
     public void actionPerformed(ActionEvent e) {
         String url = (String) JOptionPane.showInputDialog("Enter URL of remote setting:", lastURL);
-        
+
         // just return if user cancel action
-        if (url == null){
+        if (url == null) {
             return;
         }
-        
+
         try {
             mfgui.addSettings(new SettingsModel(url));
         } catch (IOException ex) {

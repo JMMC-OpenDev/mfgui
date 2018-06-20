@@ -15,7 +15,7 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.18 beta 1"/>
+    <program name="LITpro" version="1.0.18 alpha 1"/>
     <compilation date="13/05/2016" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
@@ -187,7 +187,7 @@
 
     <releasenotes>
         <release version="1.0.18">
-            <prerelease version="1.0.18 beta 1"></prerelease>
+            <prerelease version="1.0.18 alpha 1"></prerelease>
             <!-- not yet done:
             <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
             <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -211,6 +211,8 @@
                 <change type="FEATURE">Basic support for user models</change>
             </prerelease>
             -->
+                <change type="FEATURE">Basic support for genetic fitter</change>
+            </prerelease>
         </release>
         <release version="1.0.17"><pubDate>Fri, 13 May 2016 13:13:13 GMT</pubDate>
             <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>

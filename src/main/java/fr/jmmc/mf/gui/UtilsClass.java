@@ -135,7 +135,7 @@ public class UtilsClass {
         // Save laf to restore it after ptolemy stuff which change it
         LookAndFeel laf = UIManager.getLookAndFeel();
 
-        // Show plot into frame        
+        // Show plot into frame
         final PlotMLFrame plotMLFrame = new PlotMLFrame("Plotting " + plotName, plot);
         try {
             UIManager.setLookAndFeel(laf);
@@ -332,7 +332,7 @@ public class UtilsClass {
      * @throws IllegalStateException if Mapping Exception occurs
      */
     public static void marshal(Object objectToMarshal, Writer writer) throws IOException, IllegalArgumentException, IllegalStateException {
-        // Do marshalling      
+        // Do marshalling
         Marshaller marshaller = new Marshaller(writer);
         try {
             Mapping m = getMapping();
@@ -369,7 +369,7 @@ public class UtilsClass {
         Object o = null;
         Reader reader = new StringReader(xml);
         try {
-            // Do marshalling   
+            // Do marshalling
             Unmarshaller unmarshaller = new Unmarshaller();
             Mapping m = getMapping();
             // TODO check if following statement is still required to be synchronized
@@ -690,7 +690,7 @@ public class UtilsClass {
      */
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
-                   SAXException, IOException {
+            SAXException, IOException {
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
@@ -810,7 +810,7 @@ public class UtilsClass {
      *
      * @param type model type to search for
      * @param s settings to search into
-     * 
+     *
      * @return true if settings contains one or more model of given type, else false
      */
     public static boolean hasModel(final Settings s, final String modelType) {

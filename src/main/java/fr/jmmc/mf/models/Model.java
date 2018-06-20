@@ -70,11 +70,6 @@ public class Model implements java.io.Serializable {
      */
     private java.util.List<fr.jmmc.mf.models.Operator> _operatorList;
 
-    /**
-     * Field _skipOperatorList.
-     */
-    private java.util.List<java.lang.String> _skipOperatorList;
-
 
       //----------------/
      //- Constructors -/
@@ -86,7 +81,6 @@ public class Model implements java.io.Serializable {
         this._parameterList = new java.util.ArrayList<fr.jmmc.mf.models.Parameter>();
         this._parameterLinkList = new java.util.ArrayList<fr.jmmc.mf.models.ParameterLink>();
         this._operatorList = new java.util.ArrayList<fr.jmmc.mf.models.Operator>();
-        this._skipOperatorList = new java.util.ArrayList<java.lang.String>();
     }
 
 
@@ -207,34 +201,6 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * 
-     * 
-     * @param vSkipOperator
-     * @throws java.lang.IndexOutOfBoundsException if the index
-     * given is outside the bounds of the collection
-     */
-    public void addSkipOperator(
-            final java.lang.String vSkipOperator)
-    throws java.lang.IndexOutOfBoundsException {
-        this._skipOperatorList.add(vSkipOperator);
-    }
-
-    /**
-     * 
-     * 
-     * @param index
-     * @param vSkipOperator
-     * @throws java.lang.IndexOutOfBoundsException if the index
-     * given is outside the bounds of the collection
-     */
-    public void addSkipOperator(
-            final int index,
-            final java.lang.String vSkipOperator)
-    throws java.lang.IndexOutOfBoundsException {
-        this._skipOperatorList.add(index, vSkipOperator);
-    }
-
-    /**
      * Method enumerateModel.
      * 
      * @return an Enumeration over all possible elements of this
@@ -276,17 +242,6 @@ public class Model implements java.io.Serializable {
     public java.util.Enumeration<? extends fr.jmmc.mf.models.ParameterLink> enumerateParameterLink(
     ) {
         return java.util.Collections.enumeration(this._parameterLinkList);
-    }
-
-    /**
-     * Method enumerateSkipOperator.
-     * 
-     * @return an Enumeration over all possible elements of this
-     * collection
-     */
-    public java.util.Enumeration<? extends java.lang.String> enumerateSkipOperator(
-    ) {
-        return java.util.Collections.enumeration(this._skipOperatorList);
     }
 
     /**
@@ -511,51 +466,6 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Method getSkipOperator.
-     * 
-     * @param index
-     * @throws java.lang.IndexOutOfBoundsException if the index
-     * given is outside the bounds of the collection
-     * @return the value of the java.lang.String at the given index
-     */
-    public java.lang.String getSkipOperator(
-            final int index)
-    throws java.lang.IndexOutOfBoundsException {
-        // check bounds for index
-        if (index < 0 || index >= this._skipOperatorList.size()) {
-            throw new IndexOutOfBoundsException("getSkipOperator: Index value '" + index + "' not in range [0.." + (this._skipOperatorList.size() - 1) + "]");
-        }
-
-        return (java.lang.String) _skipOperatorList.get(index);
-    }
-
-    /**
-     * Method getSkipOperator.Returns the contents of the
-     * collection in an Array.  <p>Note:  Just in case the
-     * collection contents are changing in another thread, we pass
-     * a 0-length Array of the correct type into the API call. 
-     * This way we <i>know</i> that the Array returned is of
-     * exactly the correct length.
-     * 
-     * @return this collection as an Array
-     */
-    public java.lang.String[] getSkipOperator(
-    ) {
-        java.lang.String[] array = new java.lang.String[0];
-        return (java.lang.String[]) this._skipOperatorList.toArray(array);
-    }
-
-    /**
-     * Method getSkipOperatorCount.
-     * 
-     * @return the size of this collection
-     */
-    public int getSkipOperatorCount(
-    ) {
-        return this._skipOperatorList.size();
-    }
-
-    /**
      * Returns the value of field 'type'.
      * 
      * @return the value of field 'Type'.
@@ -625,17 +535,6 @@ public class Model implements java.io.Serializable {
     }
 
     /**
-     * Method iterateSkipOperator.
-     * 
-     * @return an Iterator over all possible elements in this
-     * collection
-     */
-    public java.util.Iterator<? extends java.lang.String> iterateSkipOperator(
-    ) {
-        return this._skipOperatorList.iterator();
-    }
-
-    /**
      * 
      * 
      * @param out
@@ -693,13 +592,6 @@ public class Model implements java.io.Serializable {
     public void removeAllParameterLink(
     ) {
         this._parameterLinkList.clear();
-    }
-
-    /**
-     */
-    public void removeAllSkipOperator(
-    ) {
-        this._skipOperatorList.clear();
     }
 
     /**
@@ -796,30 +688,6 @@ public class Model implements java.io.Serializable {
             final int index) {
         java.lang.Object obj = this._parameterLinkList.remove(index);
         return (fr.jmmc.mf.models.ParameterLink) obj;
-    }
-
-    /**
-     * Method removeSkipOperator.
-     * 
-     * @param vSkipOperator
-     * @return true if the object was removed from the collection.
-     */
-    public boolean removeSkipOperator(
-            final java.lang.String vSkipOperator) {
-        boolean removed = _skipOperatorList.remove(vSkipOperator);
-        return removed;
-    }
-
-    /**
-     * Method removeSkipOperatorAt.
-     * 
-     * @param index
-     * @return the element removed from the collection
-     */
-    public java.lang.String removeSkipOperatorAt(
-            final int index) {
-        java.lang.Object obj = this._skipOperatorList.remove(index);
-        return (java.lang.String) obj;
     }
 
     /**
@@ -1000,41 +868,6 @@ public class Model implements java.io.Serializable {
     public void setShortdesc(
             final java.lang.String shortdesc) {
         this._shortdesc = shortdesc;
-    }
-
-    /**
-     * 
-     * 
-     * @param index
-     * @param vSkipOperator
-     * @throws java.lang.IndexOutOfBoundsException if the index
-     * given is outside the bounds of the collection
-     */
-    public void setSkipOperator(
-            final int index,
-            final java.lang.String vSkipOperator)
-    throws java.lang.IndexOutOfBoundsException {
-        // check bounds for index
-        if (index < 0 || index >= this._skipOperatorList.size()) {
-            throw new IndexOutOfBoundsException("setSkipOperator: Index value '" + index + "' not in range [0.." + (this._skipOperatorList.size() - 1) + "]");
-        }
-
-        this._skipOperatorList.set(index, vSkipOperator);
-    }
-
-    /**
-     * 
-     * 
-     * @param vSkipOperatorArray
-     */
-    public void setSkipOperator(
-            final java.lang.String[] vSkipOperatorArray) {
-        //-- copy array
-        _skipOperatorList.clear();
-
-        for (int i = 0; i < vSkipOperatorArray.length; i++) {
-                this._skipOperatorList.add(vSkipOperatorArray[i]);
-        }
     }
 
     /**

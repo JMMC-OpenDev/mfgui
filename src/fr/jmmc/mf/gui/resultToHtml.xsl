@@ -8,16 +8,17 @@ Description:
 Generate Html view of given xml settings files .
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+ 
     <xsl:output method="html"/>
-    <!-- The input document may not contain all settings related part  -->
+    <!-- The input document may not contain all settings related part 
+    userInfo i
+    -->
     <xsl:variable name="root" select="/" />
 
-    <xsl:template match="/">
+    <xsl:template match="/">        
         <pre>
-            <xsl:copy-of select="//gui_info/table/tr[1]/td/text()"/>
-        </pre>
-        <!-- FixMe : Why do we have an array comming from lp_show_parameters()+lp_show_fit()  </h1> -->
+            <xsl:value-of select="//gui_info/text()"/>            
+        </pre>        
         <!-- a lot of information has been reduced after rev 14871 -->
     </xsl:template>
 

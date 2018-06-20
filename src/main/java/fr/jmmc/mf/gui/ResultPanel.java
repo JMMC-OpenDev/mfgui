@@ -8,19 +8,18 @@ import fr.jmmc.mf.gui.models.ResultModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 
 public class ResultPanel extends javax.swing.JPanel {
-    
+
     ResultModel current;
     SettingsViewerInterface viewer = null;
     SettingsModel settingsModel = null;
     private UserInfoPanel userInfoPanel = null;
- 
+
     /** Creates new form ResultPanel */
     public ResultPanel(SettingsViewerInterface viewer) {
         this.viewer = viewer;
         userInfoPanel = new UserInfoPanel(viewer);
         initComponents();
         jPanel2.add(userInfoPanel);
-        
 
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
@@ -46,8 +45,6 @@ public class ResultPanel extends javax.swing.JPanel {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         helpButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
         resultEditorPane = new javax.swing.JEditorPane();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Result panel:"));
@@ -76,14 +73,9 @@ public class ResultPanel extends javax.swing.JPanel {
         jScrollPane1.setAlignmentX(1.0F);
         jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 100));
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
-
         resultEditorPane.setEditable(false);
-        jScrollPane2.setViewportView(resultEditorPane);
-
-        jPanel1.add(jScrollPane2);
-
-        jScrollPane1.setViewportView(jPanel1);
+        resultEditorPane.setContentType("text/html"); // NOI18N
+        jScrollPane1.setViewportView(resultEditorPane);
 
         jSplitPane1.setBottomComponent(jScrollPane1);
 
@@ -97,7 +89,6 @@ public class ResultPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton helpButton1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

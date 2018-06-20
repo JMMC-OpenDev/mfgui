@@ -17,7 +17,7 @@ Added operators to move towards the user models support.
 
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    
+
     <xsd:annotation>
         <xsd:documentation>
             Jmmc model fitting settings Xml Schema.
@@ -83,7 +83,7 @@ Added operators to move towards the user models support.
                 <xsd:element ref="usercode" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="results" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-                <xsd:element ref="responses" minOccurs="0" maxOccurs="1"/>               
+                <xsd:element ref="responses" minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -132,15 +132,15 @@ Added operators to move towards the user models support.
                 Contains files.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="file" minOccurs="1" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
+
     <!-- File description with its possible content. -->
     <xsd:element name="file">
         <xsd:annotation>
@@ -148,7 +148,7 @@ Added operators to move towards the user models support.
                 File description.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="oitarget" minOccurs="0" maxOccurs="unbounded"/>
@@ -157,10 +157,10 @@ Added operators to move towards the user models support.
             <xsd:attribute name="id" type="xsd:ID" use="required"/>
             <xsd:attribute name="href" type="xsd:string" use="optional"/>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
-    
+
+
     <!-- File link used by targets to reference existing files by their id. -->
     <xsd:element name="fileLink">
         <xsd:annotation>
@@ -168,57 +168,57 @@ Added operators to move towards the user models support.
                 File link.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:attribute name="fileRef" type="xsd:IDREF"/>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
-    
+
+
     <!-- oitarget representation -->
     <xsd:element name="oitarget">
-        
+
         <xsd:annotation>
             <xsd:documentation>
                 oitarget representation.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element name="target" type="xsd:string" minOccurs="1" maxOccurs="1"/>
                 <xsd:element name="infos" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
-    
+
+
     <!-- Target list -->
     <xsd:element name="targets">
-        
+
         <xsd:annotation>
             <xsd:documentation>
                 Contains target elements.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="target" minOccurs="1" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
+
     <xsd:element name="target">
         <xsd:annotation>
             <xsd:documentation>
                 Target representation.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element name="ident" type="xsd:string" minOccurs="1" maxOccurs="1"/>
@@ -228,16 +228,16 @@ Added operators to move towards the user models support.
                 <xsd:element ref="residuals"  minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
+
     <xsd:element name="residuals">
         <xsd:annotation>
             <xsd:documentation>
                 Residuals configuration.
             </xsd:documentation>
         </xsd:annotation>
-    
+
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element ref="residual" maxOccurs="unbounded"/>
@@ -266,7 +266,7 @@ Added operators to move towards the user models support.
                 A common representation of every models.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
@@ -275,18 +275,18 @@ Added operators to move towards the user models support.
                 <xsd:element name="code" type="xsd:string" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
                 <xsd:element ref="parameterLink" minOccurs="0" maxOccurs="unbounded" />
-                <xsd:element ref="operator" minOccurs="0" maxOccurs="unbounded" />   
+                <xsd:element ref="operator" minOccurs="0" maxOccurs="unbounded" />
             </xsd:sequence>
             <xsd:attributeGroup ref="ModelAttributes"/>
         </xsd:complexType>
     </xsd:element>
-    
+
     <!-- Model attributes -->
     <xsd:attributeGroup name="ModelAttributes">
         <xsd:attribute name="name" type="xsd:string" use="required"/>
         <xsd:attribute name="type" type="xsd:string" use="required"/>
     </xsd:attributeGroup>
-    
+
     <!-- Parameter list. -->
     <xsd:element name="parameters">
         <xsd:annotation>
@@ -294,16 +294,16 @@ Added operators to move towards the user models support.
                 Contains parameters.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
-        
+
     </xsd:element>
-    
-    
+
+
     <!-- Model parameter representation. -->
     <xsd:element name="parameter">
         <xsd:annotation>
@@ -311,7 +311,7 @@ Added operators to move towards the user models support.
                 A common representation of every model parameters.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType>
             <xsd:all>
                 <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
@@ -326,7 +326,7 @@ Added operators to move towards the user models support.
             <xsd:attributeGroup ref="ParameterAttributes"/>
         </xsd:complexType>
     </xsd:element>
-    
+
     <!-- Parameter link used by target's models to reference existing parameters by their id. -->
     <xsd:element name="parameterLink">
         <xsd:annotation>
@@ -334,14 +334,14 @@ Added operators to move towards the user models support.
                 Parameter link.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:attribute name="parameterRef" type="xsd:IDREF" use="required" />
             <xsd:attribute name="type" type="xsd:string" />
         </xsd:complexType>
-        
+
     </xsd:element>
-    
+
     <!-- Parameters attributes -->
     <xsd:attributeGroup name="ParameterAttributes">
         <xsd:attribute name="name" type="xsd:string" use="required"/>
@@ -402,7 +402,7 @@ Added operators to move towards the user models support.
     </xsd:element>
 
 
- 
+
     <!-- Result list -->
     <xsd:element name="results">
         <xsd:annotation>
@@ -413,7 +413,7 @@ Added operators to move towards the user models support.
 
         <xsd:complexType >
             <xsd:sequence>
-                <xsd:element ref="result" minOccurs="0" maxOccurs="unbounded"/>                
+                <xsd:element ref="result" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
@@ -434,7 +434,7 @@ Added operators to move towards the user models support.
             </xsd:sequence>
             <xsd:attribute name="href" type="xsd:string" use="optional"/>
         </xsd:complexType>
-        
+
     </xsd:element>
 
 
@@ -451,19 +451,19 @@ Added operators to move towards the user models support.
                     <xsd:attribute name="type" type="xsd:string" use="optional"/>
                 </xsd:extension>
             </xsd:simpleContent>
- 
+
         </xsd:complexType>
 
     </xsd:element>
 
     <!-- File description with its possible content. -->
-   <xsd:element name="resultFile">
+    <xsd:element name="resultFile">
         <xsd:annotation>
             <xsd:documentation>
                 Result file description.
             </xsd:documentation>
         </xsd:annotation>
-        
+
         <xsd:complexType >
             <xsd:sequence>
                 <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
@@ -473,6 +473,6 @@ Added operators to move towards the user models support.
             <xsd:attribute name="href" type="xsd:string" use="optional"/>
         </xsd:complexType>
     </xsd:element>
-    
+
 </xsd:schema>
 

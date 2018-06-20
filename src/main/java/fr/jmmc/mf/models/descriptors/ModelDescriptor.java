@@ -478,59 +478,6 @@ public class ModelDescriptor extends org.exolab.castor.xml.util.XMLClassDescript
         { //-- local scope
         }
         desc.setValidator(fieldValidator);
-        //-- _skipOperatorList
-        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(java.lang.String.class, "_skipOperatorList", "skipOperator", org.exolab.castor.xml.NodeType.Element);
-        desc.setImmutable(true);
-        handler = new org.exolab.castor.xml.XMLFieldHandler() {
-            @Override
-            public java.lang.Object getValue( java.lang.Object object ) 
-                throws IllegalStateException
-            {
-                Model target = (Model) object;
-                return target.getSkipOperator();
-            }
-            @Override
-            public void setValue( java.lang.Object object, java.lang.Object value) 
-                throws IllegalStateException, IllegalArgumentException
-            {
-                try {
-                    Model target = (Model) object;
-                    target.addSkipOperator( (java.lang.String) value);
-                } catch (java.lang.Exception ex) {
-                    throw new IllegalStateException(ex.toString());
-                }
-            }
-            public void resetValue(Object object) throws IllegalStateException, IllegalArgumentException {
-                try {
-                    Model target = (Model) object;
-                    target.removeAllSkipOperator();
-                } catch (java.lang.Exception ex) {
-                    throw new IllegalStateException(ex.toString());
-                }
-            }
-            @Override
-            @SuppressWarnings("unused")
-            public java.lang.Object newInstance(java.lang.Object parent) {
-                return null;
-            }
-        };
-        desc.setSchemaType("list");
-        desc.setComponentType("string");
-        desc.setHandler(handler);
-        desc.setMultivalued(true);
-        addFieldDescriptor(desc);
-        addSequenceElement(desc);
-
-        //-- validation code for: _skipOperatorList
-        fieldValidator = new org.exolab.castor.xml.FieldValidator();
-        fieldValidator.setMinOccurs(0);
-        { //-- local scope
-            org.exolab.castor.xml.validators.StringValidator typeValidator;
-            typeValidator = new org.exolab.castor.xml.validators.StringValidator();
-            fieldValidator.setValidator(typeValidator);
-            typeValidator.setWhiteSpace("preserve");
-        }
-        desc.setValidator(fieldValidator);
     }
 
 

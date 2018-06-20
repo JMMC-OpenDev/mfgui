@@ -31,6 +31,7 @@ import fr.jmmc.mf.models.Common;
 import fr.jmmc.mf.models.File;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Files;
+import fr.jmmc.mf.models.Fitter;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Oitarget;
 import fr.jmmc.mf.models.Parameter;
@@ -98,6 +99,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public final static String className = SettingsModel.class.getName();
     /** Class logger */
     static Logger logger = LoggerFactory.getLogger(className);
+    /** list of supported models   */
+    private static List<Fitter> supportedFittersList = new LinkedList<Fitter>();
+    /** list of supported fitters   */
+    private static GenericListModel supportedFitters = null;
     /** list of supported models   */
     private static List<Model> supportedModelsList = new LinkedList<Model>();
     /** list of supported models   */
@@ -266,6 +271,40 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         /* prevent user to edit model while running process */
         setLocked(running);
+    }
+
+    /**
+     * Return the supported fitter (hack).
+     * This method could make a remote request to get the server
+     * list if the current list is empty.
+     * @return the list of supported fitters
+     */
+    public static GenericListModel<Fitter> getSupportedFitters() {
+        boolean created = supportedFitters != null;
+        if (!created) {
+            supportedFitters = new GenericListModel<Fitter>(supportedFittersList, true);
+            /*
+            TODO remove this stub to retrieve server's fitters
+             */
+            final Fitter std = new Fitter();
+            std.setName("standard");
+            supportedFittersList.add(std);
+            final Fitter genfit = new Fitter();
+            genfit.setName("genfit");
+            supportedFittersList.add(genfit);
+        }
+
+        return supportedFitters;
+    }
+
+    public static Fitter getFitter(String fitterName) {
+        for (Fitter fitter : supportedFittersList) {
+            logger.info("Searching for fitter " + fitterName + "==" + fitter.getName());
+            if (fitter.getName().equalsIgnoreCase(fitterName)) {
+                return fitter;
+            }
+        }
+        return null;
     }
 
     /**
@@ -1564,7 +1603,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (userPrefersToCancelRunning()) {
             return;
         }
-        System.out.println("fileToAdd = " + fileToAdd);
 
         // Zip file if it is not the case to embedd in base64.
         if (!FitsUtil.isCompressed(fileToAdd)) {

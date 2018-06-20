@@ -39,7 +39,7 @@ public class FilePanel extends javax.swing.JPanel {
     OIFitsFile oifitsFile_ = null;
     static Action saveEmbeddedFileAction;
     static Action checkEmbeddedFileAction;
-    static Action showEmbeddedFileAction;    
+    static Action showEmbeddedFileAction;
     MyListSelectionListener myListSelectionListener;
     ListModel hduListModel = new DefaultListModel();
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -76,7 +76,7 @@ public class FilePanel extends javax.swing.JPanel {
         // Prepare action before gui construction
         saveEmbeddedFileAction = new SaveEmbeddedFileAction();
         showEmbeddedFileAction = new ShowEmbeddedFileAction();
-        checkEmbeddedFileAction = new CheckEmbeddedFileAction();        
+        checkEmbeddedFileAction = new CheckEmbeddedFileAction();
         initComponents();
 
         myListSelectionListener = new MyListSelectionListener();
@@ -92,7 +92,7 @@ public class FilePanel extends javax.swing.JPanel {
         //helpButton4.setAction(new ShowHelpAction("_Plot_Vis_Bt"));
         //helpButton5.setAction(new ShowHelpAction("_Plot_Vis2_Bt"));
         //helpButton6.setAction(new ShowHelpAction("_Plot_T3_Bt"));
-        
+
         // sync content with current set of fits viewer samp clients
         fitsViewerComboBox.setModel(new SampSubscriptionsComboBoxModel(SampCapability.LOAD_FITS_TABLE));
     }
@@ -117,7 +117,7 @@ public class FilePanel extends javax.swing.JPanel {
         nameTextField.setText(file.getName());
 
         // update lists
-        hduList.setListData(oifitsFile_.getOiTables()); 
+        hduList.setListData(oifitsFile_.getOiTables());
        hduListModel = hduList.getModel();
         showUVCoverageButton.setEnabled(false);
         showVisButton.setEnabled(oifitsFile_.hasOiVis());
@@ -129,8 +129,8 @@ public class FilePanel extends javax.swing.JPanel {
         t3phiCheckBox.setEnabled(oifitsFile_.hasOiT3());
         // update button state
         hduList.setSelectedIndices(new int[]{});
-        
-        topcatButton.setEnabled(fitsViewerComboBox.getModel().getSize()==0);        
+
+        topcatButton.setEnabled(fitsViewerComboBox.getModel().getSize()==0);
 
     }
 
@@ -407,10 +407,10 @@ public class FilePanel extends javax.swing.JPanel {
                 sb.append("/>\n");
             }
         }
-        sb.append("</dataset>");        
+        sb.append("</dataset>");
         return sb.toString();
     }
-    
+
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[][] x, double[][] y,
             double[][] errorBar, boolean[][] flags)
@@ -444,16 +444,16 @@ public class FilePanel extends javax.swing.JPanel {
         sb.append("</dataset>");
         return sb.toString();
     }
-    
+
     public void showData(String requestedTables, String [] requestedColumns)
     {
-        logger.debug("Searching to plot {}", requestedTables);        
+        logger.debug("Searching to plot {}", requestedTables);
         String plotName=current.getName()+"(";
         for (int i = 0; i < requestedColumns.length; i++) {
             plotName = plotName+requestedColumns[i]+" " ;
         }
         plotName = plotName+")" ;
-           
+
             int retainedHdu = 0;
             // Select requested tables:
             // plot all requested if nothing selected or selection does not contains requested
@@ -518,10 +518,10 @@ public class FilePanel extends javax.swing.JPanel {
                         if (requestedColumn.equals("T3AMP"))
                         {
                             data = t.getT3Amp();
-                            err = t.getT3AmpErr();                            
+                            err = t.getT3AmpErr();
                         }
                         if (requestedColumn.equals("T3PHI"))
-                        {                           
+                        {
                             data = t.getT3Phi();
                             err = t.getT3PhiErr();
                         }
@@ -531,7 +531,7 @@ public class FilePanel extends javax.swing.JPanel {
                     {
                         OIVis t = (OIVis) table;
                         if (requestedColumn.equals("VISAMP"))
-                        {                            
+                        {
                             data = t.getVisAmp();
                             err = t.getVisAmpErr();
                         }
@@ -557,11 +557,11 @@ public class FilePanel extends javax.swing.JPanel {
             sb.append("</plot>");
 
             PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
-                       
+
         if (plotName.toLowerCase().contains("phi")) {
             UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
         } else {
-            UtilsClass.fixPlotAxesForAmp(plotMLFrame.plot);            
+            UtilsClass.fixPlotAxesForAmp(plotMLFrame.plot);
         }
 
         java.io.File tsv = UtilsClass.getPlotMLTSVFile(sb.toString());
@@ -576,20 +576,20 @@ public class FilePanel extends javax.swing.JPanel {
         final String [] amp=new String[]{"VISAMP"};
         final String [] phi=new String[]{"VISPHI"};
         final String [] nothing = new String[]{};
-        
+
         if(visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
-            showData("OI_VIS", ampAndPhi);    
+            showData("OI_VIS", ampAndPhi);
         }
         if(visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
-            showData("OI_VIS", amp);    
+            showData("OI_VIS", amp);
         }
         if(!visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
-            showData("OI_VIS", phi);    
+            showData("OI_VIS", phi);
         }
         if(!visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
-            showData("OI_VIS", nothing);    
+            showData("OI_VIS", nothing);
         }
-        
+
     }//GEN-LAST:event_showVisButtonActionPerformed
 
     private void showVis2ButtonActionPerformed(java.awt.event.ActionEvent evt)
@@ -717,7 +717,7 @@ public class FilePanel extends javax.swing.JPanel {
         topcatButton.setEnabled(false);
     }//GEN-LAST:event_topcatButtonActionPerformed
 
-    // End of variables declaration                   
+    // End of variables declaration
     public void saveFile(java.io.File targetFile)
             throws java.io.IOException, java.io.FileNotFoundException {
         UtilsClass.saveBASE64ToFile(current.getHref(), targetFile);
@@ -727,7 +727,7 @@ public class FilePanel extends javax.swing.JPanel {
     class MyListSelectionListener implements ListSelectionListener {
 
         public void valueChanged(ListSelectionEvent evt) {
-            // Iterate all selected items                
+            // Iterate all selected items
             showUVCoverageButton.setEnabled(false);
             showVisButton.setText("Plot data of all OI_VIS");
             showVis2Button.setText("Plot VIS2DATA of all OI_VIS2");

@@ -3,11 +3,11 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
-import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
@@ -26,7 +26,7 @@ public class LoadModelAction extends RegisteredAction {
     public final static String actionName = "loadModel";
     /** Class logger */
     static final Logger logger = LoggerFactory.getLogger(
-            className);    
+            className);
     MFGui mfgui;
 
     public LoadModelAction(MFGui mfgui) {
@@ -39,7 +39,7 @@ public class LoadModelAction extends RegisteredAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       // Retrieve file given by App startup or open a filechooser 
+        // Retrieve file given by App startup or open a filechooser
         File file = null;
 
         // If the action was automatically triggered from App launch
@@ -48,11 +48,11 @@ public class LoadModelAction extends RegisteredAction {
             file = new File(e.getActionCommand());
         } else // User clicked the menu item
         {
-            file=FileChooser.showOpenFileChooser("Load settings", null, MimeType.LITPRO_SETTINGS, null);            
+            file = FileChooser.showOpenFileChooser("Load settings", null, MimeType.LITPRO_SETTINGS, null);
         }
 
         // Finally try to load file
-        if (file != null) {            
+        if (file != null) {
             try {
                 logger.info("Loading '" + file.getName() + "' setting file");
                 mfgui.addSettings(new SettingsModel(file));
@@ -64,6 +64,6 @@ public class LoadModelAction extends RegisteredAction {
                 MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
             }
         }
-        
+
     }
 }

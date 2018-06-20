@@ -104,28 +104,12 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel1">
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
-                <Property name="axis" type="int" value="3"/>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JEditorPane" name="resultEditorPane">
-                      <Properties>
-                        <Property name="editable" type="boolean" value="false"/>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
-              </SubComponents>
-            </Container>
+            <Component class="javax.swing.JEditorPane" name="resultEditorPane">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

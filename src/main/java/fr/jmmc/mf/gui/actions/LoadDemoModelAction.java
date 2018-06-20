@@ -3,9 +3,9 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.mf.gui.*;
-import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.nom.tam.fits.FitsException;
 import java.awt.event.ActionEvent;

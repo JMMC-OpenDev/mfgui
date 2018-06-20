@@ -57,7 +57,7 @@ public class RunFitAction extends ResourcedAction {
     }
 
     public boolean shouldSkipPlots() {
-        // this dummy test could be replaced by a more sophisticated rule eg: 
+        // this dummy test could be replaced by a more sophisticated rule eg:
         // max data threshold ...
         // could also be a preference...
         return skipPlotDocument.isSelected();
@@ -126,7 +126,7 @@ public class RunFitAction extends ResourcedAction {
                         Thread.sleep(100);
                         System.out.print(" " + i);
                         System.out.flush();
-                    }                    
+                    }
                 } catch (InterruptedException ex) {
                     logger.info("interruped during loop", ex);
                 }
@@ -141,7 +141,7 @@ public class RunFitAction extends ResourcedAction {
             try {
                 return LITpro.execMethod(methodName, xmlFile, methodArg);
             } catch (IOException ex) {
-                // should only come from http io execption 
+                // should only come from http io execption
                 throw new RuntimeException(ex);
             }
         }
