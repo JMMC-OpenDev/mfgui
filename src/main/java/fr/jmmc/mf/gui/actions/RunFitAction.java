@@ -32,6 +32,8 @@ public class RunFitAction extends ResourcedAction {
 
     /** Main logger */
     static final Logger logger = LoggerFactory.getLogger(RunFitAction.class.getName());
+    /** Task Run Fit */
+    public static final Task TASK_RUN_FIT = new Task("RUN_FIT");
 
     static final String methodName = "runFit";
 
@@ -41,13 +43,11 @@ public class RunFitAction extends ResourcedAction {
 
     String initialActionName = null;
     //boolean running = false;
-    private Task task;
 
     public RunFitAction(SettingsModel settingsModel) {
         super("runFit");
         this.settingsModel = settingsModel;
         initialActionName = (String) this.getValue(Action.NAME);
-        task = new Task("runFit_" + settingsModel.hashCode());
     }
 
     public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument, ButtonModel skipPlotDocument) {
@@ -64,10 +64,9 @@ public class RunFitAction extends ResourcedAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-
         if (settingsModel.isRunning()) {
             // cancel job
-            TaskSwingWorkerExecutor.cancelTask(getTask());
+            TaskSwingWorkerExecutor.cancelTask(TASK_RUN_FIT);
             settingsModel.setRunning(false);
         } else {
             // display non writable panel and launch new job
@@ -91,12 +90,8 @@ public class RunFitAction extends ResourcedAction {
             File tmpFile = settingsModel.getTempFile(false);
             StatusBar.show("Running fitting process of" + settingsModel.getAssociatedFilename());
 
-            new RunFitActionWorker(getTask(), tmpFile, args.toString(), settingsModel).executeTask();
+            new RunFitActionWorker(tmpFile, args.toString(), settingsModel).executeTask();
         }
-    }
-
-    public Task getTask() {
-        return task;
     }
 
     public String getInitialActionName() {
@@ -109,8 +104,8 @@ public class RunFitAction extends ResourcedAction {
         final String methodArg;
         final SettingsModel parent;
 
-        public RunFitActionWorker(Task task, java.io.File xmlFile, String methodArg, SettingsModel sm) {
-            super(task);
+        public RunFitActionWorker(java.io.File xmlFile, String methodArg, SettingsModel sm) {
+            super(TASK_RUN_FIT);
             this.xmlFile = xmlFile;
             this.methodArg = methodArg;
             this.parent = sm; // only for callback
