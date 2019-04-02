@@ -290,9 +290,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             final Fitter std = new Fitter();
             std.setName("standard");
             supportedFittersList.add(std);
-            final Fitter genfit = new Fitter();
-            genfit.setName("genfit");
-            supportedFittersList.add(genfit);
+
+            // limit genfit to to alpha versions
+            if (ApplicationDescription.isAlphaVersion()) {
+                final Fitter genfit = new Fitter();
+                genfit.setName("genfit");
+                supportedFittersList.add(genfit);
+            }
         }
 
         return supportedFitters;
@@ -555,8 +559,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param residualModuleValue default,
      */
     public void setResiduals(Target target, String visAmpValue,
-                             String visPhiValue, String vis2Value, String t3AmpValue,
-                             String t3PhiValue) {
+            String visPhiValue, String vis2Value, String t3AmpValue,
+            String t3PhiValue) {
         Residuals residuals = new Residuals();
 
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -1945,7 +1949,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesInserted(Object[] path, int childIndice,
-                                         Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1958,7 +1962,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-                                        int childIndice, Object child) {
+            int childIndice, Object child) {
         TreeModelEvent e = new TreeModelEvent(source, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1971,7 +1975,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesChanged(Object[] path, int childIndice,
-                                        Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -2193,7 +2197,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     Object[] elements = target.getFileLink();
                     System.arraycopy(elements, 0, all, 0, target.getFileLinkCount());
                     elements
-                    = target.getModel();
+                            = target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
                     for (int j = 0; j
