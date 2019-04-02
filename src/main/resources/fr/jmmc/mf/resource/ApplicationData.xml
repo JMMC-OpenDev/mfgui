@@ -187,6 +187,7 @@
 
     <releasenotes>
         <release version="1.0.18">
+            <pubDate>Tue, 02 Apr 2019 10:41:59 GMT</pubDate>
             <prerelease version="1.0.18 alpha 1">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
