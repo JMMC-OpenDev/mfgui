@@ -7,6 +7,7 @@ import com.jidesoft.dialog.JideOptionPane;
 import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.data.app.ApplicationDescription;
+import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
@@ -374,12 +375,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             // display error message the first time that one exception occurs
             if (e != null) {
                 final String msg = "Cannot retrieve the list of models supported by the remote server.";
-                if (!created) {
-                    MessagePane.showErrorMessage(msg, e.getMessage());
-                } else {
-                    logger.info(msg);
-                }
-                // throw new IllegalStateException(CANT_GET_LIST_OF_SUPPORTED_MODELS, e);
+                // TODO  We may display a message error for missing connection exception ?
+                FeedbackReport.openDialog(new Exception(msg, e));
             }
 
         }
