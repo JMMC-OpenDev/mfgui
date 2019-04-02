@@ -1,0 +1,349 @@
+/*******************************************************************************
+ * JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+ ******************************************************************************/
+package fr.jmmc.mf.gui;
+
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.ToolTipManager;
+
+/**
+ * Preference GUI
+ */
+public class PreferencesView extends javax.swing.JFrame implements Observer {
+
+    static Preferences myPreferences = Preferences.getInstance();
+    static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField fovTextField;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JFormattedTextField maxDataLimitTextField;
+    private javax.swing.JTextField preferenceFilenaTextfield;
+    private javax.swing.JButton restoreButton;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JPanel saveRestorePanel;
+    private javax.swing.JCheckBox saveResultCheckBox;
+    private javax.swing.JCheckBox toolbarCheckBox;
+    private javax.swing.JCheckBox tooltipsCheckBox;
+    private javax.swing.JPanel yogaPanel;
+    // End of variables declaration//GEN-END:variables
+
+    /** Creates new form PreferencesView */
+    public PreferencesView() {
+        initComponents();
+        
+        // post init
+        tooltipsCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.HELP_TOOLTIPS_SHOW));        
+        toolbarCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.SHOW_TOOLBAR));
+        saveResultCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.SAVE_RESULTS));
+        fovTextField.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.USER_FOV));
+        maxDataLimitTextField.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.USER_UVPOINT_LIMITFORPLOT));
+        preferenceFilenaTextfield.setText(myPreferences.computePreferenceFilepath());
+        update(null, null);
+        
+        // register to be notified by pref changes
+        myPreferences.addObserver(this);
+    }
+
+    public void update(Observable o, Object arg) {
+
+        toolTipManager.setEnabled(myPreferences.getPreferenceAsBoolean(Preferences.HELP_TOOLTIPS_SHOW));
+
+        // override JMcs SwingSettings.setSwingDefaults()
+        // help to solve #709
+        // we could imagine to use a  specificTooltipsmanager.registerComponent on model list widgets
+        toolTipManager.setInitialDelay(750);
+
+        MFGui.showToolbar(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));        
+
+        /*
+        hidden in GUI
+        jCheckBox1.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.YOGA_REMOTE_USE));
+        jTextField1.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.YOGA_REMOTE_URL));
+        jTextField2.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.YOGA_LOCAL_HOME));
+        */ 
+        
+         /*
+          * This part of code has been commented because a color change run the documentModel to many loops
+         File f = new File(myPreferences.getPreference(Preferences.YOGA_LOCAL_HOME)
+                + myPreferences.getPreference(Preferences.YOGA_LOCAL_PROGNAME));
+       
+         if (f.exists())
+         {
+         //  Commented since it is was not in 1.5 API if(f.canExecute()){
+         jTextField2.setForeground(Color.GREEN);
+
+         // }else{
+         JOptionPane.showMessageDialog(this, f.getName()+" has been found but is not executable, please change execution right.");
+         //   }
+         }
+         else
+         {
+         jTextField2.setForeground(Color.RED);
+         }
+         */
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        jPanel3 = new javax.swing.JPanel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel1 = new javax.swing.JPanel();
+        yogaPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        toolbarCheckBox = new javax.swing.JCheckBox();
+        jLabel7 = new javax.swing.JLabel();
+        saveResultCheckBox = new javax.swing.JCheckBox();
+        fovTextField = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        maxDataLimitTextField = new javax.swing.JFormattedTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        tooltipsCheckBox = new javax.swing.JCheckBox();
+        jLabel4 = new javax.swing.JLabel();
+        preferenceFilenaTextfield = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        saveRestorePanel = new javax.swing.JPanel();
+        saveButton = new javax.swing.JButton();
+        restoreButton = new javax.swing.JButton();
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBox1.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, "yoga.remote.use"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(jCheckBox1, gridBagConstraints);
+
+        jLabel1.setText("HTTP URL:"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel3.add(jLabel1, gridBagConstraints);
+
+        jTextField1.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.remote.url"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel3.add(jTextField1, gridBagConstraints);
+
+        jLabel2.setText("LITpro package local path:"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel3.add(jLabel2, gridBagConstraints);
+
+        jTextField2.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences,"yoga.local.home"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(jTextField2, gridBagConstraints);
+
+        jLabel3.setText("Use remote yoga:"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel3.add(jLabel3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        jPanel3.add(jSeparator1, gridBagConstraints);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Preferences");
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(500, 300));
+        jPanel1.setPreferredSize(new java.awt.Dimension(500, 300));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        yogaPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("LITpro"));
+        yogaPanel.setLayout(new java.awt.GridBagLayout());
+
+        jLabel6.setText("Show  Toolbar:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel6, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(toolbarCheckBox, gridBagConstraints);
+
+        jLabel7.setText("Embed results in settings files:");
+        jLabel7.setAutoscrolls(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel7, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        yogaPanel.add(saveResultCheckBox, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        yogaPanel.add(fovTextField, gridBagConstraints);
+
+        jLabel8.setText("Default Image width:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        yogaPanel.add(jLabel8, gridBagConstraints);
+
+        maxDataLimitTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        yogaPanel.add(maxDataLimitTextField, gridBagConstraints);
+
+        jLabel9.setText("Max UV points for plot:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        yogaPanel.add(jLabel9, gridBagConstraints);
+
+        jButton2.setAction(MFGui.getYogaVersionAction);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        yogaPanel.add(jButton2, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        jPanel1.add(yogaPanel, gridBagConstraints);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("General"));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        jPanel2.add(tooltipsCheckBox, gridBagConstraints);
+
+        jLabel4.setText("Preference filename:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel2.add(jLabel4, gridBagConstraints);
+
+        preferenceFilenaTextfield.setEditable(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        jPanel2.add(preferenceFilenaTextfield, gridBagConstraints);
+
+        jLabel5.setText("Show  Tooltips:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel2.add(jLabel5, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel1.add(jPanel2, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        jPanel1.add(jPanel4, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        getContentPane().add(jPanel1, gridBagConstraints);
+
+        saveRestorePanel.setAlignmentY(0.0F);
+        saveRestorePanel.setLayout(new java.awt.GridBagLayout());
+
+        saveButton.setAction(myPreferences.getSavePreferences());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        saveRestorePanel.add(saveButton, gridBagConstraints);
+
+        restoreButton.setAction(myPreferences.getRestoreDefaultPreferences());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        saveRestorePanel.add(restoreButton, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        getContentPane().add(saveRestorePanel, gridBagConstraints);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+}

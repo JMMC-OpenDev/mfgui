@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Document   : LITproSettings.xsd
+Created on : 31 october 2006
+Author     : mella
+Description:
+
+The form try to collect every informtions needed by model fitting process
+some subtle differences exist between the server and client side xsd
+e.g. the server side do not handle filelinks as IDref but strings
+
+Updated on : 8 july 2015
+Added operators to move towards the user models support.
+- operator elements can be associated models
+- skipOperator can be provided as building rules
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Jmmc model fitting settings Xml Schema.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <!-- Response list. -->
+    <xsd:element name="responses">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains responses.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="response" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <xsd:element name="response">
+        <xsd:annotation>
+            <xsd:documentation>
+                Highest element of what generally is a server response of LITpro wrapper.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="message" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="resultFile" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="settings" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="model" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="fitters" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        </xsd:complexType>
+
+    </xsd:element>
+   
+    <!-- Root element of settings -->
+    <xsd:element name="settings">
+        <xsd:annotation>
+            <xsd:documentation>
+                Highest element of settings.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element name="minVersion" type="xsd:string" minOccurs="0" maxOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            This element contains the minimum version of the LITpro application that should support the setting file.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element ref="files" minOccurs="1" maxOccurs="1"/>
+                <xsd:element ref="targets" minOccurs="1" maxOccurs="1"/>
+                <xsd:element ref="parameters" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="fitter" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="usercode" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="results" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="userInfo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="responses" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- Fitter list. -->
+    <xsd:element name="fitters">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains fitters.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="fitter" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- Basic fitter representation. -->
+    <xsd:element name="fitter">
+        <xsd:annotation>
+            <xsd:documentation>
+                A common representation of every fitter.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attributeGroup ref="FitterAttributes"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- Fitter attributes -->
+    <xsd:attributeGroup name="FitterAttributes">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:attributeGroup>
+
+    <!-- File list. -->
+    <xsd:element name="files">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains files.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="file" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- File description with its possible content. -->
+    <xsd:element name="file">
+        <xsd:annotation>
+            <xsd:documentation>
+                File description.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="oitarget" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+            <xsd:attribute name="href" type="xsd:string" use="optional"/>
+        </xsd:complexType>
+
+    </xsd:element>
+
+
+    <!-- File link used by targets to reference existing files by their id. -->
+    <xsd:element name="fileLink">
+        <xsd:annotation>
+            <xsd:documentation>
+                File link.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:attribute name="fileRef" type="xsd:IDREF"/>
+        </xsd:complexType>
+
+    </xsd:element>
+
+
+    <!-- oitarget representation -->
+    <xsd:element name="oitarget">
+
+        <xsd:annotation>
+            <xsd:documentation>
+                oitarget representation.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element name="target" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="infos" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+
+    <!-- Target list -->
+    <xsd:element name="targets">
+
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains target elements.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="target" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <xsd:element name="target">
+        <xsd:annotation>
+            <xsd:documentation>
+                Target representation.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element name="ident" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                <xsd:element ref="fileLink" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="normalize" type="xsd:boolean"  minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="residuals"  minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <xsd:element name="residuals">
+        <xsd:annotation>
+            <xsd:documentation>
+                Residuals configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="residual" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="residual">
+        <xsd:annotation>
+            <xsd:documentation>
+                Residual description.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <xsd:attribute name="type" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <!-- Basic model representation. This model also correspond to composite model -->
+    <xsd:element name="model">
+        <xsd:annotation>
+            <xsd:documentation>
+                A common representation of every models.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="shortdesc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="code" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="parameterLink" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="operator" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attributeGroup ref="ModelAttributes"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- Model attributes -->
+    <xsd:attributeGroup name="ModelAttributes">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+    </xsd:attributeGroup>
+
+    <!-- Parameter list. -->
+    <xsd:element name="parameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains parameters.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+
+    <!-- Model parameter representation. -->
+    <xsd:element name="parameter">
+        <xsd:annotation>
+            <xsd:documentation>
+                A common representation of every model parameters.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="units" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="value" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="minValue" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="maxValue" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="scale" type="xsd:double" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="hasFixedValue" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="editable" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            </xsd:all>
+            <xsd:attributeGroup ref="ParameterAttributes"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- Parameter link used by target's models to reference existing parameters by their id. -->
+    <xsd:element name="parameterLink">
+        <xsd:annotation>
+            <xsd:documentation>
+                Parameter link.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:attribute name="parameterRef" type="xsd:IDREF" use="required" />
+            <xsd:attribute name="type" type="xsd:string" />
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- Parameters attributes -->
+    <xsd:attributeGroup name="ParameterAttributes">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <!-- <xsd:attribute name="id" type="xsd:ID" use="required"/> -->
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:attributeGroup>
+
+    <!-- Model operator representation -->
+    <xsd:element name="operator">
+        <xsd:annotation>
+            <xsd:documentation>
+                A common representation of every model operators.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="desc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="shortdesc" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="parameterLink" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attributeGroup ref="ModelAttributes"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- User code material (models and common functions) -->
+    <xsd:element name="usercode">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains user models (with code element) and user functions.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="common" minOccurs="0" maxOccurs="1"/>
+                <xsd:element ref="model" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- Common Section -->
+    <xsd:element name="common">
+        <xsd:annotation>
+            <xsd:documentation>
+                Define a common part for code.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+
+
+    <!-- Result list -->
+    <xsd:element name="results">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains results.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element ref="result" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- Result Section -->
+    <xsd:element name="result">
+        <xsd:annotation>
+            <xsd:documentation>
+                Result of a fit section.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="label" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                <xsd:any minOccurs="0" processContents="skip"/>
+            </xsd:sequence>
+            <xsd:attribute name="href" type="xsd:string" use="optional"/>
+        </xsd:complexType>
+
+    </xsd:element>
+
+
+    <!-- Message Section -->
+    <xsd:element name="message">
+        <xsd:annotation>
+            <xsd:documentation>
+                Define a message to be displayed.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attribute name="type" type="xsd:string" use="optional"/>
+                </xsd:extension>
+            </xsd:simpleContent>
+
+        </xsd:complexType>
+
+    </xsd:element>
+
+    <!-- File description with its possible content. -->
+    <xsd:element name="resultFile">
+        <xsd:annotation>
+            <xsd:documentation>
+                Result file description.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType >
+            <xsd:sequence>
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+            <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+            <xsd:attribute name="href" type="xsd:string" use="optional"/>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>
+

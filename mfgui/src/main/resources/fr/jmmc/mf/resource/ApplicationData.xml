@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*******************************************************************************
+* JMMC project ( http://www.jmmc.fr ) - Copyright (C) CNRS.
+*******************************************************************************
+-->
+
+<ApplicationData link="http://www.jmmc.fr/litpro">
+
+    <company>
+        <short_name>JMMC</short_name>
+        <legal_name>Jean-Marie Mariotti Center</legal_name>
+        <logo_resource>fr/jmmc/jmcs/resource/image/jmmc_logo.png</logo_resource>
+        <homepage_url>http://www.jmmc.fr/</homepage_url>
+        <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
+    </company>
+
+    <program name="LITpro" version="1.0.18"/>
+    <compilation date="13/05/2016" compiler="JDK 1.6.0_24"/>
+    <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
+    <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
+    <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
+    <sampdescription>Model fitting software for astronomical optical interferometry data</sampdescription>
+
+    <distribution>
+        <application_data_file>ApplicationRelease.xml</application_data_file>
+        <public_url>http://www.jmmc.fr/apps/public/LITpro/</public_url>
+        <beta_url>http://www.jmmc.fr/apps/beta/LITpro/</beta_url>
+        <alpha_url>http://www.jmmc.fr/apps/alpha/LITpro/</alpha_url>
+    </distribution>
+
+    <dependences>
+
+        <!-- JMMC -->
+
+        <!-- Java Mariotti Astronomical library -->
+        <package name="jMAL"
+                 description="JMMC library to provide common astronomical computations (coordinate conversion, SIMBAD star resolver and analytical object models in interferometry)"
+                 link="http://www.jmmc.fr/dev/jmal/"
+                 jars="jmal.jar"
+                 license="CECILL-B ???"/>
+
+        <!-- Java Mariotti OIfitsExplorer-core -->
+        <package name="OIFits Explorer core"
+                 description="OIFits Explorer core is the JMMC library dedicated to share OIFits GUI components (plots)"
+                 link="http://www.jmmc.fr/dev/oiexplorer-core/"
+                 jars="oiexplorer-core.jar"
+                 license="CECILL-B ???"/>
+
+        <!-- Java Mariotti OITools -->
+        <package name="OITools"
+                 description="OITools is the JMMC library dedicated to OIFits manipulation (load, save and validation)"
+                 link="http://www.jmmc.fr/dev/oitools/"
+                 jars="oitools.jar"
+                 license="CECILL-B ???"/>
+
+
+        <!-- 1. Science / VO libraries (always on top for better visibility) -->
+
+        <!-- OITools dependencies -->
+
+        <package name="nom.tam.fits"
+                 description="The Java FITS library (nom.tam.fits) has been developed which provides efficient I/O for FITS images and binary tables. Made by Dr Thomas A. McGlynn, HEASARC"
+                 link="http://heasarc.gsfc.nasa.gov/docs/heasarc/fits/java/v1.0/"
+                 license="Copyright: Thomas McGlynn 1997-1999." />
+        <!--
+          Copyright: Thomas McGlynn 1997-1999.
+          This code may be used for any purpose, non-commercial
+          or commercial so long as this copyright notice is retained
+          in the source code or included in or referred to in any
+          derived software.
+        -->
+
+        <!-- jMAL dependencies -->
+
+        <!-- CDS Used by ld2ud computation (fr.jmmc.mcs.astro) -->
+        <package name="CDS_SpType"
+                 description="Get information from spectral type of stellar objects. Provided by CDS"
+                 link="nc"
+                 jars="sptype.jar"/>
+
+        <!-- Model computations (bessel functions) -->
+        <package name="CERN colt"
+                 description="provides a set of Open Source Libraries for High Performance Scientific and Technical Computing in Java"
+                 link="http://acs.lbl.gov/software/colt/"
+                 jars="colt.jar"
+                 license="Copyright (c) 1999 CERN - European Organization for Nuclear Research"/>
+        <!--
+          Copyright (c) 1999 CERN - European Organization for Nuclear Research.
+          Permission to use, copy, modify, distribute and sell this software and its documentation for any purpose is
+          hereby granted without fee, provided that the above copyright notice appear in all copies and that both that
+          copyright notice and this permission notice appear in supporting documentation. CERN makes no representations
+          about the suitability of this software for any purpose. It is provided "as is" without expressed or implied warranty.
+        -->
+
+
+        <!-- 2. Swing -->
+
+        <!-- LITpro dependencies -->
+
+        <package name="Ptolemy plots"
+                 description="2D plots"
+                 link="http://ptolemy.eecs.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/index.htm"
+                 jars="ptplot5.6.jar"/>
+
+        <package name="RSyntaxTextArea"
+                 description="Text components with syntax highlighting"
+                 link="http://fifesoft.com/rsyntaxtextarea/index.php"
+                 jars="rsyntaxtextarea.jar"
+                 licence=" Modified BSD http://fifesoft.com/rsyntaxtextarea/RSyntaxTextArea.License.txt"/>
+        <!--
+        Copyright (c) 2012, Robert Futrell
+        All rights reserved.
+
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+        * Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+        * Neither the name of the author nor the names of its contributors may
+        be used to endorse or promote products derived from this software
+        without specific prior written permission.
+
+            THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+            ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+            WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+            DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+            DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+            (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+            LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+            ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+            (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+            SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        -->
+
+
+        <!-- 3. Tools -->
+
+        <!-- LITpro dependencies -->
+
+        <!--  Xml binding (castor) -->
+        <package name="castor"
+                 description="Create Java classes from XSD schema"
+                 link="http://www.castor.org/"
+                 jars="castor.jar"/>
+
+        <!-- castor dependency -->
+        <package name="xercesImpl"
+                 description="XML validation"
+                 link="http://xerces.apache.org/"
+                 jars="xercesImpl.jar xmlParserAPIs.jar"/>
+
+    </dependences>
+
+    <menubar>
+        <menu label="File">
+            <menu label="New settings..." classpath="fr.jmmc.mf.gui.actions.NewModelAction" action="newModel" accelerator="N"
+                  icon="fr/jmmc/mf/gui/icons/filenew.png"/>
+            <menu/>
+            <menu label="Load OIFits files..." classpath="fr.jmmc.mf.gui.actions.LoadDataFilesAction" action="loadDataFiles"
+                  icon="fr/jmmc/jmcs/resource/image/file_add.png"/>
+            <menu/> <!-- menu separator -->
+            <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
+                  icon="fr/jmmc/mf/gui/icons/fileopen.png"/>
+            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
+            <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
+            <menu label="Open demo settings">
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel2"/>
+                <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel3"/>
+            </menu>
+            <menu/>
+            <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
+                  icon="fr/jmmc/mf/gui/icons/filesaveas.png"/>
+        </menu>
+        <menu label="Edit">
+            <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
+                  icon="fr/jmmc/mf/gui/icons/button_fewer.png"/>
+            <menu classpath="fr.jmmc.mf.gui.actions.AttachDetachFrameAction" action="toggleFrameTreeSelection"
+                  icon="fr/jmmc/mf/gui/icons/view_sidetree.png"/>
+            <menu/>
+            <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
+        </menu>
+    </menubar>
+
+    <releasenotes>
+        <release version="1.0.18">
+            <pubDate>Tue, 02 Apr 2019 10:41:59 GMT</pubDate>
+            <prerelease version="1.0.18 alpha 1">
+                <!-- not yet done:
+                <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
+                <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
+                FIXME
+                  * Leave resource in MFGui.closeSettings()
+                TODO
+                  * add link for futur "ENDtt_Usercode" doc in UserCodePanel
+                  * Always edit the master custom model: ie do not only edit the custom model of a settings file.
+                  * Finish PlotImage bounds shortcut
+                  * Finish plotImage with decimal bounds
+                -->
+                <!--
+                <prerelease version="1.0.14 beta 3">
+                    <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>
+                </prerelease>
+                <prerelease version="1.0.14 beta 2">
+                    <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>
+                    <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>
+                </prerelease>
+                <prerelease version="1.0.14 beta 1">
+                    <change type="FEATURE">Basic support for user models</change>
+                </prerelease>
+                -->
+                <change type="FEATURE">Basic support for genetic fitter (in prep. dev only)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.17">
+            <pubDate>Fri, 13 May 2016 13:13:13 GMT</pubDate>
+            <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
+            <change type="CHANGE">Run fit action can now be cancelled</change>
+        </release>
+        <release version="1.0.16">
+            <pubDate>Tue, 27 Oct 2015 16:00:00 GMT</pubDate>
+            <prerelease version="1.0.16 beta ">
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/721">Add CUNIT=deg in the fits images of the model</change>
+            </prerelease>
+        </release>
+        <release version="1.0.15">
+            <pubDate>Thu, 15 Oct 2015 20:47:00 GMT</pubDate>
+            <prerelease version="1.0.15 beta ">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/718">Fix loading of oifits through samp from local files</change>
+            </prerelease>
+        </release>
+
+        <release version="1.0.14">
+            <pubDate>Tue, 13 Oct 2015 17:30:00 GMT</pubDate>
+            <prerelease version="1.0.14 beta ">
+                <change type="CHANGE">The model library now provides blackbody models : background_BB, disk_BB, gaussian_BB, punct_BB, stretched_disk_BB, stretched_gaussian_BB</change>
+                <change type="CHANGE">Model names can not be renamed anylonger (so that numbering in param label should stay consistent)</change>
+                <change type="CHANGE">Run fit action can now be cancelled</change>
+
+                <change type="CHANGE">Add load oifits file action in the menu entry and toolbar. User can start from scratch just loading data.</change>
+                <change type="CHANGE">Use huge tooltips for model that includes it's description</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/710">Set inserted nodes visible in the main Settings tree (move scrollbar)</change>
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/714">Increase default sampling values for chi2 maps and model image</change>
+                <!-- not yet done:
+                <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
+                <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
+                FIXME
+                  * Leave resource in MFGui.closeSettings()
+                TODO
+                  * add link for futur "ENDtt_Usercode" doc in UserCodePanel
+                  * Always edit the master custom model: ie do not only edit the custom model of a settings file.
+                  * Finish PlotImage bounds shortcut
+                  * Finish plotImage with decimal bounds
+                -->
+                <!--
+                    <prerelease version="1.0.14 beta 3">
+                        <change type="FEATURE">List of available models are now completed with the models of the user's repository (a refresh button is present of the Target Panel for the actual prototype waiting for an on demand update through samp...)</change>
+                    </prerelease>
+                    <prerelease version="1.0.14 beta 2">
+                        <change type="FEATURE">Most models can change on fly the coordinates system (polar or cartesian)</change>
+                        <change type="FEATURE">Most models can be stretched on top of basic/custom models</change>
+                    </prerelease>
+                    <prerelease version="1.0.14 beta 1">
+                        <change type="FEATURE">Basic support for user models</change>
+                    </prerelease>
+                -->
+            </prerelease>
+        </release>
+        <release version="1.0.13">
+            <pubDate>Mon, 08 Apr 2013 16:48:52 GMT</pubDate>
+            <prerelease version="1.0.13 beta 7">
+                <!-- restore default preferences for yoga webservice url -->
+            </prerelease>
+            <prerelease version="1.0.13 beta 6">
+                <change type="CHANGE">Target panels sub-components moved to save space</change>
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/448">Chi2 cuts can now be performed on every parameters (was limited to fitted parameters)</change>
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/450">Chi2 cuts bounds are now reported immediatly if entered out of parameter's bounds</change>
+
+            </prerelease>
+            <prerelease version="1.0.13 beta 5">
+                <change type="FEATURE">Chi2 map can be performed in probe mode (use 'run fit' check box)</change>
+                <change type="FEATURE">Provide a checkbox to skip very long (and sometimes non working) processing inside the GUI - should be improved</change>
+                <change type="CHANGE">Fix 'bad case' blocking error loading in the GUI some oifits</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Fix support of running fit with a max iteration value over 1000</change>
+            </prerelease>
+            <prerelease version="1.0.13 beta 4">
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/386">The height of the text summary below the 'Personal notebook' in the 'Result Panel' will not be smaller than 100px</change>
+                <change type="FEATURE">File menu gets a new 'Recent File' menu entry</change>
+            </prerelease>
+            <prerelease version="1.0.13 beta 3">
+                <change type="CHANGE"  url="http://trac.jmmc.fr/jmmc-sw/ticket/445">Diplay more informations for results and index them by datetime in the left tree and notebook.</change>
+                <change type="CHANGE">Add a separator before adding the result summary in the notebook.</change>
+                <change type="CHANGE">Use a jpg icon instead of the png previous one to work arround a known bug onto macos/java7</change>
+            </prerelease>
+            <prerelease version="1.0.13 beta 2">
+                <change type="DEVELOPPER">Use common XmlFactory for xslt transformations.</change>
+                <change type="DEVELOPPER">Use use jide checkboxLists.</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/381">Display all observables plots in the result nodes when opening an old settings file (was limited to current selected data)</change>
+            </prerelease>
+            <prerelease version="1.0.13 beta 1">
+                <change type="CHANGE">Inline documentation updated.</change>
+            </prerelease>
+        </release>
+        <release version="1.0.12">
+            <pubDate>Fri, 26 Oct 2012 10:40:56 GMT</pubDate>
+            <prerelease version="1.0.12 beta 6">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/359">Fix support of compressed files on the remote server side</change>
+                <change type="CHANGE">Uncompressed OIFits files are now always zipped before beeing embedded in the xml setting.</change>
+            </prerelease>
+            <prerelease version="1.0.12 beta 5">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/340">Fix support of '*' in fits loaded filenames</change>
+                <!-- <change type="BUGFIX">fix App.isAlpha() for the beta versions</change>-->
+            </prerelease>
+            <prerelease version="1.0.12 beta 4">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/338">Fix NPE in loss of focus from the empty cells of the parameters tables</change>
+            </prerelease>
+            <prerelease version="1.0.12b2">
+                <change type="CHANGE">Use default file chooser on Mac OS X (excepted for multiselection choosers)</change>
+                <change type="CHANGE">Save action now save by default result nodes (use preferences to change behaviour)</change>
+                <change type="FEATURE">Accept oifits through samp message table.load.fits (visit http://jmmc.fr/oidb)</change>
+                <change type="CHANGE">Radial plots for T3 get new legends for spacial frequencies (max of the 3)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.11">
+            <pubDate>Wed, 18 Apr 2012 15:46:03 GMT</pubDate>
+            <prerelease version="1.0.11b11">
+                <!-- use jide checkboxList -->
+                <!-- restore default preferences for yoga webservice url -->
+                <!--<change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/303">Fix error handling</change> -->
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/292">Handle oifits flags encoded as integer/short/char (0 indicates false else true)</change>
+            </prerelease>
+            <prerelease version="1.0.11b10">
+                <change type="CHANGE">... and many other things provided by the shared code between JMMC applications!!</change>
+                <change type="CHANGE">Interactive plots get proper range to display amplitudes or phases</change>
+                <change type="CHANGE">LITpro web service urls are reset and not shown in the preference window anylonger.</change>
+                <change type="CHANGE">Magnified images produced by LITpro web service (yorick core)</change>
+            </prerelease>
+            <prerelease version="1.0.11b9">
+                <!-- add a combobox to select fits viewer application in filePanel -->
+            </prerelease>
+            <prerelease version="1.0.11b8">
+                <change type="FEATURE">Model UV maps are now displayed as an animation of images to highlight differences between the model and data</change>
+            </prerelease>
+            <prerelease version="1.0.11b7">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/272">Fix error values in tsv export of some plots (with format change)</change>
+            </prerelease>
+            <prerelease version="1.0.11b6">
+                <change type="BUGFIX">Fix java look and feel on some platforms</change>
+            </prerelease>
+            <prerelease version="1.0.11a3">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/262">Fix CRPIX computed values to get proper centering on fits model images</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/265">Model's shared parameters can now be relinked to another shared parameter</change>
+                <change type="BUGFIX">Enhancement for multiple removals in the left settings tree</change>
+                <change type="CHANGE">Replace 'sampling' by '#samples' in the chi2 plot panels</change>
+            </prerelease>
+            <prerelease version="1.0.11a2">
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/252">Fix broken Oifits file verifier in 'File Panel'</change>
+                <change type="BUGFIX">Fix Null Pointer Exception setting the proper state of the 'Add new Target' button in the Targets Panel</change>
+                <change type="BUGFIX">Improve error handling on the LITpro server side</change>
+            </prerelease>
+            <prerelease version="1.0.11a1">
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/209">'reduced' checkbox has been added in the chi2 panel to plot reduced and/or log chi2 maps</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/146">Improve reliability and make some error messages easier to understand</change>
+                <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/193">The notebook get exactly the content of yorick lp_show_fit after every fit action</change>
+                <change type="CHANGE">Use VO protocol (Samp) to display fits tables (require topcat separate startup)</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/188">Fix bug that appeared after one target removal in some simple cases inside the plot panel</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/196">File given to application is now properly loaded on startup</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/148">Plots are now available only if the current settings get all requested parts (data+model)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.10">
+            <pubDate>Thu, 03 Mar 2011 09:33:07 GMT</pubDate>
+            <!--<change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>-->
+            <prerelease version="1.0.10a1">
+                <!--<change type="TODO">Handle webservice url preference reset during major version update</change>-->
+                <!--<change type="DOC">Update documentation</change>-->
+                <change type="BUGFIX">If one empty value is given for the value of one parameter, no more exception is thrown but the parameter get not modified.</change>
+                <change type="CHANGE">Use new error handling mecanisms</change>
+                <change type="CHANGE">Use new feedback report (which saves your email adress in a preference file)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.9">
+            <pubDate>Fri, 28 Jan 2011 09:00:34 GMT</pubDate>
+            <!--
+                  <change type="REQUEST">automatically deactivate t3amp if all t3amp are null</change>
+            -->
+            <prerelease version="1.0.9b3">
+                <change type="CHANGE">Display T3phi and VISphi data in degrees</change>
+                <!--<change type="DOC">Update documentation</change>-->
+            </prerelease>
+            <prerelease version="1.0.9b2">
+                <change type="BUGFIX">Use new oifits library that fixes bug loading data tables with only one wavelength and using TDIM keywords (1)</change>
+                <change type="BUGFIX">Use new oifits library that fixes several bugs related to ASCII character encoding / decoding and ASCII_NULL support</change>
+                <change type="BUGFIX">Fix residual sign while plotting residual. (M-D)/sigma was plotted instead of (D-M)/sigma.</change>
+                <change type="BUGFIX">Avoid error for radial plots data in T3 residuals cases</change>
+                <change type="CHANGE">Set 'weigthed residuals' instead of 'residuals' in some radial plot titles</change>
+                <change type="FEATURE">Three webservice urls are defined by preferences according Alpha Beta or Production versions</change>
+                <change type="FEATURE">Display version number in the application title bar for Alpha or Beta releases</change>
+            </prerelease>
+            <prerelease version="1.0.9b1">
+                <change type="FEATURE">Handle file extensions in loading/saving stages for oifits and xml setting files</change>
+                <change type="BUGFIX">Fix 'Prefix string too short' bug while saving in temporary file</change>
+            </prerelease>
+        </release>
+        <release version="1.0.8">
+            <pubDate>Tue, 23 Nov 2010 09:58:17 GMT</pubDate>
+            <prerelease version="1.0.8b1">
+                <change type="BUGFIX">Fix UV coverage plots in the file panel for t3data</change>
+            </prerelease>
+        </release>
+        <release version="1.0.7">
+            <pubDate>Tue, 09 Nov 2010 13:52:44 GMT</pubDate>
+            <prerelease version="1.0.7b5">
+                <change type="CHANGE">Use new Topcat release 3.6</change>
+                <!-- use of jmmc oival module by oitools -->
+                <change type="CHANGE">Use new jmmc java library to manage oifits files</change>
+                <change type="BUGFIX">Set radian unit label instead of degree for T3Phi or VisPhi plots of oifits files</change>
+            </prerelease>
+            <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
+            <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
+            <prerelease version="1.0.7b4">
+                <change type="FEATURE">Support reception of new setting from aspro using VO samp technology</change>
+            </prerelease>
+            <prerelease version="1.0.7b3">
+                <change type="BUGFIX">Do not overplot model on radial plots when T3 data are selected</change>
+            </prerelease>
+            <prerelease version="1.0.7b2">
+                <change type="CHANGE">Throw one feedback report if the 'get yoga version' action fails (called from preference panel)</change>
+            </prerelease>
+            <prerelease version="1.0.7b1">
+                <change type="BUGFIX">Set real sigma value for error bar and not half value</change>
+                <change type="BUGFIX">Fix xsl processing that generated one RunTime Error with math extension</change>
+                <!-- The message was : the following error Use of the extension function
+                'http://exslt.org/math:sqrt' is not allowed when the secure processing
+                feature is set to true.
+                -->
+            </prerelease>
+        </release>
+        <release version="1.0.6">
+            <pubDate>Wed, 21 Jul 2010 16:14:38 GMT</pubDate>
+            <!-- no comment for 1.0.6b8 Since it only a layout change in the plot panel layout and minor bug fix. -->
+            <!-- no comment for 1.0.6b7 Since it only a layout change in the chi2 plot panel. -->
+            <prerelease version="1.0.6b6">
+                <change type="CHANGE">Application download from web site asks to create an application shortcut to the desktop. This is not handled by all operating systems...</change>
+            </prerelease>
+            <prerelease version="1.0.6b5">
+                <change type="BUGFIX">Chi2 plot's bounds can be decimal</change>
+            </prerelease>
+            <!-- no comment for 1.0.6b4 Since it only fix help. -->
+            <!-- no comment for 1.0.6b3 Since it only fix a bug. The model was always plotted ... -->
+            <prerelease version="1.0.6b2">
+                <change type="BUGFIX">Allow to perform residual plots only on observables that are in the file and included into the associated residual settings of the targets.</change>
+            </prerelease>
+            <prerelease version="1.0.6b1">
+                <change type="CHANGE">Change the title of the chi2 panel: Cuts in the chi2 space panel</change>
+                <change type="CHANGE">Add the common panel (click on the plots node of the settings tree) that enables plotting with a higher granularity</change>
+                <change type="CHANGE">Add the personal notebook widget into the result panels</change>
+            </prerelease>
+        </release>
+        <release version="1.0.5">
+            <pubDate>Wed, 21 Jul 2010 16:14:38 GMT</pubDate>
+            <prerelease version="1.0.5b3">
+                <change type="BUGFIX">The USAGE messages of the LITpro engine are now displayed as error. It makes some error messages much more clear.</change>
+                <change type="CHANGE">Fix behaviour on parameters editing. User does not have to validate using enter key.</change><!-- DOCUPDATE -->
+                <change type="CHANGE">The widgets of the chi2 plots have been changed to be more intuitive and chi2 can be plotted in log</change><!-- DOCUPDATE -->
+                <change type="CHANGE">The bounds values of the chi2 parameters are changed on every parameter change</change>
+            </prerelease>
+            <prerelease version="1.0.5b2">
+                <change type="CHANGE">Add one header to the TSV exported files</change>
+                <change type="CHANGE">Set the user info field with a post-it-like background</change>
+            </prerelease>
+            <prerelease version="1.0.5b1">
+                <change type="CHANGE">The angle of radial plots is displayed in the label presented into the left tree and can get decimals</change>
+            </prerelease>
+        </release>
+        <release version="1.0.4">
+            <pubDate>Fri, 09 Apr 2010 16:11:05 GMT</pubDate>
+            <prerelease version="1.0.4b1">
+                <change type="CHANGE">The radial plot can now get different angles</change>
+                <change type="CHANGE">Model Image and UVMap image are now exported into fits file in addition to pdf and png</change>
+                <!-- Some labels have been changed into the preferences view -->
+            </prerelease>
+        </release>
+        <release version="1.0.3">
+            <pubDate>Mon, 01 Mar 2010 16:02:14 GMT</pubDate>
+            <prerelease version="1.0.3b1">
+                <change type="CHANGE">One system property is set on the machines which require one proxy for the web services (httpclient)</change>
+                <change type="CHANGE">The LITpro engine has been updated to plot images in the right orientation and draw color bars</change>
+            </prerelease>
+        </release>
+        <release version="1.0.2">
+            <pubDate>Mon, 01 Mar 2010 16:02:14 GMT</pubDate>
+            <prerelease version="1.0.2b1">
+                <change type="CHANGE">Shared parameters are now properly displayed in the table(type was wrong)</change>
+            </prerelease>
+        </release>
+        <release version="1.0.1">
+            <pubDate>Fri, 12 Feb 2010 14:37:29 GMT</pubDate>
+            <prerelease version="1.0.1b4">
+                <change type="CHANGE">Move the standard deviation column into the result panel</change>
+            </prerelease>
+            <prerelease version="1.0.1b3">
+                <change type="CHANGE">Fix handling of 1x1 arrays that could result in non displayed values (empty result plots ) </change>
+            </prerelease>
+            <prerelease version="1.0.1b2">
+                <change type="CHANGE">Show validation results of input files before doing anything else</change>
+            </prerelease>
+            <prerelease version="1.0.1b1">
+                <change type="CHANGE">Use proxy parameters to access the LITpro remote webservice</change>
+                <change type="CHANGE">Improve efficiency during the reading of the webservice return</change>
+            </prerelease>
+        </release>
+        <release version="1.0">
+            <pubDate>Fri, 12 Feb 2010 14:37:29 GMT</pubDate>
+            <prerelease version="1.0b0">
+                <change type="CHANGE">First public release</change>
+            </prerelease>
+        </release>
+        <!--
+        <release version="0.31">
+            <prerelease version="0.31beta1000">
+
+                <li>
+                Add one format version of all xml settings files
+                (Future revision will be able to check format validity
+                 and propose converter tools)
+                 </li>
+                 <change type="REQUEST">Do not send to server unused files, send only the files that get their id in target's idrefs</change>
+                 <change type="FEATURE"></change>
+                 <change type="CHANGE"></change>
+                 <change type="REQUEST"></change>
+                 <change type="BUGFIX"></change>
+                 placer les boutons expand unexpand et delete just au dessu de l'arbre
+                - - >
+                <change type="REQUEST">Permit user to select installed programs as fits viewer</change>
+                <change type="REQUEST">Fix problem with Nan in oifits files</change>
+                <change type="REQUEST">Fix interferometer sketch with multiple OiArray</change>
+                <change type="REQUEST">Flip the U axe of the UV plots</change>
+                <change type="REQUEST">Add url data file loading capability</change>
+                <change type="REQUEST">Display a progress bar during long actions( user sometimes click several times on buttons because nothing seems running...) </change>
+                <change type="REQUEST">Permit user to choose values for optionnal arguments of chi2_slice function, CMAX, CMIN, LOG_CHI2</change>
+                <change type="REQUEST">Detached window should be closed when the user asks to close one settings</change>
+                <change type="REQUEST">Add a 'back' button to return to previous panels</change>
+            </prerelease>
+            <prerelease version="0.31beta1">
+                <change type="BUGFIX">Fix out of bound radial plot</change>
+            </prerelease>
+        </release>
+        <release version="0.30">
+            <prerelease version="0.30beta1">
+                <change type="BUGFIX">Fix plot labels</change>
+            </prerelease>
+        </release>
+        <release version="0.29">
+            <prerelease version="0.29beta1">
+                <change type="CHANGE">Update Fitter settup according selected files</change>
+                <change type="BUGFIX">Remember user input into plot chi2 panel even if the parameter have one min or max value</change>
+            </prerelease>
+        </release>
+        <release version="0.28">
+            <prerelease version="0.28beta1">
+                <change type="CHANGE">Update GUI according last meeting discussions</change>
+            </prerelease>
+        </release>
+        <release version="0.27">
+            <prerelease version="0.27beta1">
+                <change type="CHANGE">Use new remote oifits browser</change>
+            </prerelease>
+        </release>
+        <release version="0.26">
+            <prerelease version="0.26beta1">
+                <change type="BUGFIX">The new plots are for the shown settings and no more for the last opened one</change>
+                <change type="FEATURE">User can download oidata files direcly from the oidata repository</change>
+                <change type="CHANGE">Improve algorythm that find new model and parameters names</change>
+            </prerelease>
+        </release>
+        <release version="0.25">
+            <prerelease version="0.25beta1000">
+            </prerelease>
+            <prerelease version="0.25beta3">
+                <change type="BUGFIX">Fix long latency on preference changes</change>
+                <change type="BUGFIX">Fix wrong inline documentation indexes</change>
+            </prerelease>
+            <prerelease version="0.25beta2">
+                <change type="BUGFIX">Allow user to plot radial data of it's model according data selection into the fitter setup</change>
+                <change type="BUGFIX">Fix handling and result display of the scale value for parameters</change>
+                <change type="FEATURE">Fill file name while saving one embedded file into the 'File panel'</change>
+            </prerelease>
+            <prerelease version="0.25beta1">
+                <change type="BUGFIX">Improve efficiency and reliability for big multiwalength data</change>
+            </prerelease>
+        </release>
+        <release version="0.24">
+            <prerelease version="0.24beta3">
+                <change type="BUGFIX">Labels of export buttons in tsv, pdf or png are now properly displayed on the windows platform</change>
+                <change type="CHANGE">Add unit on t3phi and visphi result or file plots </change>
+                <change type="FEATURE">Add one preference to define the initial values into Plot panels</change>
+                <change type="FEATURE">Tables of parameters can be edited on first click and numerical values are handled as simple strings</change>
+            </prerelease>
+            <prerelease version="0.24beta2">
+                <change type="BUGFIX">Init properly the parameters on model type changes</change>
+                <change type="BUGFIX">One tree display the use of the shared parameters</change>
+                <change type="FEATURE">Add one preference to save results elements into the xml file</change>
+                <change type="FEATURE">Tables of parameters can be edited on first click</change>
+            </prerelease>
+            <prerelease version="0.24beta1">
+                <change type="FEATURE">Add rha theta information into the popup menu of parameters tables (right-clic)</change>
+                <change type="FEATURE">Files that are not linked to any target can be removed</change>
+                <change type="FEATURE">Clean up shared parameters when last using models are removed.</change>
+                <change type="FEATURE">Type of models can be changed dynamically into the 'Model panel'.</change>
+                <change type="FEATURE">The column widths are automatically adjusted on most tables.</change>
+                <change type="BUGFIX">Fix problem of file list into the 'Target panel'</change>
+            </prerelease>
+        </release>
+        <release version="0.23">
+            <prerelease version="0.23beta1">
+                <change type="FEATURE">Add toolbar ( use preferences to hide/show it )</change>
+                <change type="BUGFIX">Fix LITpro setting file generation</change>
+            </prerelease>
+        </release>
+        <release version="0.22">
+            <prerelease version="0.22beta1">
+                <change type="BUGFIX">Fix bug that prevent submission of remote actions with an invalid settings</change>
+                <change type="BUGFIX">Shared parameters can be used in chi2 map after run fit action</change>
+                <change type="BUGFIX">Plots panel remind user selection of parameter to use for chi2map</change>
+                <change type="FEATURE">Show last result node after run fit call</change>
+                <change type="FEATURE">Target Panel embed one plotChi2Panel restricted to its parameters</change>
+            </prerelease>
+        </release>
+        <release version="0.21">
+            <prerelease version="0.21beta1">
+                <change type="BUGFIX">Fix bug that prevent update of fitter parameters in the 'Target panel'</change>
+                <change type="BUGFIX">shared parameters are updated after run fit action</change>
+                <change type="FEATURE">Add model radial plot capability (vis and vis2)</change>
+            </prerelease>
+        </release>
+        <release version="0.20">
+            <prerelease version="0.20beta6">
+                <change type="BUGFIX">chi2 map parameter list becomes updated during user modifications</change>
+                <change type="BUGFIX">Fix error bars on radial result plots</change>
+                <change type="CHANGE">Results get one data/model and residuals plots(for each quantities or selected ones for the fitting process)</change>
+            </prerelease>
+            <prerelease version="0.20beta5">
+                <change type="BUGFIX">prev_values in result report were displayed in wrong order</change>
+            </prerelease>
+            <prerelease version="0.20beta4">
+                <change type="CHANGE">Add first context help buttons</change>
+            </prerelease>
+            <prerelease version="0.20beta3">
+                <change type="CHANGE">Fit Result nodes get one index value in their tree labels</change>
+            </prerelease>
+            <prerelease version="0.20beta2">
+                <change type="CHANGE">include oitarget element into xml file output</change>
+                <change type="CHANGE">revert to Result as Result children.</change>
+                <change type="CHANGE">file plots (radial, uv coverage) get filename into the tree labels</change>
+            </prerelease>
+            <prerelease version="0.20beta1">
+                <change type="CHANGE">Use ResultFile as Result children.</change>
+                <change type="BUGFIX">Fix data file loading that added one leaf into the tree even if file was not an oifits file</change>
+                <change type="FEATURE">Add selector of data to be fitted into target panels</change>
+                <change type="FEATURE">Accept gzipped oifits file (*.gz)</change>
+                <change type="FEATURE">Wrong settings file loading show an error message instead of feedback report</change>
+                <change type="CHANGE">Display error dialog box on file loading errors.</change>
+                <change type="CHANGE">Remove local file name in the file panels</change>
+            </prerelease>
+        </release>
+        <release version="0.19">
+            <prerelease version="0.19beta1">
+                <change type="BUGFIX">Fix broken update of shared parameters widgets</change>
+                <change type="FEATURE">Add export of XY plots in TSV file</change>
+            </prerelease>
+        </release>
+        <release version="0.18">
+            <prerelease version="0.18beta1">
+                <change type="BUGFIX">Fix litpro settings file export</change>
+                <change type="BUGFIX">Fix plot build to handle multiwavelength data</change>
+            </prerelease>
+        </release>
+        <release version="0.17">
+            <prerelease version="0.17beta6">
+                <change type="FEATURE">Expand tree on tree node insertion or modification </change>
+                <change type="BUGFIX">Show scrollpane when tree content is bigger than container</change>
+                <change type="BUGFIX">Fix left tree displauy with invisible elements</change>
+                <change type="CHANGE">Fix default value of flux parameters to 1</change>
+                <change type="CHANGE">Use new version 3.4 of TOPCAT</change>
+            </prerelease>
+            <prerelease version="0.17beta5">
+                <change type="FEATURE">Add litpro settings file generation (in edit menu)</change>
+                <change type="FEATURE">Add multiwavelength uvcoverage plots in file panel</change>
+                <change type="BUGFIX">Settings with shared parameters use right names</change>
+            </prerelease>
+            <prerelease version="0.17beta4">
+                <change type="BUGFIX">Target get the full list of oifile which includes the associated target name</change>
+                <change type="CHANGE">Result panel get one titled border</change>
+                <change type="CHANGE">Improve result report for parameters</change>
+            </prerelease>
+            <prerelease version="0.17beta3">
+                <change type="CHANGE">Add attach, detach and remove button for plot list selection </change>
+            </prerelease>
+            <prerelease version="0.17beta2">
+                <change type="BUGFIX">fix shared parameter handling</change>
+            </prerelease>
+            <prerelease version="0.17beta1">
+                <change type="CHANGE">Major change: results and plots are now in the left tree</change>
+            </prerelease>
+        </release>
+        <release version="0.16">
+            <prerelease version="0.16beta1">
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+            </prerelease>
+        </release>
+        <release version="0.15">
+            <prerelease version="0.15beta1">
+                <change type="FEATURE">Add optionnal field to fix max number of iterations</change>
+                <change type="BUGFIX">Fix problem that remove the minValue of a parameter when user wanted to remove the maxValue</change>
+                <change type="BUGFIX">Remove Nan value for oldChi2 value when the chi2_track is not found</change>
+            </prerelease>
+        </release>
+        <release version="0.14">
+            <prerelease version="0.14beta6">
+                <change type="FEATURE">Propose on parameters view that group every parameter of one composed model</change>
+                <change type="CHANGE">Most plots can be exported (some must be detached to get export menu)</change>
+            </prerelease>
+            <prerelease version="0.14beta5">
+                <change type="BUGFIX" id="#1228748370">Permit user to revert to autoscaled parameter after one first init </change>
+            </prerelease>
+
+            <prerelease version="0.14beta4">
+                <change type="CHANGE">Change sniffer plot script name according server side modifications</change>
+            </prerelease>
+            <prerelease version="0.14beta3">
+                <change type="FEATURE">Minor presentation improvements with titled widgets for settings tree and plot list</change>
+                <change type="FEATURE">Display a feedback report window if the fitting server does not return any new settings and error.</change>
+            </prerelease>
+            <prerelease version="0.14beta2">
+                <change type="FEATURE">Minor presentation improvements with tittled widgets for settings tree and plot list</change>
+                <change type="CHANGE">Added vis2 residual plot</change>
+            </prerelease>
+            <prerelease version="0.14beta1">
+                <change type="BUGFIX">Fix result report when the model contains only one parameter to fit</change>
+                <change type="FEATURE">Add split bar to enlarge model description</change>
+                <change type="FEATURE">Add arcturus demo file</change>
+                <change type="FEATURE">Fix result text display list if one parameter only as been fitted and remove 'Confidence level'</change>
+                <change type="CHANGE">Models are displayed using only the name. previous form was model[type:name] too long</change>
+                <change type="CHANGE">x, y and flux_weight parameter of first model have now better initial values</change>
+                <change type="CHANGE">Make amp or phi distinct in the OI_T3 result plot</change>
+                <change type="CHANGE">Return message of error for plot failures</change>
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
+                <change type="CHANGE" id="#1228748877">Label change in the 'target panel' : 'Normalize residuals' -&gt; 'Normalize total flux'</change>
+                <change type="CHANGE" id="#1228747026">Label change in 'file panel' : 'Load one other file' -&gt; 'Load another file'</change>
+            </prerelease>
+        </release>
+        <release version="0.13">
+            <prerelease version="0.13beta">
+                <change type="FEATURE">Add a 'close setting' menu in the 'file' menu.</change>
+                <change type="CHANGE">Use checkboxes in the file list of target panels instead of the simple list widget</change>
+                <change type="CHANGE">The unit and type columns of parameters are not editable anylonger.</change>
+                <change type="CHANGE">One flag is activated on setting modification to ensure that program ask to save work before closing</change>
+                <change type="CHANGE">Fix parameter name conflict when one new target is added to an old setting file.</change>
+                <change type="FEATURE">Add plot sniffer and chi2 capabilities</change>
+            </prerelease>
+        </release>
+        <release version="0.12">
+            <prerelease version="0.12beta">
+                <change type="FEATURE">File panel gets one new button to use oifits validator.</change>
+                <change type="FEATURE">File panel gets new plotting capabilities.</change>
+                <change type="CHANGE">Yorick side errors are extracted for display, no more big xml document :-)</change>
+            </prerelease>
+        </release>
+        <release version="0.11">
+            <prerelease version="0.11beta2">
+                <change type="FEATURE">User can plot observed data from the file panels (even if abscissae is not yet in spectral freq but meters)</change>
+                <change type="FEATURE">User can load a setting from URL or pre loaded demo ones</change>
+                <change type="FEATURE">Window closing button now quits application</change>
+                <change type="FEATURE">User can plot image or uv map of model for multiple targets</change>
+                <change type="CHANGE">Normalization of residual can be adjusted in 'Target panel' (default value is true)</change>
+            </prerelease>
+            <prerelease version="0.11beta1">
+                <change type="BUGFIX">File Browser are open into user home directory on mac OS X</change>
+            </prerelease>
+        </release>
+        <release version="0.10">
+            <prerelease version="0.10beta">
+                <change>Fix bug of non solicited target ident changes during model construction </change>
+                <change>Fix right click support on windows platform view
+                    <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4119064"> bug description</a>
+                </change>
+                <change>Do not close application on preference window closing event</change>
+            </prerelease>
+        </release>
+        <release version="0.9">
+            <prerelease version="V1.0.9beta">
+                <change>Second level support of radial plots (T3 and VIS2 appears on same plot)</change>
+                <change>Textarea of result panel is not editable anymore</change>
+            </prerelease>
+        </release>
+        <release version="0.8">
+            <prerelease version="0.8.beta">
+                <change>First level support of radial plots (T3 do not yet work)</change>
+                <change> Show description of models in the
+                    <em>Model Panel</em>.Description is returned by getModelList script that extracts yorick informations through hashtable
+                </change>
+                <change> Right click on parameters is direct (no more selection need before click)</change>
+                <change> Removed limitation of param sharing based one same
+                    <em>type</em>User MUST take care of what he tries...
+                </change>
+                <change>Fix paramater sharing </change>
+            </prerelease>
+        </release>
+        <release version="0.7" >
+            <prerelease version="0.7.beta">
+                <change>Fix save bug</change>
+                <change>A dialog box is displayed when error occured on yorick side</change>
+            </prerelease>
+        </release>
+        <release version="0.6" >
+            <prerelease version="0.6.beta">
+                <change>Show most of informations about fitting process into result panel</change>
+                <change>Result panel starts to plot yoga results (baselines,uvcoverage,model image,model uv map)</change>
+                <change>Do not return error
+                    <em>not enough data point</em> anymore due to blank names into oitarget names
+                </change>
+                <change>A simple image viewer has been implemented with 3 selectable color models. Image should be in right sense and get correct values.</change>
+                <change>Velocity of result display has been improved</change>
+                <change>Parameter display has been fixed concerning exchanged values</change>
+            </prerelease>
+        </release>
+        <release version="0.5" >
+            <prerelease version="0.5.beta">
+                <change>Handle better oitargets name even if new fits library places some spaces into oitarget names</change>
+                <change>Use advanced menu to group interop menu and logging utility</change>
+                <change>Show covariance matrix into result panel</change>
+            </prerelease>
+        </release>
+        <release version="0.4" >
+            <prerelease version="0.4.beta">
+                <change> Fitting results are taken into account for parameters values</change>
+                <change> Models can share parameters </change>
+                <change> Fits files with zero length column supported </change>
+                <change> Fits viewer do not close anymore main application while quitting fits viewer</change>
+                <change> UV Coverage plot and interferometer sketch are automated at one basic level </change>
+            </prerelease>
+        </release>
+        <release version="0.3" >
+            <prerelease version="0.3.beta">
+                <change> Select by default oifiles associated to the added target </change>
+                <change> Display more info on observed data files </change>
+
+                <change> Make possible to use xml model without embedded b64 files. If the file is not found during opening, a dialog asks to locate it.</change>
+                <change> Quit action checks that every document have been saved </change>
+            </prerelease>
+        </release>
+        <release version="0.2" >
+            <prerelease version="0.2.beta">
+                <change> Display the release panel </change>
+
+                <change> Saving file does not use openDialog anymore but saveDialog instead</change>
+            </prerelease>
+        </release>
+        <release version="0.1" >
+            <prerelease version="0.1.beta">
+                <change> Fits file viewers can show selected tables with topcat defaut viewer </change>
+                <change> Embedded data extracted one time for every actions(viewing,saving...) </change>
+                <change> FilePanel permits to save embedded file </change>
+                <change> Delete button used to supress target refreshes the left tree </change>
+                <change> Preference window close button does not quit the application anylonger </change>
+                <change> Double clicks into list select view on clicked element </change>
+                <change> Settings splits sub components grouping FilesPanel and TargetsPanel </change>
+                <change> Report error loading bad format files (oifiles and settings ones) </change>
+            </prerelease>
+        </release>
+        -->
+    </releasenotes>
+
+    <acknowledgment><![CDATA[This research has made use of the Jean-Marie Mariotti Center \texttt{LITpro} service
+    co-developped by CRAL, IPAG and LAGRANGE.
+\footnote{LITpro software available at http://www.jmmc.fr/litpro}
+
+@INPROCEEDINGS{2008SPIE.7013E..44T,
+   author = {{Tallon-Bosc}, I. and {Tallon}, M. and {Thi{\'e}baut}, E. and
+	{B{\'e}chet}, C. and {Mella}, G. and {Lafrasse}, S. and {Chesneau}, O. and
+	{Domiciano de Souza}, A. and {Duvert}, G. and {Mourard}, D. and
+	{Petrov}, R. and {Vannier}, M.},
+    title = "{LITpro: a model fitting software for optical interferometry}",
+booktitle = {Society of Photo-Optical Instrumentation Engineers (SPIE) Conference Series},
+     year = 2008,
+   series = {Society of Photo-Optical Instrumentation Engineers (SPIE) Conference Series},
+   volume = 7013,
+    month = jul,
+      doi = {10.1117/12.788871},
+   adsurl = {http://cdsads.u-strasbg.fr/abs/2008SPIE.7013E..44T},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}]]></acknowledgment>
+</ApplicationData>
