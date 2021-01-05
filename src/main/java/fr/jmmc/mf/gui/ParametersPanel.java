@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.mf.gui.models.ParametersTableModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
@@ -45,8 +46,14 @@ public class ParametersPanel extends javax.swing.JPanel {
 
         // build help button
         helpButton1.setAction(new ShowHelpAction(("ENDtt_SharedParameters")));
+        postInit();
     }
-
+    
+    private void postInit(){
+        // Fix row height:
+        SwingUtils.adjustRowHeight(sharedParametersTable);
+    }
+    
     public void show(SettingsModel s, Parameters p) {
         settingsModel = s;
         current = p;

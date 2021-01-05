@@ -28,8 +28,11 @@ public class ResultPanel extends javax.swing.JPanel {
     public void show(ResultModel r, SettingsModel s) {
         current = r;
         settingsModel = s;
-        resultEditorPane.setContentType("text/html");
-        resultEditorPane.setText(r.getHtmlReport());
+//        resultEditorPane.setContentType("text/html");
+        //resultEditorPane.setText(r.getHtmlReport());
+        resultEditorPane.setContentType("text");
+        resultEditorPane.setText(s.getRootSettings().getUserInfo());
+
         resultEditorPane.setCaretPosition(0);
         userInfoPanel.show(s.getRootSettings());
     }

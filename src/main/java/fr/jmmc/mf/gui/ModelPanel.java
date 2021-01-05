@@ -7,6 +7,7 @@ import fr.jmmc.jmcs.gui.FeedbackReport;
 import fr.jmmc.jmcs.gui.component.MessageContainer;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.util.ResourceImage;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.ModelUtils;
@@ -106,6 +107,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         yorickCodePanel.add(rsp);
 
         visitUmRepositoryButton.setVisible(LITpro.USE_USERMODELS);
+        
+        // Fix row height:
+        SwingUtils.adjustRowHeight(parametersTable);
     }
 
     public void show(Model m, SettingsModel s) {

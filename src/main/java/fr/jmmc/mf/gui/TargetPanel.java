@@ -92,6 +92,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
 
         availableModelList.addListSelectionListener(this);
+        
+        // Fix row height:
+        SwingUtils.adjustRowHeight(parametersTable);
     }
 
     /**
