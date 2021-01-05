@@ -15,6 +15,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     static Preferences myPreferences = Preferences.getInstance();
     static ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private fr.jmmc.jmcs.gui.component.CommonPreferencesView commonPreferencesView1;
     private javax.swing.JTextField fovTextField;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
@@ -27,10 +28,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
@@ -118,7 +117,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jPanel1 = new javax.swing.JPanel();
         yogaPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toolbarCheckBox = new javax.swing.JCheckBox();
@@ -134,7 +132,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jLabel4 = new javax.swing.JLabel();
         preferenceFilenaTextfield = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        commonPreferencesView1 = new fr.jmmc.jmcs.gui.component.CommonPreferencesView();
         saveRestorePanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         restoreButton = new javax.swing.JButton();
@@ -195,11 +193,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        jPanel1.setMinimumSize(new java.awt.Dimension(500, 300));
-        jPanel1.setPreferredSize(new java.awt.Dimension(500, 300));
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
         yogaPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("LITpro"));
         yogaPanel.setLayout(new java.awt.GridBagLayout());
@@ -264,10 +258,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         yogaPanel.add(jButton2, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        jPanel1.add(yogaPanel, gridBagConstraints);
+        getContentPane().add(yogaPanel);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("General"));
         jPanel2.setLayout(new java.awt.GridBagLayout());
@@ -300,23 +291,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanel2.add(jLabel5, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel1.add(jPanel2, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 1.0;
-        jPanel1.add(jPanel4, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.1;
-        getContentPane().add(jPanel1, gridBagConstraints);
+        getContentPane().add(jPanel2);
+        getContentPane().add(commonPreferencesView1);
 
         saveRestorePanel.setAlignmentY(0.0F);
         saveRestorePanel.setLayout(new java.awt.GridBagLayout());
@@ -337,12 +313,7 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.weighty = 0.1;
         saveRestorePanel.add(restoreButton, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        getContentPane().add(saveRestorePanel, gridBagConstraints);
+        getContentPane().add(saveRestorePanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
