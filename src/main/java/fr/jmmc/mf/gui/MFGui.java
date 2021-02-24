@@ -143,7 +143,7 @@ public final class MFGui extends JFrame {
         final Image jmmcFavImage = ResourceImage.JMMC_FAVICON.icon().getImage();
         this.setIconImage(jmmcFavImage);
 
-        fr.jmmc.jmcs.gui.component.StatusBar.show("Application inited");
+        fr.jmmc.jmcs.gui.component.StatusBar.show("Application started");
     }
 
     public static void showToolbar(boolean visible) {

@@ -88,7 +88,7 @@ public class RunFitAction extends ResourcedAction {
             // change model state to lock it and extract its snapshot
             settingsModel.setRunning(true);
             File tmpFile = settingsModel.getTempFile(false);
-            StatusBar.show("Running fitting process of" + settingsModel.getAssociatedFilename());
+            StatusBar.show("Running fitting process of '" + settingsModel.getAssociatedFilename() + "'");
 
             new RunFitActionWorker(tmpFile, args.toString(), settingsModel).executeTask();
         }

@@ -8,6 +8,8 @@
  */
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.gui.util.SwingUtils;
+import java.awt.Font;
 
 /**
  *
@@ -47,6 +49,10 @@ public class TabbedPanel extends javax.swing.JPanel
     public TabbedPanel(String result)
     {
         initComponents();
+
+        // Adjust fonts:
+        dateTextField.setFont(new Font(Font.DIALOG, Font.PLAIN, SwingUtils.adjustUISize(10)));        
+        
         resultPane.setText(result);
         dateTextField.setText(new java.util.Date().toString());
     }
@@ -123,9 +129,9 @@ public class TabbedPanel extends javax.swing.JPanel
      * @param evt DOCUMENT ME!
      */
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt)
-    { //GEN-FIRST:event_closeButtonActionPerformed
+    {//GEN-FIRST:event_closeButtonActionPerformed
         MFGui.closeTab(this);
-    } //GEN-LAST:event_closeButtonActionPerformed
+    }//GEN-LAST:event_closeButtonActionPerformed
 
     // End of variables declaration                   
 }
