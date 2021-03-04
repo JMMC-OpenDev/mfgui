@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <!--
 Document   : resultToHtml.xsl
 Created on : 16 fevrier 2007, 16:51
@@ -11,13 +10,8 @@ Generate Html view of given xml settings files .
 
     <xsl:output method="html"/>
     <!-- The input document may not contain all settings related part  -->
-    <xsl:variable name="root" select="/" />
-
-    <xsl:template match="/">
-        <pre>
-            <xsl:copy-of select="//gui_info/table/tr[1]/td/text()"/>
-        </pre>
-        <!-- FixMe : Why do we have an array comming from lp_show_parameters()+lp_show_fit()  </h1> -->
+    <xsl:template match="/">        
+        <xsl:copy-of select=".//gui_info/text()"/>                
         <!-- a lot of information has been reduced after rev 14871 -->
     </xsl:template>
 
