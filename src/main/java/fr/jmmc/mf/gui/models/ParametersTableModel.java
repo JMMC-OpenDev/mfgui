@@ -217,8 +217,15 @@ public final class ParametersTableModel extends AbstractTableModel implements Mo
             return p.getType();
         }
         // @todo ask quality software responsible to validate following code
-        final String hasMethodName = "has" + columnNames[columnIndex];
-        final Method hasMethod = IntrospectionUtils.getMethod(Parameter.class, hasMethodName);
+        final String colName = columnNames[columnIndex];
+
+        final Method hasMethod;
+        if (!"Units".equals(colName)) {
+            final String hasMethodName = "has" + colName;
+            hasMethod = IntrospectionUtils.getMethod(Parameter.class, hasMethodName);
+        } else {
+            hasMethod = null;
+        }
 
         // not illegal because most parameters haven't some attributes
         if (hasMethod != null) {
@@ -228,7 +235,7 @@ public final class ParametersTableModel extends AbstractTableModel implements Mo
             }
         }
 
-        final String getMethodName = "get" + columnNames[columnIndex];
+        final String getMethodName = "get" + colName;
         final Method getMethod = IntrospectionUtils.getMethod(Parameter.class, getMethodName);
 
         if (getMethod != null) {
