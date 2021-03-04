@@ -426,6 +426,7 @@ public class UtilsClass {
     }
     public static final String IMAGE_FITS_DATATYPE = "image/fits";
     public static final String IMAGE_PNG_DATATYPE = "image/png";
+    private final static String[] DATA_TYPES = new String[]{IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE};
 
     /**
      * Read the given file and return one href containing base 64 encoded data.
@@ -550,13 +551,10 @@ public class UtilsClass {
      *
      */
     public static File saveBASE64ToFile(String b64, File outputFile) {
-        final String[] dataTypes = new String[]{
-            IMAGE_FITS_DATATYPE, IMAGE_PNG_DATATYPE
-        };
-        for (int i = 0; i <= dataTypes.length; i++) {
+        for (int i = 0; i <= DATA_TYPES.length; i++) {
             String base64DataType;
-            if (i < dataTypes.length) {
-                base64DataType = "data:" + dataTypes[i] + ";base64,";
+            if (i < DATA_TYPES.length) {
+                base64DataType = "data:" + DATA_TYPES[i] + ";base64,";
             } else {
                 base64DataType = "data:" + b64.substring(0, Math.min(100, b64.length())).substring(5, b64.indexOf(";base64,")) + ";base64,";
             }
@@ -690,7 +688,7 @@ public class UtilsClass {
      */
     public static Document parseXmlFile(String filename, boolean validating)
             throws ParserConfigurationException, ParserConfigurationException,
-            SAXException, IOException {
+                   SAXException, IOException {
         // Create a builder factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
