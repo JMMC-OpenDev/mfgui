@@ -4,9 +4,9 @@
 Document   : yogaToPlotML.xsl
 Created on : 14 mars 2007, 11:09
 Author     : mella
-Description:        
+Description:
 Template code try to make same actions of following yoga functions
-lp_plot_baselines, lp_plot_uvcoverage, lp_plot_radial, 
+lp_plot_baselines, lp_plot_uvcoverage, lp_plot_radial,
 lp_plot_image, lp_plot_uvmap
 
 Output must be follow plotml format:
@@ -15,6 +15,7 @@ http://ptolemy.berkeley.edu/java/ptplot5.6/ptolemy/plot/doc/plot.pdf
 NOTES pour futur documenter les GROS PROBLEMES CONSTATE entre xsltproc et xalan
 le param d'un template qui disparait a completer...
 exslt:node-set($var)//eleName ne marche pas, il faut utiliser exslt:node-set($var)/eleName
+
 
 Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une trasfo xsl
 
@@ -34,7 +35,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 xmlns:test="http://xmlsoft.org/XSLT/"
                 extension-element-prefixes="exslt math date func set str dyn saxon xt libxslt test"
                 exclude-result-prefixes="math str" >
-            
+
     <!-- <xsl:output method="xml" standalone="yes" doctype-public= "-//UC Berkeley//DTD PlotML 1//EN"
                 doctype-system="http://ptolemy.eecs.berkeley.edu/archive/plotml.dtd"/>
                 -->
@@ -43,7 +44,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
      - plotBaselines plotUVCoverage visamp visphi vis2 t3amp t3phi
      note: vis2 is sometimes called vis2data into the world structure
      -->
-    <xsl:param name="plotName">plotBaselines</xsl:param>    
+    <xsl:param name="plotName">plotBaselines</xsl:param>
     <xsl:param name="residuals"></xsl:param>
 
     <xsl:template match="/">
@@ -67,7 +68,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             </xsl:when>
             <xsl:when test="$plotName='plotUVCoverage'">
                 <xsl:call-template name="plotUVCoverage"/>
-            </xsl:when>            
+            </xsl:when>
             <xsl:otherwise>
                 <plot>
                     <title>
@@ -77,7 +78,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template name="plotRadial">
         <xsl:param name="plotName"/>
         <xsl:param name="yfactor">
@@ -109,14 +110,14 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                             </xsl:if>
                         </xsl:with-param>
                         <xsl:with-param name="errorBarElements">
-                            <xsl:copy-of select="./*[name()=concat($plotName,'err')]//td"/>                            
+                            <xsl:copy-of select="./*[name()=concat($plotName,'err')]//td"/>
                         </xsl:with-param>
                         <xsl:with-param name="flagElements">
                             <xsl:copy-of select="./flags//td"/>
-                        </xsl:with-param>                    
+                        </xsl:with-param>
                         <xsl:with-param name="name" select="concat($plotName, ' (data)')"/>
                         <xsl:with-param name="marks" select="'points'"/>
-                        <!-- Convert internal values from radians to degrees -->                        
+                        <!-- Convert internal values from radians to degrees -->
                         <xsl:with-param name="yfactor" select="$yfactor"/>
                     </xsl:call-template>
                     <!-- plot model -->
@@ -132,7 +133,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         </xsl:with-param>
                         <xsl:with-param name="flagElements">
                             <xsl:copy-of select="./flags//td"/>
-                        </xsl:with-param>                    
+                        </xsl:with-param>
                         <xsl:with-param name="name" select="concat($plotName, ' (model)')"/>
                         <xsl:with-param name="marks" select="'dots'"/>
                         <!-- Convert internal values from radians to degrees -->
@@ -174,7 +175,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         </xsl:with-param>
                         <xsl:with-param name="flagElements">
                             <xsl:copy-of select="./flags//td"/>
-                        </xsl:with-param>                    
+                        </xsl:with-param>
                         <xsl:with-param name="name" select="concat($plotName, ' (model)')"/>
                         <xsl:with-param name="marks" select="'dots'"/>
                     </xsl:call-template>
@@ -201,12 +202,17 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 <xsl:value-of select="$marks"/>
             </xsl:attribute>
 
-            <xsl:for-each select="exslt:node-set($xElements)/*">
+            <xsl:variable name="ns_x" select="exslt:node-set($xElements)" />
+            <xsl:variable name="ns_y" select="exslt:node-set($yElements)" />
+            <xsl:variable name="ns_flags" select="exslt:node-set($flagElements)" />
+            <xsl:variable name="ns_errorBars" select="exslt:node-set($errorBarElements)" />
+
+            <xsl:for-each select="$ns_x/*">
                 <xsl:variable name="i" select="position()"/>
-                <xsl:variable name="x" select="."/>
-                <xsl:variable name="y" select="exslt:node-set($yElements)/*[position()=$i]"/>
-                <xsl:variable name="flag" select="exslt:node-set($flagElements)/*[position()=$i]"/>
+                <xsl:variable name="flag" select="$ns_flags/*[position() = $i]"/>
                 <xsl:if test="not($flag='1')"><xsl:element name="p">
+                    <xsl:variable name="x" select="."/>
+                    <xsl:variable name="y" select="$ns_y/*[position() = $i]"/>
                     <xsl:attribute name="x">
                         <xsl:value-of select="$x"/>
                     </xsl:attribute>
@@ -214,7 +220,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         <xsl:value-of select="$y * $yfactor"/>
                     </xsl:attribute>
                     <xsl:if test="$errorBarElements!='no'">
-                        <xsl:for-each select="exslt:node-set($errorBarElements)/*[position()=$i]">
+                        <xsl:for-each select="$ns_errorBars/*[position() = $i]">
                             <xsl:attribute name="lowErrorBar">
                                 <xsl:value-of select="( $y - . ) * $yfactor"/>
                             </xsl:attribute>
@@ -246,22 +252,28 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 <xsl:value-of select="$marks"/>
             </xsl:attribute>
 
-            <xsl:for-each select="exslt:node-set($xElements)/*">
+            <xsl:variable name="ns_x" select="exslt:node-set($xElements)" />
+            <xsl:variable name="ns_d" select="exslt:node-set($dataElements)" />
+            <xsl:variable name="ns_m" select="exslt:node-set($modelElements)" />
+            <xsl:variable name="ns_w" select="exslt:node-set($weightElements)" />
+            <xsl:variable name="ns_flags" select="exslt:node-set($flagElements)" />
+
+            <xsl:for-each select="$ns_x/*">
                 <xsl:variable name="i" select="position()"/>
-                <xsl:variable name="x" select="."/>
-                <xsl:variable name="m" select="exslt:node-set($modelElements)/*[position()=$i]"/>
-                <xsl:variable name="d" select="exslt:node-set($dataElements)/*[position()=$i]"/>
-                <xsl:variable name="w" select="exslt:node-set($weightElements)/*[position()=$i]"/>
-                <xsl:variable name="y" select="( $d - $m ) * $w"/>
-                <xsl:variable name="flag" select="exslt:node-set($flagElements)/*[position()=$i]"/>
+                <xsl:variable name="flag" select="$ns_flags/*[position() = $i]"/>
                 <xsl:if test="not($flag='1')"><xsl:element name="p">
-                    <xsl:attribute name="x">
-                        <xsl:value-of select="$x"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="y">
-                        <xsl:value-of select="$y"/>
-                    </xsl:attribute>
-                </xsl:element></xsl:if>
+                    <xsl:variable name="x" select="."/>
+                    <xsl:variable name="d" select="$ns_d/*[position() = $i]"/>
+                    <xsl:variable name="m" select="$ns_m/*[position() = $i]"/>
+                    <xsl:variable name="w" select="$ns_w/*[position() = $i]"/>
+                    <xsl:variable name="y" select="( $d - $m ) * $w"/>
+                        <xsl:attribute name="x">
+                            <xsl:value-of select="$x"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="y">
+                            <xsl:value-of select="$y"/>
+                        </xsl:attribute>
+                    </xsl:element></xsl:if>
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
@@ -279,7 +291,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     <xsl:for-each select="ucoord//td">
                         <xsl:variable name="i" select="position()"/>
                         <xsl:variable name="u" select="."/>
-                        <xsl:variable name="v" select="$vcoord//td[position()=$i]"/>
+                        <xsl:variable name="v" select="$vcoord//td[position() = $i]"/>
                         <xsl:element name="p">
                             <xsl:attribute name="x">
                                 <xsl:value-of select="$u"/>
@@ -306,18 +318,20 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
         <plot>
             <title>UV coverage plot</title>
             <xLabel>Ucoord (1/rad)</xLabel>
-            <yLabel>Vcoord (1/rad)</yLabel>                     
+            <yLabel>Vcoord (1/rad)</yLabel>
             <xsl:for-each select="//_modeler/dataset//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="pair">
                         <xsl:copy-of select="vfreq//td"/>
                     </xsl:variable>
+                    <xsl:variable name="ns_v" select="exslt:node-set($pair)" />
+
                     <xsl:for-each select="ufreq//td">
                         <xsl:variable name="i" select="position()"/>
                         <xsl:variable name="u" select="."/>
                         <!--  take care, vfreqand ufreq are not array(1,n) but one matrix (n,1) -->
-                        <xsl:variable name="v" select="exslt:node-set($pair)/td[position()=$i]"/>
+                        <xsl:variable name="v" select="$ns_v/td[position() = $i]"/>
                         <xsl:element name="p">
                             <xsl:attribute name="x">
                                 <xsl:value-of select="$u"/>
@@ -338,5 +352,5 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 </dataset>
             </xsl:for-each>
         </plot>
-    </xsl:template>    
+    </xsl:template>
 </xsl:stylesheet>
