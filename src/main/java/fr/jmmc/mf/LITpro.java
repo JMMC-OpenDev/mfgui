@@ -191,7 +191,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
             MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);
-            logger.warn("Error occurs after following call to LITpro server : " + methodName + " " + methodArg);
+            logger.warn("Error occurs after following call to LITpro server : {} {}", methodName, methodArg);
         }
         String info = UtilsClass.getOutputMsg(r);
         if (info.length() > 1) {
@@ -222,15 +222,11 @@ public class LITpro extends fr.jmmc.jmcs.App {
         try {
             if (xmlFile == null) {
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, methodArg});
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + methodArg);
-                }
+                logger.debug("Making call using yoga script: {} {} {}", yogaProgram, methodName, methodArg);
             } else {
                 filename = xmlFile.getAbsolutePath();
                 ph = new fr.jmmc.mcs.util.ProcessHandler(new String[]{yogaProgram, methodName, filename, methodArg});
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Making call using yoga script:" + yogaProgram + " " + methodName + " " + filename + " " + methodArg);
-                }
+                logger.debug("Making call using yoga script: {} {} {} {}", yogaProgram, methodName, filename, methodArg);
             }
             YogaExec pm = new YogaExec();
             ph.setProcessManager(pm);
@@ -481,7 +477,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         new SampMessageHandler(SampCapability.LITPRO_START_SETTING) {
             @Override
             protected void processMessage(final String senderId,
-                    final Message message) throws SampException {
+                                          final Message message) throws SampException {
 
                 final String xmlModel = (String) message.getParam("model");
                 final String filename = (String) message.getParam("filename");
