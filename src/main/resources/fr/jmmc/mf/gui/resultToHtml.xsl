@@ -12,7 +12,7 @@ Generate Html view of given xml settings files .
     <!-- The input document may not contain all settings related part  -->
     <xsl:template match="/">        
         <xsl:copy-of select=".//gui_info/text()"/>                
-        <!-- a lot of information has been reduced after rev 14871 -->
+        <!-- a lot of information has been reduced after rev 14871 and replaced by gui_info computation on the CLI side-->
     </xsl:template>
 
 </xsl:stylesheet>
