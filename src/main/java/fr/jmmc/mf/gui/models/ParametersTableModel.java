@@ -3,6 +3,7 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.models;
 
+import fr.jmmc.jmcs.util.IntrospectionUtils;
 import fr.jmmc.jmcs.util.StringUtils;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.UtilsClass;
@@ -31,19 +32,23 @@ import org.slf4j.LoggerFactory;
  * @todo: check if model container should be vectors instead of arrays
  *
  */
-public class ParametersTableModel extends AbstractTableModel implements MouseListener {
+public final class ParametersTableModel extends AbstractTableModel implements MouseListener {
 
-    static Logger logger = LoggerFactory.getLogger(
-            ParametersTableModel.class.getName());
-    public static final String NAME_COLUMN_NAME = "Name";
-    public static final String TYPE_COLUMN_NAME = "Type";
+    private final static Logger logger = LoggerFactory.getLogger(ParametersTableModel.class.getName());
+
+    public static final String COLUMN_NAME = "Name";
+    public static final String COLUMN_TYPE = "Type";
+
+    // Init columns titles and types
+    // TODO: refactor using generic jmcs ColumnDef ?
+    private final static String[] columnNames = new String[]{COLUMN_NAME, COLUMN_TYPE, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
+    private final static Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
+    private final static Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
+
+    /* members */
     protected boolean recursive;
     // Store model of corresponding parameter in parameters array
     protected Model[] modelOfParameters;
-    // Init columns titles and types
-    protected final String[] columnNames = new String[]{NAME_COLUMN_NAME, TYPE_COLUMN_NAME, "Units", "Value", "MinValue", "MaxValue", "Scale", "HasFixedValue"};
-    protected final Class[] columnTypes = new Class[]{String.class, String.class, String.class, Double.class, Double.class, Double.class, Double.class, Boolean.class};
-    protected final Boolean[] columnEditableFlags = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE};
     private javax.swing.JPopupMenu parameterPopupMenu = new javax.swing.JPopupMenu();
     private SettingsModel settingsModel;
     private Target targetToPresent;
@@ -150,12 +155,10 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
     }
 
     protected void addParamsFor(Model model, Vector paramContainer, Vector<Model> modelContainer, boolean recursive) {
-
         ModelUtils.addParamsFor(model, paramContainer, modelContainer, recursive, true, true);
-
     }
 
-    // Next parts makes respond to the full TableModel interface
+    /* TableModel interface implementation */
     @Override
     public Class getColumnClass(int columnIndex) {
         return columnTypes[columnIndex];
@@ -182,91 +185,79 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
         if (o == null) {
             return null;
         }
-        Parameter p;
-        ParameterLink pl = null;
+        final Parameter p;
+        final ParameterLink pl;
+
         if (isParameterLink(o)) {
-            pl = (ParameterLink) o;
             p = (Parameter) ((ParameterLink) o).getParameterRef();
+            pl = (ParameterLink) o;
         } else {
+            pl = null;
             p = (Parameter) o;
         }
 
         // return name
         if (columnIndex == 0) {
             if (recursive) {
-                Model model = modelOfParameters[rowIndex];
-                if (isParameterLink(o)) {
+                if (pl != null) {
                     // hide the model name for one shared parameter
                     return p.getName();
-                } else if (model != null) {
-                    return model.getName() + "." + p.getName();
-                } else {
-                    // there is no parent: it is probably a shared parameter
-                    return p.getName();
                 }
-            } else {
-                return p.getName();
+                final Model model = modelOfParameters[rowIndex];
+                if (model != null) {
+                    return model.getName() + "." + p.getName();
+                }
+                // there is no parent: it is probably a shared parameter
             }
+            return p.getName();
         } else if (columnIndex == 1) {
-            if (isParameterLink(o)) {
+            if (pl != null) {
                 return pl.getType();
             }
             return p.getType();
         }
         // @todo ask quality software responsible to validate following code
-        try {
-            String getMethodName = "get" + columnNames[columnIndex];
-            Method get;
+        final String hasMethodName = "has" + columnNames[columnIndex];
+        final Method hasMethod = IntrospectionUtils.getMethod(Parameter.class, hasMethodName);
 
-            get = Parameter.class.getMethod(getMethodName, new Class[0]);
-
-            String hasMethodName = "has" + columnNames[columnIndex];
-
-            try {
-                Method has = Parameter.class.getMethod(hasMethodName, new Class[0]);
-                if (has.invoke(p, new Object[0]).equals(Boolean.FALSE)) {
-                    return null;
-                }
-            } catch (NoSuchMethodException e) {
-                // not illegal because most parameters haven't some attributes
+        // not illegal because most parameters haven't some attributes
+        if (hasMethod != null) {
+            final Object hasValue = IntrospectionUtils.getMethodValue(hasMethod, p);
+            if (Boolean.FALSE.equals(hasValue)) {
+                return null;
             }
-
-            Object ret = get.invoke(p, new Object[0]);
-            return ret;
-
-        } catch (InvocationTargetException ex) {
-            throw new IllegalStateException("Can't get data from setting", ex);
-        } catch (NoSuchMethodException ex) {
-            //throw new IllegalStateException("Can't get data from setting",ex);
-            logger.error("Can't get data from setting", ex);
-            return null;
-        } catch (SecurityException ex) {
-            throw new IllegalStateException("Can't get data from setting", ex);
-        } catch (IllegalAccessException ex) {
-            throw new IllegalStateException("Can't get data from setting", ex);
         }
+
+        final String getMethodName = "get" + columnNames[columnIndex];
+        final Method getMethod = IntrospectionUtils.getMethod(Parameter.class, getMethodName);
+
+        if (getMethod != null) {
+            return IntrospectionUtils.getMethodValue(getMethod, p);
+        }
+        return null;
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         // in full editin mode, the name is a copy of type
-        return (editForCustomModel && columnNames[columnIndex] != NAME_COLUMN_NAME) || columnEditableFlags[columnIndex];
+        return (editForCustomModel && columnNames[columnIndex] != COLUMN_NAME) || columnEditableFlags[columnIndex];
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Object o = parametersOrParameterLinksToPresent[rowIndex];
-        Parameter pprime, p;
+
+        final Parameter p;
         if (isParameterLink(o)) {
             p = (Parameter) ((ParameterLink) o).getParameterRef();
         } else {
             p = (Parameter) o;
         }
 
-        pprime = (Parameter) UtilsClass.clone(p);
+        final Parameter pprime = (Parameter) UtilsClass.clone(p);
 
         // Check all methods that accept something else than a String as param
-        // introspection can't be used because Objects are given as parmaeter
+        // introspection can't be used because Objects are given as parameter
         // and most of parameter ones accept double only :(
         if (columnNames[columnIndex].equals("Value")) {
             if (aValue != null) {
@@ -303,13 +294,15 @@ public class ParametersTableModel extends AbstractTableModel implements MouseLis
                 if (aValue != null) {
                     methodName = "set" + columnNames[columnIndex];
                     Class[] c = new Class[]{aValue.getClass()};
+                    // TODO: fix use IntrospectionUtils ?
                     Method set = Parameter.class.getMethod(methodName, c);
                     Object[] obj = new Object[]{aValue};
                     set.invoke(p, obj);
-                    if (columnNames[columnIndex] == TYPE_COLUMN_NAME && editForCustomModel) {
+                    if (columnNames[columnIndex] == COLUMN_TYPE && editForCustomModel) {
                         p.setName((String) aValue);
                     }
                 } else {
+                    // TODO: fix use IntrospectionUtils ?
                     methodName = "delete" + columnNames[columnIndex];
                     Method m = Parameter.class.getMethod(methodName);
                     m.invoke(p);
