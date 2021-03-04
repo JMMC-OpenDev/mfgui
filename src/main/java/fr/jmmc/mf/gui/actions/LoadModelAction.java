@@ -40,7 +40,7 @@ public class LoadModelAction extends RegisteredAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         // Retrieve file given by App startup or open a filechooser
-        File file = null;
+        final File file;
 
         // If the action was automatically triggered from App launch
         if (e.getSource() == ActionRegistrar.getInstance()) {
@@ -54,7 +54,7 @@ public class LoadModelAction extends RegisteredAction {
         // Finally try to load file
         if (file != null) {
             try {
-                logger.info("Loading '" + file.getName() + "' setting file");
+                logger.info("Loading '{}' setting file", file.getName());
                 mfgui.addSettings(new SettingsModel(file));
             } catch (IOException ex) {
                 MessagePane.showErrorMessage("Could not load file : " + file.getName(), ex);
