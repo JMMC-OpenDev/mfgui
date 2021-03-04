@@ -13,18 +13,28 @@ import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.service.JnlpStarter;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
-import fr.jmmc.oitools.model.*;
+import fr.jmmc.oitools.model.OIData;
+import fr.jmmc.oitools.model.OIFitsChecker;
+import fr.jmmc.oitools.model.OIFitsFile;
+import fr.jmmc.oitools.model.OIT3;
+import fr.jmmc.oitools.model.OITable;
+import fr.jmmc.oitools.model.OIVis;
+import fr.jmmc.oitools.model.OIVis2;
 import fr.nom.tam.fits.FitsException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.ListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.astrogrid.samp.Client;
 import org.astrogrid.samp.client.SampException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ptolemy.plot.plotml.*;
+import ptolemy.plot.plotml.PlotMLFrame;
 
 /**
  *
@@ -118,7 +128,7 @@ public class FilePanel extends javax.swing.JPanel {
 
         // update lists
         hduList.setListData(oifitsFile_.getOiTables());
-       hduListModel = hduList.getModel();
+        hduListModel = hduList.getModel();
         showUVCoverageButton.setEnabled(false);
         showVisButton.setEnabled(oifitsFile_.hasOiVis());
         visampCheckBox.setEnabled(oifitsFile_.hasOiVis());
@@ -130,7 +140,7 @@ public class FilePanel extends javax.swing.JPanel {
         // update button state
         hduList.setSelectedIndices(new int[]{});
 
-        topcatButton.setEnabled(fitsViewerComboBox.getModel().getSize()==0);
+        topcatButton.setEnabled(fitsViewerComboBox.getModel().getSize() == 0);
 
     }
 
@@ -370,8 +380,7 @@ public class FilePanel extends javax.swing.JPanel {
     private void hduListMouseClicked(java.awt.event.MouseEvent evt)
     {//GEN-FIRST:event_hduListMouseClicked
         // launch viewer if double click
-        if (evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             loadViewerButton.doClick();
         }
     }//GEN-LAST:event_hduListMouseClicked
@@ -379,26 +388,23 @@ public class FilePanel extends javax.swing.JPanel {
     /*TO PUT ON ANOTHER PLACE*/
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[] x, double[] y,
-          double[] errorBar, boolean[] flags) {
-    StringBuffer sb = new StringBuffer();
+                                         double[] errorBar, boolean[] flags) {
+        StringBuffer sb = new StringBuffer();
 
-    if (logger.isDebugEnabled()) {
-      if (errorBar != null) {
-        logger.debug("x,y,err dimensions : {}, {}, {}" , x.length, y.length, errorBar.length);
-      } else {
-        logger.debug("x,y dimensions : {}, {}", x.length, y.length);
-      }
-    }
+        if (logger.isDebugEnabled()) {
+            if (errorBar != null) {
+                logger.debug("x,y,err dimensions : {}, {}, {}", x.length, y.length, errorBar.length);
+            } else {
+                logger.debug("x,y dimensions : {}, {}", x.length, y.length);
+            }
+        }
 
-    sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
-        for (int i = 0; i < x.length; i++)
-        {
+        sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
+        for (int i = 0; i < x.length; i++) {
             // Output only if flags are given and are false
-            if (flags==null || !flags[i])
-            {
+            if (flags == null || !flags[i]) {
                 sb.append("<m x=\"").append(x[i]).append("\" y=\"").append(y[i]).append("\"");
-                if (errorBar != null)
-                {
+                if (errorBar != null) {
                     double lowEB = y[i] - errorBar[i];
                     double highEB = y[i] + errorBar[i];
                     sb.append(" lowErrorBar=\"").append(lowEB).append("\"");
@@ -413,25 +419,20 @@ public class FilePanel extends javax.swing.JPanel {
 
     /** Build a ptplot xml file for given data */
     private String buildXmlPtPlotDataSet(String datasetName, double[][] x, double[][] y,
-            double[][] errorBar, boolean[][] flags)
-    {
+                                         double[][] errorBar, boolean[][] flags) {
         StringBuffer sb = new StringBuffer();
-        if(errorBar!=null){
-            logger.debug("x,y,err dimensions :{}, {}, {}" , x.length, y.length, errorBar.length);
-        }   else{
-            logger.debug( "x,y dimensions :{},{}", x.length, y.length);
+        if (errorBar != null) {
+            logger.debug("x,y,err dimensions :{}, {}, {}", x.length, y.length, errorBar.length);
+        } else {
+            logger.debug("x,y dimensions :{},{}", x.length, y.length);
         }
         sb.append("<dataset connected=\"no\" marks=\"dots\" name=\"").append(datasetName).append("\">\n");
-        for (int i = 0; i < x.length; i++)
-        {
-            for (int j = 0; j < x[0].length; j++)
-            {
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x[0].length; j++) {
                 // Output only if flags are given and are false
-                if (flags==null || !flags[i][j])
-                {
+                if (flags == null || !flags[i][j]) {
                     sb.append("<m x=\"").append(x[i][j]).append("\" y=\"").append(y[i][j]).append("\"");
-                    if (errorBar != null)
-                    {
+                    if (errorBar != null) {
                         double lowEB = y[i][j] - errorBar[i][j];
                         double highEB = y[i][j] + errorBar[i][j];
                         sb.append(" lowErrorBar=\"").append(lowEB).append("\"");
@@ -445,118 +446,103 @@ public class FilePanel extends javax.swing.JPanel {
         return sb.toString();
     }
 
-    public void showData(String requestedTables, String [] requestedColumns)
-    {
+    public void showData(String requestedTables, String[] requestedColumns) {
         logger.debug("Searching to plot {}", requestedTables);
-        String plotName=current.getName()+"(";
+        String plotName = current.getName() + "(";
         for (int i = 0; i < requestedColumns.length; i++) {
-            plotName = plotName+requestedColumns[i]+" " ;
+            plotName = plotName + requestedColumns[i] + " ";
         }
-        plotName = plotName+")" ;
+        plotName = plotName + ")";
 
-            int retainedHdu = 0;
-            // Select requested tables:
-            // plot all requested if nothing selected or selection does not contains requested
-            // else plot only selected
-            Object[] selected = hduList.getSelectedValues();
-            OITable[] OITables = oifitsFile_.getOiTables();
-            selected = hduList.getSelectedValues();
-            // Search in selection
-            for (int i = 0; i < selected.length; i++)
-            {
-                OITable t = (OITable) selected[i];
-                if (t.getExtName().equals(requestedTables))
-                {
+        int retainedHdu = 0;
+        // Select requested tables:
+        // plot all requested if nothing selected or selection does not contains requested
+        // else plot only selected
+        Object[] selected = hduList.getSelectedValues();
+        OITable[] OITables = oifitsFile_.getOiTables();
+        selected = hduList.getSelectedValues();
+        // Search in selection
+        for (int i = 0; i < selected.length; i++) {
+            OITable t = (OITable) selected[i];
+            if (t.getExtName().equals(requestedTables)) {
+                OITables[retainedHdu] = t;
+                retainedHdu++;
+            }
+        }
+        // or search on all if nothing found
+        if (retainedHdu == 0) {
+            // no hdu found, we will try again on all hdu
+            for (int i = 0; i < OITables.length; i++) {
+                OITable t = (OITable) OITables[i];
+                if (t.getExtName().equals(requestedTables)) {
                     OITables[retainedHdu] = t;
                     retainedHdu++;
                 }
             }
-            // or search on all if nothing found
-            if (retainedHdu == 0)
-            {
-                // no hdu found, we will try again on all hdu
-                for (int i = 0; i < OITables.length; i++)
-                {
-                    OITable t = (OITable) OITables[i];
-                    if (t.getExtName().equals(requestedTables))
-                    {
-                        OITables[retainedHdu] = t;
-                        retainedHdu++;
-                    }
+        }
+
+        /* Start plotting loop on retained HDU*/
+        StringBuffer sb = new StringBuffer();
+        sb.append("<?xml version=\"1.0\" standalone=\"yes\"?><plot><!-- Ptolemy plot, version 5.6 , PlotML format. --><title>data versus spatial frequency</title><xLabel>spatial frequency (1/rad)");
+        if (requestedTables.contains("3")) {
+            sb.append(" (max of the 3 frequencies)");
+        }
+        sb.append("</xLabel><yLabel>");
+        sb.append(requestedTables).append("</yLabel>");
+
+        for (int i = 0; i < retainedHdu; i++) {
+            OITable table = OITables[i];
+
+            for (int j = 0; j < requestedColumns.length; j++) {
+                String requestedColumn = requestedColumns[j];
+                String units = "";
+                if (requestedColumn.contains("PHI")) {
+                    units = "(degrees)";
                 }
-            }
-
-            /* Start plotting loop on retained HDU*/
-            StringBuffer sb = new StringBuffer();
-            sb.append("<?xml version=\"1.0\" standalone=\"yes\"?><plot><!-- Ptolemy plot, version 5.6 , PlotML format. --><title>data versus spatial frequency</title><xLabel>spatial frequency (1/rad)");
-            if(requestedTables.contains("3")){
-                sb.append(" (max of the 3 frequencies)");
-            }
-            sb.append("</xLabel><yLabel>");
-            sb.append(requestedTables).append("</yLabel>");
-
-            for (int i = 0; i < retainedHdu; i++)
-            {
-                OITable table = OITables[i];
-
-                for (int j = 0; j < requestedColumns.length; j++)
-                {
-                    String requestedColumn = requestedColumns[j];
-                    String units="";
-                    if(requestedColumn.contains("PHI")){
-                        units="(degrees)";
+                String label = table.getExtName() + "#"
+                        + table.getExtNb() + ":" + requestedColumn + units;
+                double data[][] = null;
+                double err[][] = null;
+                double dist[][] = null;
+                boolean flags[][] = null;
+                if (table instanceof OIT3) {
+                    OIT3 t = (OIT3) table;
+                    if (requestedColumn.equals("T3AMP")) {
+                        data = t.getT3Amp();
+                        err = t.getT3AmpErr();
                     }
-                    String label = table.getExtName()+"#"+
-                            table.getExtNb()+":"+requestedColumn+ units;
-                    double data[][] = null;
-                    double err[][] = null;
-                    double dist[][] = null;
-                    boolean flags[][] = null;
-                    if (table instanceof OIT3)
-                    {
-                        OIT3 t = (OIT3) table;
-                        if (requestedColumn.equals("T3AMP"))
-                        {
-                            data = t.getT3Amp();
-                            err = t.getT3AmpErr();
-                        }
-                        if (requestedColumn.equals("T3PHI"))
-                        {
-                            data = t.getT3Phi();
-                            err = t.getT3PhiErr();
-                        }
-                        dist = t.getSpatialFreq();
-                        flags = t.getFlag();
-                    } else if (table instanceof OIVis)
-                    {
-                        OIVis t = (OIVis) table;
-                        if (requestedColumn.equals("VISAMP"))
-                        {
-                            data = t.getVisAmp();
-                            err = t.getVisAmpErr();
-                        }
-                        if (requestedColumn.equals("VISPHI"))
-                        {
-                            data = t.getVisPhi();
-                            err = t.getVisPhiErr();
-                        }
-                        dist = t.getSpatialFreq();
-                        flags = t.getFlag();
-                    } else
-                    {
-                        OIVis2 t = (OIVis2) table;
-                        data = t.getVis2Data();
-                        err = t.getVis2Err();
-                        dist = t.getSpatialFreq();
-                        flags = t.getFlag();
+                    if (requestedColumn.equals("T3PHI")) {
+                        data = t.getT3Phi();
+                        err = t.getT3PhiErr();
                     }
-                    sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
+                    dist = t.getSpatialFreq();
+                    flags = t.getFlag();
+                } else if (table instanceof OIVis) {
+                    OIVis t = (OIVis) table;
+                    if (requestedColumn.equals("VISAMP")) {
+                        data = t.getVisAmp();
+                        err = t.getVisAmpErr();
+                    }
+                    if (requestedColumn.equals("VISPHI")) {
+                        data = t.getVisPhi();
+                        err = t.getVisPhiErr();
+                    }
+                    dist = t.getSpatialFreq();
+                    flags = t.getFlag();
+                } else {
+                    OIVis2 t = (OIVis2) table;
+                    data = t.getVis2Data();
+                    err = t.getVis2Err();
+                    dist = t.getSpatialFreq();
+                    flags = t.getFlag();
                 }
+                sb.append(buildXmlPtPlotDataSet(label, dist, data, err, flags));
             }
+        }
 
-            sb.append("</plot>");
+        sb.append("</plot>");
 
-            PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
+        PlotMLFrame plotMLFrame = UtilsClass.getPlotMLFrame(sb.toString(), plotName);
 
         if (plotName.toLowerCase().contains("phi")) {
             UtilsClass.fixPlotAxesForPhases(plotMLFrame.plot);
@@ -572,21 +558,21 @@ public class FilePanel extends javax.swing.JPanel {
      * TO PUT ON ANOTHER PLACE*/
     private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showVisButtonActionPerformed
-        final String [] ampAndPhi=new String[]{"VISAMP", "VISPHI"};
-        final String [] amp=new String[]{"VISAMP"};
-        final String [] phi=new String[]{"VISPHI"};
-        final String [] nothing = new String[]{};
+        final String[] ampAndPhi = new String[]{"VISAMP", "VISPHI"};
+        final String[] amp = new String[]{"VISAMP"};
+        final String[] phi = new String[]{"VISPHI"};
+        final String[] nothing = new String[]{};
 
-        if(visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
+        if (visampCheckBox.isSelected() && visphiCheckBox.isSelected()) {
             showData("OI_VIS", ampAndPhi);
         }
-        if(visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
+        if (visampCheckBox.isSelected() && !visphiCheckBox.isSelected()) {
             showData("OI_VIS", amp);
         }
-        if(!visampCheckBox.isSelected() && visphiCheckBox.isSelected()){
+        if (!visampCheckBox.isSelected() && visphiCheckBox.isSelected()) {
             showData("OI_VIS", phi);
         }
-        if(!visampCheckBox.isSelected() && !visphiCheckBox.isSelected()){
+        if (!visampCheckBox.isSelected() && !visphiCheckBox.isSelected()) {
             showData("OI_VIS", nothing);
         }
 
@@ -597,24 +583,24 @@ public class FilePanel extends javax.swing.JPanel {
         showData("OI_VIS2", new String[]{"VIS2DATA"});
     }//GEN-LAST:event_showVis2ButtonActionPerformed
 
+    private final static String[] COLS_T3AMP_PHI = new String[]{"T3AMP", "T3PHI"};
+    private final static String[] COLS_T3AMP = new String[]{"T3AMP"};
+    private final static String[] COLS_T3PHI = new String[]{"T3PHI"};
+    private final static String[] COLS_NOTHING = new String[]{};
+
     private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_showT3ButtonActionPerformed
-        final String[] ampAndPhi = new String[]{"T3AMP", "T3PHI"};
-        final String[] amp = new String[]{"T3AMP"};
-        final String[] phi = new String[]{"T3PHI"};
-        final String[] nothing = new String[]{};
-
         if (t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()) {
-            showData("OI_T3", ampAndPhi);
+            showData("OI_T3", COLS_T3AMP_PHI);
         }
         if (t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()) {
-            showData("OI_T3", amp);
+            showData("OI_T3", COLS_T3AMP);
         }
         if (!t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()) {
-            showData("OI_T3", phi);
+            showData("OI_T3", COLS_T3PHI);
         }
         if (!t3ampCheckBox.isSelected() && !t3phiCheckBox.isSelected()) {
-            showData("OI_T3", nothing);
+            showData("OI_T3", COLS_NOTHING);
         }
     }//GEN-LAST:event_showT3ButtonActionPerformed
 
