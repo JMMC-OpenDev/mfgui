@@ -31,9 +31,12 @@
         <xsl:value-of select="//yLabel"/>
         <xsl:value-of select="'&#10;'"/>
 
+<!-- LBO: 2021.03.04: disabled data + model crossmatch as it is a performance bottleneck (O N2) -->
+<!-- waiting for most robust solution (directly traverse vectors X and Model -->
+<!--
         <xsl:choose>
-            <!-- try to mix data and model on plots that get data with and without error bars -->            
-            <xsl:when test="(//p[@lowErrorBar] and //p[not(@lowErrorBar)]) or (//m[@lowErrorBar] and //m[not(@lowErrorBar)])">                
+             try to mix data and model on plots that get data with and without error bars
+            <xsl:when test="(//p[@lowErrorBar] and //p[not(@lowErrorBar)]) or (//m[@lowErrorBar] and //m[not(@lowErrorBar)])">
                 <xsl:value-of select="'#'"/>
                 <xsl:value-of select="'x'"/>
                 <xsl:value-of select="'&#09;'"/>
@@ -50,13 +53,13 @@
 
                 <xsl:for-each select="//p[@lowErrorBar] | //m[@lowErrorBar]">
                     <xsl:variable name="x" select="@x"/>
-                    <xsl:variable name="model" select="//p[not(@lowErrorBar) and @x=$x] | //m[not(@lowErrorBar) and @x=$x]"/>            
-            
+                    <xsl:variable name="model" select="//p[not(@lowErrorBar) and @x=$x] | //m[not(@lowErrorBar) and @x=$x]"/>
+
                     <xsl:value-of select="@x"/>
                     <xsl:value-of select="'&#09;'"/>
                     <xsl:value-of select="@y"/>
                     <xsl:value-of select="'&#09;'"/>
-            
+
                     <xsl:value-of select="@y - @lowErrorBar"/>
                     <xsl:value-of select="'&#09;'"/>
                     <xsl:value-of select="./ancestor::dataset/@name"/>
@@ -64,11 +67,14 @@
                     <xsl:value-of select="$model/@y"/>
                     <xsl:value-of select="'&#09;'"/>
                     <xsl:value-of select="$model/ancestor::dataset/@name"/>
-                    <xsl:value-of select="'&#10;'"/>            
+                    <xsl:value-of select="'&#10;'"/>
                 </xsl:for-each>
             </xsl:when>
+-->
             <!-- else follow each data record one by one -->
-            <xsl:otherwise>     
+<!--
+            <xsl:otherwise>
+-->
                 <xsl:value-of select="'#'"/>
                 <xsl:value-of select="'x'"/>
                 <xsl:value-of select="'&#09;'"/>
@@ -89,8 +95,9 @@
                     <xsl:value-of select="./ancestor::dataset/@name"/>
                     <xsl:value-of select="'&#10;'"/>
                 </xsl:for-each>
+<!--
             </xsl:otherwise>
         </xsl:choose>
-        
+-->
     </xsl:template>
 </xsl:stylesheet>
