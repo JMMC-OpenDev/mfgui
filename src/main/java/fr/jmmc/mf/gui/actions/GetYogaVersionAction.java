@@ -23,7 +23,7 @@ public class GetYogaVersionAction extends RegisteredAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String v=null;
+        String v = null;
         try {
             v = UtilsClass.getOutputMsg(LITpro.execMethod(methodName, null));
         } catch (IOException ex) {

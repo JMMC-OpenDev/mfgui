@@ -9,10 +9,10 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  *
  * @author mella
  */
-public class YorickCodeEditor extends RSyntaxTextArea{
+public class YorickCodeEditor extends RSyntaxTextArea {
 
     public YorickCodeEditor() {
-        this.setSyntaxEditingStyle(SYNTAX_STYLE_CSHARP);           
+        this.setSyntaxEditingStyle(SYNTAX_STYLE_CSHARP);
     }
-    
+
 }

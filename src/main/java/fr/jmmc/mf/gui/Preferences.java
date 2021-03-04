@@ -69,7 +69,7 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         setDefaultPreference(SHOW_RECURSIVE_PARAMETERS, "false");
         setDefaultPreference(SAVE_RESULTS, "true");
         setDefaultPreference(USER_FOV, "30");
-        setDefaultPreference(USER_UVPOINT_LIMITFORPLOT, "300");                
+        setDefaultPreference(USER_UVPOINT_LIMITFORPLOT, "300");
         setDefaultPreference(YOGA_REMOTE_USE, "true");
         setDefaultPreference(YOGA_LOCAL_HOME, "../ys");
         setDefaultPreference(YOGA_LOCAL_PROGNAME, "/bin/yoga.sh");
@@ -81,9 +81,9 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         } else {
             setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~swmgr/LITproWebService/run.php");
         }
-        
+
         setDefaultPreference(USERMODEL_REPO_URL, "http://apps.jmmc.fr/exist/apps/usermodels/");
-        
+
     }
 
     /**

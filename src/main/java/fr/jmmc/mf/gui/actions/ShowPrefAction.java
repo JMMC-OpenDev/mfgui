@@ -5,7 +5,6 @@ package fr.jmmc.mf.gui.actions;
 
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.util.WindowUtils;
-import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.PreferencesView;
 import java.awt.event.ActionEvent;
 
@@ -18,19 +17,19 @@ public class ShowPrefAction extends RegisteredAction {
     /** Class name */
     final static String className = ShowPrefAction.class.getName();
     /** Preferences view */
-    PreferencesView preferencesView;    
+    PreferencesView preferencesView;
 
     /**
      * Create show preference action
      */
     public ShowPrefAction() {
-        super(className, "showPreferences");        
+        super(className, "showPreferences");
         flagAsPreferenceAction();
         preferencesView = new PreferencesView();
-        WindowUtils.centerOnMainScreen(preferencesView);        
+        WindowUtils.centerOnMainScreen(preferencesView);
     }
 
     public void actionPerformed(ActionEvent e) {
-        preferencesView.setVisible(true);        
+        preferencesView.setVisible(true);
     }
 }

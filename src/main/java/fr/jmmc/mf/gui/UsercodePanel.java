@@ -3,7 +3,6 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
-import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.mf.ModelUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Usercode;
@@ -35,10 +34,9 @@ public class UsercodePanel extends javax.swing.JPanel {
     public void show(SettingsModel s, Usercode u) {
         settingsModel = s;
         current = u;
-        if (u.getCommon()!= null)
-        {
+        if (u.getCommon() != null) {
             commonCodeEditor.setText(u.getCommon().getContent());
-        }        
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -112,7 +110,7 @@ public class UsercodePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addMyModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMyModelButtonActionPerformed
-       settingsModel.addUserModel();
+        settingsModel.addUserModel();
     }//GEN-LAST:event_addMyModelButtonActionPerformed
 
     private void visitUserModelReposButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visitUserModelReposButtonActionPerformed
@@ -120,6 +118,6 @@ public class UsercodePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_visitUserModelReposButtonActionPerformed
 
     private void commonCodeEditorCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_commonCodeEditorCaretUpdate
-         current.getCommon().setContent(commonCodeEditor.getText());
+        current.getCommon().setContent(commonCodeEditor.getText());
     }//GEN-LAST:event_commonCodeEditorCaretUpdate
 }

@@ -11,13 +11,12 @@
  */
 package fr.jmmc.mf.gui;
 
-
 /**
  * Make object able to be saved at end of application
  * @author mella
  */
-public interface ModifyAndSaveObject
-{
+public interface ModifyAndSaveObject {
+
     /**
      * tell if object have been modified.
      */

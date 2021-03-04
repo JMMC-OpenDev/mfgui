@@ -46,7 +46,6 @@ public class MsgPanel extends javax.swing.JPanel {
         add(jScrollPane2);
     }// </editor-fold>//GEN-END:initComponents
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JScrollPane jScrollPane2;

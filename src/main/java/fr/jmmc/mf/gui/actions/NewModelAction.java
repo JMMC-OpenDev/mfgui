@@ -28,11 +28,11 @@ public class NewModelAction extends RegisteredAction {
     public void actionPerformed(ActionEvent e) {
         try {
             mfgui.addSettings(new SettingsModel());
-        } catch (IllegalStateException ex) {                
-                throw new IllegalStateException("Can't build a new model", ex);                
+        } catch (IllegalStateException ex) {
+            throw new IllegalStateException("Can't build a new model", ex);
         } catch (ExecutionException ex) {
-           MessagePane.showErrorMessage("Can't build a new model", ex);
-           return;
+            MessagePane.showErrorMessage("Can't build a new model", ex);
+            return;
         }
         logger.info("New settings created and loaded into the GUI");
         fr.jmmc.jmcs.gui.component.StatusBar.show("New model ready for modifications! Please load oifits files, select target to fit and build your model.");

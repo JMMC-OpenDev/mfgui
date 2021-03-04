@@ -112,9 +112,9 @@ public class FilesPanel extends javax.swing.JPanel {
             } else {
                 rootSettingsModel.setSelectionPath(
                         new TreePath(new Object[]{
-                            rootSettingsModel,
-                            current,
-                            fileList.getSelectedValue()}));
+                    rootSettingsModel,
+                    current,
+                    fileList.getSelectedValue()}));
             }
         }
     } // </editor-fold>       

@@ -51,7 +51,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
         // init array of chi2 bound textfields 
         rangeTextfields1D = new JFormattedTextField[]{xminFormattedTextField, xmaxFormattedTextField};
         rangeTextfields2D = new JFormattedTextField[]{xminFormattedTextField, xmaxFormattedTextField,
-            yminFormattedTextField, ymaxFormattedTextField};
+                                                      yminFormattedTextField, ymaxFormattedTextField};
         //and become listener of them for validations step inside the GUI
         for (JFormattedTextField tf : rangeTextfields2D) {
             // tf.addActionListener(this);
@@ -189,12 +189,12 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
             if (!isRangeOk(textfield, report)) {
                 hasError = true;
                 textfield.setForeground(Color.RED);
-            }else{
+            } else {
                 textfield.setForeground(Color.BLACK);
             }
         }
-        
-        if ( hasError ) {
+
+        if (hasError) {
             MessagePane.showErrorMessage(report.toString());
         }
         return !hasError;
@@ -208,13 +208,13 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
 
         boolean log = logChi2CheckBox.isSelected();
         boolean reduced = reducedChi2CheckBox.isSelected();
-        boolean is1DChi2 =jRadioButton1D.isSelected();
-        
+        boolean is1DChi2 = jRadioButton1D.isSelected();
+
         // stop if bounds are not ok
         if (!areParameterRangesOk(is1DChi2 ? rangeTextfields1D : rangeTextfields2D)) {
             return;
         }
-        
+
         // If check box for probing is selected
         if (runFitCheckBox.isSelected()) {
             // add option in  command line

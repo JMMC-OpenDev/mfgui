@@ -18,13 +18,14 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
+
     /** settings model reference */
     private static SettingsModel settingsModel = null;
     SettingsViewerInterface viewer = null;
     JFrame frame;
     Container contentPane;
-    File lastDir=null;
-     /** File stack */
+    File lastDir = null;
+    /** File stack */
     File[] files;
     /** File names stack */
     String[] filenames;
@@ -38,7 +39,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         helpButton1.setAction(new ShowHelpAction(("BEG_ResultPlots_MT")));
     }
 
-    public void show(FrameTreeNode frameTreeNode,SettingsModel s) {
+    public void show(FrameTreeNode frameTreeNode, SettingsModel s) {
         settingsModel = s;
         frame = frameTreeNode.getFrame();
         // Take care to add this framePanel to the list one and only one time
@@ -46,11 +47,11 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             frame.addWindowListener(this);
         }
 
-        titleLabel.setText(frameTreeNode.getFrame().getTitle());     
-        
-        files = frameTreeNode.getFilesToExport();        
+        titleLabel.setText(frameTreeNode.getFrame().getTitle());
+
+        files = frameTreeNode.getFilesToExport();
         filenames = frameTreeNode.getFilenamesToExport();
-        
+
         updateFileCombo();
 
         contentPane = frame.getContentPane();
@@ -81,8 +82,6 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         //refresh the gui
         validate();
     }
-
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -156,11 +155,11 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-       
+
         int fileIndex = filenamesComboBox.getSelectedIndex();
         String fileName = filenames[fileIndex];
         File fileToSave = files[fileIndex];
-        
+
         // Open filechooser to get file to save        
         File newFile = FileChooser.showSaveFileChooser("Export as " + fileName + "?", lastDir, null, fileName);
         if (newFile == null) {
@@ -175,10 +174,9 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             return;
         }
         lastDir = newFile.getParentFile();
-        filenames[fileIndex] = newFile.getName();        
+        filenames[fileIndex] = newFile.getName();
         updateFileCombo();
     }//GEN-LAST:event_exportButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton attachDetachButton;
@@ -188,7 +186,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
-    
+
     public void windowOpened(WindowEvent e) {
     }
 
@@ -220,6 +218,6 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         filenamesComboBox.removeAllItems();
         for (int i = 0; i < filenames.length; i++) {
             filenamesComboBox.addItem(filenames[i]);
-        }        
+        }
     }
 }

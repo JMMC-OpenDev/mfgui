@@ -15,7 +15,7 @@ import java.io.IOException;
 public class SaveFileAction extends RegisteredAction {
 
     private final static String className = SaveFileAction.class.getName();
-     private File lastDir;
+    private File lastDir;
     private File fileToSave;
     private String fileName;
     private String originalActionName;
@@ -51,7 +51,7 @@ public class SaveFileAction extends RegisteredAction {
         this.fileName = "Untitled." + fileType.toLowerCase();
     }
 
-    public void actionPerformed(ActionEvent e) {                
+    public void actionPerformed(ActionEvent e) {
         // Open filechooser
         File newFile = FileChooser.showSaveFileChooser("Export as " + fileName + "?", lastDir, null, fileName);
         if (newFile == null) {

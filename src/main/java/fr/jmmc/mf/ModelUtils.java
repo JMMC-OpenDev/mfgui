@@ -55,6 +55,7 @@ public class ModelUtils {
         params[paramIndex - 1] = p;
         model.setParameter(params);
     }
+
     /* not used anylonger with this method : will be replaced by operators
      public static boolean setPolarModel(Model model, boolean flag) {
         if (model.getPolar() == flag) {
@@ -134,7 +135,6 @@ public class ModelUtils {
         return true;
     }
      */
-
     public static boolean hasPosition(Model selectedModel) {
         // test if marqued polar or has a classical x param
         //return selectedModel.getPolar() || ModelUtils.hasParameterOfType(selectedModel, "x");

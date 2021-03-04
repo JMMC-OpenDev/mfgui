@@ -3,10 +3,10 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui.actions;
 
+import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.jmcs.gui.action.RegisteredAction;
 import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.data.MimeType;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.event.ActionEvent;
@@ -30,20 +30,20 @@ public class SaveSettingsAction extends RegisteredAction {
         if (settingsModel == null) {
             return;
         }
-                
-        File file =  FileChooser.showSaveFileChooser(NAME, lastDir, MimeType.LITPRO_SETTINGS, settingsModel.getAssociatedFilename());                
-        if(file==null){
+
+        File file = FileChooser.showSaveFileChooser(NAME, lastDir, MimeType.LITPRO_SETTINGS, settingsModel.getAssociatedFilename());
+        if (file == null) {
             return;
         }
         // Store directory for next time
-        lastDir = file.getParentFile();       
-        
+        lastDir = file.getParentFile();
+
         // Save model on disk
         settingsModel.saveSettingsFile(file);
-        
+
         // Fix user associated file and save it with result
         settingsModel.setAssociatedFile(file, true);
-        
+
         /* Ask to update title */
         mfgui.getSelectedSettings();
         StatusBar.show("Settings stored into '" + file.getName() + "'");

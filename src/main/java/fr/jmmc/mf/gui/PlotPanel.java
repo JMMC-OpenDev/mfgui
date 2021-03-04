@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PlotPanel extends javax.swing.JPanel implements ListSelectionListener {
+
     /** Class logger */
     private static Logger logger = LoggerFactory.getLogger(PlotPanel.class.getName());
     /** settings model reference */
@@ -57,7 +58,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         targetListScrollPane.setViewportView(targetList);
         //targetList.addListSelectionListener(this);
         targetList.getCheckBoxListSelectionModel().addListSelectionListener(this);
-
 
         // Set online help
         jButton3.setAction(new ShowHelpAction(("ENDtt_CommonPlots_Bt")));
@@ -106,13 +106,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     public void plotModelRadial(Target targetToPlot, String observableType,
-            boolean residuals, boolean overplotModel, String angle) {
+                                boolean residuals, boolean overplotModel, String angle) {
         plotModelRadial(new Object[]{targetToPlot}, observableType,
                 residuals, overplotModel, angle);
     }
 
     public void plotModelRadial(Object[] targetsToPlot, String observableType,
-            boolean residuals, boolean overplotModel, String angle) {
+                                boolean residuals, boolean overplotModel, String angle) {
         if (residuals) {
             String args = observableType + " " + getGroupValue(targetsToPlot);
             plot("getModelResidualsPlot", args, observableType
@@ -144,7 +144,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     public void plotModelSnifferMap(Target targetToPlot, String xmin, String xmax,
-            String ymin, String ymax, String pixscale) {
+                                    String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
@@ -160,7 +160,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     void plotModelImage(Target targetToPlot, String xmin, String xmax,
-            String ymin, String ymax, String pixscale) {
+                        String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
@@ -177,9 +177,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      * @param title the plot title.
      */
     public void plot(String methodName, String methodArgs, String title) {
-        plot(methodName, methodArgs, title,null);    
+        plot(methodName, methodArgs, title, null);
     }
-    
+
     /**
      * Call plot build routine and draw the new plot.
      *
@@ -201,9 +201,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         if (resultFiles.length == 0) {
             String errors = UtilsClass.getErrorMsg(response);
             if (errors.length() > 1) {
-               return; 
+                return;
             }
-            throw new IllegalStateException("No data returned (this problem is probably data related)");                     
+            throw new IllegalStateException("No data returned (this problem is probably data related)");
         }
 
         String b64file;
@@ -213,7 +213,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         ArrayList<String> filenamesToExport = new ArrayList();
         ArrayList<File> filesToDisplay = new ArrayList<File>();
         ArrayList<String> filenamesToDisplay = new ArrayList<String>();
-        
+
         for (int i = 0; i < resultFiles.length; i++) {
             ResultFile r = resultFiles[i];
             b64file = r.getHref();
@@ -222,15 +222,15 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
             filenamesToExport.add(r.getName());
             if (r.getName().endsWith("png")) {
                 filesToDisplay.add(file);
-                if(r.getDescription()!=null && r.getDescription().length()>0){
+                if (r.getDescription() != null && r.getDescription().length() > 0) {
                     filenamesToDisplay.add(r.getDescription());
-                }else{
+                } else {
                     filenamesToDisplay.add(r.getName());
                 }
             }
         }
-        f = UtilsClass.buildFrameFor(title, "description", filesToDisplay.toArray(new File[0]),filenamesToDisplay.toArray(new String[0]));
-        
+        f = UtilsClass.buildFrameFor(title, "description", filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
+
         if (f != null) {
             FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
             settingsModel.addPlot(ftn);
@@ -253,16 +253,14 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      */
     private Object[] getTargetsToPlot() {
         Object[] inputTargets;
-        
-        
+
         // Display all targets in the target list with at list one selection
         targets = settingsModel.getTargetListModel();
-        if (targets.getSize()!= targetList.getModel().getSize()){
+        if (targets.getSize() != targetList.getModel().getSize()) {
             targetList.setModel(targets);
             logger.error("Trying to work on a non consistent model!!");
         }
-        
-        
+
         if (useAllTargetsCheckBox.isSelected()) {
             inputTargets = settingsModel.getRootSettings().getTargets().getTarget();
         } else {
@@ -508,18 +506,17 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
     // Thrown by a targetList change
     public void valueChanged(ListSelectionEvent e) {
-        updateAvailableObservables();        
+        updateAvailableObservables();
     }
 
     // todo: remove duplicated code with same method shared between PlotPanel and PlotModelPanel
     private void updateAvailableObservables() {
-        
+
         // Perform update only if widgets are visible
-        if (!isVisible())
-        {
+        if (!isVisible()) {
             return;
         }
-        
+
         // disable widget to flag automatic action into radialComboBoxActionPerformed
         radialComboBox.setEnabled(false);
         // Check if any target is selected
@@ -535,8 +532,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         if (selectedTargets.length == 0) {
             return;
         }
-
-
 
         HashSet<String> set = new HashSet();
         for (Object object : selectedTargets) {

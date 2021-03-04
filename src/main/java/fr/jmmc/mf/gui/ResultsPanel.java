@@ -9,23 +9,23 @@ import fr.jmmc.mf.models.Results;
 
 public class ResultsPanel extends javax.swing.JPanel {
 
-  Results current;
-  SettingsViewerInterface viewer = null;
-  SettingsModel settingsModel = null;
+    Results current;
+    SettingsViewerInterface viewer = null;
+    SettingsModel settingsModel = null;
 
-  /** Creates new form ResultPanel */
-  public ResultsPanel(SettingsViewerInterface viewer) {
-    this.viewer = viewer;
-    initComponents();
+    /** Creates new form ResultPanel */
+    public ResultsPanel(SettingsViewerInterface viewer) {
+        this.viewer = viewer;
+        initComponents();
 
-    // build help button
-    helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
-  }
+        // build help button
+        helpButton1.setAction(new ShowHelpAction(("BEG_Results")));
+    }
 
-  public void show(Results r, SettingsModel s) {
-    current = r;
-      settingsModel = s;      
-  }
+    public void show(Results r, SettingsModel s) {
+        current = r;
+        settingsModel = s;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

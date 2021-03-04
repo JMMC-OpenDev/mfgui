@@ -47,16 +47,16 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
     /** Creates new form PreferencesView */
     public PreferencesView() {
         initComponents();
-        
+
         // post init
-        tooltipsCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.HELP_TOOLTIPS_SHOW));        
+        tooltipsCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.HELP_TOOLTIPS_SHOW));
         toolbarCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.SHOW_TOOLBAR));
         saveResultCheckBox.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.SAVE_RESULTS));
         fovTextField.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.USER_FOV));
         maxDataLimitTextField.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.USER_UVPOINT_LIMITFORPLOT));
         preferenceFilenaTextfield.setText(myPreferences.computePreferenceFilepath());
         update(null, null);
-        
+
         // register to be notified by pref changes
         myPreferences.addObserver(this);
     }
@@ -70,16 +70,15 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         // we could imagine to use a  specificTooltipsmanager.registerComponent on model list widgets
         toolTipManager.setInitialDelay(750);
 
-        MFGui.showToolbar(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));        
+        MFGui.showToolbar(myPreferences.getPreferenceAsBoolean(Preferences.SHOW_TOOLBAR));
 
         /*
         hidden in GUI
         jCheckBox1.setModel(fr.jmmc.jmcs.data.preference.PreferencedButtonModel.getInstance(myPreferences, Preferences.YOGA_REMOTE_USE));
         jTextField1.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.YOGA_REMOTE_URL));
         jTextField2.setDocument(fr.jmmc.jmcs.data.preference.PreferencedDocument.getInstance(myPreferences, Preferences.YOGA_LOCAL_HOME));
-        */ 
-        
-         /*
+         */
+ /*
           * This part of code has been commented because a color change run the documentModel to many loops
          File f = new File(myPreferences.getPreference(Preferences.YOGA_LOCAL_HOME)
                 + myPreferences.getPreference(Preferences.YOGA_LOCAL_PROGNAME));

@@ -48,18 +48,18 @@ public class ParametersPanel extends javax.swing.JPanel {
         helpButton1.setAction(new ShowHelpAction(("ENDtt_SharedParameters")));
         postInit();
     }
-    
-    private void postInit(){
+
+    private void postInit() {
         // Fix row height:
         SwingUtils.adjustRowHeight(sharedParametersTable);
     }
-    
+
     public void show(SettingsModel s, Parameters p) {
         settingsModel = s;
         current = p;
         parameterListModel.clear();
         Parameter[] params = s.getSharedParameters();
-        sharedTableModel.setModel(s, params, false);       
+        sharedTableModel.setModel(s, params, false);
         tablePanel.add(sharedParametersTable.getTableHeader(), BorderLayout.NORTH);
 
         // set edit mode on parameters

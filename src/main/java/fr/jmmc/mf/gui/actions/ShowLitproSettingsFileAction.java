@@ -20,7 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeModelListener, TreeSelectionListener, ChangeListener{
+public class ShowLitproSettingsFileAction extends RegisteredAction implements TreeModelListener, TreeSelectionListener, ChangeListener {
 
     public final static String className = ShowLitproSettingsFileAction.class.getName();
     public final static String actionName = "showLitproSettingsFile";
@@ -33,18 +33,18 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
 
     public ShowLitproSettingsFileAction(MFGui mfgui) {
         super(className, actionName);
-        this.mfgui=mfgui;
+        this.mfgui = mfgui;
         setEnabled(false);
     }
 
     public void actionPerformed(ActionEvent e) {
         // Get yorick code
         final StringBuffer yorickSettings = new StringBuffer(settingsModel.toLITproDesc());
-        
+
         // Copy it into the clipboard
         StringSelection ss = new StringSelection(yorickSettings.toString());
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-        
+
         // and display into one message pane
         yorickSettings.append("---\nPrevious content has been copied into your clipboard");
         MessagePane.showMessage(yorickSettings.toString(), "LITpro settings file");
@@ -55,8 +55,8 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
      * @param e ChangeEvent
      */
     public void stateChanged(ChangeEvent e) {
-        settingsModel=mfgui.getSelectedSettings();
-        if(settingsModel==null){
+        settingsModel = mfgui.getSelectedSettings();
+        if (settingsModel == null) {
             return;
         }
         this.setEnabled(settingsModel.isValid());
@@ -67,7 +67,7 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
         }
     }
 
-    private void checkSettings(){
+    private void checkSettings() {
         this.setEnabled(settingsModel.isValid());
     }
 
@@ -77,10 +77,10 @@ public class ShowLitproSettingsFileAction extends RegisteredAction implements Tr
      */
     public void valueChanged(TreeSelectionEvent e) {
         setEnabled(false);
-        if (e.getSource() instanceof SettingsModel){
-            settingsModel = (SettingsModel)e.getSource();
+        if (e.getSource() instanceof SettingsModel) {
+            settingsModel = (SettingsModel) e.getSource();
             checkSettings();
-        }else{
+        } else {
             logger.warn("dropped treeSelectionEvent from {}", e.getSource());
         }
     }

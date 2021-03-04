@@ -15,7 +15,7 @@ import javax.swing.event.TreeSelectionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DeleteTreeSelectionAction extends RegisteredAction implements TreeSelectionListener, ChangeListener{
+public class DeleteTreeSelectionAction extends RegisteredAction implements TreeSelectionListener, ChangeListener {
 
     private final static String className = DeleteTreeSelectionAction.class.getName();
     /** Class logger */
@@ -27,7 +27,7 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
 
     public DeleteTreeSelectionAction(MFGui mfgui) {
         super(className, "deleteTreeSelection");
-        this.mfgui=mfgui;
+        this.mfgui = mfgui;
         // action should be enabled in the future
         setEnabled(false);
     }
@@ -41,13 +41,13 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
      * @param e ChangeEvent
      */
     public void stateChanged(ChangeEvent e) {
-        settingsModel=mfgui.getSelectedSettings();
-        if(settingsModel==null){
+        settingsModel = mfgui.getSelectedSettings();
+        if (settingsModel == null) {
             return;
         }
-        if(!settingsModelListener.contains(settingsModel)){
+        if (!settingsModelListener.contains(settingsModel)) {
             settingsModel.addTreeSelectionListener(this);
-        }        
+        }
     }
 
     /** Listen to the settings tree selection changes
@@ -56,10 +56,10 @@ public class DeleteTreeSelectionAction extends RegisteredAction implements TreeS
      */
     public void valueChanged(TreeSelectionEvent e) {
         setEnabled(false);
-        if (e.getSource() instanceof SettingsModel){
-            settingsModel = (SettingsModel)e.getSource();
+        if (e.getSource() instanceof SettingsModel) {
+            settingsModel = (SettingsModel) e.getSource();
             this.setEnabled(settingsModel.isSelectionRemovable());
-        }else{
+        } else {
             logger.warn("dropped treeSelectionEvent from {} ", e.getSource());
         }
     }

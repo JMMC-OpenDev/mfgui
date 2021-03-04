@@ -31,11 +31,11 @@ public class TargetsPanel extends javax.swing.JPanel {
         current = t;
         rootSettingsModel = s;
         targetList.setModel(settingsViewer.getSettingsModel().getTargetListModel());
-        targetNameComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);        
-        
+        targetNameComboBox.setModel(settingsViewer.getSettingsModel().oiTargets);
+
         // update UI
         targetNameComboBoxActionPerformed(null);
-        targetListValueChanged(null);        
+        targetListValueChanged(null);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -120,7 +120,7 @@ public class TargetsPanel extends javax.swing.JPanel {
                     new TreePath(new Object[]{
                 rootSettingsModel,
                 current,
-                targetList.getSelectedValue() } ));
+                targetList.getSelectedValue()}));
         }
     }//GEN-LAST:event_targetListMouseClicked
 //GEN-FIRST:event_removeTargetButtonActionPerformed
@@ -130,13 +130,13 @@ public class TargetsPanel extends javax.swing.JPanel {
             Object object = selecteds[i];
             rootSettingsModel.removeTarget((Target) object);
         }
-        removeTargetButton.setEnabled(false);        
+        removeTargetButton.setEnabled(false);
     }//GEN-LAST:event_removeTargetButtonActionPerformed
 
 //GEN-FIRST:event_targetNameComboBoxActionPerformed
     private void targetNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        if ((targetNameComboBox.getItemCount() > 0) &&
-                (targetNameComboBox.getSelectedIndex() != -1)) {
+        if ((targetNameComboBox.getItemCount() > 0)
+                && (targetNameComboBox.getSelectedIndex() != -1)) {
             addTargetButton.setEnabled(true);
         } else {
             addTargetButton.setEnabled(false);

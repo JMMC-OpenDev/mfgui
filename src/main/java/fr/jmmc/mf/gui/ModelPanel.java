@@ -74,40 +74,38 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     private boolean isCustomModel = false;
     private MessageContainer inUseMessageContainer = new MessageContainer();
     private MessageContainer duplicatedMessageContainer = new MessageContainer();
-    
+
     private YorickCodeEditor customCodeEditor = new YorickCodeEditor();
 
     // helps to ignore event generated during the show call (no user request for model change)
-    private boolean ignoreReplacement=false;
-    
+    private boolean ignoreReplacement = false;
+
     /** Creates new form ModelPanel */
     public ModelPanel() {
         // first create our parameters table model
         parametersTableModel = new ParametersTableModel();
-        initComponents();        
+        initComponents();
         postInit();
     }
-    
-    private void postInit(){
+
+    private void postInit() {
         // set help buttons
         helpButton1.setAction(new ShowHelpAction("_BEG_ParametersPanel"));
         parametersTable.getSelectionModel().addListSelectionListener(this);
         parametersTable.getModel().addTableModelListener(this);
-        
-        
-        
+
         // Code for the code textarea with syntax higlighter
         customCodeEditor.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 current.setCode(customCodeEditor.getText());
             }
-        });           
+        });
         RTextScrollPane rsp = new RTextScrollPane(customCodeEditor);
         rsp.setLineNumbersEnabled(true);
         yorickCodePanel.add(rsp);
 
         visitUmRepositoryButton.setVisible(LITpro.USE_USERMODELS);
-        
+
         // Fix row height:
         SwingUtils.adjustRowHeight(parametersTable);
     }
@@ -125,10 +123,10 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // test that we are not in use
         final boolean hasInstances = isCustomModel && ModelUtils.hasModelOfType(settingsModel.getRootSettings(), current.getType());
-        
+
         if (hasInstances) {
             inUseMessageContainer.addWarningMessage("Model is currently in use, remove instance first to edit table of params. (WorkInProgress)");
-        }else{
+        } else {
             inUseMessageContainer.clear();
         }
 
@@ -149,7 +147,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         shortDescTextField.setEditable(isCustomModel);
 
         customTypeTextField.setEditable(!hasInstances);
-        
+
         if (isCustomModel) {
             addParamButton.setEnabled(!hasInstances);
             delParamButton.setEnabled(!hasInstances);
@@ -196,9 +194,9 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // Fill short and full description 
         final Model parentModel = settingsModel.getSupportedModel(current.getType());
-        
-        if(parentModel!=null){
-            descTextArea.setText(parentModel.getDesc());        
+
+        if (parentModel != null) {
+            descTextArea.setText(parentModel.getDesc());
             descTextArea.setCaretPosition(0);
             shortDescTextField.setText(parentModel.getShortdesc());
         }
@@ -208,7 +206,7 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
 
         // display messages if any
         updateMessagePanel();
-        
+
         initStep = true;
     }
 
@@ -650,11 +648,11 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     }//GEN-LAST:event_cloneButtonActionPerformed
 
     private void availableModelListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_availableModelListValueChanged
-        Model newModel  = (Model) availableModelList.getSelectedValue();
+        Model newModel = (Model) availableModelList.getSelectedValue();
         if (ignoreReplacement || current.equals(newModel)) {
-            return; 
+            return;
         }
-        settingsModel.replaceModel(current, newModel);        
+        settingsModel.replaceModel(current, newModel);
     }//GEN-LAST:event_availableModelListValueChanged
 
     public void valueChanged(ListSelectionEvent e) {
@@ -683,40 +681,40 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         sb.append(") {");
         startingTextArea.setText(sb.toString());
     }
-    
+
     public void tableChanged(TableModelEvent e) {
         updatePrototype();
     }
 
-    private void updateMessagePanel() {            
+    private void updateMessagePanel() {
         MessageContainer c = new MessageContainer();
-                                
-        if(isCustomModel){
+
+        if (isCustomModel) {
             // complete if actual type is not uniq
             final boolean uniq = ModelUtils.isModelTypeUniq(settingsModel.getSupportedModels(), customTypeTextField.getText());
             if (!uniq) {
-                c.addErrorMessage("Given type '"+customTypeTextField.getText()+"'is already defined.");            
+                c.addErrorMessage("Given type '" + customTypeTextField.getText() + "'is already defined.");
             }
         }
-        
-        if(isCustomModel && StringUtils.isEmpty(current.getCode())){
-            c.addErrorMessage("Code is missing");            
+
+        if (isCustomModel && StringUtils.isEmpty(current.getCode())) {
+            c.addErrorMessage("Code is missing");
         }
-        
-        if(isCustomModel && StringUtils.isEmpty(current.getDesc())){
-            c.addErrorMessage("Description is missing");            
+
+        if (isCustomModel && StringUtils.isEmpty(current.getDesc())) {
+            c.addErrorMessage("Description is missing");
         }
-        
-        if(isCustomModel && StringUtils.isEmpty(current.getShortdesc())){
-            c.addErrorMessage("Short description is missing");            
+
+        if (isCustomModel && StringUtils.isEmpty(current.getShortdesc())) {
+            c.addErrorMessage("Short description is missing");
         }
 
         // do not allow to share before everything is ok (except following tests)
         shareButton.setEnabled(!c.hasMessages());
-        
+
         // add init message if any
         c.addMessages(inUseMessageContainer);
-        
+
         messagePanel1.update(c);
     }
 }

@@ -3,13 +3,12 @@
  ******************************************************************************/
 package fr.jmmc.mcs.util;
 
-
 /**
  * This interface expose process activity to interested listener.
  *
  */
-public interface ProcessManager
-{
+public interface ProcessManager {
+
     /**
      * DOCUMENT ME!
      */

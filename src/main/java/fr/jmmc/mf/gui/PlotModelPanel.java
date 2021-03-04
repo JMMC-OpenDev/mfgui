@@ -81,7 +81,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
             return;
         }
 
-
         // disable widget to flag automatic action into radialComboBoxActionPerformed
         radialComboBox.setEnabled(false);
 

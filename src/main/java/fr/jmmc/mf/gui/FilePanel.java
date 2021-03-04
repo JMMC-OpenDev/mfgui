@@ -377,8 +377,7 @@ public class FilePanel extends javax.swing.JPanel {
         add(addFileButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void hduListMouseClicked(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_hduListMouseClicked
+    private void hduListMouseClicked(java.awt.event.MouseEvent evt)    {//GEN-FIRST:event_hduListMouseClicked
         // launch viewer if double click
         if (evt.getClickCount() == 2) {
             loadViewerButton.doClick();
@@ -556,8 +555,7 @@ public class FilePanel extends javax.swing.JPanel {
 
     /*
      * TO PUT ON ANOTHER PLACE*/
-    private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_showVisButtonActionPerformed
+    private void showVisButtonActionPerformed(java.awt.event.ActionEvent evt)    {//GEN-FIRST:event_showVisButtonActionPerformed
         final String[] ampAndPhi = new String[]{"VISAMP", "VISPHI"};
         final String[] amp = new String[]{"VISAMP"};
         final String[] phi = new String[]{"VISPHI"};
@@ -578,8 +576,7 @@ public class FilePanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_showVisButtonActionPerformed
 
-    private void showVis2ButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_showVis2ButtonActionPerformed
+    private void showVis2ButtonActionPerformed(java.awt.event.ActionEvent evt)    {//GEN-FIRST:event_showVis2ButtonActionPerformed
         showData("OI_VIS2", new String[]{"VIS2DATA"});
     }//GEN-LAST:event_showVis2ButtonActionPerformed
 
@@ -588,8 +585,7 @@ public class FilePanel extends javax.swing.JPanel {
     private final static String[] COLS_T3PHI = new String[]{"T3PHI"};
     private final static String[] COLS_NOTHING = new String[]{};
 
-    private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_showT3ButtonActionPerformed
+    private void showT3ButtonActionPerformed(java.awt.event.ActionEvent evt)    {//GEN-FIRST:event_showT3ButtonActionPerformed
         if (t3ampCheckBox.isSelected() && t3phiCheckBox.isSelected()) {
             showData("OI_T3", COLS_T3AMP_PHI);
         }

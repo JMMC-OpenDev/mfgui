@@ -82,7 +82,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         // link residual module name with its widget
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
         JCheckBox[] modulesCheckBoxes = new JCheckBox[]{visAmpCheckBox,
-            visPhiCheckBox, vis2CheckBox, t3ampCheckBox, t3phiCheckBox};
+                                                        visPhiCheckBox, vis2CheckBox, t3ampCheckBox, t3phiCheckBox};
         for (int i = 0; i < moduleNames.length; i++) {
             moduleNameToCheckBox.put(moduleNames[i], modulesCheckBoxes[i]);
         }
@@ -92,7 +92,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
 
         availableModelList.addListSelectionListener(this);
-        
+
         // Fix row height:
         SwingUtils.adjustRowHeight(parametersTable);
     }
@@ -665,16 +665,15 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         add(fillerPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void modelListMouseClicked(java.awt.event.MouseEvent evt)
-    {//GEN-FIRST:event_modelListMouseClicked
+    private void modelListMouseClicked(java.awt.event.MouseEvent evt)    {//GEN-FIRST:event_modelListMouseClicked
         Object m = modelList.getSelectedValue();
         if (m != null && evt.getClickCount() == 2) {
             rootSettingsModel.setSelectionPath(
                     new TreePath(new Object[]{
-                        rootSettingsModel,
-                        rootSettingsModel.getRootSettings().getTargets(),
-                        current, m
-                    }));
+                rootSettingsModel,
+                rootSettingsModel.getRootSettings().getTargets(),
+                current, m
+            }));
         }
     }//GEN-LAST:event_modelListMouseClicked
 
@@ -683,15 +682,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         if (evt.getClickCount() == 2) {
             rootSettingsModel.setSelectionPath(
                     new TreePath(new Object[]{
-                        rootSettingsModel,
-                        rootSettingsModel.getRootSettings().getFiles(),
-                        fileList.getSelectedValue()}));
+                rootSettingsModel,
+                rootSettingsModel.getRootSettings().getFiles(),
+                fileList.getSelectedValue()}));
         }
 
     }
 
-    private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)
-    {//GEN-FIRST:event_removeModelButtonActionPerformed
+    private void removeModelButtonActionPerformed(java.awt.event.ActionEvent evt)    {//GEN-FIRST:event_removeModelButtonActionPerformed
         Object[] values = modelList.getSelectedValues();
         for (int i = 0; i < values.length; i++) {
             Object object = values[i];
@@ -703,12 +701,11 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         plotChi2Panel.show(rootSettingsModel);
     }//GEN-LAST:event_removeModelButtonActionPerformed
 
-    private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)
-    {//GEN-FIRST:event_modelListValueChanged
+    private void modelListValueChanged(javax.swing.event.ListSelectionEvent evt)    {//GEN-FIRST:event_modelListValueChanged
         boolean hasSelection = modelList.getSelectedIndex() != -1;
         removeModelButton.setEnabled(hasSelection);
 
-        operatorSelector.setModel(getSelectedModel(),this);
+        operatorSelector.setModel(getSelectedModel(), this);
 
         //sync checkbox with selection
         //polarCheckBox.setSelected(hasSelection && getSelectedModel().getPolar());

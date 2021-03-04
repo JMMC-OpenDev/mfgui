@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
  * @author mellag
  */
 public class OperatorSelector extends JToolBar {
+
     ListSelectionEvent event;
 
     public OperatorSelector() {
