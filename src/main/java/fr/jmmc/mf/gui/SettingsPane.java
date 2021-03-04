@@ -5,6 +5,7 @@ package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.action.ActionRegistrar;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.util.IntrospectionUtils;
 import fr.jmmc.mf.gui.actions.RunFitAction;
 import fr.jmmc.mf.gui.models.ResultModel;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  */
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
-        TreeModelListener, SettingsViewerInterface, Observer {
+                                                                TreeModelListener, SettingsViewerInterface, Observer {
 
     /** Model reference */
     final private SettingsModel settingsModel;
@@ -525,31 +526,28 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
-                boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                                                      boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
             setToolTipText(null);
-            if (value.getClass().getName().startsWith("fr.jmmc.mf.models")) {
+
+            final Class clazz = value.getClass();
+            if (clazz.getName().startsWith("fr.jmmc.mf.models")) {
                 //setToolTipText("TBD");
-                // Next part try to get valide state of serialized xml objects
+                // Next part try to get valid state of serialized xml objects
                 Exception e = null;
                 try {
-                    String methodName = "validate";
-                    Class[] c = new Class[0];
-                    Method m = value.getClass().getMethod(methodName, c);
-                    Object[] o = new Object[0];
-                    m.invoke(value, o);
+                    final Method m = IntrospectionUtils.getMethod(clazz, "validate");
+                    IntrospectionUtils.executeMethodWithThrows(m, value);
 
-                } catch (NoSuchMethodException ex) {
-                    e = ex;
-                } catch (SecurityException ex) {
-                    e = ex;
-                } catch (IllegalAccessException ex) {
-                    e = ex;
-                } catch (IllegalArgumentException ex) {
-                    e = ex;
-                } catch (InvocationTargetException ex) {
-                    e = ex;
+                } catch (SecurityException se) {
+                    e = se;
+                } catch (IllegalAccessException iae) {
+                    e = iae;
+                } catch (IllegalArgumentException iae) {
+                    e = iae;
+                } catch (InvocationTargetException ite) {
+                    e = ite;
                 }
                 if (e != null) {
                     setForeground(Color.red);
@@ -560,7 +558,6 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                     }
                 }
             }
-            // TODO test else case
             return this;
         }
     }
