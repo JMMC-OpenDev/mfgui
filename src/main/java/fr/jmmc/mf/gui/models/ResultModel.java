@@ -147,6 +147,9 @@ public class ResultModel extends DefaultMutableTreeNode {
             plotName = plotName + " residuals";
         }
 
+        // LBO: HOTSPOT (modeler to ML is slow !)
+        // TODO: do it only when needed (lazy) if possible ?
+        // or in background (not blocking EDT ie GUI)
         logger.debug("start xslt from yoga xml to ptolemy plot (args={})", args);
         xmlStr = XslTransform.transform(xmlResult, "fr/jmmc/mf/gui/yogaToPlotML.xsl", args);
         logger.debug("end xslt from yoga xml to ptolemy plot");
@@ -166,6 +169,9 @@ public class ResultModel extends DefaultMutableTreeNode {
         }
 
         logger.debug("End plot generation");
+
+        // LBO: HOTSPOT (ML to TSV is very slow !)
+        // TODO: do it only when needed (lazy)
         logger.debug("Start tsv generation:{}", plotName);
         File tsv = UtilsClass.getPlotMLTSVFile(xmlStr);
         logger.debug("End tsv generation");
