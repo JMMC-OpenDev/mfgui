@@ -12,15 +12,13 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 /**
  * Give access and control on one external program call. One ProcessManager
  * class can be attach to follow program activity.
  *
  */
-public class ProcessHandler
-{
+public class ProcessHandler {
+
     /**
      * DOCUMENT ME!
      */
@@ -53,8 +51,7 @@ public class ProcessHandler
      *
      * @param command DOCUMENT ME!
      */
-    public ProcessHandler(String[] command)
-    {
+    public ProcessHandler(String[] command) {
         processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
 
@@ -67,8 +64,7 @@ public class ProcessHandler
      *
      * @param manager DOCUMENT ME!
      */
-    public void setProcessManager(ProcessManager manager)
-    {
+    public void setProcessManager(ProcessManager manager) {
         this.manager = manager;
     }
 
@@ -77,19 +73,14 @@ public class ProcessHandler
      *
      * @throws IOException DOCUMENT ME!
      */
-    public void start() throws IOException
-    {
-      if (process != null)
-        {
+    public void start() throws IOException {
+        if (process != null) {
             logger.warning("process already started");
-        }
-        else
-        {
+        } else {
             logger.info("starting new process");
             process = processBuilder.start();
 
-            if (manager != null)
-            {
+            if (manager != null) {
                 manager.processStarted();
             }
 
@@ -105,12 +96,11 @@ public class ProcessHandler
      *
      * @throws InterruptedException DOCUMENT ME!
      */
-    public int waitFor() throws InterruptedException, java.io.IOException
-    {
+    public int waitFor() throws InterruptedException, java.io.IOException {
         logger.info("waiting for process");
 
         int retValue = process.waitFor();
-        logger.info("process terminated (returned " + retValue + ")");
+        logger.log(Level.INFO, "process terminated (returned {0})", retValue);
 
         // send EOF if requested
         OutputStream out = process.getOutputStream();
@@ -120,8 +110,7 @@ public class ProcessHandler
         // wait for output data flux
         t1.join();
 
-        if (manager != null)
-        {
+        if (manager != null) {
             manager.processTerminated(retValue);
         }
 
@@ -131,33 +120,25 @@ public class ProcessHandler
     /**
      * DOCUMENT ME!
      */
-    public void stop()
-    {
-        if (process != null)
-        {
+    public void stop() {
+        if (process != null) {
             // try to determine if process has terminated
-            try
-            {
+            try {
                 process.exitValue();
                 logger.warning("process already terminated");
 
                 // @todo: Would it be interresting to throw one exception ?
-            }
-            catch (IllegalThreadStateException e)
-            {
+            } catch (IllegalThreadStateException e) {
                 logger.info("stoping process");
                 // Stoping listening processes
                 t1.stop();
                 process.destroy();
 
-                if (manager != null)
-                {
+                if (manager != null) {
                     manager.processStoped();
                 }
             }
-        }
-        else
-        {
+        } else {
             logger.warning("process not yet started");
         }
     }
@@ -169,16 +150,12 @@ public class ProcessHandler
      *
      * @throws IOException DOCUMENT ME!
      */
-    public void sendToStdin(String data) throws IOException
-    {
-        if (process != null)
-        {
+    public void sendToStdin(String data) throws IOException {
+        if (process != null) {
             OutputStream out = process.getOutputStream();
             out.write(data.getBytes());
             out.flush();
-        }
-        else
-        {
+        } else {
             logger.warning("process not yet started");
         }
     }
@@ -188,13 +165,11 @@ public class ProcessHandler
      *
      * @param args DOCUMENT ME!
      */
-    public static void main(String[] args)
-    {
-        String usage = "Usage:" + "   jmmc.common.ProcessHandler <command>";
+    public static void main(String[] args) {
+        String usage = "Usage:   jmmc.common.ProcessHandler <command>";
         System.out.println("Hello World!");
 
-        if (args.length < 1)
-        {
+        if (args.length < 1) {
             System.out.println(usage);
             System.exit(1);
         }
@@ -208,51 +183,41 @@ public class ProcessHandler
         logger.addHandler(handler);
 
         // Run main application
-        try
-        {
+        try {
             ProcessHandler pm = new ProcessHandler(args);
             pm.start();
             pm.waitFor();
             pm.stop();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "failure : ", e);
         }
     }
 
-    private class OutputHandler implements Runnable
-    {
-        public OutputHandler()
-        {
+    private class OutputHandler implements Runnable {
+
+        public OutputHandler() {
         }
 
-        public void run()
-        {
+        public void run() {
             logger.finest("listening process output started");
 
-            BufferedReader reader   = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String         line;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
 
-            try
-            {
-                while ((line = reader.readLine()) != null)
-                {
-                    if (manager != null)
-                    {
+            try {
+                while ((line = reader.readLine()) != null) {
+                    if (manager != null) {
                         //Exception exc = new Exception(line);
                         //manager.errorOccured(exc);
                         manager.outputOccured(line + "\n");
                     }
                 }
-            }
-            catch (IOException e)
-            {
-                logger.finest("listening process output encountered one ioexception" +
-                    e.getMessage());
+            } catch (IOException e) {
+                if (logger.isLoggable(Level.FINEST)) {
+                    logger.log(Level.FINEST, "listening process output encountered one ioexception{0}", e.getMessage());
+                }
 
-                if (manager != null)
-                {
+                if (manager != null) {
                     manager.errorOccured(e);
                 }
             } finally {
