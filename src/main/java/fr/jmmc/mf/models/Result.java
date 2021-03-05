@@ -41,6 +41,12 @@ public class Result implements java.io.Serializable {
      */
     private java.lang.Object _anyObject;
 
+    /**
+     * Highest element of settings.
+     *  
+     */
+    private fr.jmmc.mf.models.Settings _settings;
+
 
       //----------------/
      //- Constructors -/
@@ -93,6 +99,18 @@ public class Result implements java.io.Serializable {
     public java.lang.String getLabel(
     ) {
         return this._label;
+    }
+
+    /**
+     * Returns the value of field 'settings'. The field 'settings'
+     * has the following description: Highest element of settings.
+     *  
+     * 
+     * @return the value of field 'Settings'.
+     */
+    public fr.jmmc.mf.models.Settings getSettings(
+    ) {
+        return this._settings;
     }
 
     /**
@@ -180,6 +198,18 @@ public class Result implements java.io.Serializable {
     public void setLabel(
             final java.lang.String label) {
         this._label = label;
+    }
+
+    /**
+     * Sets the value of field 'settings'. The field 'settings' has
+     * the following description: Highest element of settings.
+     *  
+     * 
+     * @param settings the value of field 'settings'.
+     */
+    public void setSettings(
+            final fr.jmmc.mf.models.Settings settings) {
+        this._settings = settings;
     }
 
     /**

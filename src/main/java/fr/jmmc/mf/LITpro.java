@@ -186,8 +186,11 @@ public class LITpro extends fr.jmmc.jmcs.App {
         }
 
         logger.debug(xmlResult);
-
+        StatusBar.show("Fitting response received, unmarshal content...");
+        
+        // TODO look at this HOTSPOT
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
+        
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
             MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);

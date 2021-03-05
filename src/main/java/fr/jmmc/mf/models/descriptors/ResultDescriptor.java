@@ -234,6 +234,44 @@ public class ResultDescriptor extends org.exolab.castor.xml.util.XMLClassDescrip
         //-- validation code for: _anyObject
         fieldValidator = new org.exolab.castor.xml.FieldValidator();
         desc.setValidator(fieldValidator);
+        //-- _settings
+        desc = new org.exolab.castor.xml.util.XMLFieldDescriptorImpl(fr.jmmc.mf.models.Settings.class, "_settings", "settings", org.exolab.castor.xml.NodeType.Element);
+        handler = new org.exolab.castor.xml.XMLFieldHandler() {
+            @Override
+            public java.lang.Object getValue( java.lang.Object object ) 
+                throws IllegalStateException
+            {
+                Result target = (Result) object;
+                return target.getSettings();
+            }
+            @Override
+            public void setValue( java.lang.Object object, java.lang.Object value) 
+                throws IllegalStateException, IllegalArgumentException
+            {
+                try {
+                    Result target = (Result) object;
+                    target.setSettings( (fr.jmmc.mf.models.Settings) value);
+                } catch (java.lang.Exception ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+            @Override
+            @SuppressWarnings("unused")
+            public java.lang.Object newInstance(java.lang.Object parent) {
+                return new fr.jmmc.mf.models.Settings();
+            }
+        };
+        desc.setSchemaType("fr.jmmc.mf.models.Settings");
+        desc.setHandler(handler);
+        desc.setMultivalued(false);
+        addFieldDescriptor(desc);
+        addSequenceElement(desc);
+
+        //-- validation code for: _settings
+        fieldValidator = new org.exolab.castor.xml.FieldValidator();
+        { //-- local scope
+        }
+        desc.setValidator(fieldValidator);
     }
 
 

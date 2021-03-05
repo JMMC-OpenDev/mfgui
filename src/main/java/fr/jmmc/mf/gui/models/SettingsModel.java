@@ -1271,8 +1271,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void updateWithNewSettings(Response newResponse) {
 
-        Settings newSettings = newResponse.getSettings();
         StatusBar.show("Fitting response received, creating result node...");
+        Settings newSettings = newResponse.getSettings();        
         if (newSettings == null) {
             logger.warn("no settings present in result message");
             if (UtilsClass.getErrorMsg(newResponse).length() == 0) {
@@ -1351,8 +1351,20 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 // add it to the previous result list
                 rootSettings.getResults().addResult(newResult);
                 ResultModel r = getModel(newResult, false);
+                
                 // TODO: check if following call still get some files to display
-                r.genPlots(null, null, newResponse.getResultFile());
+                // disable waiting for confirmation ... 
+                // r.genPlots(null, null, newResponse.getResultFile());
+                
+                // store newSettings inside result for memory
+                // this also helps the resultPanel to show consistent plots on a lazy fashion
+                newSettings.getFiles().removeAllFile();
+                File fakeFile = new File();
+                fakeFile.setId("fake"+fakeFile.hashCode());
+                fakeFile.setName("fake");
+                newSettings.getFiles().addFile(fakeFile);
+                newResult.setSettings(newSettings);
+                
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1, r);
@@ -1372,7 +1384,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         } else {
             throw new IllegalStateException("This part of code should not be reached, please report.\nObject to select : " + o);
         }
-
+    }
+    
+    public void selectInTree(Object parent, Object child) {
+        //valueForPathChanged(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}), parent);
+        fireTreeStructureChanged(parent);
+        if (parent instanceof ResultModel) {
+            setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getResults(), parent, child}));
+        } else {
+            throw new IllegalStateException("This part of code should not be reached, please report.\nObject to select : " + parent);
+        }
     }
 
     private void stampLastUserInfo(ResultModel r) {

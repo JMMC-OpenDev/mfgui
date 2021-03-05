@@ -552,10 +552,13 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 if (e != null) {
                     setForeground(Color.red);
                     if (e.getCause() != null) {
-                        setToolTipText(e.getCause().getMessage());
+                        setToolTipText(e.getCause().getMessage());                        
+                        System.out.println("e.getCause.msg = " + e.getCause().getMessage());
                     } else {
                         setToolTipText(e.getMessage());
+                        System.out.println("e.msg = " + e.getMessage());
                     }
+                    
                 }
             }
             return this;

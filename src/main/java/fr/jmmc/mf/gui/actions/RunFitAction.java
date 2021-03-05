@@ -143,7 +143,7 @@ public class RunFitAction extends ResourcedAction {
 
         @Override
         public void refreshUI(Response r) {
-            // action finished, we can change state and update model just after.
+            // action finished, we can change state and update model just after.            
             this.parent.setRunning(false);
             this.parent.updateWithNewSettings(r);
             StatusBar.show("GUI updated with fitting results");
