@@ -19,6 +19,18 @@ exslt:node-set($var)//eleName ne marche pas, il faut utiliser exslt:node-set($va
 
 Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une trasfo xsl
 
+
+Mars 2021 :  assume matrix mode provides tr series of next tds: 
+        ruv, visamp, visamperr, visamp_model, visamp_wght, visphi, visphierr, visphi_model, visphi_wght
+        ruv, vis2data, vis2data_model
+        ruv, t3amp, t3amperr, t3amp_model, t3amp_wght, t3phi, t3phierr, t3phi_model, t3phi_wght                    
+        (see Matrix templates between)
+        
+        TODO : matrix variables must be adapted to avoid // and match with future yorick output.
+            look at //world vs /result/world/ (yorick output is )
+            
+            
+
 -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -107,9 +119,8 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                 </xsl:choose>
             </xsl:variable>
             <xsl:variable name="errName" select="concat($plotName,'err')"/>
-            <xsl:variable name="modelName" select="concat($dataName,'_model')"/>
-
-            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'DB')]">
+            <xsl:variable name="modelName" select="concat($dataName,'_model')"/>            
+            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'DB')]">                                                
                 <xsl:variable name="yElem" select="./*[name() = $dataName]"/>
                 <xsl:if test="$yElem">
                     <xsl:variable name="errElem" select="./*[name() = $errName]"/>
@@ -119,8 +130,8 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     <xsl:call-template name="ptPlotDataSet">
                         <xsl:with-param name="xElements" select="./ruv/table/tr/td"/>
                         <xsl:with-param name="yElements" select="$yElem/table/tr/td"/>
-                        <xsl:with-param name="errorBarElements" select="$errElem/table/tr/td"/>
-                        <xsl:with-param name="flagElements" select="./flags/table/tr/td"/>
+                        <xsl:with-param name="errorBarElements" select="$errElem/table/tr/td"/>                      
+                        <!--<xsl:with-param name="flagElements" select="./flags/table/tr/td"/>-->
                         <xsl:with-param name="name" select="concat($plotName,' (data)')"/>
                         <xsl:with-param name="marks" select="'points'"/>
                         <!-- Convert internal values from radians to degrees -->
@@ -130,13 +141,21 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     <xsl:call-template name="ptPlotDataSet">
                         <xsl:with-param name="xElements" select="./ruv/table/tr/td"/>
                         <xsl:with-param name="yElements" select="$mElem/table/tr/td"/>
-                        <xsl:with-param name="flagElements" select="./flags/table/tr/td"/>
+                        <!--<xsl:with-param name="flagElements" select="./flags/table/tr/td"/>-->
                         <xsl:with-param name="name" select="concat($plotName,' (model)')"/>
                         <xsl:with-param name="marks" select="'dots'"/>
                         <!-- Convert internal values from radians to degrees -->
                         <xsl:with-param name="yfactor" select="$yfactor"/>
                     </xsl:call-template>
                 </xsl:if>
+                <xsl:variable name="matrix" select=".//tr"/>
+                <xsl:if test="$matrix[th=$dataName]">                  
+                    <xsl:call-template name="ptPlotMatrixSet">
+                        <xsl:with-param name="matrix" select="$matrix"/>
+                        <xsl:with-param name="name" select="$plotName"/>                        
+                        <xsl:with-param name="yfactor" select="$yfactor"/>
+                    </xsl:call-template>                                        
+                </xsl:if>                                
             </xsl:for-each>
         </plot>
     </xsl:template>
@@ -163,7 +182,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <xsl:variable name="modelName" select="concat($dataName,'_model')"/>
             <xsl:variable name="weightName" select="concat($plotName,'_wght')"/>
 
-            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'DB')]">
+            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'DB')]">
                 <xsl:variable name="dataElem" select="./*[name() = $dataName]"/>
                 <xsl:if test="$dataElem">
                     <xsl:variable name="mElem" select="./*[name() = $modelName]"/>
@@ -174,13 +193,127 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                         <xsl:with-param name="dataElements" select="$dataElem/table/tr/td"/>
                         <xsl:with-param name="modelElements" select="$mElem/table/tr/td"/>
                         <xsl:with-param name="weightElements" select="$wElem/table/tr/td"/>
-                        <xsl:with-param name="flagElements" select="./flags/table/tr/td"/>
-                        <xsl:with-param name="name" select="concat($plotName,' (model)')"/>
+                        <!--<xsl:with-param name="flagElements" select="./flags/table/tr/td"/>-->
+                        <xsl:with-param name="name" select="$plotName"/>
                         <xsl:with-param name="marks" select="'dots'"/>
                     </xsl:call-template>
-                </xsl:if>
+                </xsl:if>                
+                <xsl:variable name="matrix" select=".//tr"/>
+                <xsl:if test="$matrix[th=$dataName]">                  
+                    <xsl:call-template name="ptPlotResidualsMatrixSet">
+                        <xsl:with-param name="matrix" select="$matrix"/>
+                        <xsl:with-param name="name" select="$plotName"/>                        
+                    </xsl:call-template>                                        
+                </xsl:if>                                
             </xsl:for-each>
         </plot>
+    </xsl:template>
+
+    <xsl:template name="ptPlotMatrixSet">
+        <xsl:param name="matrix"/> <!-- trs -->
+        <xsl:param name="name" select="'missing name'"/>        
+        <xsl:param name="yfactor" select="1"/>
+        
+        <xsl:variable name="yfactorNum" select="number($yfactor)"/>
+        
+        <xsl:variable name="yposition">                    
+            <xsl:choose>
+                <xsl:when test="contains($name,'phi')">6</xsl:when> <!-- COULD BE dynamic given observable element position() -->
+                <xsl:otherwise>2</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="ypos" select="number($yposition)"/>                   
+        <xsl:variable name="errpos" select="$ypos + 1"/>
+        <xsl:variable name="modelpos" select="$ypos + 2"/>
+        
+        <!-- data -->
+        <xsl:element name="dataset">
+            <xsl:attribute name="name">
+                <xsl:value-of select="concat($name,' (data)')"/>
+            </xsl:attribute>
+            <xsl:attribute name="connected">no</xsl:attribute>
+            <xsl:attribute name="marks">points</xsl:attribute>            
+            <xsl:for-each select="$matrix[td]">            
+                <xsl:variable name="x" select="number(./td[1])"/>         
+                <xsl:variable name="y" select="number(./td[$ypos])"/>
+                <xsl:variable name="err" select="number(./td[$errpos])"/>                            
+                <xsl:element name="p">
+                    <xsl:attribute name="x">
+                        <xsl:value-of select="$x"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="y">
+                        <xsl:value-of select="$y * $yfactorNum"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="lowErrorBar">
+                        <xsl:value-of select="( $y - $err ) * $yfactorNum"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="highErrorBar">
+                        <xsl:value-of select="( $y + $err ) * $yfactorNum"/>
+                    </xsl:attribute>
+                </xsl:element>                    
+            </xsl:for-each>            
+        </xsl:element>
+        
+        <!-- model -->
+        <xsl:element name="dataset">
+            <xsl:attribute name="name">
+                <xsl:value-of select="concat($name,' (model)')"/> 
+            </xsl:attribute>
+            <xsl:attribute name="connected">no</xsl:attribute>
+            <xsl:attribute name="marks">dots</xsl:attribute>            
+            <xsl:for-each select="$matrix[td]"> 
+                <xsl:variable name="x" select="number(./td[1])"/>           
+                <xsl:variable name="y" select="number(./td[$modelpos])"/>                
+                <xsl:element name="p">
+                    <xsl:attribute name="x">
+                        <xsl:value-of select="$x"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="y">
+                        <xsl:value-of select="$y * $yfactorNum"/>
+                    </xsl:attribute>
+                </xsl:element>                    
+            </xsl:for-each>            
+        </xsl:element>
+        
+    </xsl:template>
+
+    <xsl:template name="ptPlotResidualsMatrixSet">
+        <xsl:param name="matrix"/> <!-- trs -->
+        <xsl:param name="name" select="'missing name'"/>        
+        
+        <xsl:variable name="dataposition">                    
+            <xsl:choose>
+                <xsl:when test="contains($name,'phi')">6</xsl:when> <!-- COULD BE dynamic given observable element position() -->
+                <xsl:otherwise>2</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>       
+        <xsl:variable name="datapos" select="number($dataposition)"/>                   
+        
+        
+        <xsl:variable name="modelpos" select="$datapos + 2"/>
+        <xsl:variable name="wghtpos" select="$datapos + 3"/>
+                
+        <xsl:element name="dataset">
+            <xsl:attribute name="name">
+                <xsl:value-of select="$name"/>
+            </xsl:attribute>
+            <xsl:attribute name="connected">no</xsl:attribute>
+            <xsl:attribute name="marks">points</xsl:attribute>            
+            <xsl:for-each select="$matrix[td]">            
+                <xsl:variable name="x" select="number(./td[1])"/>
+                <xsl:variable name="d" select="number(./td[$datapos])"/>
+                <xsl:variable name="m" select="number(./td[$modelpos])"/>
+                <xsl:variable name="w" select="number(./td[$wghtpos])"/>
+                <xsl:element name="p">
+                    <xsl:attribute name="x">
+                        <xsl:value-of select="$x"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="y">
+                        <xsl:value-of select="( $d - $m ) * $w"/>
+                    </xsl:attribute>
+                </xsl:element>                    
+            </xsl:for-each>            
+        </xsl:element>                        
     </xsl:template>
 
     <xsl:template name="ptPlotDataSet">
@@ -208,7 +341,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                     <xsl:for-each select="$xElements">
                         <xsl:variable name="i" select="position()"/>
 
-                        <xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">
+                        <!--<xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">-->
                             <xsl:variable name="y" select="number($yElements[$i])"/>
                             <xsl:variable name="err" select="number($errorBarElements[$i])"/>
                             <xsl:element name="p">
@@ -225,14 +358,14 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                                     <xsl:value-of select="( $y + $err ) * $yfactorNum"/>
                                 </xsl:attribute>
                             </xsl:element>
-                        </xsl:if>
+                        <!--</xsl:if>-->
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:for-each select="$xElements">
                         <xsl:variable name="i" select="position()"/>
 
-                        <xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">
+<!--                        <xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">-->
                             <xsl:variable name="y" select="number($yElements[$i])"/>
                             <xsl:element name="p">
                                 <xsl:attribute name="x">
@@ -242,19 +375,19 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                                     <xsl:value-of select="$y * $yfactorNum"/>
                                 </xsl:attribute>
                             </xsl:element>
-                        </xsl:if>
+                        <!--</xsl:if>-->
                     </xsl:for-each>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:element>
     </xsl:template>
-
+    
     <xsl:template name="ptPlotResidualsDataSet">
         <xsl:param name="xElements"/>
         <xsl:param name="dataElements"/>
         <xsl:param name="modelElements"/>
         <xsl:param name="weightElements"/>
-        <xsl:param name="flagElements"/>
+        <!--<xsl:param name="flagElements"/>-->
         <xsl:param name="name" select="'missing name'"/>
         <xsl:param name="marks" select="'points'"/>
 
@@ -270,7 +403,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <xsl:for-each select="$xElements">
                 <xsl:variable name="i" select="position()"/>
 
-                <xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">
+                <!--<xsl:if test="$flagElements[$i] = '0' or not($flagElements[$i] = '1')">-->
                     <xsl:variable name="d" select="number($dataElements[$i])"/>
                     <xsl:variable name="m" select="number($modelElements[$i])"/>
                     <xsl:variable name="w" select="number($weightElements[$i])"/>
@@ -282,7 +415,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
                             <xsl:value-of select="( $d - $m ) * $w"/>
                         </xsl:attribute>
                     </xsl:element>
-                </xsl:if>
+                <!--</xsl:if>-->
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
@@ -292,7 +425,7 @@ Ensuite avec xalan et le proxy la reference au dtd peut poser probleme avec une 
             <title>Baselines plot</title>
             <xLabel>Ucoord (meters)</xLabel>
             <yLabel>Vcoord (meters)</yLabel>
-            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
+            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ucoord" select="./ucoord/table/tr/td"/>
