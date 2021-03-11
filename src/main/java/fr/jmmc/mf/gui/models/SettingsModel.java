@@ -1270,9 +1270,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      *  @param s Settings to grab informations into.
      */
     public void updateWithNewSettings(Response newResponse) {
-
         StatusBar.show("Fitting response received, creating result node...");
-        Settings newSettings = newResponse.getSettings();        
+        Settings newSettings = newResponse.getSettings();                
         if (newSettings == null) {
             logger.warn("no settings present in result message");
             if (UtilsClass.getErrorMsg(newResponse).length() == 0) {
@@ -1345,25 +1344,32 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             Result newResult = newResults[i];
             if (newResult != null) {
                 // define label for the new result nodes
-                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                final SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 newResult.setLabel("Fit Result " + ft.format(new Date()));
 
                 // add it to the previous result list
                 rootSettings.getResults().addResult(newResult);
-                ResultModel r = getModel(newResult, false);
+                final ResultModel r = getModel(newResult, false);
                 
                 // TODO: check if following call still get some files to display
                 // disable waiting for confirmation ... 
                 // r.genPlots(null, null, newResponse.getResultFile());
                 
-                // store newSettings inside result for memory
-                // this also helps the resultPanel to show consistent plots on a lazy fashion
-                newSettings.getFiles().removeAllFile();
-                File fakeFile = new File();
+                // store newSettings copy inside result for memory
+                // this also helps the resultPanel to show consistent plots on a lazy fashion                               
+                final Settings memorySettings = (Settings)UtilsClass.clone(newSettings);
+                newResult.setSettings(memorySettings);
+                // but we have to 
+                // - clear heavy parts
+                memorySettings.getFiles().removeAllFile();
+                final File fakeFile = new File();
                 fakeFile.setId("fake"+fakeFile.hashCode());
                 fakeFile.setName("fake");
-                newSettings.getFiles().addFile(fakeFile);
-                newResult.setSettings(newSettings);
+                memorySettings.getFiles().addFile(fakeFile);
+                
+                // - and avoid repeated ids 
+                UtilsClass.prefixIds(memorySettings);                                                        
+                
                 
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
@@ -2214,8 +2220,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     Object[] all = new Object[target.getFileLinkCount() + target.getModelCount()];
                     Object[] elements = target.getFileLink();
                     System.arraycopy(elements, 0, all, 0, target.getFileLinkCount());
-                    elements
-                    = target.getModel();
+                    elements = target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
                     for (int j = 0; j
