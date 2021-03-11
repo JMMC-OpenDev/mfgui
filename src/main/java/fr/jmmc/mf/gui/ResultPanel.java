@@ -51,10 +51,9 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
 
     public void show(ResultModel r, SettingsModel s) {
         current = r;
-        settingsModel = s;
-        resultEditorPane.setContentType("text");
-        resultEditorPane.setText(r.getHtmlReport()); // ok this is not html ...
-        resultEditorPane.setCaretPosition(0);
+        settingsModel = s;        
+        resultTextArea.setText(r.getHtmlReport()); // ok this is not html ...
+        resultTextArea.setCaretPosition(0);
         
         userInfoPanel.show(s.getRootSettings());
         
@@ -223,19 +222,20 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        helpButton1 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        resultEditorPane = new javax.swing.JEditorPane();
+        resultTextArea = new javax.swing.JTextArea();
         plotButtonsPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Result panel:"));
         setLayout(new java.awt.GridBagLayout());
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(0.6);
         jSplitPane1.setMaximumSize(new java.awt.Dimension(1000, 600));
 
         jPanel2.setAlignmentX(1.0F);
-        jPanel2.setMaximumSize(new java.awt.Dimension(100, 150));
+        jPanel2.setMaximumSize(new java.awt.Dimension(100, 250));
         jPanel2.setMinimumSize(new java.awt.Dimension(100, 150));
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 170));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.PAGE_AXIS));
@@ -243,46 +243,57 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
         jPanel3.add(filler1);
 
-        helpButton1.setText("jButton1");
-        helpButton1.setAlignmentX(1.0F);
-        helpButton1.setAlignmentY(0.0F);
-        jPanel3.add(helpButton1);
-
         jPanel2.add(jPanel3);
 
-        jSplitPane1.setTopComponent(jPanel2);
+        jSplitPane1.setBottomComponent(jPanel2);
 
-        jScrollPane1.setMaximumSize(new java.awt.Dimension(1000, 400));
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 100));
+        jPanel1.setPreferredSize(new java.awt.Dimension(262, 410));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        resultEditorPane.setEditable(false);
-        resultEditorPane.setContentType("text/html"); // NOI18N
-        resultEditorPane.setMaximumSize(new java.awt.Dimension(1000, 600));
-        jScrollPane1.setViewportView(resultEditorPane);
+        jScrollPane1.setAlignmentY(1.0F);
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(1000, 800));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(25, 300));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(262, 800));
 
-        jSplitPane1.setBottomComponent(jScrollPane1);
+        resultTextArea.setEditable(false);
+        resultTextArea.setColumns(20);
+        resultTextArea.setRows(5);
+        jScrollPane1.setViewportView(resultTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        jPanel1.add(jScrollPane1, gridBagConstraints);
+
+        plotButtonsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel1.add(plotButtonsPanel, gridBagConstraints);
+
+        jSplitPane1.setTopComponent(jPanel1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(jSplitPane1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(plotButtonsPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JButton helpButton1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel plotButtonsPanel;
-    private javax.swing.JEditorPane resultEditorPane;
+    private javax.swing.JTextArea resultTextArea;
     // End of variables declaration//GEN-END:variables
 }
