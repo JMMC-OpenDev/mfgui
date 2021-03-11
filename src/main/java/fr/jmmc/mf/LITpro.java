@@ -186,10 +186,12 @@ public class LITpro extends fr.jmmc.jmcs.App {
         }
 
         logger.debug(xmlResult);
-        StatusBar.show("Fitting response received, unmarshal content...");
+        StatusBar.show("Remote process response received, unmarshal content...");
         
         // TODO look at this HOTSPOT
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
+        
+        StatusBar.show("Response unmarshaled");
         
         String errors = UtilsClass.getErrorMsg(r);
         if (errors.length() > 1) {
