@@ -895,4 +895,25 @@ public class UtilsClass {
 
         return index;
     }
+
+    public static void prefixIds(Settings s) {
+        final String prefix="s"+s.hashCode()+"_";
+        
+        Parameter[] newSharedParams = s.getParameters().getParameter();
+        for (Parameter sharedParam : newSharedParams) {
+            sharedParam.setId(prefix+sharedParam.getId());
+        }        
+        for (Target t : s.getTargets().getTarget()) {
+            final Model[] models = t.getModel();
+            for (Model m : models) {                
+                for (Parameter p : m.getParameter()) {
+                    if(p.getId()!=null){
+                        p.setId(prefix+p.getId());
+                    };
+                }                
+            }
+        }
+        // parameterLinks refs should follow automatically
+        // should s.results.children also be updated ?
+    }
 }
