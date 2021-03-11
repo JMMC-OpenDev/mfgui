@@ -59,16 +59,16 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
         
         plotButtonsPanel.removeAll();
         
-        plotButtonsPanel.add(new JLabel("Plot : ")); 
-        Map<String, String> plots  = plotTobuild();
-        for (String n : plots.keySet() ) {
-            JButton b = new JButton(n);
-            b.setActionCommand(plots.get(n));
-            b.addActionListener(this);                
-            plotButtonsPanel.add(b);
-        }            
-       
-        //genPlots(false);  
+        if ( current.getResult().getHref() != null ){
+            plotButtonsPanel.add(new JLabel("Plot : ")); 
+            Map<String, String> plots  = plotTobuild();
+            for (String n : plots.keySet() ) {
+                JButton b = new JButton(n);
+                b.setActionCommand(plots.get(n));
+                b.addActionListener(this);                
+                plotButtonsPanel.add(b);
+            }            
+        }
         
         // because it is long - poor dev helper
         App.showFrameToFront();
@@ -103,14 +103,15 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
     }
     
     private LinkedHashMap<String, String> plotTobuild(){
-        LinkedHashMap<String, String> plotTobuild = new LinkedHashMap<>();
+        LinkedHashMap<String, String> plotTobuild = new LinkedHashMap<>();                
         
         plotTobuild.put("Baselines","plotBaselines");
         plotTobuild.put("UVCoverage", "plotUVCoverage");
         
-        Settings settings = current.getResult().getSettings();
+        Settings settings = current.getResult().getSettings();        
         if (settings==null){
-            settings=settingsModel.getRootSettings();
+            // try with the current settings (which may be unsync...
+            settings=settingsModel.getRootSettings();            
         }
         
         Target[] targets = settings.getTargets().getTarget();
