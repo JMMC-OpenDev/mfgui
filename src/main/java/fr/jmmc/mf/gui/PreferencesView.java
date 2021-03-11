@@ -116,6 +116,8 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        maxDataLimitTextField = new javax.swing.JFormattedTextField();
+        jLabel9 = new javax.swing.JLabel();
         yogaPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toolbarCheckBox = new javax.swing.JCheckBox();
@@ -123,8 +125,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         saveResultCheckBox = new javax.swing.JCheckBox();
         fovTextField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        maxDataLimitTextField = new javax.swing.JFormattedTextField();
-        jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         tooltipsCheckBox = new javax.swing.JCheckBox();
@@ -190,6 +190,10 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.weightx = 1.0;
         jPanel3.add(jSeparator1, gridBagConstraints);
 
+        maxDataLimitTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
+
+        jLabel9.setText("Max UV points for plot:");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
@@ -235,20 +239,6 @@ public class PreferencesView extends javax.swing.JFrame implements Observer {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         yogaPanel.add(jLabel8, gridBagConstraints);
-
-        maxDataLimitTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        yogaPanel.add(maxDataLimitTextField, gridBagConstraints);
-
-        jLabel9.setText("Max UV points for plot:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        yogaPanel.add(jLabel9, gridBagConstraints);
 
         jButton2.setAction(MFGui.getYogaVersionAction);
         gridBagConstraints = new java.awt.GridBagConstraints();
