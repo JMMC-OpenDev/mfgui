@@ -15,8 +15,9 @@
         <feedback_form_url>http://jmmc.fr/feedback/feedback.php</feedback_form_url>
     </company>
 
-    <program name="LITpro" version="1.0.19"/>
-    <compilation date="13/05/2016" compiler="JDK 1.6.0_24"/>
+    <!--<program name="LITpro" version="1.0.19"/>-->
+    <program name="LITpro" version="1.1.0 beta 1"/>
+    <compilation date="11/03/2021" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
@@ -186,8 +187,8 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 alpha 1">
-            <pubDate>Tue, 02 Apr 2019 10:41:59 GMT</pubDate>
+        <release version="1.1.0 beta 1">
+            <pubDate>Tue, 15 Mar 2021 15:15:15 GMT</pubDate>
             <prerelease version="1.1.0 alpha 1">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
@@ -213,10 +214,10 @@
                 </prerelease>
                 -->
                 <change type="CHANGE">Major GUI speedup. No longer uv-point limits. Result plots displayed on demand. More to come.</change>
-                <change type="CHANGE">Result summary displayed in the result panel.</change>
+                <change type="CHANGE">Result summary displayed in the result panel (was lost in last previous versions).</change>
                 <change type="TODO">Move to asynchronous client-server mode: chi2 maps or genfit process easyly can reach timeouts</change>                
-                <change type="TODO">Replace validation report dialog while loading OIFits by message in the application log</change>                
                 <change type="TODO">Make long process interruptible in the same way as run fit</change>                
+                <change type="TODO">Replace validation report dialog while loading OIFits by message in the application log</change>                
                 <change type="TODO">Make shared_param removable</change>                
                 <change type="TODO">Fix file selection bug when all are unselected</change>                
                 <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                
