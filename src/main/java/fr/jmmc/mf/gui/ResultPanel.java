@@ -103,7 +103,7 @@ public class ResultPanel extends javax.swing.JPanel  implements ActionListener {
     }
     
     private LinkedHashMap<String, String> plotTobuild(){
-        LinkedHashMap<String, String> plotTobuild = new LinkedHashMap<>();                
+        LinkedHashMap<String, String> plotTobuild = new LinkedHashMap<String, String>();                
         
         plotTobuild.put("Baselines","plotBaselines");
         plotTobuild.put("UVCoverage", "plotUVCoverage");
