@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  */
 public class SettingsPane extends javax.swing.JPanel implements TreeSelectionListener,
-                                                                TreeModelListener, SettingsViewerInterface, Observer {
+        TreeModelListener, SettingsViewerInterface, Observer {
 
     /** Model reference */
     final private SettingsModel settingsModel;
@@ -119,7 +119,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         ActionRegistrar actionRegistrar = ActionRegistrar.getInstance();
         saveSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.SaveSettingsAction", "saveSettings");
-        closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");        
+        closeSettingsAction = actionRegistrar.get("fr.jmmc.mf.gui.actions.CloseModelAction", "closeModel");
 
         settingsTree.setModel(settingsModel);
         settingsTree.setSelectionModel(settingsModel);
@@ -325,8 +325,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         skipPlotResultsButton.setVisible(limitReached);
         skipPlotResultsLabel.setVisible(limitReached);
         skipPlotResultsCheckBox.setSelected(limitReached);
-        */
-
+         */
         saveSettingsAction.setEnabled(validSettingsModel);
     }
 
@@ -498,7 +497,7 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
 
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
-                                                      boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
             setToolTipText(null);
@@ -524,13 +523,10 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
                 if (e != null) {
                     setForeground(Color.red);
                     if (e.getCause() != null) {
-                        setToolTipText(e.getCause().getMessage());                        
-                        System.out.println("e.getCause.msg = " + e.getCause().getMessage());
+                        setToolTipText(e.getCause().getMessage());
                     } else {
                         setToolTipText(e.getMessage());
-                        System.out.println("e.msg = " + e.getMessage());
                     }
-                    
                 }
             }
             return this;
