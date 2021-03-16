@@ -73,13 +73,14 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
         setDefaultPreference(YOGA_REMOTE_USE, "true");
         setDefaultPreference(YOGA_LOCAL_HOME, "../ys");
         setDefaultPreference(YOGA_LOCAL_PROGNAME, "/bin/yoga.sh");
+        
         // our actual convention tells that a beta version ends with b1...bN
         if (ApplicationDescription.isAlphaVersion()) {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~mellag/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~mellag/LITproWebService/run.php");
         } else if (ApplicationDescription.isBetaVersion()) {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~betaswmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~betaswmgr/LITproWebService/run.php");
         } else {
-            setDefaultPreference(YOGA_REMOTE_URL, "http://jmmc.fr/~swmgr/LITproWebService/run.php");
+            setDefaultPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~swmgr/LITproWebService/run.php");
         }
 
         setDefaultPreference(USERMODEL_REPO_URL, "http://apps.jmmc.fr/exist/apps/usermodels/");
