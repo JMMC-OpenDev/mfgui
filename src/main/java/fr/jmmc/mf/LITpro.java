@@ -19,6 +19,7 @@ import fr.jmmc.jmcs.util.runner.LocalLauncher;
 import fr.jmmc.mf.gui.MFGui;
 import fr.jmmc.mf.gui.Preferences;
 import fr.jmmc.mf.gui.UtilsClass;
+import fr.jmmc.mf.gui.interop.SendFitsImageAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Model;
 import fr.jmmc.mf.models.Response;
@@ -61,7 +62,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
     protected static final String LITPRO_SERVER_MESSAGE_TITLE = "LITpro server message";
     /** Avoid use of user model until server side is ready for it */
     public static final boolean USE_USERMODELS = false;
-
+    
+    public static SendFitsImageAction sendFitsImageAction;
+    
     /**
      * Creates a new LITpro object.
      *
@@ -78,6 +81,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
         fr.jmmc.jmcs.util.PropertyUtils.setResourceName("fr/jmmc/mf/gui/Resources");
 
         myPreferences = Preferences.getInstance();
+        
+        // init actions 
+        sendFitsImageAction = new SendFitsImageAction();        
 
         // Initialize job runner:
         LocalLauncher.startUp();

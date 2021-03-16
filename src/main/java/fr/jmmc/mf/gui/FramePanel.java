@@ -7,6 +7,7 @@ import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.mf.gui.interop.SendFitsImageAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
 import java.awt.event.WindowEvent;
@@ -216,8 +217,11 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
      */
     private void updateFileCombo() {
         filenamesComboBox.removeAllItems();
-        for (int i = 0; i < filenames.length; i++) {
+        for (int i = 0; i < filenames.length; i++) {            
             filenamesComboBox.addItem(filenames[i]);
+            if (filenames[i].endsWith(".fits")){
+                SendFitsImageAction.setFitsFileToSend(files[i]);
+            }
         }
     }
 }

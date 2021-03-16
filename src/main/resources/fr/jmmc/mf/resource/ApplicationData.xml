@@ -16,8 +16,9 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0 alpha 1"/>
-    <compilation date="11/03/2021" compiler="JDK 1.6.0_24"/>
+    <program name="LITpro" version="1.1.0 beta 2"/>
+    <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
+    <compilation date="16/03/2021" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
@@ -184,11 +185,15 @@
             <menu/>
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
+        <menu label="Interop">
+            <menu label="Send model image" classpath="fr.jmmc.mf.gui.interop.SendFitsImageAction" action="sendFitsImageAction"
+                  description="send your model image to any Fits Image application SAMP compliant"/>
+        </menu>                
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 beta 1">
-            <pubDate>Tue, 15 Mar 2021 15:15:15 GMT</pubDate>
+        <release version="1.1.0 beta 2">
+            <pubDate>Tue, 16 Mar 2021 16:16:16 GMT</pubDate>
             <prerelease version="1.1.0 alpha 1">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
@@ -215,16 +220,17 @@
                 -->
                 <change type="CHANGE">Major GUI speedup. No longer uv-point limits. Result plots displayed on demand. More to come.</change>
                 <change type="CHANGE">Result summary displayed in the result panel (was lost in last previous versions).</change>
+                <change type="CHANGE">Replace validation report dialog while loading OIFits by status bar message ( shown in the application log).</change>                
+                <change type="FEATURE">New interop menu entry to send a model image to any fits image reader.</change>                                                
                 <change type="TODO">Move to asynchronous client-server mode: chi2 maps or genfit process easyly can reach timeouts</change>                
-                <change type="TODO">Make long process interruptible in the same way as run fit</change>                
-                <change type="TODO">Replace validation report dialog while loading OIFits by message in the application log</change>                
+                <change type="TODO">Make long process interruptible in the same way as run fit</change>                                
                 <change type="TODO">Make shared_param removable</change>                
                 <change type="TODO">Fix file selection bug when all are unselected</change>                
                 <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                
                 <change type="TODO">Fix ghostscript error for Radial plots + residuals </change>                
                 <change type="TODO">Enhance parameter handling in the Plot Chi2 with fit</change>
                 <change type="TODO">Display best chi2 solutions after chi2 map</change>                                
-                <change type="TODO">Add "Send image by SAMP" button</change>                                                
+                
             </prerelease>
         </release>
         <release version="1.0.18">
