@@ -1726,7 +1726,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         final String checkReport = checker.getCheckReport();
         logger.info("validation results:\n{}", checkReport);
 
-        MessagePane.showMessage(checkReport);
+        //MessagePane.showMessage(checkReport);
+        StatusBar.show(fileToPopulate.getName() + " added : " + checker.getCheckStatus());
 
         // store association between check and oifits object
         setCheckerOfOiFitsFile(fits, checker);
