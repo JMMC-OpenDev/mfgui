@@ -109,7 +109,8 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     @Override
     protected int getPreferencesVersionNumber() {
         // 1 -> 2 v1.0.11b10
-        return 2;
+        //return 2; v1.1.0
+        return 3;
     }
 
     /**
@@ -124,8 +125,10 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
     protected boolean updatePreferencesVersion(int loadedVersionNumber) {
         logger.info("Upgrading preference file from version '{}' to version '{}'", loadedVersionNumber, loadedVersionNumber + 1);
 
-        switch (loadedVersionNumber) {
-            // Wrong column identifiers in the the simple and detailed bright N columns order list
+        switch (loadedVersionNumber) {            
+            case 2:
+                return updateFromVersion2ToVersion3();
+
             case 1:
                 return updateFromVersion1ToVersion2();
 
@@ -146,6 +149,24 @@ public class Preferences extends fr.jmmc.jmcs.data.preference.Preferences {
                 String defaultValue = defaultValues[i];
                 setPreference(preferenceName, defaultValue);
             }
+        } catch (PreferencesException ex) {
+            logger.error("Can't update preference version", ex);
+            return false;
+        }
+        return true;
+    }
+    // cleanup introduced in version 1.1.0
+    private boolean updateFromVersion2ToVersion3() {             
+        try {
+                // force reset for remote server urls 
+            if (ApplicationDescription.isAlphaVersion()) {
+                setPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~mellag/LITproWebService/run.php");
+            } else if (ApplicationDescription.isBetaVersion()) {
+                setPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~betaswmgr/LITproWebService/run.php");
+            } else {
+                setPreference(YOGA_REMOTE_URL, "http://apps.jmmc.fr/~swmgr/LITproWebService/run.php");
+            }
+                                                        
         } catch (PreferencesException ex) {
             logger.error("Can't update preference version", ex);
             return false;
