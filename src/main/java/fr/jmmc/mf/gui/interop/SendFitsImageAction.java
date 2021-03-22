@@ -6,8 +6,13 @@ package fr.jmmc.mf.gui.interop;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.network.interop.SampCapability;
 import fr.jmmc.jmcs.network.interop.SampCapabilityAction;
+import fr.jmmc.jmcs.util.FileUtils;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -33,6 +38,9 @@ public final class SendFitsImageAction extends SampCapabilityAction {
     /* members */
     /** current fitsFile to send */
     static File currentFitsFile = null;
+    static String currentFitsFilename = null;
+    /** tmp link to currentFitsFile with right filename */
+    static File wellNamedFitsFile = null; 
 
     /**
      * Public constructor that automatically register the action in RegisteredAction.
@@ -45,8 +53,9 @@ public final class SendFitsImageAction extends SampCapabilityAction {
      * Getter called by plot panel to set file reference of Fits to send.
      * @param currentFitsFile file to send or null to clean old reference.
      */
-    public static void setFitsFileToSend(File fitsFile) {
+    public static void setFitsFileToSend(File fitsFile, String filename) {
         currentFitsFile = fitsFile;
+        currentFitsFilename = filename;        
     }
 
     
@@ -64,7 +73,21 @@ public final class SendFitsImageAction extends SampCapabilityAction {
             StatusBar.show("Sorry, no fits file to send. Select your target, ask to plot image and run again.");
             return; // no data
         }
-
+        // hack to create a directory fix final filename
+        File  tempDir = FileUtils.getTempFile("___","___");
+        tempDir.delete();                
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");                
+        wellNamedFitsFile = new File(tempDir, ft.format(new Date())+"_"+currentFitsFilename);         
+        wellNamedFitsFile.getParentFile().mkdirs();
+        wellNamedFitsFile.deleteOnExit();
+               
+        try {
+            Files.createSymbolicLink(wellNamedFitsFile.toPath(), currentFitsFile.toPath());
+        } catch (IOException ex) {
+            logger.error("Can't copy file from {} to {} . Use src file only.",currentFitsFile, wellNamedFitsFile);
+            wellNamedFitsFile=currentFitsFile;
+        }
+                
         final String command = e.getActionCommand();
         composeAndSendMessage(command);
     }
@@ -79,7 +102,7 @@ public final class SendFitsImageAction extends SampCapabilityAction {
         logger.debug("composeMessage");       
         // Store parameters into SAMP message:
         final Map<String, String> parameters = new HashMap<String, String>(4);
-        addUrlParameter(parameters, this.currentFitsFile);
+        addUrlParameter(parameters, this.wellNamedFitsFile);
         return parameters;
     }
 }

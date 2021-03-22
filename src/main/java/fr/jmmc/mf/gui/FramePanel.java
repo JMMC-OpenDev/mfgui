@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JFrame;
+import ptolemy.plot.plotml.PlotMLFrame;
 
 public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
@@ -66,7 +67,12 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             frame.setContentPane(contentPane);
             frame.setVisible(true);
         }
-        blankPanel.repaint();
+        
+        resetZoomButton.setVisible(this.frame instanceof PlotMLFrame);
+        
+        blankPanel.revalidate();
+        repaint();        
+        
     }
 
     public void toggleFrame() {
@@ -99,6 +105,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         exportButton = new javax.swing.JButton();
         titleLabel = new javax.swing.JLabel();
         blankPanel = new javax.swing.JPanel();
+        resetZoomButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -148,11 +155,23 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(blankPanel, gridBagConstraints);
+
+        resetZoomButton.setText("Reset zoom");
+        resetZoomButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetZoomButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        add(resetZoomButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -179,12 +198,22 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         updateFileCombo();
     }//GEN-LAST:event_exportButtonActionPerformed
 
+    private void resetZoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetZoomButtonActionPerformed
+        
+        if( this.frame instanceof PlotMLFrame ) 
+        {
+              ((PlotMLFrame)this.frame).plot.resetAxes();
+        }
+        
+    }//GEN-LAST:event_resetZoomButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton attachDetachButton;
     private javax.swing.JPanel blankPanel;
     private javax.swing.JButton exportButton;
     private javax.swing.JComboBox filenamesComboBox;
     private javax.swing.JButton helpButton1;
+    private javax.swing.JButton resetZoomButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -220,7 +249,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         for (int i = 0; i < filenames.length; i++) {            
             filenamesComboBox.addItem(filenames[i]);
             if (filenames[i].endsWith(".fits")){
-                SendFitsImageAction.setFitsFileToSend(files[i]);
+                SendFitsImageAction.setFitsFileToSend(files[i],filenames[i]);
             }
         }
     }
