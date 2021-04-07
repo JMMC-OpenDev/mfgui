@@ -90,7 +90,7 @@
                     <xsl:value-of select="'&#09;'"/>
                     <xsl:value-of select="@y"/>
                     <xsl:value-of select="'&#09;'"/>
-                    <xsl:value-of select="@lowErrorBar"/>
+                    <xsl:value-of select="@y - @lowErrorBar"/><!-- may be NaN -->
                     <xsl:value-of select="'&#09;'"/>
                     <xsl:value-of select="./ancestor::dataset/@name"/>
                     <xsl:value-of select="'&#10;'"/>
