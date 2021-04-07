@@ -276,22 +276,24 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
                 < selectedFiles.length; j++) {
             File selectedFile = (File) selectedFiles[j];
             OIFitsFile oifile = SettingsModel.getOIFitsFromFile(selectedFile);
+                        
             if (oifile.hasOiVis2()) {
                 vis2CheckBox.setEnabled(true);
                 if (residuals == null) {
                     vis2CheckBox.setSelected(true);
                 }
             }
-
+            
             if (oifile.hasOiVis()) {
                 visAmpCheckBox.setEnabled(true);
                 visPhiCheckBox.setEnabled(true);
-                if (residuals == null) {
+                /* VIS data disabled by default in V1.1.0 beta 4 */
+                if (residuals == null  && ! oifile.hasOiVis2() && ! oifile.hasOiT3()) {
                     visAmpCheckBox.setSelected(true);
                     visPhiCheckBox.setSelected(true);
                 }
             }
-
+            
             if (oifile.hasOiT3()) {
                 t3ampCheckBox.setEnabled(true);
                 t3phiCheckBox.setEnabled(true);

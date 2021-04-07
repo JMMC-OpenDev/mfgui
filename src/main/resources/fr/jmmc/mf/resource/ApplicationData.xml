@@ -16,9 +16,9 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0 beta 3"/>
+    <program name="LITpro" version="1.1.0 beta 4"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
-    <compilation date="22/03/2021" compiler="JDK 1.6.0_24"/>
+    <compilation date="07/04/2021" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
@@ -192,8 +192,8 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 beta 3">
-            <pubDate>Tue, 16 Mar 2021 16:16:16 GMT</pubDate>
+        <release version="1.1.0 beta 4">
+            <pubDate>Wed, 7 Apr 2021 11:11:11 GMT</pubDate>
             <prerelease version="1.1.0 beta 3">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
@@ -217,8 +217,7 @@
                 <prerelease version="1.0.14 beta 1">
                     <change type="FEATURE">Basic support for user models</change>
                 </prerelease>
-                -->
-                
+                -->                
                 <change type="TODO">Move to asynchronous client-server mode: chi2 maps or genfit process easyly can reach timeouts</change>                
                 <change type="TODO">Make long process interruptible in the same way as run fit</change>                                
                 <change type="TODO">Make shared_param removable</change>                
@@ -227,6 +226,9 @@
                 <change type="TODO">Fix ghostscript error for Radial plots + residuals </change>                
                 <change type="TODO">Enhance parameter handling in the Plot Chi2 with fit</change>
                 <change type="TODO">Display best chi2 solutions after chi2 map</change>                                                
+                <change type="CHANGE">VIS data are no longer selected by default in the fitter setup if VIS or T3 are present.</change>
+            </prerelease>
+            <prerelease version="1.1.0 beta 3">
                 <change type="FEATURE">Provide a reset zoom for result plots (future versions will use OIExplorer's plots)</change>
             </prerelease>
             <prerelease version="1.1.0 alpha 1">                
