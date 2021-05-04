@@ -119,7 +119,8 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
                 </xsl:choose>
             </xsl:variable>
             <xsl:variable name="errName" select="concat($plotName,'err')"/>
-            <xsl:variable name="modelName" select="concat($dataName,'_model')"/>            
+            <xsl:variable name="modelName" select="concat($dataName,'_model')"/>      
+                  
             <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'DB')]">                                                
                 <xsl:variable name="yElem" select="./*[name() = $dataName]"/>
                 <xsl:if test="$yElem">
@@ -147,16 +148,21 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
                         <!-- Convert internal values from radians to degrees -->
                         <xsl:with-param name="yfactor" select="$yfactor"/>
                     </xsl:call-template>
-                </xsl:if>
-                <xsl:variable name="matrix" select=".//tr"/>
-                <xsl:if test="$matrix[th=$dataName]">                  
-                    <xsl:call-template name="ptPlotMatrixSet">
-                        <xsl:with-param name="matrix" select="$matrix"/>
-                        <xsl:with-param name="name" select="$plotName"/>                        
-                        <xsl:with-param name="yfactor" select="$yfactor"/>
-                    </xsl:call-template>                                        
-                </xsl:if>                                
+                </xsl:if>                 
             </xsl:for-each>
+            
+            <!-- handle squeezed_world if any -->
+            <xsl:for-each select="//squeezed_world/*/*[starts-with(name(),'DB')]">                                                                                                                        
+                <xsl:call-template name="ptPlotDB">
+                    <xsl:with-param name="db" select="."/>                        
+                    <xsl:with-param name="name" select="$plotName"/>                        
+                    <xsl:with-param name="dataName" select="$dataName"/>
+                    <xsl:with-param name="errName" select="$errName"/>
+                    <xsl:with-param name="modelName" select="$modelName"/>
+                    <xsl:with-param name="yfactor" select="$yfactor"/>          
+                </xsl:call-template>                                                        
+            </xsl:for-each>
+            
         </plot>
     </xsl:template>
 
@@ -197,123 +203,126 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
                         <xsl:with-param name="name" select="$plotName"/>
                         <xsl:with-param name="marks" select="'dots'"/>
                     </xsl:call-template>
-                </xsl:if>                
-                <xsl:variable name="matrix" select=".//tr"/>
-                <xsl:if test="$matrix[th=$dataName]">                  
-                    <xsl:call-template name="ptPlotResidualsMatrixSet">
-                        <xsl:with-param name="matrix" select="$matrix"/>
-                        <xsl:with-param name="name" select="$plotName"/>                        
-                    </xsl:call-template>                                        
                 </xsl:if>                                
             </xsl:for-each>
+            
+            <!-- handle squeezed_world if any -->
+            <xsl:for-each select="//squeezed_world/*/*[starts-with(name(),'DB')]">                                                                                                                        
+                <xsl:call-template name="ptPlotResidualsDB">
+                    <xsl:with-param name="db" select="."/>                        
+                    <xsl:with-param name="name" select="$plotName"/>                          
+                </xsl:call-template>                                                        
+            </xsl:for-each>
+            
         </plot>
     </xsl:template>
 
-    <xsl:template name="ptPlotMatrixSet">
-        <xsl:param name="matrix"/> <!-- trs -->
-        <xsl:param name="name" select="'missing name'"/>        
-        <xsl:param name="yfactor" select="1"/>
+    <xsl:template name="ptPlotDB">
+        <xsl:param name="db"/> <!-- DBn -->
+        <xsl:param name="name"/>        
+        <xsl:param name="dataName"/>        
+        <xsl:param name="errName"/>                
+        <xsl:param name="modelName"/> 
+                       
+        <xsl:param name="yfactor" select="1"/>                
         
-        <xsl:variable name="yfactorNum" select="number($yfactor)"/>
-        
-        <xsl:variable name="yposition">                    
-            <xsl:choose>
-                <xsl:when test="contains($name,'phi')">6</xsl:when> <!-- COULD BE dynamic given observable element position() -->
-                <xsl:otherwise>2</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="ypos" select="number($yposition)"/>                   
-        <xsl:variable name="errpos" select="$ypos + 1"/>
-        <xsl:variable name="modelpos" select="$ypos + 2"/>
-        
-        <!-- data -->
-        <xsl:element name="dataset">
-            <xsl:attribute name="name">
-                <xsl:value-of select="concat($name,' (data)')"/>
-            </xsl:attribute>
-            <xsl:attribute name="connected">no</xsl:attribute>
-            <xsl:attribute name="marks">points</xsl:attribute>            
-            <xsl:for-each select="$matrix[td]">            
-                <xsl:variable name="x" select="number(./td[1])"/>         
-                <xsl:variable name="y" select="number(./td[$ypos])"/>
-                <xsl:variable name="err" select="number(./td[$errpos])"/>                            
-                <xsl:element name="p">
-                    <xsl:attribute name="x">
-                        <xsl:value-of select="$x"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="y">
-                        <xsl:value-of select="$y * $yfactorNum"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="lowErrorBar">
-                        <xsl:value-of select="( $y - $err ) * $yfactorNum"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="highErrorBar">
-                        <xsl:value-of select="( $y + $err ) * $yfactorNum"/>
-                    </xsl:attribute>
-                </xsl:element>                    
-            </xsl:for-each>            
-        </xsl:element>
-        
-        <!-- model -->
-        <xsl:element name="dataset">
-            <xsl:attribute name="name">
-                <xsl:value-of select="concat($name,' (model)')"/> 
-            </xsl:attribute>
-            <xsl:attribute name="connected">no</xsl:attribute>
-            <xsl:attribute name="marks">dots</xsl:attribute>            
-            <xsl:for-each select="$matrix[td]"> 
-                <xsl:variable name="x" select="number(./td[1])"/>           
-                <xsl:variable name="y" select="number(./td[$modelpos])"/>                
-                <xsl:element name="p">
-                    <xsl:attribute name="x">
-                        <xsl:value-of select="$x"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="y">
-                        <xsl:value-of select="$y * $yfactorNum"/>
-                    </xsl:attribute>
-                </xsl:element>                    
-            </xsl:for-each>            
-        </xsl:element>
-        
+        <xsl:if test="$db/labels//td[.=$dataName]">
+
+            <xsl:variable name="yfactorNum" select="number($yfactor)"/>
+
+            <xsl:variable name="xpos">
+                <xsl:for-each select="$db/labels//td"><xsl:if test=". = 'ruv'"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable>        
+            <xsl:variable name="ypos">
+                <xsl:for-each select="$db/labels//td"><xsl:if test=". = $dataName"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable>        
+            <xsl:variable name="errpos">
+                <xsl:for-each select="$db/labels//td"><xsl:if test=". = $errName"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable>
+            <xsl:variable name="modelpos">
+                <xsl:for-each select="$db/labels//td"><xsl:if test=". = $modelName"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable>                                             
+
+            <!-- data -->
+            <xsl:element name="dataset">
+                <xsl:attribute name="name"><xsl:value-of select="concat($name,' (data)')"/></xsl:attribute>               
+                <xsl:attribute name="connected">no</xsl:attribute>
+                <xsl:attribute name="marks">points</xsl:attribute>            
+           
+                <xsl:for-each select="$db/data//tr">            
+                    <xsl:variable name="y" select="td[position()=$ypos]"/>
+                    <xsl:variable name="err" select="td[position()=$errpos]"/>                            
+                    <xsl:element name="p">
+                        <xsl:attribute name="x">
+                            <xsl:value-of select="td[position()=$xpos]"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="y">
+                            <xsl:value-of select="$y * $yfactorNum"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="lowErrorBar">
+                            <xsl:value-of select="( $y - $err ) * $yfactorNum"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="highErrorBar">
+                            <xsl:value-of select="( $y + $err ) * $yfactorNum"/>
+                        </xsl:attribute>
+                    </xsl:element>                    
+                </xsl:for-each>            
+            </xsl:element>
+
+            <!-- model -->
+            <xsl:element name="dataset">
+                <xsl:attribute name="name">
+                    <xsl:value-of select="concat($name,' (model)')"/> 
+                </xsl:attribute>
+                <xsl:attribute name="connected">no</xsl:attribute>
+                <xsl:attribute name="marks">dots</xsl:attribute>            
+                <xsl:for-each select="$db/data//tr">                             
+                    <xsl:element name="p">
+                        <xsl:attribute name="x">
+                            <xsl:value-of select="td[position()=$xpos]"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="y">
+                            <xsl:value-of select="td[position()=$modelpos] * $yfactorNum"/>
+                        </xsl:attribute>
+                    </xsl:element>                    
+                </xsl:for-each>            
+            </xsl:element>
+        </xsl:if>
     </xsl:template>
 
-    <xsl:template name="ptPlotResidualsMatrixSet">
-        <xsl:param name="matrix"/> <!-- trs -->
-        <xsl:param name="name" select="'missing name'"/>        
-        
-        <xsl:variable name="dataposition">                    
-            <xsl:choose>
-                <xsl:when test="contains($name,'phi')">6</xsl:when> <!-- COULD BE dynamic given observable element position() -->
-                <xsl:otherwise>2</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>       
-        <xsl:variable name="datapos" select="number($dataposition)"/>                   
-        
-        
-        <xsl:variable name="modelpos" select="$datapos + 2"/>
-        <xsl:variable name="wghtpos" select="$datapos + 3"/>
+    <xsl:template name="ptPlotResidualsDB">
+        <xsl:param name="db"/> <!-- DBn -->
+        <xsl:param name="name"/>                
+        <xsl:variable name="residualsName" select="concat($name,'_residuals')"/>        
                 
-        <xsl:element name="dataset">
-            <xsl:attribute name="name">
-                <xsl:value-of select="$name"/>
-            </xsl:attribute>
-            <xsl:attribute name="connected">no</xsl:attribute>
-            <xsl:attribute name="marks">points</xsl:attribute>            
-            <xsl:for-each select="$matrix[td]">            
-                <xsl:variable name="x" select="number(./td[1])"/>
-                <xsl:variable name="d" select="number(./td[$datapos])"/>
-                <xsl:variable name="m" select="number(./td[$modelpos])"/>
-                <xsl:variable name="w" select="number(./td[$wghtpos])"/>
-                <xsl:element name="p">
-                    <xsl:attribute name="x">
-                        <xsl:value-of select="$x"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="y">
-                        <xsl:value-of select="( $d - $m ) * $w"/>
-                    </xsl:attribute>
-                </xsl:element>                    
-            </xsl:for-each>            
-        </xsl:element>                        
+        <xsl:if test="$db/labels//td[.=$residualsName]">
+                                
+            <xsl:variable name="xpos">
+                    <xsl:for-each select="$db/labels//td"><xsl:if test=". = 'ruv'"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable>        
+            <xsl:variable name="ypos">
+                <xsl:for-each select="$db/labels//td"><xsl:if test=". = $residualsName"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+            </xsl:variable> 
+
+            <xsl:element name="dataset">
+                <xsl:attribute name="name">
+                    <xsl:value-of select="$name"/>
+                </xsl:attribute>
+                <xsl:attribute name="connected">no</xsl:attribute>
+                <xsl:attribute name="marks">points</xsl:attribute>            
+                <xsl:for-each select="$db/data//tr">                                       
+                    <xsl:element name="p">
+                        <xsl:attribute name="x">
+                            <xsl:value-of select="td[position()=$xpos]"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="y">
+                            <xsl:value-of select="td[position()=$ypos]"/>
+                        </xsl:attribute>
+                    </xsl:element>                    
+                </xsl:for-each>            
+            </xsl:element>                        
+
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="ptPlotDataSet">
@@ -425,7 +434,7 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
             <title>Baselines plot</title>
             <xLabel>Ucoord (meters)</xLabel>
             <yLabel>Vcoord (meters)</yLabel>
-            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
+            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'CR')]  | /result/squeezed_world//*[starts-with(name(),'CR')] ">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ucoord" select="./ucoord/table/tr/td"/>
@@ -463,7 +472,7 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
             <xLabel>Ucoord (1/rad)</xLabel>
             <yLabel>Vcoord (1/rad)</yLabel>
 
-            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
+            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')] | /result/squeezed_world//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ufreq" select="./ufreq/table/tr/td"/>
