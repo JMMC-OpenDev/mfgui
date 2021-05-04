@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0 beta 5"/>
+    <program name="LITpro" version="1.1.0 alpha 6"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="07/04/2021" compiler="JDK 1.6.0_24"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -192,9 +192,9 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 beta 5">
+        <release version="1.1.0 alpha 6">
             <pubDate>Wed, 7 Apr 2021 19:19:19 GMT</pubDate>
-            <prerelease version="1.1.0 beta 5">
+            <prerelease version="1.1.0 alpha 6">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -226,6 +226,9 @@
                 <change type="TODO">Fix ghostscript error for Radial plots + residuals </change>                
                 <change type="TODO">Enhance parameter handling in the Plot Chi2 with fit</change>
                 <change type="TODO">Display best chi2 solutions after chi2 map</change>                                                
+                <change type="CHANGE">Speed-up client-server execution and result plot generation</change>
+            </prerelease>
+            <prerelease version="1.1.0 beta 5">                                               
                 <change type="CHANGE">Enhance TSV export for large datasets.</change>
             </prerelease>
             <prerelease version="1.1.0 beta 4">
