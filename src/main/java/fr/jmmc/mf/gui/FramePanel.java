@@ -59,12 +59,14 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         updateFileCombo();
         
         infoLabel.setVisible(false);
+        storeInfoButton.setVisible(false);
 
         if ( frameTreeNode.hasResponse()){
             String info = UtilsClass.getOutputMsg(frameTreeNode.getResponse());
             if (info.length() > 1) {                
                 infoLabel.setText("<html>"+info+"</html>");
                 infoLabel.setVisible(true);
+                storeInfoButton.setVisible(true);
             }            
         }       
         
@@ -127,6 +129,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         blankPanel = new javax.swing.JPanel();
         resetZoomButton = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
+        storeInfoButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -195,10 +198,29 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(resetZoomButton, gridBagConstraints);
 
-        infoLabel.setText("jLabel1");
-        add(infoLabel, new java.awt.GridBagConstraints());
+        infoLabel.setText("infoLabel");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        add(infoLabel, gridBagConstraints);
+
+        storeInfoButton.setText("Store info below in notebook");
+        storeInfoButton.setActionCommand("Store info below in personal notebook");
+        storeInfoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeInfoButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        add(storeInfoButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -234,6 +256,15 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         
     }//GEN-LAST:event_resetZoomButtonActionPerformed
 
+    private void storeInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeInfoButtonActionPerformed
+        // string massa(g/cr)e
+        String newInfo = settingsModel.getRootSettings().getUserInfo() + 
+                "--------------------------------------------------------------------------------" + 
+                infoLabel.getText().replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n");       
+        settingsModel.getRootSettings().setUserInfo(newInfo); 
+        storeInfoButton.setVisible(false);
+    }//GEN-LAST:event_storeInfoButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton attachDetachButton;
     private javax.swing.JPanel blankPanel;
@@ -242,6 +273,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JButton resetZoomButton;
+    private javax.swing.JButton storeInfoButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 
