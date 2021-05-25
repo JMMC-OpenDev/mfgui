@@ -3,9 +3,11 @@
  ******************************************************************************/
 package fr.jmmc.mf.gui;
 
+import fr.jmmc.jmcs.App;
 import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.gui.interop.SendFitsImageAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
@@ -71,7 +73,14 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         resetZoomButton.setVisible(this.frame instanceof PlotMLFrame);
         
         blankPanel.revalidate();
-        repaint();        
+        repaint();  
+        
+        // this swing refresh line fixed the refresh issue we stille may remove some code just before ??
+        SwingUtils.invokeLaterEDT(new Runnable() {
+            @Override
+            public void run() {App.showFrameToFront();}
+                    
+        });
         
     }
 
