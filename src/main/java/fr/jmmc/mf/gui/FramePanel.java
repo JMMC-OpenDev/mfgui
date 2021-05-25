@@ -57,6 +57,17 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         filenames = frameTreeNode.getFilenamesToExport();
 
         updateFileCombo();
+        
+        infoLabel.setVisible(false);
+
+        if ( frameTreeNode.hasResponse()){
+            String info = UtilsClass.getOutputMsg(frameTreeNode.getResponse());
+            if (info.length() > 1) {                
+                infoLabel.setText("<html>"+info+"</html>");
+                infoLabel.setVisible(true);
+            }            
+        }       
+        
 
         contentPane = frame.getContentPane();
         blankPanel.removeAll();
@@ -115,6 +126,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         titleLabel = new javax.swing.JLabel();
         blankPanel = new javax.swing.JPanel();
         resetZoomButton = new javax.swing.JButton();
+        infoLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -123,18 +135,21 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(attachDetachButton, gridBagConstraints);
 
         helpButton1.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
         add(helpButton1, gridBagConstraints);
 
         filenamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(filenamesComboBox, gridBagConstraints);
 
         exportButton.setText("Save as ...");
@@ -147,6 +162,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(exportButton, gridBagConstraints);
 
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -179,8 +195,10 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(resetZoomButton, gridBagConstraints);
+
+        infoLabel.setText("jLabel1");
+        add(infoLabel, new java.awt.GridBagConstraints());
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -222,6 +240,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JButton exportButton;
     private javax.swing.JComboBox filenamesComboBox;
     private javax.swing.JButton helpButton1;
+    private javax.swing.JLabel infoLabel;
     private javax.swing.JButton resetZoomButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables

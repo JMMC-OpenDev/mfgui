@@ -190,7 +190,7 @@ public class UtilsClass {
      * @return a frame that contains the image
      * @throws IllegalStateException if image can't be read from file
      */
-    public static JFrame buildFrameFor(String title, String description, File[] pngFiles, String[] filenames) throws IllegalStateException {
+    public static JFrame buildFrameFor(String title, String description, File[] pngFiles, String[] filenames) throws IllegalStateException {    
         if (pngFiles == null || pngFiles.length == 0) {
             return null;
         }

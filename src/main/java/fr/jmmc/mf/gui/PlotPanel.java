@@ -192,11 +192,11 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         Response response = null;
         try {
             response = LITpro.execMethod(methodName,
-                    settingsModel.getTempFile(false), methodArgs);
+                    settingsModel.getTempFile(false), methodArgs, false);
         } catch (IOException ex) {
             MessagePane.showErrorMessage("Can't plot data", ex);
             return;
-        }
+        }                
         ResultFile[] resultFiles = response.getResultFile();
         if (resultFiles.length == 0) {
             String errors = UtilsClass.getErrorMsg(response);
@@ -228,23 +228,15 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
                     filenamesToDisplay.add(r.getName());
                 }
             }
-        }
+        }                        
         f = UtilsClass.buildFrameFor(title, description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
 
         if (f != null) {
-            FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
+            FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]), response);
             settingsModel.addPlot(ftn);
         }
 
-        StatusBar.show(methodName + " process finished");
-        /**
-        if (false) {
-        fr.jmmc.mcs.ImageViewer v = new fr.jmmc.mcs.ImageViewer("replace by result/blah");
-        v = null;
-        v.setTitle(title);
-        v.setSize(400, 400);
-        }
-         */
+        StatusBar.show(methodName + " process finished");        
     }
 
     /**
