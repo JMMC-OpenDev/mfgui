@@ -492,8 +492,8 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
     <xsl:template name="plotUVCoverage">
         <plot>
             <title>UV coverage plot</title>
-            <xLabel>Ucoord (1/rad)</xLabel>
-            <yLabel>Vcoord (1/rad)</yLabel>
+            <xLabel>Ufreq (1/rad)</xLabel>
+            <yLabel>Vfreq (1/rad)</yLabel>
 
             <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')] | //squeezed_world//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
