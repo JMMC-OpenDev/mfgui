@@ -434,7 +434,7 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
             <title>Baselines plot</title>
             <xLabel>Ucoord (meters)</xLabel>
             <yLabel>Vcoord (meters)</yLabel>
-            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
+            <xsl:for-each select="//world/_modeler/dataset/*/*[starts-with(name(),'CR')] | //squeezed_world//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ucoord" select="./ucoord/table/tr/td"/>
@@ -495,7 +495,7 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
             <xLabel>Ucoord (1/rad)</xLabel>
             <yLabel>Vcoord (1/rad)</yLabel>
 
-            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')]">
+            <xsl:for-each select="/result/world/_modeler/dataset/*/*[starts-with(name(),'CR')] | //squeezed_world//*[starts-with(name(),'CR')]">
                 <!-- read ucoord and vcoord array and plot u,v and -u -v -->
                 <dataset connected="no" marks="various">
                     <xsl:variable name="ufreq" select="./ufreq/table/tr/td"/>
@@ -539,10 +539,10 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
                         </xsl:element>
                         <xsl:element name="p">
                             <xsl:attribute name="x">
-                                <xsl:value-of select="-number(td[1])"/>
+                                <xsl:value-of select="'-'"/><xsl:value-of select="td[1]"/>
                             </xsl:attribute>
                             <xsl:attribute name="y">
-                                <xsl:value-of select="-number(td[2])"/>
+                                <xsl:value-of select="'-'"/><xsl:value-of select="td[2]"/>
                             </xsl:attribute>
                         </xsl:element>
                     </xsl:for-each>
