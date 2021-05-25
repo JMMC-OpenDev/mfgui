@@ -180,10 +180,27 @@ public class LITpro extends fr.jmmc.jmcs.App {
      *  @param methodName name of method to wrap
      *  @param xmlFile file to give as argument of the method or null if
      *         no one is requested
+     *  @param methodArg method's args
      *  @throws ExecutionException if the local execution fails
      *  @throws IllegalStateException if one unexpected (bad) things occurs
      */
     public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg) throws IOException {
+        return execMethod( methodName,  xmlFile,  methodArg, true);
+    }
+
+    /** This is the main wrappers method to execute yoga actions
+     *  The job is delegated to a local program or distant web service
+     *  according yoga.remote.use preference.
+     *  @param methodName name of method to wrap
+     *  @param xmlFile file to give as argument of the method or null if
+     *         no one is requested
+     *  @param methodArg method's args
+     *  @param displayInfoMessage show a message pane with response's info message if true. Error always are shown.
+     *  @throws ExecutionException if the local execution fails
+     *  @throws IllegalStateException if one unexpected (bad) things occurs
+     */
+    public static Response execMethod(String methodName, java.io.File xmlFile, String methodArg, boolean displayInfoMessage) throws IOException {
+
         String xmlResult = null;
         if (myPreferences.getPreferenceAsBoolean("yoga.remote.use")) {
             xmlResult = doPost(methodName, xmlFile, methodArg);
@@ -204,10 +221,13 @@ public class LITpro extends fr.jmmc.jmcs.App {
             MessagePane.showErrorMessage(errors, LITPRO_SERVER_MESSAGE_TITLE);
             logger.warn("Error occurs after following call to LITpro server : {} {}", methodName, methodArg);
         }
-        String info = UtilsClass.getOutputMsg(r);
-        if (info.length() > 1) {
-            MessagePane.showMessage(info, LITPRO_SERVER_MESSAGE_TITLE);
+        if(displayInfoMessage){
+            final String info = UtilsClass.getOutputMsg(r);        
+            if (info.length() > 1) {
+                MessagePane.showMessage(info, LITPRO_SERVER_MESSAGE_TITLE);
+            }
         }
+                
         return r;
     }
 
