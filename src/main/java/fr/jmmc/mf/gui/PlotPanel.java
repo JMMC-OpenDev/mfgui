@@ -229,7 +229,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
                 }
             }
         }
-        f = UtilsClass.buildFrameFor(title, "description", filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
+        f = UtilsClass.buildFrameFor(title, description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
 
         if (f != null) {
             FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]));
