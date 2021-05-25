@@ -44,9 +44,8 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         timer.setInitialDelay(0);        
 
         /* Init the description label if any desc are given */
-        if (description != null) {
-            descriptionLabel.setText(description);
-        }
+        descriptionLabel.setText(description != null ? description :"");
+         
 
         /* Init the images related arrays */
         files = new File[inputFiles.length];
@@ -137,6 +136,7 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(animateCheckBox, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -154,6 +154,7 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(imageSlider, gridBagConstraints);
 
         filenameLabel.setText("jLabel1");
@@ -166,6 +167,8 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(descriptionLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
