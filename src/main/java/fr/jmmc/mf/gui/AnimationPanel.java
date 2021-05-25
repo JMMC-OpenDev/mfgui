@@ -41,8 +41,7 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
 
         /* Init and launch the timer that will throw actionEvent */
         timer = new Timer(REFRESH_PERIOD, this);
-        timer.setInitialDelay(0);
-        timer.start();
+        timer.setInitialDelay(0);        
 
         /* Init the description label if any desc are given */
         if (description != null) {
@@ -78,6 +77,7 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
         /* throw actionEvent for changes on some swing elements*/
         animateCheckBox.addActionListener(this);
         imageSlider.addChangeListener(this);
+        stateChanged(null);
     }
 
     /**
@@ -133,7 +133,6 @@ public class AnimationPanel extends javax.swing.JPanel implements ActionListener
 
         setLayout(new java.awt.GridBagLayout());
 
-        animateCheckBox.setSelected(true);
         animateCheckBox.setText("animate");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
