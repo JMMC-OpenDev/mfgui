@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0 beta 6"/>
+    <program name="LITpro" version="1.1.0 beta 7"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="04/05/2021" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -192,9 +192,9 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 beta 6">
+        <release version="1.1.0 beta 7">
                         
-            <prerelease version="1.1.0 beta 6">
+            <prerelease version="1.1.0 beta 7">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -220,14 +220,15 @@
                 -->                
                 <change type="TODO">Move to asynchronous client-server mode: chi2 maps or genfit process easyly can reach timeouts</change>                
                 <change type="TODO">Make long process interruptible in the same way as run fit</change>                                
-                <change type="TODO">Make shared_param removable</change>                
+                <change type="TODO">Make shared_param removable</change>
                 <change type="TODO">Fix file selection bug when all are unselected</change>                
-                <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                
-                <change type="TODO">Fix ghostscript error for Radial plots + residuals </change>                
-                <change type="TODO">Enhance parameter handling in the Plot Chi2 with fit</change>
-                <change type="TODO">Display best chi2 solutions after chi2 map</change>                                                
+                <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                                
+                <change type="TODO">Enhance parameter handling in the Plot Chi2 with fit</change>               
                 <change type="CHANGE">Speed-up client-server execution and result plot generation for reshaped data by CLI side</change>
-            </prerelease>
+                <change type="CHANGE">Animation is not enable by default anylonger on animated panel (e.g. plot UV Map )</change>
+                <change type="CHANGE">First chi2 minima are shown in the plot frame and information can be copied in the personal notebook</change>
+                <change type="BUGFIX">Fixed ghostscript error for Radial plots + residuals </change>                
+            </prerelease>            
             <prerelease version="1.1.0 beta 5">                                               
                 <change type="CHANGE">Enhance TSV export for large datasets.</change>
             </prerelease>
