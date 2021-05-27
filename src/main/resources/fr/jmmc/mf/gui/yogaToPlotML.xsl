@@ -539,10 +539,10 @@ Mars 2021 :  assume matrix mode provides tr series of next tds:
                         </xsl:element>
                         <xsl:element name="p">
                             <xsl:attribute name="x">
-                                <xsl:value-of select="'-'"/><xsl:value-of select="td[1]"/>
+                                <xsl:value-of select="-number(td[1])"/>
                             </xsl:attribute>
                             <xsl:attribute name="y">
-                                <xsl:value-of select="'-'"/><xsl:value-of select="td[2]"/>
+                                <xsl:value-of select="-number(td[2])"/>
                             </xsl:attribute>
                         </xsl:element>
                     </xsl:for-each>
