@@ -189,6 +189,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      * @param description (optionnal) plot description
      */
     public void plot(String methodName, String methodArgs, String title, String description) {
+        
+        StatusBar.show(methodName + " process launched - please wait");        
         Response response = null;
         try {
             response = LITpro.execMethod(methodName,
