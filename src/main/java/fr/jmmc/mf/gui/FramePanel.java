@@ -9,6 +9,7 @@ import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.util.FileUtils;
+import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.interop.SendFitsImageAction;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import java.awt.Container;
@@ -41,6 +42,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         attachDetachButton.setAction(MFGui.attachDetachFrameAction);
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_ResultPlots_MT")));
+        sampButton.setAction(LITpro.sendFitsImageAction);
+        
     }
 
     public void show(FrameTreeNode frameTreeNode, SettingsModel s) {
@@ -130,6 +133,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         resetZoomButton = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
         storeInfoButton = new javax.swing.JButton();
+        sampButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -196,7 +200,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(resetZoomButton, gridBagConstraints);
@@ -221,6 +225,14 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(storeInfoButton, gridBagConstraints);
+
+        sampButton.setText("replacedbySampAction");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
+        add(sampButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -273,6 +285,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JButton helpButton1;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JButton resetZoomButton;
+    private javax.swing.JButton sampButton;
     private javax.swing.JButton storeInfoButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
@@ -306,10 +319,12 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
      */
     private void updateFileCombo() {
         filenamesComboBox.removeAllItems();
+        sampButton.setVisible(false);
         for (int i = 0; i < filenames.length; i++) {            
             filenamesComboBox.addItem(filenames[i]);
             if (filenames[i].endsWith(".fits")){
                 SendFitsImageAction.setFitsFileToSend(files[i],filenames[i]);
+                sampButton.setVisible(true);
             }
         }
     }
