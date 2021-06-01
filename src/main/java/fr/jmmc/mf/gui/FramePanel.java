@@ -131,9 +131,10 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         titleLabel = new javax.swing.JLabel();
         blankPanel = new javax.swing.JPanel();
         resetZoomButton = new javax.swing.JButton();
-        infoLabel = new javax.swing.JLabel();
-        storeInfoButton = new javax.swing.JButton();
         sampButton = new javax.swing.JButton();
+        storeInfoButton = new javax.swing.JButton();
+        infoLabel = new javax.swing.JLabel();
+        userinfoPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Frame panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -205,13 +206,13 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(resetZoomButton, gridBagConstraints);
 
-        infoLabel.setText("infoLabel");
+        sampButton.setText("replacedbySampAction");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        add(infoLabel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
+        add(sampButton, gridBagConstraints);
 
         storeInfoButton.setText("Store info below in notebook");
         storeInfoButton.setActionCommand("Store info below in personal notebook");
@@ -226,13 +227,23 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         add(storeInfoButton, gridBagConstraints);
 
-        sampButton.setText("replacedbySampAction");
+        infoLabel.setText("infoLabel");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
-        add(sampButton, gridBagConstraints);
+        add(infoLabel, gridBagConstraints);
+
+        userinfoPanel.setLayout(new javax.swing.BoxLayout(userinfoPanel, javax.swing.BoxLayout.LINE_AXIS));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        add(userinfoPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -270,11 +281,16 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
 
     private void storeInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeInfoButtonActionPerformed
         // string massa(g/cr)e
-        String newInfo = settingsModel.getRootSettings().getUserInfo() + 
+        viewer.getSettingsPane().getUserInfoPanel().append(
+                settingsModel.getRootSettings().getUserInfo() + 
                 "--------------------------------------------------------------------------------" + 
-                infoLabel.getText().replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n");       
-        settingsModel.getRootSettings().setUserInfo(newInfo); 
-        storeInfoButton.setVisible(false);
+                infoLabel.getText().replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n"));       
+        
+        storeInfoButton.setVisible(false);        
+        infoLabel.setVisible(false);        
+        userinfoPanel.add(viewer.getSettingsPane().getUserInfoPanel());
+        this.revalidate();
+        this.repaint();
     }//GEN-LAST:event_storeInfoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -288,6 +304,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
     private javax.swing.JButton sampButton;
     private javax.swing.JButton storeInfoButton;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel userinfoPanel;
     // End of variables declaration//GEN-END:variables
 
     public void windowOpened(WindowEvent e) {
