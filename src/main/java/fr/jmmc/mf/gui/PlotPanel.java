@@ -7,6 +7,7 @@ import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
@@ -106,13 +107,13 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     public void plotModelRadial(Target targetToPlot, String observableType,
-                                boolean residuals, boolean overplotModel, String angle) {
+            boolean residuals, boolean overplotModel, String angle) {
         plotModelRadial(new Object[]{targetToPlot}, observableType,
                 residuals, overplotModel, angle);
     }
 
     public void plotModelRadial(Object[] targetsToPlot, String observableType,
-                                boolean residuals, boolean overplotModel, String angle) {
+            boolean residuals, boolean overplotModel, String angle) {
         if (residuals) {
             String args = observableType + " " + getGroupValue(targetsToPlot);
             plot("getModelResidualsPlot", args, observableType
@@ -144,7 +145,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     public void plotModelSnifferMap(Target targetToPlot, String xmin, String xmax,
-                                    String ymin, String ymax, String pixscale) {
+            String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
@@ -160,7 +161,7 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
     void plotModelImage(Target targetToPlot, String xmin, String xmax,
-                        String ymin, String ymax, String pixscale) {
+            String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
@@ -188,57 +189,66 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
      * @param title the plot title.
      * @param description (optionnal) plot description
      */
-    public void plot(String methodName, String methodArgs, String title, String description) {
-        
-        StatusBar.show(methodName + " process launched - please wait");        
-        Response response = null;
-        try {
-            response = LITpro.execMethod(methodName,
-                    settingsModel.getTempFile(false), methodArgs, false);
-        } catch (IOException ex) {
-            MessagePane.showErrorMessage("Can't plot data", ex);
-            return;
-        }                
-        ResultFile[] resultFiles = response.getResultFile();
-        if (resultFiles.length == 0) {
-            String errors = UtilsClass.getErrorMsg(response);
-            if (errors.length() > 1) {
-                return;
-            }
-            throw new IllegalStateException("No data returned (this problem is probably data related)");
-        }
+    public void plot(final String methodName, final String methodArgs, final String title, final String description) {
 
-        String b64file;
-        File file = null;
-        JFrame f = null;
-        ArrayList<File> filesToExport = new ArrayList();
-        ArrayList<String> filenamesToExport = new ArrayList();
-        ArrayList<File> filesToDisplay = new ArrayList<File>();
-        ArrayList<String> filenamesToDisplay = new ArrayList<String>();
+        StatusBar.show(methodName + " process launched - please wait");
 
-        for (int i = 0; i < resultFiles.length; i++) {
-            ResultFile r = resultFiles[i];
-            b64file = r.getHref();
-            file = UtilsClass.saveBASE64ToFile(b64file, r.getName().substring(r.getName().indexOf(".")));
-            filesToExport.add(file);
-            filenamesToExport.add(r.getName());
-            if (r.getName().endsWith("png")) {
-                filesToDisplay.add(file);
-                if (r.getDescription() != null && r.getDescription().length() > 0) {
-                    filenamesToDisplay.add(r.getDescription());
-                } else {
-                    filenamesToDisplay.add(r.getName());
+        // involke later to guarantee that status bar infor the user he have to wait.
+        SwingUtils.invokeLaterEDT(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Response response = null;
+                try {
+                    response = LITpro.execMethod(methodName,
+                            settingsModel.getTempFile(false), methodArgs, false);
+                } catch (IOException ex) {
+                    MessagePane.showErrorMessage("Can't plot data", ex);
+                    return;
                 }
+                ResultFile[] resultFiles = response.getResultFile();
+                if (resultFiles.length == 0) {
+                    String errors = UtilsClass.getErrorMsg(response);
+                    if (errors.length() > 1) {
+                        return;
+                    }
+                    throw new IllegalStateException("No data returned (this problem is probably data related)");
+                }
+
+                String b64file;
+                File file = null;
+                JFrame f = null;
+                ArrayList<File> filesToExport = new ArrayList();
+                ArrayList<String> filenamesToExport = new ArrayList();
+                ArrayList<File> filesToDisplay = new ArrayList<File>();
+                ArrayList<String> filenamesToDisplay = new ArrayList<String>();
+
+                for (int i = 0; i < resultFiles.length; i++) {
+                    ResultFile r = resultFiles[i];
+                    b64file = r.getHref();
+                    file = UtilsClass.saveBASE64ToFile(b64file, r.getName().substring(r.getName().indexOf(".")));
+                    filesToExport.add(file);
+                    filenamesToExport.add(r.getName());
+                    if (r.getName().endsWith("png")) {
+                        filesToDisplay.add(file);
+                        if (r.getDescription() != null && r.getDescription().length() > 0) {
+                            filenamesToDisplay.add(r.getDescription());
+                        } else {
+                            filenamesToDisplay.add(r.getName());
+                        }
+                    }
+                }
+                f = UtilsClass.buildFrameFor(title, description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
+
+                if (f != null) {
+                    FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]), response);
+                    settingsModel.addPlot(ftn);
+                }
+
+                StatusBar.show(methodName + " process finished");
             }
-        }                        
-        f = UtilsClass.buildFrameFor(title, description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
-
-        if (f != null) {
-            FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]), response);
-            settingsModel.addPlot(ftn);
-        }
-
-        StatusBar.show(methodName + " process finished");        
+        });
     }
 
     /**
