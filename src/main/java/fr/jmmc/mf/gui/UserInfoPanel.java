@@ -25,10 +25,22 @@ public class UserInfoPanel extends javax.swing.JPanel {
 
     public void show(Settings s) {
         current = s;
-
-        if (s.getUserInfo() != null) {
-            userInfoTextArea.setText(s.getUserInfo());
+        refresh();
+    }
+    
+    public void refresh(){
+        if (current.getUserInfo() != null) {
+            userInfoTextArea.setText(current.getUserInfo());            
+            userInfoTextArea.setCaretPosition(userInfoTextArea.getDocument().getLength());
+            userInfoTextArea.getCaret().setVisible(true);                                    
+            this.revalidate();
+            this.repaint();
         }
+    }
+    
+    void append(String string) {
+        current.setUserInfo(current.getUserInfo() + "\n" + string );
+        refresh();
     }
 
     /** This method is called from within the constructor to
@@ -53,9 +65,12 @@ public class UserInfoPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jButton1, gridBagConstraints);
 
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(262, 197));
+
         userInfoTextArea.setBackground(new java.awt.Color(255, 255, 153));
         userInfoTextArea.setColumns(20);
         userInfoTextArea.setFont(userInfoTextArea.getFont());
+        userInfoTextArea.setLineWrap(true);
         userInfoTextArea.setRows(5);
         userInfoTextArea.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
