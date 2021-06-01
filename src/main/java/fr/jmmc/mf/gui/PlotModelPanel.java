@@ -4,6 +4,7 @@
 package fr.jmmc.mf.gui;
 
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Residual;
@@ -34,13 +35,18 @@ public class PlotModelPanel extends javax.swing.JPanel {
         // Fix #714 (still requires a preference setup?)
         pixscaleFormattedTextField.setText("0.10");
         pixscaleFormattedTextField1.setText("1");
-
+        
         // build help button
         //helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
         helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
         helpButton2.setAction(new ShowHelpAction(("ENDtt_PlotUVmap_Bt")));
         helpButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
         helpButton4.setAction(new ShowHelpAction(("ENDtt_PlotSniffer_Bt")));
+        
+        // set square mode image by default
+        sameBoxCheckBox.setSelected(true);
+        sameBoxCheckBoxActionPerformed(null);        
+        
     }
 
     public void show(SettingsModel s, Target t) {
@@ -173,7 +179,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        sameBoxCheckBox = new javax.swing.JCheckBox();
         plotImageButton = new javax.swing.JButton();
         targetLabel = new javax.swing.JLabel();
         targetComboBox = new javax.swing.JComboBox();
@@ -189,16 +194,17 @@ public class PlotModelPanel extends javax.swing.JPanel {
         residualsCheckBox = new javax.swing.JCheckBox();
         addModelCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        yminLabel = new javax.swing.JLabel();
+        xmaxLabel = new javax.swing.JLabel();
+        ymaxLabel = new javax.swing.JLabel();
+        pixscalLabel = new javax.swing.JLabel();
+        xminLabel = new javax.swing.JLabel();
         xminFormattedTextField = new javax.swing.JFormattedTextField();
         yminFormattedTextField = new javax.swing.JFormattedTextField();
         xmaxFormattedTextField = new javax.swing.JFormattedTextField();
         ymaxFormattedTextField = new javax.swing.JFormattedTextField();
         pixscaleFormattedTextField = new javax.swing.JFormattedTextField();
+        sameBoxCheckBox = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         xminFormattedTextField1 = new javax.swing.JFormattedTextField();
@@ -210,12 +216,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         ymaxFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel11 = new javax.swing.JLabel();
         pixscaleFormattedTextField1 = new javax.swing.JFormattedTextField();
-
-        sameBoxCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sameBoxCheckBoxActionPerformed(evt);
-            }
-        });
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Plot model panel"));
         setLayout(new java.awt.GridBagLayout());
@@ -363,50 +363,55 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jLabel2.setText("ymin");
+        yminLabel.setText("ymin");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel1.add(jLabel2, gridBagConstraints);
+        jPanel1.add(yminLabel, gridBagConstraints);
 
-        jLabel3.setText("xmax");
+        xmaxLabel.setText("xmax");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel1.add(jLabel3, gridBagConstraints);
+        jPanel1.add(xmaxLabel, gridBagConstraints);
 
-        jLabel4.setText("ymax");
+        ymaxLabel.setText("ymax");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 11;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel1.add(jLabel4, gridBagConstraints);
+        jPanel1.add(ymaxLabel, gridBagConstraints);
 
-        jLabel5.setText("pixscale");
+        pixscalLabel.setText("pixscale");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridx = 13;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel1.add(jLabel5, gridBagConstraints);
+        jPanel1.add(pixscalLabel, gridBagConstraints);
 
-        jLabel6.setText("xmin");
+        xminLabel.setText("xmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        jPanel1.add(jLabel6, gridBagConstraints);
+        jPanel1.add(xminLabel, gridBagConstraints);
 
         xminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         xminFormattedTextField.setText("-"+startValue);
+        xminFormattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                xminFormattedTextFieldFocusLost(evt);
+            }
+        });
         xminFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xminFormattedTextFieldActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -415,7 +420,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         yminFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         yminFormattedTextField.setText("-"+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -424,7 +429,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         xmaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         xmaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -433,7 +438,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         ymaxFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         ymaxFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 12;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -442,11 +447,23 @@ public class PlotModelPanel extends javax.swing.JPanel {
         pixscaleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         pixscaleFormattedTextField.setText("1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 11;
+        gridBagConstraints.gridx = 14;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         jPanel1.add(pixscaleFormattedTextField, gridBagConstraints);
+
+        sameBoxCheckBox.setText("square");
+        sameBoxCheckBox.setToolTipText("");
+        sameBoxCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sameBoxCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 16;
+        gridBagConstraints.gridy = 1;
+        jPanel1.add(sameBoxCheckBox, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -574,12 +591,18 @@ public class PlotModelPanel extends javax.swing.JPanel {
                 plotRadialAngleFormattedTextField1.getText());
 }//GEN-LAST:event_plotRadialButtonActionPerformed
 
-    private void updateImageBounds() {
-        String v = xminFormattedTextField.getText().replace("-", "");
-        xminFormattedTextField.setText("-" + v);
-        xmaxFormattedTextField.setText(v);
-        yminFormattedTextField.setText("-" + v);
-        ymaxFormattedTextField.setText(v);
+    private void updateImageBounds() {        
+        // invoking later help to get value post formatted
+        SwingUtils.invokeLaterEDT(new Runnable() {
+            @Override
+            public void run() {
+                String v = xminFormattedTextField.getText().replace("-", "");
+                xminFormattedTextField.setText("-" + v);
+                xmaxFormattedTextField.setText(v);
+                yminFormattedTextField.setText("-" + v);
+                ymaxFormattedTextField.setText(v);
+            }
+        });
     }
 
     private void targetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetComboBoxActionPerformed
@@ -610,19 +633,27 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     private void sameBoxCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sameBoxCheckBoxActionPerformed
         final boolean sameBounds = sameBoxCheckBox.isSelected();
-        yminFormattedTextField.setEnabled(sameBounds);
-        ymaxFormattedTextField.setEnabled(sameBounds);
-        xmaxFormattedTextField.setEnabled(sameBounds);
-        if (sameBounds) {
+        System.out.println("yminFormattedTextField.getText() = " + yminFormattedTextField.getText());
+        yminFormattedTextField.setEnabled(!sameBounds);
+        ymaxFormattedTextField.setEnabled(!sameBounds);
+        xmaxFormattedTextField.setEnabled(!sameBounds);
+        if (evt != null && sameBounds) {
             updateImageBounds();
         }
     }//GEN-LAST:event_sameBoxCheckBoxActionPerformed
+
+    private void xminFormattedTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_xminFormattedTextFieldFocusLost
+        if (sameBoxCheckBox.isSelected()) {
+            updateImageBounds();
+        }
+    }//GEN-LAST:event_xminFormattedTextFieldFocusLost
 
     private void xminFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xminFormattedTextFieldActionPerformed
         if (sameBoxCheckBox.isSelected()) {
             updateImageBounds();
         }
     }//GEN-LAST:event_xminFormattedTextFieldActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox addModelCheckBox;
     private javax.swing.JButton helpButton1;
@@ -631,16 +662,12 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private javax.swing.JButton helpButton4;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel pixscalLabel;
     private javax.swing.JFormattedTextField pixscaleFormattedTextField;
     private javax.swing.JFormattedTextField pixscaleFormattedTextField1;
     private javax.swing.JButton plotImageButton;
@@ -655,11 +682,15 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private javax.swing.JLabel targetLabel;
     private javax.swing.JFormattedTextField xmaxFormattedTextField;
     private javax.swing.JFormattedTextField xmaxFormattedTextField1;
+    private javax.swing.JLabel xmaxLabel;
     private javax.swing.JFormattedTextField xminFormattedTextField;
     private javax.swing.JFormattedTextField xminFormattedTextField1;
+    private javax.swing.JLabel xminLabel;
     private javax.swing.JFormattedTextField ymaxFormattedTextField;
     private javax.swing.JFormattedTextField ymaxFormattedTextField1;
+    private javax.swing.JLabel ymaxLabel;
     private javax.swing.JFormattedTextField yminFormattedTextField;
     private javax.swing.JFormattedTextField yminFormattedTextField1;
+    private javax.swing.JLabel yminLabel;
     // End of variables declaration//GEN-END:variables
 }
