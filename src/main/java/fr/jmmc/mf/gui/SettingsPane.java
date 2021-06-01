@@ -489,7 +489,11 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
         runFitAction.setConstraints(ITMaxCheckBox.getModel(), ITMaxTextField.getDocument(), skipPlotResultsCheckBox.getModel());
         runFitButton.setAction(runFitAction);
     }
-
+    
+    public UserInfoPanel getUserInfoPanel() {
+        return userInfoPanel;
+    }
+    
     // Cell renderer used by the settings tree
     // it make red faulty nodes and place help tooltips
     protected class MyCellRenderer extends DefaultTreeCellRenderer {
