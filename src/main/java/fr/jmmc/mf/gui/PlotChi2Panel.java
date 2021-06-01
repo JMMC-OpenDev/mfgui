@@ -114,9 +114,9 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
 
         isIniting = false;
         // fix bounds for new parameters
-        if (xParamChanged) {
+//        if (xParamChanged) {
             xComboBoxActionPerformed(null);
-        }
+//        }
         if (yParamChanged) {
             yComboBoxActionPerformed(null);
         }
