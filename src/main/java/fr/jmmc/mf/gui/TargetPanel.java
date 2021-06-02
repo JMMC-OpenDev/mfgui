@@ -50,6 +50,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     public SettingsModel rootSettingsModel = null;
     private PlotModelPanel plotModelImagePanel;
     private PlotChi2Panel plotChi2Panel;
+    private UserInfoPanel uip;
     private ParametersTableModel parametersTableModel;
     private Vector<MouseListener> mouseListeners = new Vector();
     private Hashtable<String, JCheckBox> moduleNameToCheckBox = new Hashtable();
@@ -92,6 +93,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         fitterSetupHelpButton.setAction(new ShowHelpAction(("END_FitterSetup_TargetPanel")));
 
         availableModelList.addListSelectionListener(this);
+        
+        uip = new UserInfoPanel(settingsViewer);
+        fillerPanel.add(uip);
 
         // Fix row height:
         SwingUtils.adjustRowHeight(parametersTable);
@@ -168,6 +172,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         plotModelImagePanel.show(settingsModel, current);
         plotChi2Panel.show(settingsModel);
+        uip.show(settingsModel.getRootSettings());
     }
 
     private void updateModels() {
@@ -657,11 +662,14 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         add(subplotPanel, gridBagConstraints);
+
+        fillerPanel.setLayout(new javax.swing.BoxLayout(fillerPanel, javax.swing.BoxLayout.LINE_AXIS));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weighty = 1.0;
         add(fillerPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
