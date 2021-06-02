@@ -8,6 +8,7 @@ import fr.jmmc.jmcs.gui.component.FileChooser;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.util.SwingUtils;
+import fr.jmmc.jmcs.network.interop.SampCapabilityAction;
 import fr.jmmc.jmcs.util.FileUtils;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.interop.SendFitsImageAction;
@@ -42,7 +43,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         attachDetachButton.setAction(MFGui.attachDetachFrameAction);
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_ResultPlots_MT")));
-        sampButton.setAction(LITpro.sendFitsImageAction);
+        sampButton.setAction(LITpro.sendFitsImageAction);        
+        sampButton.setActionCommand(SampCapabilityAction.BROADCAST_MENU_LABEL);        
         
     }
 
