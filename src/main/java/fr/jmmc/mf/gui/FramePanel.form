@@ -120,7 +120,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="storeInfoButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Store info below in notebook"/>
+        <Property name="text" type="java.lang.String" value="Store info in notebook"/>
         <Property name="actionCommand" type="java.lang.String" value="Store info below in personal notebook"/>
       </Properties>
       <Events>

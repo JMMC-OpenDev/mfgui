@@ -16,9 +16,9 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0 beta 8"/>
+    <program name="LITpro" version="1.1.0 beta 9"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
-    <compilation date="04/05/2021" compiler="JDK 1.8"/>
+    <compilation date="02/06/2021" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
@@ -186,14 +186,14 @@
             <menu classpath="fr.jmmc.mf.gui.actions.ShowLitproSettingsFileAction" action="showLitproSettingsFile"/>
         </menu>
         <menu label="Interop">
-            <menu label="Send model image" classpath="fr.jmmc.mf.gui.interop.SendFitsImageAction" action="sendFitsImageAction"
-                  description="send your model image to any Fits Image application SAMP compliant"/>
+            <menu label="Send FITS" classpath="fr.jmmc.mf.gui.interop.SendFitsImageAction" action="sendFitsImageAction"
+                  description="send FITS image to any SAMP compliant application"/>
         </menu>                
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0 beta 8">
-            <prerelease version="1.1.0 beta 8">
+        <release version="1.1.0 beta 9">
+            <prerelease version="1.1.0 beta 9">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -222,8 +222,12 @@
                 <change type="TODO">Make shared_param removable</change>
                 <change type="TODO">Fix file selection bug when all are unselected</change>                
                 <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                                
+                <change type="CHANGE">Notebook shown in Frame and Target panels.</change>
+                <change type="CHANGE">Simplify parameters for plot model image and sniffer map.</change>          
+            </prerelease>                
+            <prerelease version="1.1.0 beta 8">
                 <change type="BUGFIX">Plot Chi2 get better value on init</change>          
-                <change type="CHANGE">Plot model image now accept only one field to define a square image but checkbox can be unselected to define other bounds.</change>          
+           
             </prerelease>                
             <prerelease version="1.1.0 beta 7">                           
                 <change type="CHANGE">Speed-up client-server execution and result plot generation for reshaped data by CLI side</change>
@@ -244,9 +248,8 @@
                 <change type="CHANGE">Major GUI speedup. No longer uv-point limits. Result plots displayed on demand. More to come.</change>
                 <change type="CHANGE">Result summary displayed in the result panel (was lost in last previous versions).</change>
                 <change type="CHANGE">Replace validation report dialog while loading OIFits by status bar message ( shown in the application log).</change>                
-                <change type="FEATURE">New interop menu entry to send a model image to any fits image reader.</change>                                                                
-            </prerelease>
-            
+                <change type="FEATURE">New interop menu entry to send FITS to any running fits image reader.</change>                                                                
+            </prerelease>            
         </release>
         <release version="1.0.18">
             <pubDate>Tue, 02 Apr 2019 10:41:59 GMT</pubDate>

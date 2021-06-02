@@ -44,8 +44,8 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         // build help button
         helpButton1.setAction(new ShowHelpAction(("BEG_ResultPlots_MT")));
         sampButton.setAction(LITpro.sendFitsImageAction);        
-        sampButton.setActionCommand(SampCapabilityAction.BROADCAST_MENU_LABEL);        
-        
+        sampButton.setActionCommand(SampCapabilityAction.BROADCAST_MENU_LABEL);     
+                
     }
 
     public void show(FrameTreeNode frameTreeNode, SettingsModel s) {
@@ -89,9 +89,15 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         }
         
         resetZoomButton.setVisible(this.frame instanceof PlotMLFrame);
+
+
+        userinfoPanel.add(viewer.getSettingsPane().getUserInfoPanel());
         
         blankPanel.revalidate();
-        repaint();  
+
+        this.revalidate();
+        this.repaint();     
+        
         
         // this swing refresh line fixed the refresh issue we stille may remove some code just before ??
         SwingUtils.invokeLaterEDT(new Runnable() {
@@ -216,7 +222,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
         add(sampButton, gridBagConstraints);
 
-        storeInfoButton.setText("Store info below in notebook");
+        storeInfoButton.setText("Store info in notebook");
         storeInfoButton.setActionCommand("Store info below in personal notebook");
         storeInfoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,10 +295,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
                 infoLabel.getText().replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n"));       
         
         storeInfoButton.setVisible(false);        
-        infoLabel.setVisible(false);        
-        userinfoPanel.add(viewer.getSettingsPane().getUserInfoPanel());
-        this.revalidate();
-        this.repaint();
+        infoLabel.setVisible(false);                
     }//GEN-LAST:event_storeInfoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
