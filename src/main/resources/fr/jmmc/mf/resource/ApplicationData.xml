@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.1.0"/>
+    <program name="LITpro" version="1.1.1 beta 1"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="02/06/2021" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -192,8 +192,8 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.1.0">
-            <prerelease version="1.1.0 beta 9">
+        <release version="1.1.1">
+            <prerelease version="1.1.1 beta 1">
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -222,9 +222,14 @@
                 <change type="TODO">Make shared_param removable</change>
                 <change type="TODO">Fix file selection bug when all are unselected</change>                
                 <change type="TODO">File can be removed but must not be used by any target. Make file removable in all cases.</change>                                
+                <change type="BUGFIX">Model replacement</change>                
+            </prerelease>                
+        </release>        
+        <release version="1.1.0">
+            <prerelease version="1.1.0 beta 9">
                 <change type="CHANGE">Notebook shown in Frame and Target panels.</change>
                 <change type="CHANGE">Simplify parameters for plot model image and sniffer map.</change>          
-            </prerelease>                
+            </prerelease>
             <prerelease version="1.1.0 beta 8">
                 <change type="BUGFIX">Plot Chi2 get better value on init</change>          
            

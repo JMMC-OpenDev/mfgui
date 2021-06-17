@@ -606,9 +606,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         if (newModel == null) {
             return; //skip this case
         }
-
-        parentTarget.removeModel(currentModel);
-
+        
         int modelIdx = UtilsClass.parseModelUniqueIndex(currentModel);
         newModel.setName(newModel.getType() + modelIdx);
         // try to recover previous parameters
@@ -673,11 +671,13 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 childPosition = i;
             }
         }
-
         parentTarget.addModel(childPosition, newModel);
-        //update treenode and ask to update viewer of new model
+        parentTarget.removeModel(currentModel);
+        
+        //update treenode and ask to update viewer of new model       
         fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
-        setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
+        
+        // setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
     }
 
     /** try to tell if the data of the old parameter can be copied to new parameter.
@@ -1071,11 +1071,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     getIndexOfChild(rootSettings.getUsercode(), model),
                     model);
         } else {
-            Target parentTarget = getParent(model);
-            fireTreeNodesChanged(new Object[]{rootSettings},
-                    getIndexOfChild(rootSettings.getTargets(), parentTarget),
-                    model);
-
+            
+//            Target parentTarget = getParent(model);
+//            fireTreeNodesChanged(new Object[]{rootSettings},
+//                    getIndexOfChild(rootSettings.getTargets(), parentTarget),
+//                    model);
         }
     }
 

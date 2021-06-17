@@ -652,7 +652,10 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
         if (ignoreReplacement || current.equals(newModel)) {
             return;
         }
+        // replace in the model 
         settingsModel.replaceModel(current, newModel);
+        // and refresh with new model
+        this.show(newModel, settingsModel);
     }//GEN-LAST:event_availableModelListValueChanged
 
     public void valueChanged(ListSelectionEvent e) {
