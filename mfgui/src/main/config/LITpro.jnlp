@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<jnlp spec="6.0+" codebase="@GENERATED@" href="LITpro.jnlp">
+    <information>
+        <title>LITpro</title>
+        <vendor>JMMC (Jean-Marie MARIOTTI Center)</vendor>
+        <homepage href="http://www.jmmc.fr/litpro"/>
+        <description>This application handles model-fitting process using reduced optical interferometry observables. Main core is based on LIT - Lyon's Interferometric Tool.</description>
+        <description kind="tooltip">LITpro</description>
+        <icon href="@GENERATED@/LITpro.jpg"/>
+        <offline-allowed/>
+        <association mime-type="application/x-litpro+xml" extensions="litprox">
+            <icon href="@GENERATED@/LITpro.jpg"/>
+            <description>LITpro settings files</description>
+        </association>
+        <shortcut online="true" install="true">
+            <desktop/>
+        </shortcut>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.7+" initial-heap-size="512m" max-heap-size="1024m"/>
+
+        <!-- MANUALLY EDITED -->
+
+        <!-- Application module first (main class) -->
+        <jar href="jar/mfgui-TRUNK.jar" main="true"/>
+
+
+        <!-- doc module -->
+        <jar href="jar/mfgui-doc-TRUNK.jar" />
+
+
+        <!-- JMMC modules -->
+        <extension href="../jmcs/Jmcs.jnlp"/>
+        <extension href="../jmal/Jmal.jnlp"/>
+        <extension href="../oiexplorer-core/OIExplorerCore.jnlp"/>
+
+
+        <!-- Libraries -->
+
+        <!-- ptolemy plots -->
+        <jar href="@SHARED@/ptplot-5.6.jar" />
+
+        <!-- RSyntaxTextArea http://fifesoft.com/rsyntaxtextarea/index.php -->
+        <jar href="@SHARED@/rsyntaxtextarea-2.5.0.jar"/>
+
+        <!--  Xml binding (castor) -->
+        <jar href="@SHARED@/castor-1.2.jar"/>
+
+        <!-- castor dependency -->
+        <jar href="@SHARED@/xercesImpl-2.8.1.jar"/>
+        <jar href="@SHARED@/xml-apis-1.3.03.jar"/>
+
+    </resources>
+
+    <application-desc main-class="fr.jmmc.mf.LITpro"/>
+</jnlp>
