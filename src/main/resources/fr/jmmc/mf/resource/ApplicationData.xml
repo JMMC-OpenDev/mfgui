@@ -18,7 +18,7 @@
     <!--<program name="LITpro" version="1.0.19"/>-->
     <program name="LITpro" version="1.1.1 beta 1"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
-    <compilation date="02/06/2021" compiler="JDK 1.8"/>
+    <compilation date="18/06/2021" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
