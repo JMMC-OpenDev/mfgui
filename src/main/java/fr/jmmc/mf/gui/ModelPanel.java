@@ -25,9 +25,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelPanel extends javax.swing.JPanel implements ListSelectionListener, TableModelListener {
 
+    static Logger logger = LoggerFactory.getLogger(ModelPanel.class.getName());
     ParametersTableModel parametersTableModel;
     Model current;
     SettingsModel settingsModel;
@@ -648,14 +651,22 @@ public class ModelPanel extends javax.swing.JPanel implements ListSelectionListe
     }//GEN-LAST:event_cloneButtonActionPerformed
 
     private void availableModelListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_availableModelListValueChanged
-        Model newModel = (Model) availableModelList.getSelectedValue();
-        if (ignoreReplacement || current.equals(newModel)) {
+        if (ignoreReplacement || availableModelList.getSelectedValue() == null) {
             return;
         }
-        // replace in the model 
-        settingsModel.replaceModel(current, newModel);
-        // and refresh with new model
-        this.show(newModel, settingsModel);
+        
+        final Model newModel = (Model) UtilsClass.clone((Model)availableModelList.getSelectedValue());        
+        if (current.equals(newModel)) {
+            return;
+        }
+                
+        // replace models replaceModel will update the GUI 
+        logger.debug("modelListChanged : try to replace {} by {} (evt={})", current, newModel,evt);        
+        
+        // change current reference to prevent future callback that may use old references
+        final Model old = current;
+        current=newModel;
+        settingsModel.replaceModel(old, newModel);
     }//GEN-LAST:event_availableModelListValueChanged
 
     public void valueChanged(ListSelectionEvent e) {
