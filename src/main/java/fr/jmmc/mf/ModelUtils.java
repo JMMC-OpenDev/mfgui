@@ -428,7 +428,7 @@ public class ModelUtils {
                 }
             }
         }
-        logger.debug("Adding {}/{} normal/shared params and {}/{} normal/shared parameters operators of model {}",
+        logger.debug("Adding {} params ({} shared)  and {} operators ({} shared)  of model {}",
                 nbOfParams, nbOfSharedParams, nbOfOperatorParams, nbOfSharedOperatorParams, model);
 
         if (recursive) {
