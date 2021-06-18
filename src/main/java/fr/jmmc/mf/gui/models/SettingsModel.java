@@ -12,6 +12,7 @@ import fr.jmmc.jmcs.gui.component.GenericListModel;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.task.TaskSwingWorkerExecutor;
+import fr.jmmc.jmcs.gui.util.SwingUtils;
 import fr.jmmc.jmcs.network.http.Http;
 import fr.jmmc.jmcs.service.RecentFilesManager;
 import fr.jmmc.jmcs.service.XslTransform;
@@ -123,6 +124,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     private DefaultListModel parameterListModel;
     private DefaultComboBoxModel targetComboBoxModel;
     private DefaultComboBoxModel parameterComboBoxModel;
+    
     /** flag used to tell that the model is self consistent (not the case during update) */
     private boolean isSelfConsistent = true;
     /** Store a reference over the associated local file */
@@ -465,6 +467,113 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     /**
+     * Replace one model of the given target.
+     * The model should keep as many parameters as possible.
+     * @param parentTarget
+     * @param newModel
+     */
+    public void replaceModel(Model currentModel, Model newModel) {
+        replaceModel(getParent(currentModel), currentModel, newModel);
+    }
+
+    /**
+     * Replace one model of the given target.
+     * The model should keep as many parameters as possible.
+     * Nothing is performed if newModel is null.
+     * @param parentTarget parent target of the model to be replaced
+     * @param currentModel model to be replaced (must be cloned before)
+     * @param newModel replacing model
+     */
+    public void replaceModel(final Target parentTarget, final Model currentModel, final Model newModel) {
+   
+        if (newModel == null || parentTarget == null) {
+            logger.debug("Can't replace in target '{}@{}' model '{}@{}'  by '{}@{}' (null ref)", parentTarget, parentTarget.hashCode(), currentModel, currentModel.hashCode(), newModel, newModel.hashCode());
+            return; //skip this case
+        }
+
+        int modelIdx = UtilsClass.parseModelUniqueIndex(currentModel);
+        newModel.setName(newModel.getType() + modelIdx);
+        // try to recover previous parameters
+        Parameter[] currentModelParams = currentModel.getParameter();
+        Parameter[] newModelParams = newModel.getParameter();
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter np = newModelParams[i];
+            np.setName(np.getType() + modelIdx);
+            for (int j = 0; j < currentModelParams.length; j++) {
+                Parameter cp = currentModelParams[j];
+                if (matchType(np.getType(), cp.getType())) {
+                    np.setValue(cp.getValue());
+                    np.setHasFixedValue(cp.getHasFixedValue());
+                    if (cp.hasScale()) {
+                        np.setScale(cp.getScale());
+                    }
+                    if (cp.hasMaxValue()) {
+                        np.setMaxValue(cp.getMaxValue());
+                    }
+                    if (cp.hasMinValue()) {
+                        np.setMinValue(cp.getMinValue());
+                    }
+                    if (np.getType().equals(cp.getType())) {
+                        // the name is not always copyed because min_diameter matches with diameter
+                        np.setName(cp.getName());
+                    }
+                }
+            }
+        }
+        // try to recover previous shared parameters
+        ParameterLink[] currentParameterLinks = currentModel.getParameterLink();
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter np = newModelParams[i];
+            for (int j = 0; j < currentParameterLinks.length; j++) {
+                ParameterLink cpl = currentParameterLinks[j];
+                if (np.getType().equals(cpl.getType())) {
+                    newModel.removeParameter(np);
+                    newModel.addParameterLink(cpl);
+                }
+            }
+        }
+
+        //update content of contentModels
+        for (int i = 0; i < currentModelParams.length; i++) {
+            Parameter p = currentModelParams[i];
+            parameterComboBoxModel.removeElement(p);
+            parameterListModel.removeElement(p);
+        }
+        for (int i = 0; i < newModelParams.length; i++) {
+            Parameter p = newModelParams[i];
+            parameterComboBoxModel.addElement(p);
+            parameterListModel.addElement(p);
+        }
+
+        // add the new element to current target at the same position
+        int childPosition = 0;
+        Model[] models = parentTarget.getModel();
+        for (int i = 0; i < models.length; i++) {
+            Model model = models[i];
+            if (model == currentModel) {
+                childPosition = i;
+            }
+        }
+
+        //update model, fire treenode change and ask to update viewer of new model 
+        
+        parentTarget.removeModel(currentModel);
+        parentTarget.addModel(childPosition, newModel);
+        setModified(true);
+
+        int idx = getIndexOfChild(parentTarget, newModel);
+        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, idx, newModel);
+
+        
+        SwingUtils.invokeLaterEDT(new Runnable() {
+            @Override
+            public void run() {            
+                setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));                
+            }
+        } );
+    }
+
+    /**
      * Get the Model associated to the given model name
      * @param type model type
      *
@@ -542,6 +651,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void notifyObservers() {
         if (isSelfConsistent) {
             observableDelegate.notifyObservers();
+            //logger.debug("notify change on model {}", this);
         }
     }
 
@@ -559,8 +669,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @param residualModuleValue default,
      */
     public void setResiduals(Target target, String visAmpValue,
-                             String visPhiValue, String vis2Value, String t3AmpValue,
-                             String t3PhiValue) {
+            String visPhiValue, String vis2Value, String t3AmpValue,
+            String t3PhiValue) {
         Residuals residuals = new Residuals();
 
         String[] moduleNames = new String[]{"VISamp", "VISphi", "VIS2", "T3amp", "T3phi"};
@@ -594,92 +704,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         setSelectionPath(new TreePath(new Object[]{rootSettings, plotContainerNode, newPlotNode}));
     }
 
-    /**
-     * Replace one model of the given target.
-     * The model should keep as many parameters as possible.
-     * Nothing is performed if newModel is null.
-     * @param parentTarget parent target of the model to be replaced
-     * @param currentModel model to be replaced
-     * @param newModel replacing model
-     */
-    public void replaceModel(Target parentTarget, Model currentModel, Model newModel) {
-        if (newModel == null) {
-            return; //skip this case
-        }
-        
-        int modelIdx = UtilsClass.parseModelUniqueIndex(currentModel);
-        newModel.setName(newModel.getType() + modelIdx);
-        // try to recover previous parameters
-        Parameter[] currentModelParams = currentModel.getParameter();
-        Parameter[] newModelParams = newModel.getParameter();
-        for (int i = 0; i < newModelParams.length; i++) {
-            Parameter np = newModelParams[i];
-            np.setName(np.getType() + modelIdx);
-            for (int j = 0; j < currentModelParams.length; j++) {
-                Parameter cp = currentModelParams[j];
-                if (matchType(np.getType(), cp.getType())) {
-                    np.setValue(cp.getValue());
-                    np.setHasFixedValue(cp.getHasFixedValue());
-                    if (cp.hasScale()) {
-                        np.setScale(cp.getScale());
-                    }
-                    if (cp.hasMaxValue()) {
-                        np.setMaxValue(cp.getMaxValue());
-                    }
-                    if (cp.hasMinValue()) {
-                        np.setMinValue(cp.getMinValue());
-                    }
-                    if (np.getType().equals(cp.getType())) {
-                        // the name is not always copyed because min_diameter matches with diameter
-                        np.setName(cp.getName());
-                    }
-                }
-            }
-        }
-        // try to recover previous shared parameters
-        ParameterLink[] currentParameterLinks = currentModel.getParameterLink();
-        for (int i = 0; i < newModelParams.length; i++) {
-            Parameter np = newModelParams[i];
-            for (int j = 0; j < currentParameterLinks.length; j++) {
-                ParameterLink cpl = currentParameterLinks[j];
-                if (np.getType().equals(cpl.getType())) {
-                    newModel.removeParameter(np);
-                    newModel.addParameterLink(cpl);
-                }
-            }
-        }
-
-        //update content of contentModels
-        for (int i = 0; i < currentModelParams.length; i++) {
-            Parameter p = currentModelParams[i];
-            parameterComboBoxModel.removeElement(p);
-            parameterListModel.removeElement(p);
-        }
-        for (int i = 0; i < newModelParams.length; i++) {
-            Parameter p = newModelParams[i];
-            parameterComboBoxModel.addElement(p);
-            parameterListModel.addElement(p);
-        }
-
-        setModified(true);
-        // add the new element to current target at the same position
-        int childPosition = 0;
-        Model[] models = parentTarget.getModel();
-        for (int i = 0; i < models.length; i++) {
-            Model model = models[i];
-            if (model == currentModel) {
-                childPosition = i;
-            }
-        }
-        parentTarget.addModel(childPosition, newModel);
-        parentTarget.removeModel(currentModel);
-        
-        //update treenode and ask to update viewer of new model       
-        fireTreeNodesChanged(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
-        
-        // setSelectionPath(new TreePath(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget, newModel}));
-    }
-
     /** try to tell if the data of the old parameter can be copied to new parameter.
      * according to both names. If they ends with the same string after the '_'
      * character, then this method returns true.
@@ -704,16 +728,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         }
 
         return false;
-    }
-
-    /**
-     * Replace one model of the given target.
-     * The model should keep as many parameters as possible.
-     * @param parentTarget
-     * @param newModel
-     */
-    public void replaceModel(Model currentModel, Model newModel) {
-        replaceModel(getParent(currentModel), currentModel, newModel);
     }
 
     /**
@@ -759,10 +773,10 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             parameterListModel.addElement(p);
         }
 
-        setModified(true);
-
         // add the new element to current target
         parentTarget.addModel(newModel);
+        setModified(true);
+
         fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getTargets(), parentTarget}, getIndexOfChild(parentTarget, newModel), newModel);
     }
 
@@ -1020,8 +1034,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public boolean isValid() {
         boolean isValid = rootSettings.isValid();
-        logger.debug("isValid.rootSettings={}", isValid);
-
+        
         boolean hasFreeParam = false;
         // walk throug every parameters and set hasOneFreeParam to true on first free one
         Parameter params[] = getSharedParameters();
@@ -1046,9 +1059,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.debug("isValid.hasFreeParam={}", hasFreeParam);
-        logger.debug("isValid.isSelfConsistent=", isSelfConsistent);
-
+        
+        logger.debug("rootSettings isValid={}, hasFreeParam={}, isSelfConsistent={}", isValid, hasFreeParam, isSelfConsistent);        
+        
         boolean flag = isValid && hasFreeParam && isSelfConsistent;
 
         // sync runFitAction state
@@ -1071,7 +1084,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     getIndexOfChild(rootSettings.getUsercode(), model),
                     model);
         } else {
-            
+
 //            Target parentTarget = getParent(model);
 //            fireTreeNodesChanged(new Object[]{rootSettings},
 //                    getIndexOfChild(rootSettings.getTargets(), parentTarget),
@@ -1271,7 +1284,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      */
     public void updateWithNewSettings(Response newResponse) {
         StatusBar.show("Fitting response received, creating result node...");
-        Settings newSettings = newResponse.getSettings();                
+        Settings newSettings = newResponse.getSettings();
         if (newSettings == null) {
             logger.warn("no settings present in result message");
             if (UtilsClass.getErrorMsg(newResponse).length() == 0) {
@@ -1350,27 +1363,25 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 // add it to the previous result list
                 rootSettings.getResults().addResult(newResult);
                 final ResultModel r = getModel(newResult, false);
-                
+
                 // TODO: check if following call still get some files to display
                 // disable waiting for confirmation ... 
                 // r.genPlots(null, null, newResponse.getResultFile());
-                
                 // store newSettings copy inside result for memory
                 // this also helps the resultPanel to show consistent plots on a lazy fashion                               
-                final Settings memorySettings = (Settings)UtilsClass.clone(newSettings);
+                final Settings memorySettings = (Settings) UtilsClass.clone(newSettings);
                 newResult.setSettings(memorySettings);
                 // but we have to 
                 // - clear heavy parts
                 memorySettings.getFiles().removeAllFile();
                 final File fakeFile = new File();
-                fakeFile.setId("fake"+fakeFile.hashCode());
+                fakeFile.setId("fake" + fakeFile.hashCode());
                 fakeFile.setName("fake");
                 memorySettings.getFiles().addFile(fakeFile);
-                
+
                 // - and avoid repeated ids 
-                UtilsClass.prefixIds(memorySettings);                                                        
-                
-                
+                UtilsClass.prefixIds(memorySettings);
+
                 stampLastUserInfo(r);
                 fireTreeNodesInserted(new Object[]{rootSettings, rootSettings.getResults()},
                         rootSettings.getResults().getResultCount() - 1, r);
@@ -1391,7 +1402,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             throw new IllegalStateException("This part of code should not be reached, please report.\nObject to select : " + o);
         }
     }
-    
+
     public void selectInTree(Object parent, Object child) {
         //valueForPathChanged(new TreePath(new Object[]{rootSettings, rootSettings.getResults()}), parent);
         fireTreeStructureChanged(parent);
@@ -1534,14 +1545,14 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 }
             }
         }
-        logger.debug("Can't find parent of : {}", child);
+        logger.debug("Can't find parent of : {}@{}", child, child.hashCode());
         logger.debug("Models are:");
         for (int i = 0; i < targets.length; i++) {
             Target target = targets[i];
             Model[] models = target.getModel();
             for (int j = 0; j < models.length; j++) {
                 Model model = models[j];
-                logger.debug("Model {}", model);
+                logger.debug("  {}@{}", model, model.hashCode());
             }
         }
         logger.warn("Can't find parent of : {}", child, new Throwable());
@@ -1976,7 +1987,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesInserted(Object[] path, int childIndice,
-                                         Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -1989,7 +2000,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-                                        int childIndice, Object child) {
+            int childIndice, Object child) {
         TreeModelEvent e = new TreeModelEvent(source, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -2002,7 +2013,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @see DefaultTreeModel implementation
      */
     protected void fireTreeNodesChanged(Object[] path, int childIndice,
-                                        Object child) {
+            Object child) {
         TreeModelEvent e = new TreeModelEvent(this, path,
                 new int[]{childIndice}, new Object[]{child});
         for (int i = 0; i < treeModelListeners.size(); i++) {
@@ -2116,6 +2127,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * Returns the index of child in parent.
      */
     public int getIndexOfChild(Object parent, Object child) {
+        logger.debug("getIndexOfChild({}, {}) on {}", parent, child, this);
+        //new Throwable().printStackTrace();
+
         if ((parent == null) || (child == null)) {
             return -1;
         }
@@ -2224,13 +2238,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                     elements = target.getModel();
                     System.arraycopy(elements, 0, all, target.getFileLinkCount(), target.getModelCount());
 
+                    logger.debug("searching  '{}@{}' in target '{}'", child, child.hashCode(), target);
                     for (int j = 0; j
                             < all.length; j++) {
+                        logger.debug(" - target.child[" + j + "]={}@{}", all[j], all[j].hashCode());
                         if (child == all[j]) {
                             return j;
                         }
                     }
-                    // TODO fix that point!
+                    
+                    // TODO fix that point! everything is not in sync :(
                     logger.debug("parent: {} does not seem to contain: {}", parent, child);
                     return -1;
                 }
@@ -2286,7 +2303,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
     @Override
     public String toString() {
-        return className + " " + getAssociatedFilename();
+        return className + "V" + getVersion() + " " + getAssociatedFilename();
     }
 
     /** Marshal the settings and return it as a String */
