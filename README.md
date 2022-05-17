@@ -6,6 +6,7 @@ This module contains the LITpro java application developed by the JMMC technical
 
 
 See [LITpro](https://www.jmmc.fr/litpro)
+See [JMMC releases](https://www.jmmc.fr/releases/)
 See [JMMC OpenDev @ github](https://github.com/JMMC-OpenDev/)
 
 See [CI nightly builds](https://github.com/JMMC-OpenDev/jmmc-java-build/actions/workflows/build.yml)
