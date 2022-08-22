@@ -223,10 +223,11 @@ public class ModelUtils {
         double sep = 0;
         double pa = 0;
         boolean cartesianInput = true;
-        Parameter[] params = m.getParameter();
-        ParameterLink[] paramLinks = m.getParameterLink();
-        for (int i = 0; i < (params.length + paramLinks.length); i++) {
-            Parameter parameter;
+        final Parameter[] params = m.getParameter();
+        final ParameterLink[] paramLinks = m.getParameterLink();
+        
+        for (int i = 0, len = (params.length + paramLinks.length); i < len; i++) {
+            final Parameter parameter;
             if (i < params.length) {
                 parameter = params[i];
             } else {
