@@ -1733,11 +1733,9 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             throw new IOException("Can't add fits file '" + filename + "' to this setting ", ex);
         }
 
-        // display validation messages anyway:
-        final String checkReport = checker.getCheckReport();
-        logger.info("validation results:\n{}", checkReport);
+        // log validation messages anyway:
+        logger.info("validation results:\n{}", checker.getCheckReport()); // full mode
 
-        //MessagePane.showMessage(checkReport);
         StatusBar.show(fileToPopulate.getName() + " added : " + checker.getCheckStatus());
 
         // store association between check and oifits object

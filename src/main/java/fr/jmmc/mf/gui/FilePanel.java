@@ -13,6 +13,7 @@ import fr.jmmc.jmcs.network.interop.SampSubscriptionsComboBoxModel;
 import fr.jmmc.jmcs.service.JnlpStarter;
 import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.File;
+import fr.jmmc.oiexplorer.core.gui.OIFitsCheckerPanel;
 import fr.jmmc.oitools.model.OIData;
 import fr.jmmc.oitools.model.OIFitsChecker;
 import fr.jmmc.oitools.model.OIFitsFile;
@@ -779,11 +780,7 @@ public class FilePanel extends javax.swing.JPanel {
             // file extension can be *fits or *fits.gz
             final OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
 
-            // display validation messages anyway:
-            final String checkReport = checker.getCheckReport();
-            logger.info("validation results:\n{}", checkReport);
-
-            MessagePane.showMessage(checkReport);
+            OIFitsCheckerPanel.displayReport(checker);
         }
     }
 
