@@ -627,10 +627,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         File[] files = this.rootSettings.getFiles().getFile();
         for (File file : files) {
             OIFitsFile oifits = getOIFitsFromFile(file);
-            List<OIData> oidata = oifits.getOiDataList();
-            for (OIData table : oidata) {
-                count += table.getNbMeasurements();
-            }
+            count += oifits.getNbMeasurements();
         }
         return count;
     }
