@@ -285,7 +285,6 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public static GenericListModel<Fitter> getSupportedFitters() {
         boolean created = supportedFitters != null;
         if (!created) {
-            supportedFitters = new GenericListModel<Fitter>(supportedFittersList, true);
             /*
             TODO remove this stub to retrieve server's fitters
              */
@@ -299,8 +298,8 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
                 genfit.setName("genfit");
                 supportedFittersList.add(genfit);
             }
+            supportedFitters = new GenericListModel<Fitter>(supportedFittersList, true);
         }
-
         return supportedFitters;
     }
 
