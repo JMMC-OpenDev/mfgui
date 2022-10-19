@@ -780,7 +780,7 @@ public class FilePanel extends javax.swing.JPanel {
             // file extension can be *fits or *fits.gz
             final OIFitsChecker checker = settingsModel.getOiFitsFileChecker(oifitsFile_);
 
-            OIFitsCheckerPanel.displayReport(checker);
+            OIFitsCheckerPanel.displayReport(checker, null);
         }
     }
 
