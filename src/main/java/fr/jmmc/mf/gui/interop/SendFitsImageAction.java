@@ -39,7 +39,7 @@ public final class SendFitsImageAction extends SampCapabilityAction {
     /** current fitsFile to send */
     static File currentFitsFile = null;
     static String currentFitsFilename = null;
-    /** tmp link to currentFitsFile with right filename */
+    /** tmp link to currentFitsFile with a varying filename */
     static File wellNamedFitsFile = null; 
 
     /**
@@ -76,8 +76,9 @@ public final class SendFitsImageAction extends SampCapabilityAction {
         // hack to create a directory fix final filename
         File  tempDir = FileUtils.getTempFile("___","___");
         tempDir.delete();                
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");                
-        wellNamedFitsFile = new File(tempDir, ft.format(new Date())+"_"+currentFitsFilename);         
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss"); 
+        final String uniqName = FileUtils.cleanupFileName(ft.format(new Date())+"_"+currentFitsFilename);
+        wellNamedFitsFile = new File(tempDir, uniqName);         
         wellNamedFitsFile.getParentFile().mkdirs();
         wellNamedFitsFile.deleteOnExit();
                
