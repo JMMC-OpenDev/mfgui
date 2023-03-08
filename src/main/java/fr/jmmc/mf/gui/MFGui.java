@@ -9,6 +9,7 @@ import fr.jmmc.jmcs.gui.action.internal.InternalActionFactory;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.util.ResourceImage;
+import fr.jmmc.jmcs.service.BrowserLauncher;
 import fr.jmmc.mf.gui.actions.AttachDetachFrameAction;
 import fr.jmmc.mf.gui.actions.CloseModelAction;
 import fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction;
@@ -32,11 +33,13 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +47,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author  mella
  */
-public final class MFGui extends JFrame {
+public final class MFGui extends JFrame implements HyperlinkListener {
 
     /** Class Name */
     static final String className = "fr.jmmc.mf.gui.MFGui";
@@ -201,7 +204,7 @@ public final class MFGui extends JFrame {
         return null;
     }
 
-    public static void closeTab(java.awt.Component c) {
+    public void closeTab(java.awt.Component c) {
         tabbedPane_.remove(c);
         if (tabbedPane_.getComponentCount() == 0) {
             initTabbedPane();
@@ -211,20 +214,36 @@ public final class MFGui extends JFrame {
     /** This method is called from within the constructor to
      * initialize the wizard/welcome panel.
      */
-    public static void initTabbedPane() {
+    public void initTabbedPane() {
         welcomePanel = new JPanel();
         welcomePanel.setLayout(new GridBagLayout());
-        JPanel thewelcomePanel = new JPanel();
+        final JPanel thewelcomePanel = new JPanel();
+        final JEditorPane infoPane = new JEditorPane();
+        infoPane.setOpaque(false);
+        infoPane.setEditable(false);
+        infoPane.setContentType("text/html");
+        // Use default fonts (hi-dpi) if no font defined in html:
+        infoPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        infoPane.addHyperlinkListener(this);
+        infoPane.setText("<html>Is it the first time you run LITpro ?<br>"
+                + "Please go to File > Open demo settings, with the <a href='https://www.jmmc.fr/litpro'>Tutorial document</a> open.<br>"
+                + "\n"
+                + "If not, open your settings file or load your OIFITs files via the File Menu.<br>"
+                + "Or click on the first icon of the toolbar in the upper left corner to open a new setting directly.<br>"
+                + "<br>"
+                + "Have a good session!<br>"
+                + "<br>"
+                + "And please do not hesitate to <a href='https://www.jmmc.fr/feedback'>send us any request</a>, "
+                + "e.g. on a model you would like to have, to help us improve the software."
+                + ""
+                + "</html>");
 
         thewelcomePanel.setLayout(new BoxLayout(thewelcomePanel, BoxLayout.Y_AXIS));
-        ActionRegistrar registrar = ActionRegistrar.getInstance();
-        thewelcomePanel.add(new JButton(registrar.get("fr.jmmc.mf.gui.actions.NewModelAction", "newModel")));
-        thewelcomePanel.add(new JButton(registrar.get(LoadDataFilesAction.className, LoadDataFilesAction.actionName)));
+        thewelcomePanel.add(infoPane);
 
         welcomePanel.add(thewelcomePanel);
-
-        //tabbedPane_.add(welcomePanel);
-        //tabbedPane_.setTitleAt(0, "Starting LITpro");
+        tabbedPane_.add(welcomePanel);
+        tabbedPane_.setTitleAt(0, "Starting LITpro");
     }
 
     /** This method is called from within the constructor to
@@ -269,5 +288,21 @@ public final class MFGui extends JFrame {
             objs[i] = ((SettingsPane) components[i]).getSettingsModel();
         }
         return UtilsClass.checkUserModificationToQuit(objs);
+    }
+
+    /**
+     * Handle URL link clicked in the JEditorPane.
+     *
+     * @param event the received event.
+     */
+    public void hyperlinkUpdate(HyperlinkEvent event) {
+        // When a link is clicked
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            // Get the clicked URL
+            final String clickedURL = event.getURL().toExternalForm();
+
+            // Open the url in web browser
+            BrowserLauncher.openURL(clickedURL);
+        }
     }
 }
