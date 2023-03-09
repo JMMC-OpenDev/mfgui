@@ -48,10 +48,10 @@ import fr.jmmc.mf.models.Settings;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.mf.models.Targets;
 import fr.jmmc.mf.models.Usercode;
-import fr.jmmc.oitools.model.OIData;
 import fr.jmmc.oitools.model.OIFitsChecker;
 import fr.jmmc.oitools.model.OIFitsFile;
 import fr.jmmc.oitools.model.OIFitsLoader;
+import fr.jmmc.oitools.model.OIFitsWriter;
 import fr.jmmc.oitools.model.OITarget;
 import fr.nom.tam.fits.FitsException;
 import fr.nom.tam.fits.FitsUtil;
@@ -1648,6 +1648,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
         Files files = rootSettings.getFiles();
 
         OIFitsFile oifitsFile = OIFitsLoader.loadOIFits(fileToAdd.getAbsolutePath());
+        OIFitsWriter.writeOIFits(className, oifitsFile);
         String fitsFileName = oifitsFile.getAbsoluteFilePath();
 
         File newFile = new File();
