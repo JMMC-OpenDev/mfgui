@@ -54,7 +54,6 @@ import fr.jmmc.oitools.model.OIFitsLoader;
 import fr.jmmc.oitools.model.OIFitsWriter;
 import fr.jmmc.oitools.model.OITarget;
 import fr.nom.tam.fits.FitsException;
-import fr.nom.tam.fits.FitsUtil;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -1632,26 +1631,31 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
      * @throws IllegalStateException if fits exception occurs
      * @throws FitsException if file io errors occurs
      */
-    public void addFile(java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
+    public void addFile(final java.io.File fileToAdd) throws IOException, IllegalArgumentException, FitsException {
 
         if (userPrefersToCancelRunning()) {
             return;
-        }
-
-        // Zip file if it is not the case to embedd in base64.
-        if (!FitsUtil.isCompressed(fileToAdd)) {
-            java.io.File zippedFile = FileUtils.getTempFile(fileToAdd.getName() + ".gz");
-            FileUtils.zip(fileToAdd, zippedFile);
-            fileToAdd = zippedFile;
-        }
-
-        Files files = rootSettings.getFiles();
-
+        }        
+        
+        // Load and write a first time to fix content for later reuse in sync with what the GUI has in memory
+        final java.io.File fixedFile = FileUtils.getTempFile(fileToAdd.getName(),".tmp");
         OIFitsFile oifitsFile = OIFitsLoader.loadOIFits(fileToAdd.getAbsolutePath());
-        OIFitsWriter.writeOIFits(className, oifitsFile);
-        String fitsFileName = oifitsFile.getAbsoluteFilePath();
+        OIFitsWriter.writeOIFits(fixedFile.getAbsolutePath(), oifitsFile);
+        
+        String zippedFilename = fileToAdd.getName();        
+        if ( ! zippedFilename.endsWith(".gz") ){
+            zippedFilename += ".gz" ;
+        }
+                
+        final java.io.File zippedFile = FileUtils.getTempFile(zippedFilename);
+        FileUtils.zip(fixedFile, zippedFile);
+        
+        final Files files = rootSettings.getFiles();
 
-        File newFile = new File();
+        oifitsFile = OIFitsLoader.loadOIFits(zippedFile.getAbsolutePath());
+        final String fitsFileName = oifitsFile.getAbsoluteFilePath();
+
+        final File newFile = new File();
         newFile.setName(fitsFileName);
         newFile.setId(oifitsFile.getFileName());
 
