@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.2.0 beta 1"/>
+    <program name="LITpro" version="1.2.0 beta 2"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="18/06/2021" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -166,7 +166,8 @@
             <menu/> <!-- menu separator -->
             <menu label="Open settings file..." classpath="fr.jmmc.mf.gui.actions.LoadModelAction" action="loadModel" accelerator="O"
                   icon="fr/jmmc/mf/gui/icons/fileopen.png" description="Open a settings file"/>
-            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"/>
+            <menu label="Close settings file" classpath="fr.jmmc.mf.gui.actions.CloseModelAction" action="closeModel" accelerator="W"
+                    description="Close the settings file"/>
             <menu label="Open settings url..." classpath="fr.jmmc.mf.gui.actions.LoadRemoteModelAction" action="loadRemoteModel"/>
             <menu label="Open demo settings">
                 <menu classpath="fr.jmmc.mf.gui.actions.LoadDemoModelAction" action="demoModel1"/>
@@ -175,7 +176,7 @@
             </menu>
             <menu/>
             <menu label="Save settings..." classpath="fr.jmmc.mf.gui.actions.SaveSettingsAction" action="saveSettings" accelerator="S"
-                  icon="fr/jmmc/mf/gui/icons/filesaveas.png"/>
+                  icon="fr/jmmc/mf/gui/icons/filesaveas.png" description="Save the settings file"/>
         </menu>
         <menu label="Edit">
             <menu classpath="fr.jmmc.mf.gui.actions.DeleteTreeSelectionAction" action="deleteTreeSelection" accelerator="DELETE"
@@ -192,8 +193,9 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.2.0">
-            <prerelease version="1.2.0 beta 1">
+        <release version="1.2.0">                            
+            <prerelease version="1.2.0 beta 2">
+                
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
@@ -216,7 +218,10 @@
                 <prerelease version="1.0.14 beta 1">
                     <change type="FEATURE">Basic support for user models</change>
                 </prerelease>
-                -->                                
+                -->                          
+                <change type="BUGFIX">Improved OIFits loading to fix invalid TargetId values (1 instead of 0) if only 1 target and fix other integer or string references if only one accepted value.</change>      
+            </prerelease>
+            <prerelease version="1.2.0 beta 1">    
                 <change type="CHANGE">Add a welcome message instead of the empty frame</change>
                 <change type="CHANGE">Add more tooltips on toolbar's actions</change>
                 <change type="BUGFIX" url="https://github.com/JMMC-OpenDev/mfgui/commit/504640b8919a9c7503608d2c690c7d63eee15893">Fix SAMP interop Sending a fits Image on Windows</change>                
