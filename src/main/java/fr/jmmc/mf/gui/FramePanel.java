@@ -292,7 +292,7 @@ public class FramePanel extends javax.swing.JPanel implements WindowListener {
         viewer.getSettingsPane().getUserInfoPanel().append(
                 settingsModel.getRootSettings().getUserInfo() + 
                 "--------------------------------------------------------------------------------" + 
-                infoLabel.getText().replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n"));       
+                infoLabel.getText().replaceAll("<li>", "\n").replaceAll("<br>", "\n").replaceAll("\\<.*?\\>", "").replaceAll("\n\n", "\n"));       
         
         storeInfoButton.setVisible(false);        
         infoLabel.setVisible(false);                
