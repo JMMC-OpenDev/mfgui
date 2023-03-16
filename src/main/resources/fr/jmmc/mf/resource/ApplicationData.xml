@@ -16,9 +16,9 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.2.0 beta 3"/>
+    <program name="LITpro" version="1.2.0"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
-    <compilation date="18/06/2021" compiler="JDK 1.8"/>
+    <compilation date="16/03/2023" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
     <authors>CRAL, IPAG and LAGRANGE laboratories, and the JMMC Technical Group</authors>
     <jnlp>http://www.jmmc.fr/apps/public/LITpro/LITpro.jnlp</jnlp>
@@ -193,9 +193,10 @@
     </menubar>
 
     <releasenotes>
-        <release version="1.2.0">                            
+        <release version="1.2.0">
+            <pubDate>Thu, 16 Mar 2023 09:10:11 GMT</pubDate>                                        
             <prerelease version="1.2.0 beta 3">
-                
+                <change type="BUGFIX">Last best values of Chi2 plot are displayed even if 'with fit' is selected.</change>
                 <!-- not yet done:
                 <change type="CHANGE">OIFits file plots are now displayed in 'Files' tree menu and does not appear anylonger under the 'Plots' branch.</change>
                 <change type="CHANGE">Chi2 maps, UV map, model images and radial plot are now stored in the settings files.</change>
