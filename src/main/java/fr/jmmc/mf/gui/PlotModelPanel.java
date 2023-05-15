@@ -276,6 +276,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
         add(plotRadialAngleFormattedTextField1, gridBagConstraints);
 
         residualsCheckBox.setText("Residuals");
@@ -350,6 +351,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
         add(fovFormattedTextField, gridBagConstraints);
 
         fillerPanel1.setLayout(new javax.swing.BoxLayout(fillerPanel1, javax.swing.BoxLayout.LINE_AXIS));
