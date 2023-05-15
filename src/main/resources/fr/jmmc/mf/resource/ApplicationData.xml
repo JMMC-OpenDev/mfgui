@@ -221,6 +221,7 @@
         <release version="1.3.0">            
             <prerelease version="1.3.0 beta 1">
                 <change type="CHANGE" url="http://trac.jmmc.fr/jmmc-sw/ticket/1310">Removed "Plot sniffer map" since is it done by "Plot chi2" 2D with parameters flux_weights.</change>
+                <change type="BUGFIX" url="http://trac.jmmc.fr/jmmc-sw/ticket/1309">Accept decimal values to define the FOV plotting Model Image.</change>                
             </prerelease>            
         </release>
         <release version="1.2.0">

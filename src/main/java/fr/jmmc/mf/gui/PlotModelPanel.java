@@ -344,7 +344,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(fovLabel, gridBagConstraints);
 
-        fovFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        fovFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         fovFormattedTextField.setText(""+startValue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
@@ -382,9 +382,9 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     private String getFoV() {
         System.out.println("fovFormattedTextField.getValue() = " + fovFormattedTextField.getValue());
-        Long l = (Long)fovFormattedTextField.getValue();
+        Double d = (Double)fovFormattedTextField.getValue();
         
-        return ""+ (l.doubleValue()/2);
+        return ""+ (d/2);
     }
 
     private void plotUVMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUVMapButtonActionPerformed
