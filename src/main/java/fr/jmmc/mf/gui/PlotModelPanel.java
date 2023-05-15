@@ -36,7 +36,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         plotRadialAngleFormattedTextField1.setValue(0);
         // Fix #714 (still requires a preference setup?)
         pixscaleFormattedTextField.setText("0.10");
-        pixscaleFormattedTextField1.setText("1");
         
         try {
             fovFormattedTextField.commitEdit();
@@ -49,7 +48,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         helpButton1.setAction(new ShowHelpAction(("ENDtt_PlotImage_Bt")));
         helpButton2.setAction(new ShowHelpAction(("ENDtt_PlotUVmap_Bt")));
         helpButton3.setAction(new ShowHelpAction(("ENDtt_PlotRadial_Bt")));
-        helpButton4.setAction(new ShowHelpAction(("ENDtt_PlotSniffer_Bt")));        
     }
 
     public void show(SettingsModel s, Target t) {
@@ -75,7 +73,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         boolean hasOneTarget = targetComboBox.getItemCount() != 0;
         boolean valid = hasOneTarget && s.isValid();
         plotImageButton.setEnabled(valid);
-        plotSnifferMapButton.setEnabled(valid);
         plotUVMapButton.setEnabled(valid);
         plotRadialButton.setEnabled(valid);
         // update widget states
@@ -195,11 +192,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         pixscalLabel = new javax.swing.JLabel();
         pixscaleFormattedTextField = new javax.swing.JFormattedTextField();
         plotImageButton = new javax.swing.JButton();
-        plotSnifferMapButton = new javax.swing.JButton();
         helpButton1 = new javax.swing.JButton();
-        helpButton4 = new javax.swing.JButton();
-        jLabel11 = new javax.swing.JLabel();
-        pixscaleFormattedTextField1 = new javax.swing.JFormattedTextField();
         fovLabel = new javax.swing.JLabel();
         fovFormattedTextField = new javax.swing.JFormattedTextField();
         fillerPanel1 = new javax.swing.JPanel();
@@ -337,18 +330,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(plotImageButton, gridBagConstraints);
 
-        plotSnifferMapButton.setText("Plot sniffer map");
-        plotSnifferMapButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                plotSnifferMapButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(plotSnifferMapButton, gridBagConstraints);
-
         helpButton1.setText("jButton1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -356,33 +337,10 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(helpButton1, gridBagConstraints);
 
-        helpButton4.setText("jButton1");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(helpButton4, gridBagConstraints);
-
-        jLabel11.setText("pixscale");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        add(jLabel11, gridBagConstraints);
-
-        pixscaleFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        pixscaleFormattedTextField1.setText("10");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(pixscaleFormattedTextField1, gridBagConstraints);
-
         fovLabel.setText("FoV (mas) :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(fovLabel, gridBagConstraints);
 
@@ -391,7 +349,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(fovFormattedTextField, gridBagConstraints);
 
@@ -434,17 +391,6 @@ public class PlotModelPanel extends javax.swing.JPanel {
         Target targetToPlot = (Target) targetComboBox.getSelectedItem();
         plotPanel.plotModelUVMap(targetToPlot);
 }//GEN-LAST:event_plotUVMapButtonActionPerformed
-
-    private void plotSnifferMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotSnifferMapButtonActionPerformed
-        String fov = getFoV();
-        String mfov = "-"+getFoV();
-        plotPanel.plotModelSnifferMap((Target) targetComboBox.getSelectedItem(),
-                mfov,
-                fov,
-                mfov,
-                fov,
-                pixscaleFormattedTextField1.getText());
-}//GEN-LAST:event_plotSnifferMapButtonActionPerformed
 
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
         String observableType = radialComboBox.getSelectedItem().toString();
@@ -489,15 +435,11 @@ public class PlotModelPanel extends javax.swing.JPanel {
     private javax.swing.JButton helpButton1;
     private javax.swing.JButton helpButton2;
     private javax.swing.JButton helpButton3;
-    private javax.swing.JButton helpButton4;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel pixscalLabel;
     private javax.swing.JFormattedTextField pixscaleFormattedTextField;
-    private javax.swing.JFormattedTextField pixscaleFormattedTextField1;
     private javax.swing.JButton plotImageButton;
     private javax.swing.JFormattedTextField plotRadialAngleFormattedTextField1;
     private javax.swing.JButton plotRadialButton;
-    private javax.swing.JButton plotSnifferMapButton;
     private javax.swing.JButton plotUVMapButton;
     private javax.swing.JComboBox radialComboBox;
     private javax.swing.JCheckBox residualsCheckBox;
