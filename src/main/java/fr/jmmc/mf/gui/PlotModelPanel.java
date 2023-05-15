@@ -383,9 +383,8 @@ public class PlotModelPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_plotImageButtonActionPerformed
 
     private String getFoV() {
-        System.out.println("fovFormattedTextField.getValue() = " + fovFormattedTextField.getValue());
-        Double d = (Double)fovFormattedTextField.getValue();
-        
+        System.out.println("fovFormattedTextField.getValue() = " + fovFormattedTextField.getValue());        
+        double d = ((Number)fovFormattedTextField.getValue()).doubleValue();        
         return ""+ (d/2);
     }
 
