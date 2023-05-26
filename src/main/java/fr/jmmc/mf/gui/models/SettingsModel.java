@@ -267,7 +267,11 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     public void setRunning(boolean running) {
         this.running = running;
         // TODO assert that every calls are performed from EDT
-        runFitAction.putValue(Action.NAME, (running) ? "Cancel" : runFitAction.getInitialActionName());
+        if (running){
+            runFitAction.putValue(Action.NAME, "Cancel");
+        }else{
+            runFitAction.restoreActionName();
+        }
         runFitAction.putValue(Action.LARGE_ICON_KEY, running ? ImageUtils.loadResourceIcon("fr/jmmc/mf/gui/icons/spinner.gif") : null);
         // TODO fix the icon display shown only if the user change the focus.
 

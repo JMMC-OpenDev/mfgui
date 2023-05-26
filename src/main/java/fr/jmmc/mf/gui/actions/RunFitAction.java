@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
-import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -41,13 +40,10 @@ public class RunFitAction extends ResourcedAction {
     Document iTMaxDocument = null;
     ButtonModel skipPlotDocument = null;
 
-    String initialActionName = null;
-    //boolean running = false;
 
     public RunFitAction(SettingsModel settingsModel) {
         super("runFit");
         this.settingsModel = settingsModel;
-        initialActionName = (String) this.getValue(Action.NAME);
     }
 
     public void setConstraints(ButtonModel iTMaxButtonModel, Document iTMaxDocument, ButtonModel skipPlotDocument) {
@@ -94,9 +90,6 @@ public class RunFitAction extends ResourcedAction {
         }
     }
 
-    public String getInitialActionName() {
-        return initialActionName;
-    }
 
     static class RunFitActionWorker extends TaskSwingWorker<Response> {
 
