@@ -7,10 +7,13 @@ import com.jidesoft.swing.CheckBoxList;
 import fr.jmmc.jmcs.gui.component.MessagePane;
 import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
-import fr.jmmc.jmcs.gui.util.SwingUtils;
+import fr.jmmc.jmcs.gui.task.Task;
+import fr.jmmc.jmcs.gui.task.TaskSwingWorker;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
+import fr.jmmc.mf.gui.task.LITproTaskRegistry;
 import fr.jmmc.mf.models.FileLink;
+import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Residual;
 import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
@@ -18,12 +21,15 @@ import fr.jmmc.mf.models.Target;
 import fr.jmmc.oitools.model.OIFitsFile;
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +46,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private boolean showChi2AndModelPanels;
     private String lastObservable = null;
     private CheckBoxList targetList = null;
+    
+    //private LITproTaskRegistry litproTaskRegistry = LITproTaskRegistry.getInstance();
+    
 
     /** Creates new form PlotPanel */
     public PlotPanel(SettingsViewerInterface viewer, boolean showChi2AndModelPanels) {
@@ -168,87 +177,6 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
                 + " " + ymax
                 + " " + pixscale;
         plot("getModelImage", args, "Model Image of " + targetToPlot.getIdent());
-    }
-
-    /**
-     * Call plot build routine and draw the new plot.
-     *
-     * @param methodName the method's name.
-     * @param methodArgs the method's arguments.
-     * @param title the plot title.
-     */
-    public void plot(String methodName, String methodArgs, String title) {
-        plot(methodName, methodArgs, title, null);
-    }
-
-    /**
-     * Call plot build routine and draw the new plot.
-     *
-     * @param methodName the method's name.
-     * @param methodArgs the method's arguments.
-     * @param title the plot title.
-     * @param description (optionnal) plot description
-     */
-    public void plot(final String methodName, final String methodArgs, final String title, final String description) {
-
-        StatusBar.show(methodName + " process launched - please wait");
-
-        // involke later to guarantee that status bar infor the user he have to wait.
-        SwingUtils.invokeLaterEDT(new Runnable() {
-
-            @Override
-            public void run() {
-
-                Response response = null;
-                try {
-                    response = LITpro.execMethod(methodName,
-                            settingsModel.getTempFile(false), methodArgs, false);
-                } catch (IOException ex) {
-                    MessagePane.showErrorMessage("Can't plot data", ex);
-                    return;
-                }
-                ResultFile[] resultFiles = response.getResultFile();
-                if (resultFiles.length == 0) {
-                    String errors = UtilsClass.getErrorMsg(response);
-                    if (errors.length() > 1) {
-                        return;
-                    }
-                    throw new IllegalStateException("No data returned (this problem is probably data related)");
-                }
-
-                String b64file;
-                File file = null;
-                JFrame f = null;
-                ArrayList<File> filesToExport = new ArrayList();
-                ArrayList<String> filenamesToExport = new ArrayList();
-                ArrayList<File> filesToDisplay = new ArrayList<File>();
-                ArrayList<String> filenamesToDisplay = new ArrayList<String>();
-
-                for (int i = 0; i < resultFiles.length; i++) {
-                    ResultFile r = resultFiles[i];
-                    b64file = r.getHref();
-                    file = UtilsClass.saveBASE64ToFile(b64file, r.getName().substring(r.getName().indexOf(".")));
-                    filesToExport.add(file);
-                    filenamesToExport.add(r.getName());
-                    if (r.getName().endsWith("png")) {
-                        filesToDisplay.add(file);
-                        if (r.getDescription() != null && r.getDescription().length() > 0) {
-                            filenamesToDisplay.add(r.getDescription());
-                        } else {
-                            filenamesToDisplay.add(r.getName());
-                        }
-                    }
-                }
-                f = UtilsClass.buildFrameFor(title, description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
-
-                if (f != null) {
-                    FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]), response);
-                    settingsModel.addPlot(ftn);
-                }
-
-                StatusBar.show(methodName + " process finished");
-            }
-        });
     }
 
     /**
@@ -610,4 +538,160 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         plotRadialAngleFormattedTextField1.setEnabled(canOverplotModelFlag);
 
     }
+
+
+
+    /**
+     * Call plot build routine and draw the new plot.
+     *
+     * @param methodName the method's name.
+     * @param methodArgs the method's arguments.
+     * @param title the plot title.
+     */
+    public void plot(String methodName, String methodArgs, String title) {
+        plot(methodName, methodArgs, title, null);
+    }
+
+    /**
+     * Call plot build routine and draw the new plot.
+     *
+     * @param methodName the method's name.
+     * @param methodArgs the method's arguments.
+     * @param title the plot title.
+     * @param description (optionnal) plot description
+     */
+    public void plot(final String methodName, final String methodArgs, final String title, final String description) {
+
+        StatusBar.show(methodName + " process launched - please wait");
+        
+        new PlotActionWorker(settingsModel.getTempFile(false), methodName, methodArgs, settingsModel, false, title, description).executeTask();        
+    }
+
+    
+    static class PlotActionWorker extends TaskSwingWorker<Response> {
+
+        final java.io.File xmlFile;
+        final String methodName;
+        final String methodArg;
+        final boolean displayInfoMessage;
+        final SettingsModel parent;
+        final Task task;
+        final String title;
+        final String description;
+
+        public PlotActionWorker(final java.io.File xmlFile, final String methodName, final String methodArg, final SettingsModel sm, final boolean displayInfoMessage, final String title, final String description) {
+            super(LITproTaskRegistry.TASK_PLOT);
+            this.task = LITproTaskRegistry.TASK_PLOT;
+            this.xmlFile = xmlFile;
+            this.methodName = methodName;
+            this.methodArg = methodArg;
+            this.parent = sm; // only for callback
+            this.displayInfoMessage = displayInfoMessage;
+            this.title=title;
+            this.description=description;
+        }
+
+        @Override
+        public Response computeInBackground() {
+
+            if (false) {
+                logger.info("skip remote call for testing purpose. Just loop for pause");
+                try {
+                    for (int i = 0; i < 200; i++) {
+                        Thread.sleep(100);
+                        System.out.print(" " + i);
+                        System.out.flush();
+                    }
+                } catch (InterruptedException ex) {
+                    logger.info("interruped during loop", ex);
+                }
+                Message m = new Message();
+                m.setContent("test");
+                m.setType("ERROR");
+                Response r = new Response();
+                r.addMessage(m);
+                return r;
+            }
+
+            try {
+                return LITpro.execMethod(methodName, xmlFile, methodArg, displayInfoMessage);
+            } catch (IOException ex) {
+                // should only come from http io execption
+                throw new RuntimeException(ex);
+            }
+        }
+
+        @Override
+        public void refreshUI(Response response) {
+            // action finished, we can build plot.            
+            // this.parent.setRunning(false);
+            // this.parent.updateWithNewSettings(r);
+            
+            ResultFile[] resultFiles = response.getResultFile();
+                if (resultFiles.length == 0) {
+                    String errors = UtilsClass.getErrorMsg(response);
+                    if (errors.length() > 1) {
+                        return;
+                    }
+                    throw new IllegalStateException("No data returned (this problem is probably data related)");
+                }
+
+                String b64file;
+                File file = null;
+                JFrame f = null;
+                ArrayList<File> filesToExport = new ArrayList<>();
+                ArrayList<String> filenamesToExport = new ArrayList<>();
+                ArrayList<File> filesToDisplay = new ArrayList<>();
+                ArrayList<String> filenamesToDisplay = new ArrayList<>();
+
+                for (int i = 0; i < resultFiles.length; i++) {
+                    ResultFile rf = resultFiles[i];
+                    b64file = rf.getHref();
+                    file = UtilsClass.saveBASE64ToFile(b64file, rf.getName().substring(rf.getName().indexOf(".")));
+                    filesToExport.add(file);
+                    filenamesToExport.add(rf.getName());
+                    if (rf.getName().endsWith("png")) {
+                        filesToDisplay.add(file);
+                        if (rf.getDescription() != null && rf.getDescription().length() > 0) {
+                            filenamesToDisplay.add(rf.getDescription());
+                        } else {
+                            filenamesToDisplay.add(rf.getName());
+                        }
+                    }
+                }
+                f = UtilsClass.buildFrameFor(this.title, this.description, filesToDisplay.toArray(new File[0]), filenamesToDisplay.toArray(new String[0]));
+
+                if (f != null) {
+                    FrameTreeNode ftn = new FrameTreeNode(f, filesToExport.toArray(new File[0]), filenamesToExport.toArray(new String[0]), response);
+                    this.parent.addPlot(ftn);
+                }
+
+                StatusBar.show(methodName + " process finished");
+            
+            StatusBar.show("GUI updated");
+        }
+
+        @Override
+        public void handleException(ExecutionException ee) {
+            // notify that process is finished
+            this.parent.setRunning(false);
+
+            // filter some exceptions to avoid feedback report
+            if (filter(ee)) {
+                MessagePane.showErrorMessage("Please check your network setup", ee);
+            } else {
+                super.handleException(ee);
+            }
+
+            StatusBar.show("Error occured during fitting process");
+        }
+
+        public boolean filter(Exception e) {
+            Throwable c = e.getCause();
+            return c != null
+                    && (c instanceof UnknownHostException
+                    || c instanceof ConnectTimeoutException);
+        }
+    }
+    
 }
