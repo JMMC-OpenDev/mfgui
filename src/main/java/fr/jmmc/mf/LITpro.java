@@ -91,7 +91,7 @@ public class LITpro extends fr.jmmc.jmcs.App {
         // Create OIFitsCollectionManager at startup (JAXB factory, event queues and PlotDefinitionFactory ...)
         // to avoid OpenJDK classloader issues (ie use main thread):
         OIFitsCollectionManager.getInstance();
-
+        
         // Accept multiple thread for worker to enable jobs distribution from the GUI
         TaskSwingWorkerExecutor.start(4);
 
@@ -209,7 +209,9 @@ public class LITpro extends fr.jmmc.jmcs.App {
         }
 
         logger.debug(xmlResult);
-        StatusBar.show("Remote process response received, unmarshal content...");
+        if(xmlResult!=null){
+            StatusBar.show("Remote process response received, unmarshal content...");
+        }
         
         // TODO look at this HOTSPOT
         Response r = (Response) UtilsClass.unmarshal(Response.class, xmlResult);
