@@ -379,7 +379,7 @@ public class PlotModelPanel extends javax.swing.JPanel {
         Target targetToPlot = (Target) targetComboBox.getSelectedItem();
         String fov = getFoV();
         String mfov = "-"+getFoV();
-        plotPanel.plotModelImage(targetToPlot, mfov, fov, mfov, fov, pixscaleFormattedTextField.getText());
+        plotPanel.plotModelImage(plotPanel.getAction(plotImageButton), targetToPlot, mfov, fov, mfov, fov, pixscaleFormattedTextField.getText());
     }//GEN-LAST:event_plotImageButtonActionPerformed
 
     private String getFoV() {
@@ -390,12 +390,12 @@ public class PlotModelPanel extends javax.swing.JPanel {
 
     private void plotUVMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUVMapButtonActionPerformed
         Target targetToPlot = (Target) targetComboBox.getSelectedItem();
-        plotPanel.plotModelUVMap(targetToPlot);
+        plotPanel.plotModelUVMap(plotPanel.getAction(plotUVMapButton), targetToPlot);
 }//GEN-LAST:event_plotUVMapButtonActionPerformed
 
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
         String observableType = radialComboBox.getSelectedItem().toString();
-        plotPanel.plotModelRadial((Target) targetComboBox.getSelectedItem(),
+        plotPanel.plotModelRadial(plotPanel.getAction(plotRadialButton), (Target) targetComboBox.getSelectedItem(),
                 observableType, residualsCheckBox.isSelected(),
                 addModelCheckBox.isSelected() && addModelCheckBox.isEnabled(),
                 plotRadialAngleFormattedTextField1.getText());

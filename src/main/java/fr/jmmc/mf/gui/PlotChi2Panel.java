@@ -10,11 +10,14 @@ import fr.jmmc.mf.gui.models.SettingsModel;
 import fr.jmmc.mf.models.Parameter;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import org.slf4j.Logger;
@@ -47,6 +50,14 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
         // build help button
         helpButton1.setAction(new ShowHelpAction(("END_Plots_PlotChi2_Bt")));
         tablePanel.add(jTable1.getTableHeader(), BorderLayout.NORTH);
+        Action plotChi2Action = new AbstractAction("Plot Chi2") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                plotChi2(plotChi2Button.getAction());
+            }
+        };
+        plotChi2Button.setAction(plotChi2Action);
+        
 
         // init array of chi2 bound textfields 
         rangeTextfields1D = new JFormattedTextField[]{xminFormattedTextField, xmaxFormattedTextField};
@@ -200,7 +211,12 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
         return !hasError;
     }
 
-    private void plotChi2() {
+    /**
+     * Prepare argument to launch  a plot.
+     * Associated task is cancelled if it it still running.
+     * @param caller action 
+     */
+    private void plotChi2(Action caller) {
         String titleLabel = "Slice";
 
         // Build command line arguments according to the widget states                
@@ -246,12 +262,12 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
         args.append(xSamplingFormattedTextField.getText());
 
         if (is1DChi2) {
-            plotPanel.plot("getChi2Map", args.toString(), "1D " + type + " " + titleLabel + " on " + xParamName);
+            plotPanel.plot(caller, "getChi2Map", args.toString(), "1D " + type + " " + titleLabel + " on " + xParamName);
         } else {
             final String yParamName = ((Parameter) yComboBox.getSelectedItem()).getName();
             args.append(" '").append(yParamName).append("' ").append(yminFormattedTextField.getText()).append(" ");
             args.append(ymaxFormattedTextField.getText()).append(" ").append(ySamplingFormattedTextField.getText());
-            plotPanel.plot("getChi2Map", args.toString(),
+            plotPanel.plot(caller, "getChi2Map", args.toString(),
                     "2D " + type + " " + titleLabel + " on " + xParamName + " and " + yParamName);
         }
     }
@@ -496,7 +512,7 @@ public class PlotChi2Panel extends javax.swing.JPanel implements Observer, Focus
 
     private void plotChi2ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_plotChi2ButtonActionPerformed
     {//GEN-HEADEREND:event_plotChi2ButtonActionPerformed
-        plotChi2();
+        //plotChi2(plotChi2Button.getAction());
 }//GEN-LAST:event_plotChi2ButtonActionPerformed
 
     private void updateTable() {

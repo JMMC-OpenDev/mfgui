@@ -9,9 +9,9 @@ import fr.jmmc.jmcs.gui.component.ShowHelpAction;
 import fr.jmmc.jmcs.gui.component.StatusBar;
 import fr.jmmc.jmcs.gui.task.Task;
 import fr.jmmc.jmcs.gui.task.TaskSwingWorker;
+import fr.jmmc.jmcs.gui.task.TaskSwingWorkerExecutor;
 import fr.jmmc.mf.LITpro;
 import fr.jmmc.mf.gui.models.SettingsModel;
-import fr.jmmc.mf.gui.task.LITproTaskRegistry;
 import fr.jmmc.mf.models.FileLink;
 import fr.jmmc.mf.models.Message;
 import fr.jmmc.mf.models.Residual;
@@ -19,12 +19,16 @@ import fr.jmmc.mf.models.Response;
 import fr.jmmc.mf.models.ResultFile;
 import fr.jmmc.mf.models.Target;
 import fr.jmmc.oitools.model.OIFitsFile;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -47,7 +51,12 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     private String lastObservable = null;
     private CheckBoxList targetList = null;
     
-    //private LITproTaskRegistry litproTaskRegistry = LITproTaskRegistry.getInstance();
+    private HashMap<String,Task> toBeRemoved = new HashMap<>();
+    /*  List of action which have an associated action */
+    private HashMap<Action,Task> runningActions = new HashMap<>(); 
+    private HashMap<Task,Action> runningTasks = new HashMap<>(); 
+    /* Name of running action : used to restore name */
+    private HashMap<Action,String> actionNames = new HashMap<>();        
     
 
     /** Creates new form PlotPanel */
@@ -56,6 +65,8 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         this.showChi2AndModelPanels = showChi2AndModelPanels;
         settingsModel = viewer.getSettingsModel();
         initComponents();
+        
+        
         if (showChi2AndModelPanels) {
             plotModelPanel = new PlotModelPanel(this);
             plotChi2Panel = new PlotChi2Panel(this);
@@ -78,7 +89,23 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         // TODO filter one target selection change
         radialComboBox.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[]{"VIS2", "VISamp", "VISphi", "T3amp", "T3phi"}));
-
+        
+    }
+    
+    public static Action getAction(javax.swing.JButton button){
+        
+        Action action  = button.getAction();
+        if(action==null){
+            action = new AbstractAction(button.getActionCommand()) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //
+                }
+            };
+                    
+            button.setAction(action);
+        }
+        return action;
     }
 
     public void show(SettingsModel s) {
@@ -115,68 +142,68 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         return s.substring(0, s.lastIndexOf(',')) + "]";
     }
 
-    public void plotModelRadial(Target targetToPlot, String observableType,
+    public void plotModelRadial(final Action action, Target targetToPlot, String observableType,
             boolean residuals, boolean overplotModel, String angle) {
-        plotModelRadial(new Object[]{targetToPlot}, observableType,
+        plotModelRadial(action, new Object[]{targetToPlot}, observableType,
                 residuals, overplotModel, angle);
     }
 
-    public void plotModelRadial(Object[] targetsToPlot, String observableType,
+    public void plotModelRadial(final Action action, Object[] targetsToPlot, String observableType,
             boolean residuals, boolean overplotModel, String angle) {
         if (residuals) {
             String args = observableType + " " + getGroupValue(targetsToPlot);
-            plot("getModelResidualsPlot", args, observableType
+            plot(action, "getModelResidualsPlot", args, observableType
                     + " weighted residuals of targets " + getGroupValue(targetsToPlot));
         } else {
             if (overplotModel) {
                 String args = observableType + " " + getGroupValue(targetsToPlot)
                         + " " + angle;
-                plot("getModelRadialPlot", args, "Model " + observableType
+                plot(action, "getModelRadialPlot", args, "Model " + observableType
                         + " of targets " + getGroupValue(targetsToPlot) + " " + angle + "°");
             } else {
                 String args = observableType + " " + getGroupValue(targetsToPlot);
-                plot("getModelRadialPlot", args, "Model " + observableType
+                plot(action, "getModelRadialPlot", args, "Model " + observableType
                         + " of targets " + getGroupValue(targetsToPlot));
             }
         }
     }
 
-    private void plotBaselinesButton(Object[] targetsToPlot) {
+    private void plotBaselinesButton(final Action action, Object[] targetsToPlot) {
         String args = getGroupValue(targetsToPlot);
-        plot("getBaselinesPlot", args, "Baselines of targets "
+        plot(action, "getBaselinesPlot", args, "Baselines of targets "
                 + getGroupValue(targetsToPlot));
     }
 
-    private void plotUVCoverage(Object[] targetsToPlot) {
+    private void plotUVCoverage(final Action action, Object[] targetsToPlot) {
         String args = getGroupValue(targetsToPlot);
-        plot("getUVCoveragePlot", args, "UV coverage of targets "
+        plot(action, "getUVCoveragePlot", args, "UV coverage of targets "
                 + getGroupValue(targetsToPlot));
     }
 
-    public void plotModelSnifferMap(Target targetToPlot, String xmin, String xmax,
+    public void plotModelSnifferMap(final Action action, Target targetToPlot, String xmin, String xmax,
             String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
                 + " " + ymax
                 + " " + pixscale;
-        plot("getModelSnifferMap", args, "Sniffer Map of " + targetToPlot.getIdent());
+        plot(action, "getModelSnifferMap", args, "Sniffer Map of " + targetToPlot.getIdent());
     }
 
-    void plotModelUVMap(Target targetToPlot) {
+    void plotModelUVMap(final Action action, Target targetToPlot) {
         String args = getGroupValue(targetToPlot);
-        plot("getModelUVMap", args, "UV map of " + targetToPlot.getIdent(),
+        plot(action, "getModelUVMap", args, "UV map of " + targetToPlot.getIdent(),
                 "Model map in the uv plane with markers of data overplotted with the same color table.");
     }
 
-    void plotModelImage(Target targetToPlot, String xmin, String xmax,
+    void plotModelImage(final Action action, Target targetToPlot, String xmin, String xmax,
             String ymin, String ymax, String pixscale) {
         String args = getGroupValue(targetToPlot) + " " + xmin
                 + " " + xmax
                 + " " + ymin
                 + " " + ymax
                 + " " + pixscale;
-        plot("getModelImage", args, "Model Image of " + targetToPlot.getIdent());
+        plot(action, "getModelImage", args, "Model Image of " + targetToPlot.getIdent());
     }
 
     /**
@@ -392,17 +419,17 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }//GEN-LAST:event_addModelCheckBoxActionPerformed
 
     private void plotBaselinesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotBaselinesButtonActionPerformed
-        plotBaselinesButton(getTargetsToPlot());
+        plotBaselinesButton(getAction(plotBaselinesButton), getTargetsToPlot());
     }//GEN-LAST:event_plotBaselinesButtonActionPerformed
 
     private void plotUvCoverageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotUvCoverageButtonActionPerformed
-        plotUVCoverage(getTargetsToPlot());
+        plotUVCoverage(getAction(plotUvCoverageButton), getTargetsToPlot());
     }//GEN-LAST:event_plotUvCoverageButtonActionPerformed
 
     private void plotRadialButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotRadialButtonActionPerformed
         String observableType = radialComboBox.getSelectedItem().toString();
 
-        plotModelRadial(getTargetsToPlot(),
+        plotModelRadial(getAction(plotRadialButton), getTargetsToPlot(),
                 observableType, residualsCheckBox.isSelected(),
                 addModelCheckBox.isSelected() && addModelCheckBox.isEnabled(),
                 plotRadialAngleFormattedTextField1.getText());
@@ -540,36 +567,64 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
     }
 
 
-
     /**
-     * Call plot build routine and draw the new plot.
+     * Call plot build routine and draw the new plot if associated Action is running else kill associated task.
      *
      * @param methodName the method's name.
      * @param methodArgs the method's arguments.
      * @param title the plot title.
      */
-    public void plot(String methodName, String methodArgs, String title) {
-        plot(methodName, methodArgs, title, null);
+    public void plot(final Action action, String methodName, String methodArgs, String title) {
+        plot(action, methodName, methodArgs, title, null);
     }
 
     /**
-     * Call plot build routine and draw the new plot.
+     * Call plot build routine and draw the new plot if associated Action is running else kill associated task.
      *
      * @param methodName the method's name.
      * @param methodArgs the method's arguments.
      * @param title the plot title.
      * @param description (optionnal) plot description
      */
-    public void plot(final String methodName, final String methodArgs, final String title, final String description) {
+    public void plot(final Action action, final String methodName, final String methodArgs, final String title, final String description) {
 
         StatusBar.show(methodName + " process launched - please wait");
+        Task task = runningActions.get(action);
         
-        new PlotActionWorker(settingsModel.getTempFile(false), methodName, methodArgs, settingsModel, false, title, description).executeTask();        
+        if(task!=null){            
+            logger.info("cancelling task {}",task);
+            TaskSwingWorkerExecutor.cancelTaskAndRelated(task);        
+            taskFinished(task);
+            StatusBar.show("Plot process canceled");
+        }else{
+            /* Store old name */
+            actionNames.put(action, (String)action.getValue(Action.NAME));
+            /* Show that action is cancellable */
+            action.putValue(Action.NAME, "Cancel");
+            /* Create a new task to run a plottin worker */
+            task= new Task(action.toString());
+            logger.info("adding new task {}",task);
+            runningActions.put(action, task);
+            runningTasks.put(task, action);
+            
+            new PlotActionWorker(this, task, settingsModel.getTempFile(false), methodName, methodArgs, settingsModel, false, title, description).executeTask();
+        }                        
     }
 
+    public void taskFinished(final Task task){
+        /* retrieve associated action */
+        Action action = runningTasks.get(task);
+        /* restore old name */
+        String oldName = actionNames.get(action);
+        action.putValue(Action.NAME, oldName);            
+        /* cleanup active task/actions */
+        runningActions.remove(action);
+        runningTasks.remove(task);        
+    }
     
     static class PlotActionWorker extends TaskSwingWorker<Response> {
 
+        final PlotPanel plotPanel;
         final java.io.File xmlFile;
         final String methodName;
         final String methodArg;
@@ -579,9 +634,10 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
         final String title;
         final String description;
 
-        public PlotActionWorker(final java.io.File xmlFile, final String methodName, final String methodArg, final SettingsModel sm, final boolean displayInfoMessage, final String title, final String description) {
-            super(LITproTaskRegistry.TASK_PLOT);
-            this.task = LITproTaskRegistry.TASK_PLOT;
+        public PlotActionWorker(final PlotPanel plotPanel, Task task, final java.io.File xmlFile, final String methodName, final String methodArg, final SettingsModel sm, final boolean displayInfoMessage, final String title, final String description) {
+            super(task);
+            this.plotPanel = plotPanel;
+            this.task = task;
             this.xmlFile = xmlFile;
             this.methodName = methodName;
             this.methodArg = methodArg;
@@ -623,7 +679,9 @@ public class PlotPanel extends javax.swing.JPanel implements ListSelectionListen
 
         @Override
         public void refreshUI(Response response) {
-            // action finished, we can build plot.            
+            // action finished, we can build plot.
+            plotPanel.taskFinished(this.task);
+            
             // this.parent.setRunning(false);
             // this.parent.updateWithNewSettings(r);
             
