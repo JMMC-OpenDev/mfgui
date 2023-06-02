@@ -30,7 +30,8 @@ public class UserInfoPanel extends javax.swing.JPanel {
     
     public void refresh(){
         if (current.getUserInfo() != null) {
-            userInfoTextArea.setText(current.getUserInfo());            
+            String text = current.getUserInfo();
+            userInfoTextArea.setText(text);            
             userInfoTextArea.setCaretPosition(userInfoTextArea.getDocument().getLength());
             userInfoTextArea.getCaret().setVisible(true);                                    
             this.revalidate();
