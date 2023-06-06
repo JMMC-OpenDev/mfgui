@@ -59,6 +59,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -696,7 +697,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
     }
 
     public void addPlot(FrameTreeNode newPlotNode) {
-        plotContainerNode.add(newPlotNode);
+        plotContainerNode.add(newPlotNode);        
         fireTreeNodesInserted(new Object[]{rootSettings, plotContainerNode},
                 plotContainerNode.getChildCount() - 1,
                 newPlotNode);
@@ -877,6 +878,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
         targetListModel.removeElement(oldTarget);
+        fileListModels.remove(oldTarget);
         rootSettings.getTargets().removeTarget(oldTarget);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
@@ -894,6 +896,16 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         int indice = getIndexOfChild(rootSettings.getFiles(), oldFile);
         allFilesListModel.removeElement(oldFile);
+        
+        // remove file from previously associations
+        Collection<ListModel> listModels =fileListModels.values();
+        for (Object lm : listModels) {
+            DefaultListModel listModel = (DefaultListModel)lm;
+            if (listModel.contains(oldFile)){
+                listModel.removeElement(oldFile);
+            }            
+        }
+        
         rootSettings.getFiles().removeFile(oldFile);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getFiles()},
@@ -1612,6 +1624,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
             fileListModels.put(key, lm);
         }
 
+        // we may have duplicates ? 
         if (!lm.contains(file)) {
             logger.debug("adding file '{}' to listmodel for '{}'", file.getName(), key);
             lm.addElement(file);
