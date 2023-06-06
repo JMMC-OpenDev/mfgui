@@ -878,7 +878,7 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         int indice = getIndexOfChild(rootSettings.getTargets(), oldTarget);
         targetListModel.removeElement(oldTarget);
-        fileListModels.remove(oldTarget);
+        fileListModels.remove(oldTarget.getIdent());
         rootSettings.getTargets().removeTarget(oldTarget);
         fireTreeNodesRemoved(this,
                 new Object[]{rootSettings, rootSettings.getTargets()},
