@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.3.0 beta 2"/>
+    <program name="LITpro" version="1.3.0"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="16/03/2023" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -219,6 +219,11 @@
                 -->                          
         
         <release version="1.3.0">
+            <prerelease version="1.3.0 beta 3">
+                <change type="CHANGE">Use native filechooser by default (look at preferences to revert back to Java FileChooser).</change>
+                <change type="BUGFIX">Resolved the issue of phantom files.</change>
+                <change type="BUGFIX">Fix personal notebook consistency in plot panels.</change>                
+            </prerelease>            
             <prerelease version="1.3.0 beta 2">
                 <change type="CHANGE">Plots are now all cancellable.</change>
                 <change type="CHANGE">increase up to 4 parallel tasks (fitting, plots).</change>                
