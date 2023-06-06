@@ -491,6 +491,8 @@ public class SettingsPane extends javax.swing.JPanel implements TreeSelectionLis
     }
     
     public UserInfoPanel getUserInfoPanel() {
+        // ensure to provide an updated content ! (and fix a bug)
+        userInfoPanel.refresh();
         return userInfoPanel;
     }
     
