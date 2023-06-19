@@ -302,8 +302,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
             if (oifile.hasOiT3()) {
                 t3ampCheckBox.setEnabled(true);
                 t3phiCheckBox.setEnabled(true);
-                if (residuals == null) {
-                    t3ampCheckBox.setSelected(true);
+                if (residuals == null) {                    
                     t3phiCheckBox.setSelected(true);
                 }
             }
