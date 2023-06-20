@@ -1674,9 +1674,18 @@ public class SettingsModel extends DefaultTreeSelectionModel implements TreeMode
 
         final File newFile = new File();
         newFile.setName(fitsFileName);
-        newFile.setId(oifitsFile.getFileName());
+        final String newFileId=oifitsFile.getFileName();
+        newFile.setId(newFileId);
 
         if (checkFile(newFile)) {
+            for( File file : files.getFile()){
+                final String fileId= file.getId();
+                if ( fileId.equals(newFileId) ){
+                    StatusBar.show("File '"+newFileId+"'ignored : already present with same file name");
+                    return;
+                }
+            }
+                    
             allFilesListModel.addElement(newFile);
             logger.debug("'{}' oifile added to file list", fitsFileName);
             int idx = files.getFileCount();
