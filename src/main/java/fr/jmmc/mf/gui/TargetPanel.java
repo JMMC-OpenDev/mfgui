@@ -140,10 +140,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         });
 
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
-
-        fileList.setModel(targetFiles);
-
+        
         if (targetFiles != null) {
+            fileList.setModel(targetFiles);
             fileList.clearSelection();
             // define selected files reading fileLinks of current target            
             for (int i = 0; i < targetFiles.getSize(); i++) {
