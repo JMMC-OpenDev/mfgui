@@ -135,9 +135,9 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
 
         fileList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fileListMouseClicked(evt);
-            }
-        });
+                        fileListMouseClicked(evt);
+                    }
+                });
 
         targetFiles = settingsViewer.getSettingsModel().getFileListModelForOiTarget(t.getIdent());
         
@@ -686,13 +686,13 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
     }//GEN-LAST:event_modelListMouseClicked
 
     private void fileListMouseClicked(java.awt.event.MouseEvent evt) {
-        // FIXME their is a bug when doubleclicked file is not part of this target
-        if (evt.getClickCount() == 2) {
+        Object selectedFile = fileList.getSelectedValue();
+        if (evt.getClickCount() == 2  && selectedFile !=null) {
             rootSettingsModel.setSelectionPath(
                     new TreePath(new Object[]{
                 rootSettingsModel,
                 rootSettingsModel.getRootSettings().getFiles(),
-                fileList.getSelectedValue()}));
+                selectedFile}));
         }
 
     }
@@ -719,7 +719,7 @@ public class TargetPanel extends javax.swing.JPanel implements ListSelectionList
         //polarCheckBox.setSelected(hasSelection && getSelectedModel().getPolar());
         //stretchedCheckBox.setSelected(hasSelection && getSelectedModel().getStretched());
         // accept some modification for positional model only
-        hasSelection = hasSelection && getSelectedModel() != null && ModelUtils.hasPosition(getSelectedModel());
+        //hasSelection = hasSelection && getSelectedModel() != null && ModelUtils.hasPosition(getSelectedModel());
         //polarCheckBox.setEnabled(hasSelection);
         //stretchedCheckBox.setEnabled(hasSelection);
 
