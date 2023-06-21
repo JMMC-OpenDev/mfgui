@@ -16,7 +16,7 @@
     </company>
 
     <!--<program name="LITpro" version="1.0.19"/>-->
-    <program name="LITpro" version="1.3.0"/>
+    <program name="LITpro" version="1.3.1 beta 1"/>
     <!--<program name="LITpro" version="1.1.0 alpha 2"/>-->
     <compilation date="16/03/2023" compiler="JDK 1.8"/>
     <text>LITpro is the JMMC model fitting software for astronomical optical interferometry data.</text>
@@ -218,6 +218,14 @@
                 </prerelease>
                 -->                          
         
+        <release version="1.3.1">
+            <prerelease version="1.3.1 beta 1">
+                <change type="CHANGE">Disable use of T3AMP for a new target to fit by default.</change>
+                <change type="BUGFIX">Prevent multiple addition of the same filename (duplicated ids breaks the setting consistency).</change>
+                <change type="BUGFIX">Avoid a NPE if targetPanel can't find associated files.</change>                
+                <change type="BUGFIX">Avoid a NPE while double clicking on the files checbox list in the targetPanel.</change>                
+            </prerelease>            
+        </release>
         <release version="1.3.0">
             <prerelease version="1.3.0 beta 3">
                 <change type="CHANGE">Use native filechooser by default (look at preferences to revert back to Java FileChooser).</change>
