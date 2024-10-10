@@ -123,7 +123,7 @@ public final class MFGui extends JFrame implements HyperlinkListener {
         getContentPane().add(StatusBar.getInstance(), java.awt.BorderLayout.SOUTH);
 
         String title = ApplicationDescription.getInstance().getProgramName();
-        if (ApplicationDescription.isAlphaVersion() || ApplicationDescription.isBetaVersion()) {
+        if (ApplicationDescription.isAlphaOrBetaVersion()) {
             title += " " + ApplicationDescription.getInstance().getProgramVersion();
         }
         setTitle(title);
