@@ -55,10 +55,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
@@ -67,9 +63,6 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import ptolemy.plot.Plot;
 import ptolemy.plot.PlotBox;
 import ptolemy.plot.plotml.PlotMLFrame;
@@ -190,7 +183,7 @@ public class UtilsClass {
      * @return a frame that contains the image
      * @throws IllegalStateException if image can't be read from file
      */
-    public static JFrame buildFrameFor(String title, String description, File[] pngFiles, String[] filenames) throws IllegalStateException {    
+    public static JFrame buildFrameFor(String title, String description, File[] pngFiles, String[] filenames) throws IllegalStateException {
         if (pngFiles == null || pngFiles.length == 0) {
             return null;
         }
@@ -655,62 +648,6 @@ public class UtilsClass {
         }
         return true;
     }
-    private static TransformerFactory factory_ = null;
-
-    private static TransformerFactory getTransformerFactoryInstance() throws TransformerConfigurationException {
-        if (factory_ == null) {
-            // Create transformer factory
-            factory_ = TransformerFactory.newInstance();
-
-            // @todo try to suppress this kind of workarround
-            // Allow use of xslt with SECURE set to False in JNLP mode
-            try {
-                System.setSecurityManager(null);
-            } catch (SecurityException se) {
-                // This case occurs with java netx and
-                // OpenJDK Runtime Environment (IcedTea6 1.6) (rhel-1.13.b16.el5-x86_64)
-                logger.warn("Can't set security manager to null");
-            }
-
-            // allow use of extensions
-            factory_.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, false);
-        }
-
-        return factory_;
-    }
-
-    //
-    // XML Parsing
-    //
-    /**
-     * Parses an XML file and returns a DOM document. If validating is true, the
-     * contents is validated against the DTD specified in the file.
-     */
-    public static Document parseXmlFile(String filename, boolean validating)
-            throws ParserConfigurationException, ParserConfigurationException,
-                   SAXException, IOException {
-        // Create a builder factory
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(validating);
-        // Create the builder and parse the file
-        Document doc = factory.newDocumentBuilder().parse(new File(filename));
-        return doc;
-    }
-
-    /**
-     * Parses an XML string and returns a DOM document. If validating is true,
-     * the contents is validated against the DTD specified in the file.
-     */
-    public static Document parseXmlString(String xmlBuffer, boolean validating)
-            throws ParserConfigurationException, IOException, SAXException {
-        // Create a builder factory
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(validating);
-        // Create the builder and parse the buffer
-        StringReader r = new StringReader(xmlBuffer);
-        Document doc = factory.newDocumentBuilder().parse(new InputSource(r));
-        return doc;
-    }
 
     /*
      * Following section give accesses to response content.
@@ -897,20 +834,20 @@ public class UtilsClass {
     }
 
     public static void prefixIds(Settings s) {
-        final String prefix="s"+s.hashCode()+"_";
-        
+        final String prefix = "s" + s.hashCode() + "_";
+
         Parameter[] newSharedParams = s.getParameters().getParameter();
         for (Parameter sharedParam : newSharedParams) {
-            sharedParam.setId(prefix+sharedParam.getId());
-        }        
+            sharedParam.setId(prefix + sharedParam.getId());
+        }
         for (Target t : s.getTargets().getTarget()) {
             final Model[] models = t.getModel();
-            for (Model m : models) {                
+            for (Model m : models) {
                 for (Parameter p : m.getParameter()) {
-                    if(p.getId()!=null){
-                        p.setId(prefix+p.getId());
+                    if (p.getId() != null) {
+                        p.setId(prefix + p.getId());
                     };
-                }                
+                }
             }
         }
         // parameterLinks refs should follow automatically
